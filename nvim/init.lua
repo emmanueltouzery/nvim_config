@@ -353,3 +353,8 @@ vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "DiagnosticSignHint", })
 
 vim.cmd("colorscheme doom-one")
+
+-- https://stackoverflow.com/a/14407121/516188
+vim.cmd("au BufRead,BufNewFile,BufEnter /home/emmanuel/projects/* setlocal sw=2")
+
+vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")

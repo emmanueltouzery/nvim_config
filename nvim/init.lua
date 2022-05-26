@@ -74,7 +74,27 @@ require('packer').startup(function(use)
     })
   end,
   requires = {"nvim-lua/plenary.nvim", "neovim/nvim-lspconfig"} }
-  use {'ruifm/gitlinker.nvim', commit='ff33d07'}
+  use {'ruifm/gitlinker.nvim', commit='ff33d07', config = function()
+    require"gitlinker".setup({
+      opts = {
+        action_callback = function(url)
+          local human_readable_url = ''
+          if vim.fn.mode() == 'n' then
+            human_readable_url = _G.get_file_line()
+          else
+            human_readable_url = _G.get_file_line_sel()
+          end
+
+          vim.api.nvim_command('let @+ = \'' .. human_readable_url .. ' ' .. url .. '\'')
+        end,
+      },
+      callbacks = {
+        ["gitlab.*"] = require"gitlinker.hosts".get_gitlab_type_url
+      },
+      -- default mapping to call url generation with action_callback
+      mappings = "<leader>gy"
+    })
+  end}
   use {'j-hui/fidget.nvim', commit='37d536bbbee47222ddfeca0e8186e8ee6884f9a2', config= function()
     require"fidget".setup{}
   end}

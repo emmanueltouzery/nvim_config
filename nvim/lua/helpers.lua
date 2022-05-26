@@ -66,3 +66,39 @@ function _G.ShowCommitAtLine()
     local commit_sha = require"agitator".git_blame_commit_for_line()
     vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha)
 end
+
+-- TELESCOPE-PROJECT START
+-- lifted from https://github.com/nvim-telescope/telescope-project.nvim/blob/master/lua/telescope/_extensions/project/utils.lua
+telescope_projects_file = vim.fn.stdpath('data') .. '/telescope-projects.txt'
+
+-- Get project info for all (de)activated projects
+get_project_objects = function()
+  local projects = {}
+  for line in io.lines(telescope_projects_file) do
+    local project = parse_project_line(line)
+    table.insert(projects, project)
+  end
+  return projects
+end
+
+-- Extracts information from telescope projects line
+parse_project_line = function(line)
+  local title, path, workspace, activated = line:match("^(.-)=(.-)=(.-)=(.-)$")
+  if not workspace then
+    title, path = line:match("^(.-)=(.-)$")
+    workspace = 'w0'
+  end
+  if not activated then
+    title, path, workspace = line:match("^(.-)=(.-)=(.-)$")
+    activated = 1
+  end
+  return {
+    title = title,
+    path = path,
+    workspace = workspace,
+    activated = activated
+  }
+end
+
+-- 
+-- TELESCOPE-PROJECT END

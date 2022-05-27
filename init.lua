@@ -120,12 +120,8 @@ require('packer').startup(function(use)
         require("null-ls").builtins.diagnostics.eslint,
         require("null-ls").builtins.diagnostics.credo,
         -- require("null-ls").builtins.completion.spell,
-        -- null_ls.builtins.diagnostics.credo,
-        -- null_ls.builtins.diagnostics.shellcheck,
         require("null-ls").builtins.formatting.prettier,
-        -- null_ls.builtins.formatting.rustfmt,
         -- null_ls.builtins.formatting.mix,
-        -- null_ls.builtins.formatting.eslint,
       },
     })
   end,
@@ -421,6 +417,10 @@ vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSi
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "DiagnosticSignWarn", })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "DiagnosticSignInfo", })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "DiagnosticSignHint", })
+
+-- for some reason the Red default color looks horrible in neovide for me...
+-- bad subpixel rendering, i think => pick a diff tone of red, looks OK
+vim.cmd("hi DiagnosticError guifg=#ff6262")
 
 vim.api.nvim_set_hl(0, "TelescopeBorder", {fg="#88c0d0"})
 vim.api.nvim_set_hl(0, "TelescopePromptPrefix", {fg="#88c0d0"})

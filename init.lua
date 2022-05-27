@@ -426,4 +426,11 @@ vim.cmd("au BufRead,BufNewFile,BufEnter /home/emmanuel/projects/* setlocal sw=2"
 
 vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
 
+-- https://github.com/do-no-van/nvim/blob/main/lua/ascii_bg.lua
+-- don't want piping either... https://github.com/NTBBloodbath/doom-nvim/commit/16c4987ed125f434efb182158c0e294bcac5fd12
+-- Check if there were args (i.e. opened file), non-empty buffer, or started in insert mode
+--[[ if vim.fn.argc() == 0 or vim.fn.line2byte("$") ~= -1 and not opt.insertmode then
+    require("ascii_bg").set_ascii_bg()
+end ]]
+
 -- vim: ts=4 sts=4 sw=4 et

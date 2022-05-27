@@ -33,7 +33,20 @@ require('packer').startup(function(use)
     vim.g['rooter_cd_cmd'] = 'lcd'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
-  use {'sindrets/diffview.nvim', commit='9d3e868376b30737aa4adc982c0d95ecb95b46ca'}
+  use {'sindrets/diffview.nvim', commit='39f401c778a3694fecd94872130373586d1038b8',
+  config = function()
+      local actions = require("diffview.config").actions
+      require('diffview').setup {
+	  keymaps = {
+	      file_panel = {
+		  ["-"] = false, -- i want this shortcut for choosewin
+		  ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+	      }
+	  }
+      }
+      require('diffview').init()
+  end
+  }
   use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
   use '/home/emmanuel/home/agitator.nvim/'
   use {'nvim-telescope/telescope-project.nvim', commit='d317c3cef6917d650d9a638c627b54d3e1173031'}
@@ -47,7 +60,11 @@ require('packer').startup(function(use)
   use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
   use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
   use {'lifepillar/vim-cheat40', commit='ae237b02f9031bc82a8ad9202bffee2bcef71ed1'}
-  use {'ggandor/lightspeed.nvim', commit='23565bcdd45afea0c899c71a367b14fc121dbe13'}
+  use {'ggandor/lightspeed.nvim', commit='23565bcdd45afea0c899c71a367b14fc121dbe13', config = function()
+      require'lightspeed'.setup {
+	  ignore_case = true,
+      }
+  end}
   use {'samoshkin/vim-mergetool', commit='0275a85256ad173e3cde586d54f66566c01b607f'}
   use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
   use {'vim-test/vim-test', commit='56bbfa295fe62123d2ebe8ed57dd002afab46097'}
@@ -146,7 +163,17 @@ require('packer').startup(function(use)
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use 'simrat39/symbols-outline.nvim'
-  use 'TimUntersberger/neogit'
+  use {'TimUntersberger/neogit', config = function()
+      require('neogit') .setup {
+	  -- disable_context_highlighting = true,
+	  signs = {
+	      -- { CLOSED, OPENED }
+	      section = { "▶", "▼" },
+	      item = { "▶", "▼" },
+	      hunk = { "", "" },
+	  }
+      }
+  end}
   use 'folke/trouble.nvim'
   use {
     'kyazdani42/nvim-tree.lua',
@@ -154,7 +181,19 @@ require('packer').startup(function(use)
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
   }
-  use "b3nj5m1n/kommentary"
+  use {"b3nj5m1n/kommentary", config = function()
+      require('kommentary.config')
+      .configure_language("default", {
+	  prefer_single_line_comments = true,
+      })
+  end}
+  use {"folke/todo-comments.nvim", config = function()
+      require("todo-comments").setup {
+	  highlight = {
+	      pattern = {[[\s*\/\/.*<(KEYWORDS)\s*]], [[\s*--.*<(KEYWORDS)\s*]], [[\s*#.*<(KEYWORDS)\s*]]},
+	  }
+      }
+  end}
 end)
 
 --Set highlight on search
@@ -386,3 +425,5 @@ vim.cmd("colorscheme doom-one")
 vim.cmd("au BufRead,BufNewFile,BufEnter /home/emmanuel/projects/* setlocal sw=2")
 
 vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
+
+-- vim: ts=4 sts=4 sw=4 et

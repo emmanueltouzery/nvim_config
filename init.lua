@@ -13,7 +13,44 @@ vim.g.doom_one_terminal_colors = true
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = function()
+      local actions = require("telescope.actions")
+      require('telescope').setup {
+          defaults = {
+              path_display = {'truncate'},
+              prompt_prefix = "   ",
+              selection_caret = " ",
+              layout_config = {
+                  width = 0.75,
+                  preview_cutoff = 120,
+                  horizontal = {
+                      preview_width = 0.6,
+                  },
+              },
+              file_ignore_patterns = { "^%.git/", "^node_modules/", "^__pycache__/" },
+              mappings = {
+                  i = {
+                      ['<C-u>'] = false,
+                      ['<C-d>'] = false,
+                      ["<C-n>"] = actions.cycle_history_next,
+                      ["<C-p>"] = actions.cycle_history_prev,
+                  },
+              },
+          },
+          pickers = {
+              buffers = {
+                  mappings = {
+                      i = {
+                          ["<c-d>"] = actions.delete_buffer + actions.move_to_top,
+                      }
+                  }
+              }
+          },
+      }
+
+      -- Enable telescope fzf native
+      require('telescope').load_extension 'fzf'
+  end}
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   -- Add git related info in the signs columns and popups
@@ -48,7 +85,7 @@ require('packer').startup(function(use)
   end
   }
   use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
-  use '/home/emmanuel/home/agitator.nvim/'
+  use 'emmanueltouzery/agitator.nvim'
   use {'nvim-telescope/telescope-project.nvim', commit='d317c3cef6917d650d9a638c627b54d3e1173031'}
   -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
   -- drop s and S due to lightspeed
@@ -244,34 +281,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
-
--- Telescope
-local actions = require("telescope.actions")
-require('telescope').setup {
-  defaults = {
-    prompt_prefix = "   ",
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-	['<C-d>'] = false,
-	["<C-n>"] = actions.cycle_history_next,
-	["<C-p>"] = actions.cycle_history_prev,
-      },
-    },
-  },
-  pickers = {
-    buffers = {
-      mappings = {
-        i = {
-          ["<c-d>"] = actions.delete_buffer + actions.move_to_top,
-        }
-      }
-    }
-  },
-}
-
--- Enable telescope fzf native
-require('telescope').load_extension 'fzf'
 
 -- Treesitter configuration
 -- Parsers must be installed manually via :TSInstall

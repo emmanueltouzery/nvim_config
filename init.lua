@@ -224,13 +224,10 @@ require('packer').startup(function(use)
 	  prefer_single_line_comments = true,
       })
   end}
-  use {"folke/todo-comments.nvim", config = function()
-      require("todo-comments").setup {
-	  highlight = {
-	      pattern = {[[\s*\/\/.*<(KEYWORDS)\s*]], [[\s*--.*<(KEYWORDS)\s*]], [[\s*#.*<(KEYWORDS)\s*]]},
-	  }
-      }
-  end}
+  use {"folke/todo-comments.nvim"
+  -- https://github.com/folke/todo-comments.nvim/issues/93 https://github.com/folke/todo-comments.nvim/issues/99
+  -- can't put the config inline, causes weird issues
+  }
 end)
 
 --Set highlight on search

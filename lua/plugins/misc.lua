@@ -80,4 +80,10 @@ require'nvim-tree'.setup {
 vim.g.glow_width = 120
 vim.g.glow_border = "rounded"
 
+require("todo-comments").setup {
+    highlight = {
+        pattern = {[[\s*\/\/.*<(KEYWORDS)\s*]], [[\s*--.*<(KEYWORDS)\s*]], [[\s*#.*<(KEYWORDS)\s*]]},
+    }
+}
+
 -- vim: ts=4 sts=4 sw=4 et

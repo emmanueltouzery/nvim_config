@@ -99,3 +99,13 @@ end
 
 vim.g.glow_width = 120
 vim.g.glow_border = "rounded"
+
+require('neogit').setup {
+  -- disable_context_highlighting = true,
+  signs = {
+    -- { CLOSED, OPENED }
+    section = { "▶", "▼" },
+    item = { "▶", "▼" },
+    hunk = { "", "" },
+  }
+}

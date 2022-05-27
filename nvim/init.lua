@@ -17,7 +17,9 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   -- Add git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = function()
+    require("gitsigns").setup {}
+  end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter'
   -- Additional textobjects for treesitter
@@ -204,26 +206,28 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
--- Gitsigns
-require('gitsigns').setup {
-  signs = {
-    add = { text = '+' },
-    change = { text = '~' },
-    delete = { text = '_' },
-    topdelete = { text = '‾' },
-    changedelete = { text = '~' },
-  },
-}
-
 -- Telescope
+local actions = require("telescope.actions")
 require('telescope').setup {
   defaults = {
+    prompt_prefix = "   ",
     mappings = {
       i = {
         ['<C-u>'] = false,
-        ['<C-d>'] = false,
+	['<C-d>'] = false,
+	["<C-n>"] = actions.cycle_history_next,
+	["<C-p>"] = actions.cycle_history_prev,
       },
     },
+  },
+  pickers = {
+    buffers = {
+      mappings = {
+        i = {
+          ["<c-d>"] = actions.delete_buffer + actions.move_to_top,
+        }
+      }
+    }
   },
 }
 
@@ -330,6 +334,7 @@ vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h10.6"
 vim.opt.fillchars = vim.opt.fillchars + 'diff:╱'
 vim.o.relativenumber = true
 vim.opt.cursorline = true -- highlight the current line number
+vim.opt.clipboard = "unnamedplus"
 
 require("plugins.lualine")
 require("plugins.misc")
@@ -371,6 +376,9 @@ vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSi
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "DiagnosticSignWarn", })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "DiagnosticSignInfo", })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "DiagnosticSignHint", })
+
+vim.api.nvim_set_hl(0, "TelescopeBorder", {fg="#88c0d0"})
+vim.api.nvim_set_hl(0, "TelescopePromptPrefix", {fg="#88c0d0"})
 
 vim.cmd("colorscheme doom-one")
 

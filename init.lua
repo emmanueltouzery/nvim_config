@@ -60,7 +60,8 @@ require('packer').startup(function(use)
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use {'nvim-treesitter/nvim-treesitter', config=function()
       require("nvim-treesitter.configs").setup({
-          ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown","elixir","jsdoc","json","scss","typescript" },
+          -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+          ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown","elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex" },
           highlight = { enable = true },
           autopairs = {
               enable = true,

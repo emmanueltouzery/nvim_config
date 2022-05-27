@@ -58,13 +58,40 @@ require('packer').startup(function(use)
     require("gitsigns").setup {}
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use 'nvim-treesitter/nvim-treesitter'
+  use {'nvim-treesitter/nvim-treesitter', config=function()
+      require("nvim-treesitter.configs").setup({
+          ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown","elixir","jsdoc","json","scss","typescript" },
+          highlight = { enable = true },
+          autopairs = {
+              enable = true,
+          },
+          indent = { enable = false },
+          playground = { enable = true },
+          tree_docs = { enable = true },
+          context_commentstring = { enable = true },
+          autotag = {
+              enable = true,
+              filetypes = {
+                  "html",
+                  "javascript",
+                  "javascriptreact",
+                  "svelte",
+                  "vue",
+                  "markdown",
+              },
+          },
+      })
+  end}
   -- Additional textobjects for treesitter
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
-  use 'romgrk/doom-one.vim'
+  use {'NTBBloodbath/doom-one.nvim', config = function()
+      require('doom-one').setup({
+          cursor_coloring = true,
+      })
+  end}
   use {'airblade/vim-rooter', config = function() 
     vim.g['rooter_silent_chdir'] = 1 
     vim.g['rooter_cd_cmd'] = 'lcd'
@@ -424,8 +451,6 @@ vim.cmd("hi DiagnosticError guifg=#ff6262")
 
 vim.api.nvim_set_hl(0, "TelescopeBorder", {fg="#88c0d0"})
 vim.api.nvim_set_hl(0, "TelescopePromptPrefix", {fg="#88c0d0"})
-
-vim.cmd("colorscheme doom-one")
 
 -- https://stackoverflow.com/a/14407121/516188
 vim.cmd("au BufRead,BufNewFile,BufEnter /home/emmanuel/projects/* setlocal sw=2")

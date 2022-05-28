@@ -18,36 +18,6 @@ local function project()
   return vim.fn.getcwd(vim.fn.winnr()):match("[^/]+$");
 end
 
-function _G.toggle_comment_custom_commentstring_curline()
-  startline = vim.fn.line('.')
-  endline = vim.fn.line('.')
-  _G.toggle_comment_custom_commentstring(startline, endline)
-end
-
-function _G.toggle_comment_custom_commentstring_sel()
-  local startline = vim.fn.line("'<")
-  local endline = vim.fn.line("'>")
-  _G.toggle_comment_custom_commentstring(startline, endline)
-end
-
--- https://github.com/b3nj5m1n/kommentary/issues/11
---[[ This is our custom function for toggling comments with a custom commentstring,
-it's based on the default toggle_comment, but before calling the function for
-toggling ranges, it sets the commenstring to something else. After it is done,
-it sets it back to what it was before. ]]
-function _G.toggle_comment_custom_commentstring(startline, endline)
-  -- Save the current value of commentstring so we can restore it later
-  local commentstring = vim.bo.commentstring
-  -- Set the commentstring for the current buffer to something new
-  vim.bo.commentstring =  "{/*%s*/}"
-  --[[ Call the function for toggling comments, which will resolve the config
-    to the new commentstring and proceed with that. ]]
-  require('kommentary.kommentary').toggle_comment_range(startline, endline,
-    require('kommentary.config').get_modes().normal)
-  -- Restore the original value of commentstring
-  vim.api.nvim_buf_set_option(0, "commentstring", commentstring)
-end
-
 -- https://stackoverflow.com/a/34953646/516188
 function escape_pattern(text)
   return text:gsub("([^%w])", "%%%1")

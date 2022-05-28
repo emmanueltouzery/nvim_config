@@ -20,6 +20,11 @@ function _G.cur_file_path_in_project()
     return vim.fn.expand("%")
 end
 
+-- https://stackoverflow.com/a/34953646/516188
+function escape_pattern(text)
+  return text:gsub("([^%w])", "%%%1")
+end
+
 function _G.get_file_line()
     local file_path = cur_file_path_in_project()
     local line = vim.fn.line(".")
@@ -102,3 +107,111 @@ end
 
 -- 
 -- TELESCOPE-PROJECT END
+
+function _G.select_current_qf(also_print)
+    local qf_entries = vim.fn.getqflist()
+    local i = 1
+    local cur_text = ""
+    while qf_entries[i] do
+        local qf_entry = qf_entries[i]
+        if qf_entry.lnum == 0 then
+            cur_text = cur_text .. "\n" .. qf_entry.text
+        elseif qf_entry.lnum == vim.fn.line('.') and qf_entry.bufnr == vim.fn.bufnr() then
+            if also_print then
+                print(cur_text)
+            end
+            vim.cmd(":cc " .. i)
+            cur_text = ""
+        else
+            -- new message, reset
+            cur_text = ""
+        end
+        i = i+1
+    end
+end
+
+function is_diff_line(line_no)
+    -- https://www.reddit.com/r/vim/comments/k2r7b/how_do_i_execute_a_command_on_all_differences_in/c2hee5z/
+    -- https://stackoverflow.com/a/20010859/516188
+    return vim.fn.diff_hlID(line_no, 1) > 0
+end
+
+function diff_get_start_end_line()
+    -- https://vi.stackexchange.com/a/36854/38754
+    local line = vim.fn.line(".")
+    local startline = line
+    while (is_diff_line(startline - 1))
+    do
+        startline = startline - 1
+    end
+    local endline = line
+    while (is_diff_line(endline + 1))
+    do
+        endline = endline + 1
+    end
+    return startline, endline
+end
+
+function diffget_and_keep(put_after)
+    -- switch to other window
+    vim.cmd('wincmd l')
+    local startline_other, endline_other = diff_get_start_end_line()
+    -- go to the start line of the hunk to simplify things
+    -- vim.fn.feedkeys(startline .. 'G')
+    -- yank relevant lines into register f
+    vim.cmd(startline_other .. ',' .. endline_other .. 'y f')
+
+    -- back to where i was
+    vim.cmd('wincmd h')
+
+    local startline_here, endline_here = diff_get_start_end_line()
+
+    if put_after then
+        -- to paste after, we must move to the end of the block
+        local hunk_lines = endline_here - startline_here
+        for i=1,hunk_lines do
+            vim.fn.feedkeys('j')
+        end
+        vim.fn.feedkeys('"fp')
+    else
+        vim.fn.feedkeys('k"fp')
+    end
+end
+
+function _G.diffget_and_keep_before()
+    diffget_and_keep(false)
+end
+
+function _G.diffget_and_keep_after()
+    diffget_and_keep(true)
+end
+
+function _G.toggle_comment_custom_commentstring_curline()
+  startline = vim.fn.line('.')
+  endline = vim.fn.line('.')
+  _G.toggle_comment_custom_commentstring(startline, endline)
+end
+
+function _G.toggle_comment_custom_commentstring_sel()
+  local startline = vim.fn.line("'<")
+  local endline = vim.fn.line("'>")
+  _G.toggle_comment_custom_commentstring(startline, endline)
+end
+
+-- https://github.com/b3nj5m1n/kommentary/issues/11
+--[[ This is our custom function for toggling comments with a custom commentstring,
+it's based on the default toggle_comment, but before calling the function for
+toggling ranges, it sets the commenstring to something else. After it is done,
+it sets it back to what it was before. ]]
+function _G.toggle_comment_custom_commentstring(startline, endline)
+  -- Save the current value of commentstring so we can restore it later
+  local commentstring = vim.bo.commentstring
+  -- Set the commentstring for the current buffer to something new
+  vim.bo.commentstring =  "{/*%s*/}"
+  --[[ Call the function for toggling comments, which will resolve the config
+    to the new commentstring and proceed with that. ]]
+  require('kommentary.kommentary').toggle_comment_range(startline, endline,
+    require('kommentary.config').get_modes().normal)
+  -- Restore the original value of commentstring
+  vim.api.nvim_buf_set_option(0, "commentstring", commentstring)
+end

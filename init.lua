@@ -39,6 +39,7 @@ require('packer').startup(function(use)
       },
       pickers = {
         buffers = {
+          sort_lastused = true,
           mappings = {
             i = {
               ["<c-d>"] = actions.delete_buffer + actions.move_to_top,
@@ -526,5 +527,15 @@ vim.cmd([[autocmd FileType NeogitCommitMessage syn match UrlNoSpell "\w\+:\/\/[^
 
 -- word-wrapping in markdown files
 vim.cmd('autocmd FileType markdown setlocal wrap linebreak')
+
+-- visible tab
+-- https://www.reddit.com/r/vim/comments/4hoa6e/what_do_you_use_for_your_listchars/
+vim.cmd("set list")
+vim.cmd("set listchars=tab:→\\ ,trail:·,nbsp:␣")
+
+-- for instance nginx configuration files
+vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')
+vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
+vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
 
 -- vim: ts=2 sts=2 sw=2 et

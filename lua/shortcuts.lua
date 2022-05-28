@@ -31,3 +31,7 @@ vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>", {desc="Resize window 
 vim.cmd('nmap gx :silent execute "!xdg-open " . shellescape("<cWORD>")<CR>')
 -- https://stackoverflow.com/questions/1533565/how-to-get-visually-selected-text-in-vimscript#comment10417791_1533565
 vim.cmd('vmap gx <Esc>:silent execute "!xdg-open " . shellescape(getline("\'<")[getpos("\'<")[2]-1:getpos(".")[2]]) . " &"<CR>')
+
+-- customization for https://github.com/samoshkin/vim-mergetool
+vim.cmd("nmap <expr> db &diff? ':lua diffget_and_keep_before()<cr>' : 'db'")
+vim.cmd("nmap <expr> da &diff? ':lua diffget_and_keep_after()<cr>' : 'da'")

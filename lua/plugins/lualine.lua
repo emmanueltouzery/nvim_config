@@ -109,6 +109,7 @@ if lualine then
       disabled_filetypes = {
         'NeogitStatus', -- perf issues over sshfs
         'dashboard',
+        'alpha',
         'NvimTree',
         'Outline',
         'NeogitCommitMessage',

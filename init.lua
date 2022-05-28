@@ -252,6 +252,14 @@ require('packer').startup(function(use)
   -- https://github.com/folke/todo-comments.nvim/issues/93 https://github.com/folke/todo-comments.nvim/issues/99
   -- can't put the config inline, causes weird issues
   }
+  use {"windwp/nvim-autopairs", commit='b9cc0a26f3b5610ce772004e1efd452b10b36bc9', config=function()
+      require("nvim-autopairs").setup({
+          check_ts = true,
+          enable_afterquote = true,
+          enable_moveright = true,
+          enable_check_bracket_line = true,
+      })
+  end}
 end)
 
 --Set highlight on search

@@ -13,7 +13,7 @@ vim.g.doom_one_terminal_colors = true
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = function()
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit="cd9e6aaee01624c1a5423a783e7fd5bc8fc955c5", config = function()
       local actions = require("telescope.actions")
       require('telescope').setup {
           defaults = {
@@ -51,14 +51,13 @@ require('packer').startup(function(use)
       -- Enable telescope fzf native
       require('telescope').load_extension 'fzf'
   end}
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-  use 'nvim-lualine/lualine.nvim' -- Fancier statusline
-  -- Add git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = function()
+  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', commit="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" }
+  use { 'nvim-lualine/lualine.nvim', commit='c12b1673107c181e32ce54f2dc4c76a2a884d7ba'}
+  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit='27aeb2e715c32cbb99aa0b326b31739464b61644', config = function()
     require("gitsigns").setup {}
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='3dea0bbf71438d2d5a79de0145b509dfb16525a5', config=function()
       require("nvim-treesitter.configs").setup({
           -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
           ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown","elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex" },
@@ -84,16 +83,17 @@ require('packer').startup(function(use)
       })
   end}
   -- Additional textobjects for treesitter
-  use 'nvim-treesitter/nvim-treesitter-textobjects'
-  use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-  use 'hrsh7th/cmp-nvim-lsp'
-  use {'NTBBloodbath/doom-one.nvim', config = function()
+  use {'nvim-treesitter/nvim-treesitter-textobjects', commit='b1e850b77e57b2720c06d523d6fc4776ad6a5608'}
+  use {'neovim/nvim-lspconfig', commit='b86a37caf7a4e53e62ba883aef5889b590260de9'} -- Collection of configurations for built-in LSP client
+  use {'hrsh7th/nvim-cmp', commit='033a817ced907c8bcdcbe3355d7ea67446264f4b'} -- Autocompletion plugin
+  use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
+  use {'emmanueltouzery/doom-one.nvim', commit='f1f846f3ea995263877215d1498734656e1d999c', config = function()
       require('doom-one').setup({
           cursor_coloring = true,
+          diagnostics_color_text = false,
       })
   end}
-  use {'airblade/vim-rooter', config = function() 
+  use {'airblade/vim-rooter', commit='0415be8b5989e56f6c9e382a04906b7f719cfb38', config = function() 
     vim.g['rooter_silent_chdir'] = 1 
     vim.g['rooter_cd_cmd'] = 'lcd'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
@@ -113,7 +113,7 @@ require('packer').startup(function(use)
   end
   }
   use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
-  use 'emmanueltouzery/agitator.nvim'
+  use {'emmanueltouzery/agitator.nvim', commit='7ceffd71ad3b58409b95fa0d0678bc349fb14abc'}
   use {'nvim-telescope/telescope-project.nvim', commit='d317c3cef6917d650d9a638c627b54d3e1173031'}
   -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
   -- drop s and S due to lightspeed
@@ -206,9 +206,9 @@ require('packer').startup(function(use)
     end,
     after = "nvim-lspconfig",
   }
-  use 'linty-org/key-menu.nvim'
-  use 'lambdalisue/suda.vim'
-  use {'akinsho/toggleterm.nvim', config = function()
+  use {'linty-org/key-menu.nvim', commit='14afd14d73488118c1cf8419e01f9353351f7bdb'}
+  use {'lambdalisue/suda.vim', commit='6bffe36862faa601d2de7e54f6e85c1435e832d0'}
+  use {'akinsho/toggleterm.nvim', commit='c525442a03b7bb229c48874abf53168eb38c5b9b', config = function()
     require("toggleterm").setup{
       direction = 'float',
       float_opts = {
@@ -223,8 +223,8 @@ require('packer').startup(function(use)
     -- if you only want these mappings for toggle term use term://*toggleterm#* instead
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
-  use 'simrat39/symbols-outline.nvim'
-  use {'TimUntersberger/neogit', config = function()
+  use {'simrat39/symbols-outline.nvim', commit='15ae99c27360ab42e931be127d130611375307d5'}
+  use {'TimUntersberger/neogit', commit='1453acd27c38fb4374093bc5c2c85dd1fc03d689', config = function()
       require('neogit') .setup {
 	  -- disable_context_highlighting = true,
 	  signs = {
@@ -235,20 +235,20 @@ require('packer').startup(function(use)
 	  }
       }
   end}
-  use 'folke/trouble.nvim'
+  use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5'}
   use {
-    'kyazdani42/nvim-tree.lua',
+    'kyazdani42/nvim-tree.lua', commit='e482bad61cbab18ed6c2334c51c6854d0935c878',
     requires = { 'kyazdani42/nvim-web-devicons', },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
   }
-  use {"b3nj5m1n/kommentary", config = function()
+  use {"b3nj5m1n/kommentary", commit='533d768a140b248443da8346b88e88db704212ab', config = function()
       require('kommentary.config')
       .configure_language("default", {
 	  prefer_single_line_comments = true,
       })
   end}
-  use {"folke/todo-comments.nvim"
+  use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400e'
   -- https://github.com/folke/todo-comments.nvim/issues/93 https://github.com/folke/todo-comments.nvim/issues/99
   -- can't put the config inline, causes weird issues
   }

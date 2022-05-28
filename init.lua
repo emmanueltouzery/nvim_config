@@ -9,6 +9,7 @@ local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
 
 vim.g.doom_one_terminal_colors = true
+vim.g.BufKillCreateMappings = 0 -- vim-bufkill plugin
 
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager

@@ -328,6 +328,9 @@ vim.o.smartcase = true
 vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
+-- no folds by defaults
+vim.opt.foldenable = false
+
 --Set colorscheme
 vim.o.termguicolors = true
 -- vim.cmd [[colorscheme onedark]]

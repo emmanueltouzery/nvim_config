@@ -20,6 +20,21 @@ function _G.cur_file_path_in_project()
     return vim.fn.expand("%")
 end
 
+-- if you have a git project that has subfolders..
+-- in a subfolder there is a package.json.. then vim-rooter
+-- will set the cwd to that subfolder -- not the git repo root.
+-- with this we get the actual git repo root.
+function _G.cur_file_project_root()
+    local full_path = vim.fn.expand("%:p")
+    for _, project in pairs(get_project_objects()) do
+      if full_path:match("^" .. escape_pattern(project.path)) then
+        return project.path
+      end
+    end
+    -- no project that matches, return the current folder
+    return vim.fn.get_cwd()
+end
+
 -- https://stackoverflow.com/a/34953646/516188
 function escape_pattern(text)
   return text:gsub("([^%w])", "%%%1")
@@ -215,3 +230,5 @@ function _G.toggle_comment_custom_commentstring(startline, endline)
   -- Restore the original value of commentstring
   vim.api.nvim_buf_set_option(0, "commentstring", commentstring)
 end
+
+-- vim: ts=2 sts=2 sw=2 et

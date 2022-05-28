@@ -6,6 +6,7 @@ require'nvim-tree'.setup {
   diagnostics = {
     enable = true,
   },
+  remove_file_close_window = false,
   update_cwd = true,
   update_focused_file = {
     -- enables the feature

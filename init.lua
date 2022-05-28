@@ -237,7 +237,7 @@ require('packer').startup(function(use)
   end}
   use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5'}
   use {
-    'kyazdani42/nvim-tree.lua', commit='e482bad61cbab18ed6c2334c51c6854d0935c878',
+    'emmanueltouzery/nvim-tree.lua', commit='dd2578c597d2bcc97b6d63898f4da1c40ec50097',
     requires = { 'kyazdani42/nvim-web-devicons', },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end

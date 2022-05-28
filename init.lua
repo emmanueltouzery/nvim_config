@@ -412,6 +412,11 @@ vim.opt.fillchars = vim.opt.fillchars + 'diff:╱'
 vim.o.relativenumber = true
 vim.opt.cursorline = true -- highlight the current line number
 vim.opt.clipboard = "unnamedplus"
+vim.opt.timeoutlen = 500 -- allow considerably more time to enter shortcuts
+
+-- https://vim.fandom.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
+vim.cmd('inoremap <C-h> <C-\\><C-o>db')
+vim.cmd('inoremap <C-BS> <C-\\><C-o>db')
 
 require("plugins.lualine")
 require("plugins.misc")

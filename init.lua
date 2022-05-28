@@ -314,7 +314,9 @@ vim.o.mouse = 'a'
 vim.o.breakindent = true
 
 --Save undo history
-vim.opt.undofile = true
+vim.opt.undofile = false
+--Swap file -- annoying if you open twice the same file in two editors
+vim.opt.swapfile = false
 
 --Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true

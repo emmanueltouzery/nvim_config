@@ -326,7 +326,10 @@ vim.o.smartcase = true
 
 --Decrease update time
 vim.o.updatetime = 250
-vim.wo.signcolumn = 'yes'
+
+-- display eg the git status in more cases, for instance git status+TODO marker
+-- it's 2-3 in doom-nvim
+vim.wo.signcolumn = 'auto:1-2' 
 
 -- no folds by defaults
 vim.opt.foldenable = false

@@ -239,7 +239,7 @@ use {'TimUntersberger/neogit', commit='1453acd27c38fb4374093bc5c2c85dd1fc03d689'
 end}
 use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5'}
 use {
-  'emmanueltouzery/nvim-tree.lua', commit='dd2578c597d2bcc97b6d63898f4da1c40ec50097',
+  'emmanueltouzery/nvim-tree.lua', commit='97e59975fd808d03c5b4795f4cf7e54c18597dbf',
   requires = { 'kyazdani42/nvim-web-devicons', },
   -- for some reason must call init outside of the config block, elsewhere
   -- config = function() require'nvim-tree'.setup {} end

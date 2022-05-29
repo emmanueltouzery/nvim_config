@@ -6,7 +6,6 @@ require'nvim-tree'.setup {
   diagnostics = {
     enable = true,
   },
-  remove_file_close_window = false,
   update_focused_file = {
     enable = true,
   },
@@ -33,7 +32,10 @@ require'nvim-tree'.setup {
       window_picker = {
         chars = '234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
       }
-    }
+    },
+    remove_file = {
+      close_window = false,
+    },
   },
   filters = {
     custom = { ".git" }, -- ignore .git

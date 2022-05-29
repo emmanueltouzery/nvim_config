@@ -46,11 +46,14 @@ vim.keymap.set("n", "<leader>wm", "<C-w>o", {desc="Window maximize"})
 
 -- OPEN
 require 'key-menu'.set('n', '<Space>o', {desc='Open'})
-vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
-vim.keymap.set("n", "<leader>os", "<cmd>SymbolsOutline<CR>", {desc = "Toggle SymbolsOutline (LSP symbols)"})
-vim.keymap.set("n", "<leader>ot", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
 vim.keymap.set("n", "<leader>op", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<CR>", {desc="Open project"})
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
+
+-- TOGGLE
+require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
+vim.keymap.set("n", "<leader>te", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
+vim.keymap.set("n", "<leader>ts", "<cmd>SymbolsOutline<CR>", {desc = "Toggle SymbolsOutline (LSP symbols)"})
+vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
 
 vim.api.nvim_exec([[
 function! ToggleQuickFix()
@@ -61,7 +64,9 @@ function! ToggleQuickFix()
     endif
 endfunction
  ]], false)
-vim.keymap.set("n", "<leader>oq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
+vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
+vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
+vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 
 -- GIT
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})
@@ -108,7 +113,3 @@ vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {de
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
 vim.keymap.set("n", "<leader>clf", ":TroubleToggle lsp_references<cr>", {desc="Toggle lsp references"})
-
--- TAB
-require 'key-menu'.set('n', '<Space>t', {desc='Tab'})
-vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"})

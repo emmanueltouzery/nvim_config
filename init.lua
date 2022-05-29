@@ -100,7 +100,7 @@ require('packer').startup(function(use)
     vim.g['rooter_cd_cmd'] = 'lcd'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
-  use {'sindrets/diffview.nvim', commit='39f401c778a3694fecd94872130373586d1038b8',
+  use {'sindrets/diffview.nvim', commit='08e4340f690d0b611a393eafb633b2fb62f78601',
   config = function()
     local actions = require("diffview.config").actions
     require('diffview').setup {

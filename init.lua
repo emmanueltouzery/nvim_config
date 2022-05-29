@@ -54,6 +54,9 @@ require('packer').startup(function(use)
     require('telescope').load_extension 'fzf'
   end}
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', commit="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" }
+  use { 'nvim-telescope/telescope-file-browser.nvim', commit='ea7905ed9b13bcf50e0ba4f3bff13330028d298c', config=function()
+    require("telescope").load_extension "file_browser"
+  end}
   use { 'nvim-lualine/lualine.nvim', commit='c12b1673107c181e32ce54f2dc4c76a2a884d7ba'}
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit='27aeb2e715c32cbb99aa0b326b31739464b61644', config = function()
     require("gitsigns").setup {}
@@ -296,6 +299,7 @@ use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400
     dashboard.section.buttons.val = {
       dashboard.button( "e", "  New file" , ":ene <BAR> startinsert <CR>"),
       dashboard.button( "p", "  Open project" , "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<CR>"),
+      dashboard.button( "b", "  Open file browser" , "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>"), -- alt icon: פּ
       dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
     }
     dashboard.config.opts.noautocmd = true

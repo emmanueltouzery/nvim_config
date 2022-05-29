@@ -48,6 +48,7 @@ vim.keymap.set("n", "<leader>wm", "<C-w>o", {desc="Window maximize"})
 require 'key-menu'.set('n', '<Space>o', {desc='Open'})
 vim.keymap.set("n", "<leader>op", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<CR>", {desc="Open project"})
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
+vim.keymap.set("n", "<leader>ob", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>", {desc="Open file browser"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

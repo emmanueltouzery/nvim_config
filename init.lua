@@ -341,15 +341,6 @@ vim.o.termguicolors = true
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
---Remap space as leader key
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
---Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
 -- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -464,10 +455,6 @@ vim.o.relativenumber = true
 vim.opt.cursorline = true -- highlight the current line number
 vim.opt.clipboard = "unnamedplus"
 vim.opt.timeoutlen = 500 -- allow considerably more time to enter shortcuts
-
--- https://vim.fandom.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
-vim.cmd('inoremap <C-h> <C-\\><C-o>db')
-vim.cmd('inoremap <C-BS> <C-\\><C-o>db')
 
 require("plugins.lualine")
 require("plugins.misc")

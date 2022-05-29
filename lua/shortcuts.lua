@@ -35,3 +35,11 @@ vim.cmd('vmap gx <Esc>:silent execute "!xdg-open " . shellescape(getline("\'<")[
 -- customization for https://github.com/samoshkin/vim-mergetool
 vim.cmd("nmap <expr> db &diff? ':lua diffget_and_keep_before()<cr>' : 'db'")
 vim.cmd("nmap <expr> da &diff? ':lua diffget_and_keep_after()<cr>' : 'da'")
+
+--Remap for dealing with word wrap
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- https://vim.fandom.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
+vim.cmd('inoremap <C-h> <C-\\><C-o>db')
+vim.cmd('inoremap <C-BS> <C-\\><C-o>db')

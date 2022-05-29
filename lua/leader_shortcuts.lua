@@ -3,13 +3,17 @@ vim.keymap.set( "n", "<leader>,", "<cmd>Telescope buffers show_all_buffers=true<
 vim.keymap.set("n", "<leader>?", ":Cheat40<cr>", {desc="help"})
 
 -- BUFFER
+require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})
 -- https://stackoverflow.com/a/19619038/516188
 -- if that doesn't cut it, consider https://github.com/qpkorr/vim-bufkill
 -- and check https://www.reddit.com/r/vim/comments/m6jl0b/i_made_a_plugin_a_replacement_for_bdelete_that/
 --":b#<bar>bd#<CR>",
 vim.keymap.set("n", "<leader>bd",  ":BD<cr>", {desc="Delete buffer"})
 
+require 'key-menu'.set('n', '<Space>')
+
 -- FILES
+require 'key-menu'.set('n', '<Space>f', {desc='File'})
 vim.keymap.set('n', '<leader>fn', "<cmd>vert new<cr>", {desc = "New file"})
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<cr>", {desc = "Find files"})
 vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent files"})
@@ -20,12 +24,14 @@ vim.keymap.set("n", "<leader>fP", ':let @+ = expand("%:p")<cr>', {desc="Copy fil
 vim.keymap.set("n", "<leader>fW", ":noautocmd w<cr>", {desc="save_noindent"})
 
 -- SEARCH
+require 'key-menu'.set('n', '<Space>s', {desc='Search'})
 vim.keymap.set("n", "<leader>ss", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Goto LSP symbol"})
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw()<cr>", {desc="Search text raw"})
 vim.keymap.set( "n", "<leader>sS", "<cmd>Telescope lsp_workspace_symbols<CR>", {desc="Goto workspace symbol"})
 
 -- WINDOW
+require 'key-menu'.set('n', '<Space>w', {desc='Window'})
 vim.keymap.set("n", "<leader>wd", "<C-W>c", {desc="Close current window"})
 vim.keymap.set("n", "<leader>w=", "<C-W>=", {desc = "Balance window"})
 vim.keymap.set("n", "<leader>ws", "<C-W>s", {desc = "Split window below"})
@@ -34,6 +40,7 @@ vim.keymap.set("n", "<leader>wr", "<C-w>r", {desc="Window rotate"})
 vim.keymap.set("n", "<leader>wm", "<C-w>o", {desc="Window maximize"})
 
 -- OPEN
+require 'key-menu'.set('n', '<Space>o', {desc='Open'})
 vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
 vim.keymap.set("n", "<leader>os", "<cmd>SymbolsOutline<CR>", {desc = "Toggle SymbolsOutline (LSP symbols)"})
 vim.keymap.set("n", "<leader>ot", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
@@ -52,6 +59,7 @@ endfunction
 vim.keymap.set("n", "<leader>oq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
 
 -- GIT
+require 'key-menu'.set('n', '<Space>g', {desc='Git'})
 vim.keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<CR>", {desc = "Browse git status"})
 vim.keymap.set("n", "<leader>gB", "<cmd>Telescope git_branches<CR>", {desc=  "Browse git branches"})
 vim.keymap.set("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", {desc ="Browse git commits"})
@@ -75,19 +83,27 @@ vim.keymap.set("n", "<leader>gh", '<cmd>lua require"gitsigns".preview_hunk()<CR>
 vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame link"})
 
 -- CODE
-vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
-vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
-vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
-vim.keymap.set("n", "<leader>clf", ":TroubleToggle lsp_references<cr>", {desc="Toggle lsp references"})
+require 'key-menu'.set('n', '<Space>c', {desc='Code'})
 vim.keymap.set("n", "<leader>cf", ":lua vim.lsp.buf.formatting_sync()<cr>", {desc="Code format"})
 vim.keymap.set("n", "<leader>cm", ":Glow<cr>", {desc="Markdown preview"})
 vim.keymap.set("n", "<leader>cw", ":set wrap! linebreak<cr>", {desc="toggle_linebreak"})
+
+require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})
 vim.keymap.set("n", "<leader>ctf", ":TestFile -strategy=dispatch<cr>", {desc="test file"})
 vim.keymap.set("n", "<leader>ctn", ":TestNearest -strategy=dispatch<cr>", {desc="test nearest"})
 vim.keymap.set("n", "<leader>ctl", ":TestLast -strategy=dispatch<cr>", {desc="test last"})
 vim.keymap.set("n", "<leader>cta", ":TestSuite -strategy=dispatch<cr>", {desc="test all"})
+
+require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})
 vim.keymap.set("n", "<leader>cqs", ":lua select_current_qf(false)<cr>", {desc="quickfix select current"})
 vim.keymap.set("n", "<leader>cqv", ":lua select_current_qf(true)<cr>", {desc="quickfix view & select current"})
 
+require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
+vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
+vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
+vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
+vim.keymap.set("n", "<leader>clf", ":TroubleToggle lsp_references<cr>", {desc="Toggle lsp references"})
+
 -- TAB
+require 'key-menu'.set('n', '<Space>t', {desc='Tab'})
 vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"})

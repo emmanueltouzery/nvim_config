@@ -476,19 +476,6 @@ require("shortcuts")
 require("helpers")
 
 vim.o.timeoutlen = 200
-require 'key-menu'.set('n', '<Space>')
-require 'key-menu'.set('n', '<Space>f', {desc='File'})
-require 'key-menu'.set('n', '<Space>g', {desc='Git'})
-require 'key-menu'.set('n', '<Space>s', {desc='Search'})
-require 'key-menu'.set('n', '<Space>o', {desc='Open'})
-require 'key-menu'.set('n', '<Space>g', {desc='Git'})
-require 'key-menu'.set('n', '<Space>w', {desc='Window'})
-require 'key-menu'.set('n', '<Space>c', {desc='Code'})
-require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
-require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})
-require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})
-require 'key-menu'.set('n', '<Space>t', {desc='Tab'})
-require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})
 
 vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync()]]

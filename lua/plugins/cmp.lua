@@ -1,36 +1,39 @@
-  local kind_icons = {
-    Text = "   ",
-    Method = "  ",
-    Function = "  ",
-    Constructor = "  ",
-    Field = " פּ ",
-    Variable = "  ",
-    Class = "  ",
-    Interface = " ﰮ ",
-    Module = "  ",
-    Property = " ﰠ ",
-    Unit = "  ",
-    Value = "  ",
-    Enum = " 練",
-    Keyword = "  ",
-    Snippet = "  ",
-    Color = "  ",
-    File = "  ",
-    Reference = "  ",
-    Folder = "  ",
-    EnumMember = "  ",
-    Constant = " ﲀ ",
-    Struct = " ﳤ ",
-    Event = "  ",
-    Operator = "  ",
-    TypeParameter = "  ",
-  }
-  --- Given an LSP item kind, returns a nerdfont icon
-  --- @param kind_type string LSP item kind
-  --- @return string Nerdfont Icon
-  local function get_kind_icon(kind_type)
-    return kind_icons[kind_type]
-  end
+local kind_icons = {
+  Text = "   ",
+  Method = "  ",
+  Function = "  ",
+  Constructor = "  ",
+  Field = " פּ ",
+  Variable = "  ",
+  Class = "  ",
+  Interface = " ﰮ ",
+  Module = "  ",
+  Property = " ﰠ ",
+  Unit = "  ",
+  Value = "  ",
+  Enum = " 練",
+  Keyword = "  ",
+  Snippet = "  ",
+  Color = "  ",
+  File = "  ",
+  Reference = "  ",
+  Folder = "  ",
+  EnumMember = "  ",
+  Constant = " ﲀ ",
+  Struct = " ﳤ ",
+  Event = "  ",
+  Operator = "  ",
+  TypeParameter = "  ",
+}
+--- Given an LSP item kind, returns a nerdfont icon
+--- @param kind_type string LSP item kind
+--- @return string Nerdfont Icon
+local function get_kind_icon(kind_type)
+  return kind_icons[kind_type]
+end
+
+-- luasnip setup
+local luasnip = require 'luasnip'
 
 -- nvim-cmp setup
 local cmp = require 'cmp'

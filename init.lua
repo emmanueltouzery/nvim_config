@@ -305,6 +305,9 @@ use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400
     dashboard.config.opts.noautocmd = true
     alpha.setup(dashboard.config)
   end}
+  -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
+  use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
+  use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
 end)
 
 --Set highlight on search
@@ -408,47 +411,6 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- nvim-cmp setup
-local cmp = require 'cmp'
-cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-  }),
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  },
-}
-
 -- guifont = "JetBrains Mono Nerd Font"
 -- or 10.9 or 11
 vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h10.6"
@@ -461,6 +423,7 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.timeoutlen = 500 -- allow considerably more time to enter shortcuts
 
 require("plugins.lualine")
+require("plugins.cmp")
 require("plugins.misc")
 require("leader_shortcuts")
 require("shortcuts")

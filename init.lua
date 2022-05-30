@@ -97,6 +97,9 @@ require('packer').startup(function(use)
       cursor_coloring = true,
       diagnostics_color_text = false,
     })
+
+    -- the theme MUST be loaded before we attempt to load bufferline
+    require("plugins.bufferline")
   end}
   use {'airblade/vim-rooter', commit='0415be8b5989e56f6c9e382a04906b7f719cfb38', config = function() 
     vim.g['rooter_silent_chdir'] = 1 
@@ -308,6 +311,7 @@ use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400
   -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
   use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
+  use {'akinsho/bufferline.nvim', commit = 'e2b1e99deb077bf49f8e167d1320292e66b22477'}
 end)
 
 --Set highlight on search

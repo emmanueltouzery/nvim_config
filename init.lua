@@ -243,7 +243,11 @@ use {'TimUntersberger/neogit', commit='1453acd27c38fb4374093bc5c2c85dd1fc03d689'
     }
   }
 end}
-use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5'}
+use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5', config = function()
+  require("trouble").setup {
+    auto_preview = false -- partly hoping it'll fix some errors https://github.com/folke/trouble.nvim/issues/125#issuecomment-1023980225
+  }
+end}
 use {
   'kyazdani42/nvim-tree.lua', commit='3806653d750cea567428ebc6014038da108d56bb',
   requires = { 'kyazdani42/nvim-web-devicons', },

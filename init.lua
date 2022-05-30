@@ -96,6 +96,9 @@ require('packer').startup(function(use)
     require('doom-one').setup({
       cursor_coloring = true,
       diagnostics_color_text = false,
+      plugins_integrations = {
+        telescope = true,
+      }
     })
 
     -- the theme MUST be loaded before we attempt to load bufferline
@@ -473,8 +476,8 @@ vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSig
 -- bad subpixel rendering, i think => pick a diff tone of red, looks OK
 vim.cmd("hi DiagnosticError guifg=#ff6262")
 
-vim.api.nvim_set_hl(0, "TelescopeBorder", {fg="#88c0d0"})
-vim.api.nvim_set_hl(0, "TelescopePromptPrefix", {fg="#88c0d0"})
+-- vim.api.nvim_set_hl(0, "TelescopeBorder", {fg="#88c0d0"})
+-- vim.api.nvim_set_hl(0, "TelescopePromptPrefix", {fg="#88c0d0"})
 
 -- https://stackoverflow.com/a/14407121/516188
 vim.cmd("au BufRead,BufNewFile,BufEnter /home/emmanuel/projects/* setlocal sw=2")

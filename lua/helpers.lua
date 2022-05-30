@@ -54,10 +54,10 @@ end
 
 function _G.get_file_line_sel()
     local file_path = cur_file_path_in_project()
-    local start_line = vim.fn.getpos("v")[2]
-    local end_line = vim.fn.getcurpos()[2]
-    -- local start_line = vim.fn.line("'<")
-    -- local end_line = vim.fn.line("'>")
+    -- local start_line = vim.fn.getpos("v")[2]
+    -- local end_line = vim.fn.getcurpos()[2]
+    local start_line = vim.fn.line("'<")
+    local end_line = vim.fn.line("'>")
     return "`" .. file_path .. ":" .. start_line .. "-" .. end_line .. "`"
 end
 

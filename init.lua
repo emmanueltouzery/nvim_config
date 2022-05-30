@@ -317,6 +317,9 @@ end)
 --Set highlight on search
 vim.o.hlsearch = false
 
+-- disable word wrapping (selectively reenabled eg for markdown through an autocommand)
+vim.opt.wrap = false
+
 --Make line numbers default
 vim.wo.number = true
 
@@ -337,6 +340,11 @@ vim.o.smartcase = true
 
 --Decrease update time
 vim.o.updatetime = 250
+
+-- Buffer options
+vim.opt.smartindent = true
+vim.opt.copyindent = true
+vim.opt.preserveindent = true
 
 -- display eg the git status in more cases, for instance git status+TODO marker
 -- it's 2-3 in doom-nvim

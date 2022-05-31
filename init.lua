@@ -92,6 +92,8 @@ require('packer').startup(function(use)
   use {'neovim/nvim-lspconfig', commit='b86a37caf7a4e53e62ba883aef5889b590260de9'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='033a817ced907c8bcdcbe3355d7ea67446264f4b'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
+  use { "hrsh7th/cmp-buffer", commit = "12463cfcd9b14052f9effccbf1d84caa7a2d57f0" }
+  use { "hrsh7th/cmp-path", commit = "466b6b8270f7ba89abd59f402c73f63c7331ff6e" }
   use {'emmanueltouzery/doom-one.nvim', commit='f1f846f3ea995263877215d1498734656e1d999c', config = function()
     require('doom-one').setup({
       cursor_coloring = true,

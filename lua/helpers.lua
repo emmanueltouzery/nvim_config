@@ -9,15 +9,20 @@ function _G.copy_to_clipboard(to_copy)
     vim.cmd("let @+ = '" .. to_copy .. "'")
 end
 
-function _G.cur_file_path_in_project()
-    local full_path = vim.fn.expand("%:p")
+function _G.to_file_path_in_project(full_path)
     for _, project in pairs(get_project_objects()) do
         if full_path:match("^" .. escape_pattern(project.path)) then
-            return full_path:gsub("^" .. escape_pattern(project.path .. "/"), "")
+            return {project.path, full_path:gsub("^" .. escape_pattern(project.path .. "/"), "")}
         end
     end
-    -- no project that matches, return the relative path
-    return vim.fn.expand("%")
+    return nil
+end
+
+function _G.cur_file_path_in_project()
+    local full_path = vim.fn.expand("%:p")
+    local project_info = to_file_path_in_project(full_path)
+    -- if no project that matches, return the relative path
+    return project_info and project_info[2] or vim.fn.expand("%")
 end
 
 -- if you have a git project that has subfolders..
@@ -229,6 +234,18 @@ function _G.toggle_comment_custom_commentstring(startline, endline)
     require('kommentary.config').get_modes().normal)
   -- Restore the original value of commentstring
   vim.api.nvim_buf_set_option(0, "commentstring", commentstring)
+end
+
+function _G.toggle_highlight_global_marks()
+  -- https://stackoverflow.com/a/39584989/516188
+  vim.cmd("highlight GlobalMarks ctermbg=darkred guibg=darkred")
+  if vim.g.global_marks_highlight_is_on then
+    vim.cmd("windo match GlobalMarks //")
+    vim.g.global_marks_highlight_is_on = false
+  else
+    vim.cmd([[windo match GlobalMarks /\v.*(%'A|%'B|%'C|%'D|%'E|%'F|%'G|%'H|%'I|%'J|%'K|%'L|%'M|%'N|%'O|%'P|%'Q|%'R|%'S|%'T|%'U|%'V|%'W|%'X|%'Y|%'Z).*/]])
+    vim.g.global_marks_highlight_is_on = true
+  end
 end
 
 -- vim: ts=2 sts=2 sw=2 et

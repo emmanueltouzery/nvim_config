@@ -447,6 +447,7 @@ require("plugins.misc")
 require("leader_shortcuts")
 require("shortcuts")
 require("helpers")
+require("telescope_global_marks")
 
 vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync()]]

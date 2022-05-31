@@ -50,12 +50,14 @@ require 'key-menu'.set('n', '<Space>o', {desc='Open'})
 vim.keymap.set("n", "<leader>op", "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<CR>", {desc="Open project"})
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
 vim.keymap.set("n", "<leader>ob", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>", {desc="Open file browser"})
+vim.keymap.set("n", "<leader>om", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
 vim.keymap.set("n", "<leader>te", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
 vim.keymap.set("n", "<leader>ts", "<cmd>SymbolsOutline<CR>", {desc = "Toggle SymbolsOutline (LSP symbols)"})
 vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
+vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>", {desc = "Toggle highlight of global marks"})
 
 vim.api.nvim_exec([[
 function! ToggleQuickFix()

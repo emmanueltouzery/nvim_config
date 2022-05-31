@@ -43,3 +43,6 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- https://vim.fandom.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 vim.cmd('inoremap <C-h> <C-\\><C-o>db')
 vim.cmd('inoremap <C-BS> <C-\\><C-o>db')
+
+-- way better spell checker than the builtin z=
+vim.keymap.set("n", "z=", ":lua require'telescope.builtin'.spell_suggest{}<cr>")

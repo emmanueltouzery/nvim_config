@@ -19,8 +19,8 @@ vim.api.nvim_set_keymap('v', 'gC', ':<C-u>lua toggle_comment_custom_commentstrin
 -- resizing splits
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", {desc="Resize window (increase width)"})
 vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", {desc="Resize window (decrease width)"})
-vim.keymap.set("n", "<C-Right>", ":vertical resize -2<CR>", {desc="Resize window (decrease height)"})
-vim.keymap.set("n", "<C-Left>", ":vertical resize +2<CR>", {desc="Resize window (increase height)"})
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", {desc="Resize window (decrease height)"})
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", {desc="Resize window (increase height)"})
 
 -- https://vi.stackexchange.com/a/27803/38754
 -- the default 'gx' to open links doesn't work.

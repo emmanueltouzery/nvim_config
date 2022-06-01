@@ -5,6 +5,7 @@ require("bufferline").setup({
     end,
     max_name_length = 20,
     tab_size = 25,
+    modified_icon = '',
     diagnostics = "nvim_lsp",
     diagnostics_indicator = function(_, _, diagnostics_dict, _)
       local s = " "

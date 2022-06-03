@@ -1,3 +1,6 @@
+local Job = require'plenary.job'
+local strings = require'plenary.strings'
+
 function _G.my_open_tele()
     local w = vim.fn.expand('<cword>')
     -- require('telescope.builtin').live_grep()
@@ -80,6 +83,26 @@ function _G.goto_fileline()
     for _, project in pairs(get_project_objects()) do
         if vim.fn.filereadable(project.path .. "/" .. fname) == 1 then
             vim.cmd(":e " .. project.path .. "/" .. fname)
+            vim.cmd(":" .. line)
+            return
+        end
+    end
+    -- didn't go the easy way.. let's try to be more tolerant.
+    -- maybe we got a subpath, not rooted. eg only a filename,
+    -- or only like app/win.rs instead of src/app/win.rs
+    -- we can leverage 'fd' for that.
+    for _, project in pairs(get_project_objects()) do
+      local output = nil
+      Job:new({
+        command = 'fd',
+        args = { '-p', fname },
+        cwd = project.path,
+        on_exit = function(j, return_val)
+          output = j:result()
+        end,
+      }):sync()
+      if output ~= nil and #output > 0 and vim.fn.filereadable(project.path .. "/" .. output[1]) == 1 then
+            vim.cmd(":e " .. project.path .. "/" .. output[1])
             vim.cmd(":" .. line)
             return
         end

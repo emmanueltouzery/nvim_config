@@ -491,9 +491,15 @@ vim.cmd("au BufRead,BufNewFile,BufEnter /home/emmanuel/projects/* setlocal sw=2"
 vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
 
 -- SPELL CHECKING
-vim.cmd('autocmd FileType markdown setlocal spell')
-vim.cmd('autocmd FileType gitcommit setlocal spell')
-vim.cmd('autocmd FileType NeogitCommitMessage setlocal spell')
+vim.cmd("set spell")
+vim.cmd("set spelloptions=camel")
+vim.cmd("hi clear SpellCap")
+vim.cmd("au BufNewFile,BufRead,BufWritePost *.lua setlocal nospell")
+vim.cmd("au BufNewFile,BufRead,BufWritePost *.sh setlocal nospell")
+-- neogit has stuff like [c]ommit that don't spell check well
+-- and generally nothing mine to spell check there
+vim.cmd('autocmd FileType NeogitStatus setlocal nospell')
+vim.cmd("set spelllang=en,sl")
 -- https://vi.stackexchange.com/a/4003/38754
 -- don't spellcheck URLs in markdown files and similar
 vim.cmd([[autocmd FileType markdown syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])

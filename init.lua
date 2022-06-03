@@ -324,6 +324,7 @@ use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400
   use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
   use {'akinsho/bufferline.nvim', commit = 'e2b1e99deb077bf49f8e167d1320292e66b22477'}
+  use {'emmanueltouzery/vim-dispatch-neovim', commit='72d8fb41aade2968a3786abd74c0936b599466d8'}
 end)
 
 --Set highlight on search

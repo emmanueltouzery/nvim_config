@@ -105,16 +105,20 @@ vim.keymap.set("n", "<leader>cf", ":lua vim.lsp.buf.formatting_sync()<cr>", {des
 vim.keymap.set("n", "<leader>cm", ":Glow<cr>", {desc="Markdown preview"})
 vim.keymap.set("n", "<leader>cw", ":set wrap! linebreak<cr>", {desc="toggle_linebreak"})
 
+-- TESTS
 require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})
 vim.keymap.set("n", "<leader>ctf", ":TestFile -strategy=dispatch<cr>", {desc="test file"})
 vim.keymap.set("n", "<leader>ctn", ":TestNearest -strategy=dispatch<cr>", {desc="test nearest"})
 vim.keymap.set("n", "<leader>ctl", ":TestLast -strategy=dispatch<cr>", {desc="test last"})
 vim.keymap.set("n", "<leader>cta", ":TestSuite -strategy=dispatch<cr>", {desc="test all"})
+vim.keymap.set("n", "<leader>ctp", "<cmd>lua test_output_in_popup()<cr>", {desc="test output in popup"})
 
+-- QUICKFIX
 require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})
 vim.keymap.set("n", "<leader>cqs", ":lua select_current_qf(false)<cr>", {desc="quickfix select current"})
 vim.keymap.set("n", "<leader>cqv", ":lua select_current_qf(true)<cr>", {desc="quickfix view & select current"})
 
+-- LSP
 require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
 vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})

@@ -150,6 +150,59 @@ function _G.select_current_qf(also_print)
     end
 end
 
+-- when running tests, i have the output in quickfix and in a terminal buffer
+-- thanks to my fork of dispatch-neovim. When the cursor is on top of a line
+-- with a failing test, open a popup centered on the relevant line in the text
+-- output.
+function _G.test_output_in_popup()
+  -- collect the quickfix text for this line so i can search for it in the popup
+  local qf_entries = vim.fn.getqflist()
+  local i = 1
+  local text = nil
+  while qf_entries[i] do
+    local qf_entry = qf_entries[i]
+    if qf_entry.lnum == vim.fn.line('.') and qf_entry.bufnr == vim.fn.bufnr() then
+      text = qf_entry.text
+      break
+    end
+    i = i+1
+  end
+  -- is there a terminal to embed?
+  if vim.g.test_term_buf_id ~= nil and vim.fn.bufexists(vim.g.test_term_buf_id) == 1 then
+    -- yes, work on positioning the popup
+    local current_top_line = vim.fn.line('w0')
+    local current_bottom_line = vim.fn.line('w$')
+    local current_line = vim.fn.line('.')
+    local anchor = "NW"
+    if current_line - current_top_line > current_bottom_line - current_line then
+      -- we're closer to the bottom of the screen than to the top...
+      anchor = "SW"
+    end
+    local opts = {
+      focusable = true,
+      style = "minimal",
+      border = "rounded",
+      relative = "cursor",
+      width = 120,
+      height = 20,
+      anchor = anchor,
+      row = 2,
+      col = 30,
+    }
+
+    vim.b.popup_win = vim.api.nvim_open_win(vim.g.test_term_buf_id, false, opts)
+    -- set the focus to the popup, add shortcuts to close it
+    vim.api.nvim_set_current_win(vim.b.popup_win)
+    vim.cmd("nmap <buffer> q <C-W>c")
+    vim.cmd("nmap <buffer> <Esc> <C-W>c")
+    if text ~= nil then
+      -- search for the text, zz to center, select the line
+      vim.fn.feedkeys("/" .. text:gsub('/', '.') .. "\rzz")
+      -- vim.cmd("match Search /\%'.line('.').'l/'")
+    end
+  end
+end
+
 function is_diff_line(line_no)
     -- https://www.reddit.com/r/vim/comments/k2r7b/how_do_i_execute_a_command_on_all_differences_in/c2hee5z/
     -- https://stackoverflow.com/a/20010859/516188

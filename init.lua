@@ -96,7 +96,7 @@ require('packer').startup(function(use)
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
   use { "hrsh7th/cmp-buffer", commit = "12463cfcd9b14052f9effccbf1d84caa7a2d57f0" }
   use { "hrsh7th/cmp-path", commit = "466b6b8270f7ba89abd59f402c73f63c7331ff6e" }
-  use {'emmanueltouzery/doom-one.nvim', commit='f1f846f3ea995263877215d1498734656e1d999c', config = function()
+  use {'emmanueltouzery/doom-one.nvim', commit='af905579e85bf9c67efe5394af8949f07037825b', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
       diagnostics_color_text = false,

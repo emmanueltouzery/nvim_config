@@ -226,6 +226,34 @@ function _G.test_output_in_popup()
   end
 end
 
+-- when running tests, i have the output in quickfix and in a terminal buffer
+-- thanks to my fork of dispatch-neovim. When the cursor is on top of a line
+-- with a failing test, open the text output in the current window.
+function _G.test_output_open()
+  -- collect the quickfix text for this line so i can search for it in the popup
+  local qf_entries = vim.fn.getqflist()
+  local i = 1
+  local text = nil
+  while qf_entries[i] do
+    local qf_entry = qf_entries[i]
+    if qf_entry.lnum == vim.fn.line('.') and qf_entry.bufnr == vim.fn.bufnr() then
+      text = qf_entry.text
+      break
+    end
+    i = i+1
+  end
+  -- is there a terminal to embed?
+  if vim.g.test_term_buf_id ~= nil and vim.fn.bufexists(vim.g.test_term_buf_id) == 1 then
+    -- yes, open the buffer in the current window
+    vim.cmd(":b" .. vim.g.test_term_buf_id)
+    if text ~= nil then
+      -- search for the text, zz to center, select the line
+      vim.fn.feedkeys("/" .. text:gsub('/', '.') .. "\rzz")
+      -- vim.cmd("match Search /\%'.line('.').'l/'")
+    end
+  end
+end
+
 function is_diff_line(line_no)
     -- https://www.reddit.com/r/vim/comments/k2r7b/how_do_i_execute_a_command_on_all_differences_in/c2hee5z/
     -- https://stackoverflow.com/a/20010859/516188

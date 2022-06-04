@@ -113,6 +113,7 @@ vim.keymap.set("n", "<leader>ctn", ":TestNearest -strategy=dispatch<cr>", {desc=
 vim.keymap.set("n", "<leader>ctl", ":TestLast -strategy=dispatch<cr>", {desc="test last"})
 vim.keymap.set("n", "<leader>cta", ":TestSuite -strategy=dispatch<cr>", {desc="test all"})
 vim.keymap.set("n", "<leader>ctp", "<cmd>lua test_output_in_popup()<cr>", {desc="test output in popup"})
+vim.keymap.set("n", "<leader>cto", "<cmd>lua test_output_open()<cr>", {desc="open test output"})
 
 -- QUICKFIX
 require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})

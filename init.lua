@@ -66,7 +66,8 @@ require('packer').startup(function(use)
   use {'nvim-treesitter/nvim-treesitter', commit='3dea0bbf71438d2d5a79de0145b509dfb16525a5', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-      ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown","elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex" },
+      ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown",
+        "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx" },
       highlight = { enable = true },
       autopairs = {
         enable = true,

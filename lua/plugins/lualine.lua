@@ -72,6 +72,44 @@ local function scroll_indicator()
   end
 end
 
+-- -- https://www.reddit.com/r/neovim/comments/uy3lnh/how_can_i_display_lsp_loading_in_my_statusline/
+-- -- alternative: https://github.com/arkav/lualine-lsp-progress
+-- function lsp_progress()
+--   print("call " .. vim.loop.hrtime())
+--   progress_per_name = {}
+--   for _, lsp in ipairs(vim.lsp.util.get_progress_messages()) do
+--     local name = lsp.name or ""
+--     local percentage = lsp.percentage or 0
+--     local existing = progress_per_name[name]
+--     if existing == nil or percentage < existing then
+--       progress_per_name[name] = percentage
+--     end
+--   end
+--   local msg = ""
+--   for name, percentage in pairs(progress_per_name) do
+--     if percentage < 100 then -- don't want it to keep displaying 100% when it's done
+--       msg = msg .. " " .. string.format("%%<%s: %s%%%%", name, percentage)
+--     end
+--   end
+--   if strings.strdisplaywidth(msg) > 0 then
+--     local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+--     local ms = vim.loop.hrtime() / 1000000
+--     local frame = math.floor(ms / 120) % #spinners
+--     return "ﮒ " .. spinners[frame + 1] .. msg -- ﬥ
+--   end
+--   return ""
+-- end
+--   -- local lsp = vim.lsp.util.get_progress_messages()[1]
+--   -- if lsp then
+--   --   local name = lsp.name or ""
+--   --   local msg = lsp.message or ""
+--   --   local percentage = lsp.percentage or 0
+--   --   local title = lsp.title or ""
+--   --   -- return string.format(" %%<%s: %s %s (%s%%%%) ", name, title, msg, percentage)
+--   --   return string.format("ﮒ %%<%s: %s%%%%", name, percentage) -- ﬥ
+--   -- end
+--   -- return lsp.name
+
 local lualine = require('lualine')
 if lualine then
   lualine.setup {
@@ -102,7 +140,14 @@ if lualine then
       -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
       -- don't color the filetype icon, else it's not always visible with the 'nord' theme.
       lualine_x = { 'filesize', {'filetype', colored = false, icon_only = true}},
-      lualine_y = {'progress', scroll_indicator},
+      lualine_y = {'progress', scroll_indicator, {
+        'lsp_progress', 
+        display_components = { 
+          -- 'spinner', 'lsp_client_name', {'percentage'},
+          'spinner', 'lsp_client_name',
+        },
+        spinner_symbols = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+      }},
       -- lualine_z = {'location'}
       lualine_z = {
         { 'location', separator = { right = '' }, left_padding = 2 },

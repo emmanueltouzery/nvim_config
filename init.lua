@@ -192,9 +192,7 @@ use {'ruifm/gitlinker.nvim', commit='ff33d07', config = function()
     mappings = "<leader>gy"
   })
 end}
-use {'j-hui/fidget.nvim', commit='37d536bbbee47222ddfeca0e8186e8ee6884f9a2', config= function()
-  require"fidget".setup{}
-end}
+use {'arkav/lualine-lsp-progress', commit='56842d097245a08d77912edf5f2a69ba29f275d7'}
 use {'stevearc/dressing.nvim', commit='55e4ceae81d9169f46ea4452ce6e8c58cca00651', config=function()
   require('dressing').setup({
     input = {

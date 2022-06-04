@@ -94,11 +94,11 @@ vim.keymap.set("n", "<leader>gR", '<cmd>lua require"gitsigns".reset_buffer()<CR>
 vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame line"})
 vim.keymap.set("n", "<leader>gr", '<cmd>lua require"telescope.builtin".git_branches{}<CR>', {desc="git bRanches"})
 
-require 'key-menu'.set('n', '<Space>gh', {desc='Hunk'})
-vim.keymap.set("n", "<leader>ghS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})
-vim.keymap.set("n", "<leader>ghu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
-vim.keymap.set("n", "<leader>ghr", '<cmd>lua require"gitsigns".reset_hunk()<CR>', {desc="reset hunk"})
-vim.keymap.set("n", "<leader>ghh", '<cmd>lua require"gitsigns".preview_hunk()<CR>', {desc="preview hunk"})
+require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
+vim.keymap.set("n", "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})
+vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
+vim.keymap.set("n", "<leader>hr", '<cmd>lua require"gitsigns".reset_hunk()<CR>', {desc="reset hunk"})
+vim.keymap.set("n", "<leader>hh", '<cmd>lua require"gitsigns".preview_hunk()<CR>', {desc="preview hunk"})
 
 -- CODE
 require 'key-menu'.set('n', '<Space>c', {desc='Code'})

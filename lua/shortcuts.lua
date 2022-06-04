@@ -1,12 +1,13 @@
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {desc = "Jump to definition"})
-vim.keymap.set('n', 'čp', '<Cmd>:cp<CR>', {desc="Next quickfix"})
-vim.keymap.set('n', 'čn', '<Cmd>:cn<CR>', {desc="Previous quickfix"})
-vim.keymap.set('n', 'ćp', '<Cmd>lua require("gitsigns").prev_hunk()<CR>', {desc="Next git hunk"})
-vim.keymap.set('n', 'ćn', '<Cmd>lua require("gitsigns").next_hunk()<CR>', {desc="Previous git hunk"})
-vim.keymap.set('n', 'žp', '[c', {desc="Previous diff hunk"}) -- :h jumpto-diffs diffs+diffview.nvim
-vim.keymap.set('n', 'žn', ']c', {desc="Next diff hunk"})
-vim.keymap.set('n', 'šp', '<Cmd>lua vim.diagnostic.goto_prev()<CR>', {desc="Previous diagnostic"})
-vim.keymap.set('n', 'šn', '<Cmd>lua vim.diagnostic.goto_next()<CR>', {desc="Next diagnostic"})
+
+vim.keymap.set('n', 'šq', '<Cmd>:cp<CR>', {desc="Next quickfix"})
+vim.keymap.set('n', 'đq', '<Cmd>:cn<CR>', {desc="Previous quickfix"})
+vim.keymap.set('n', 'šh', '<Cmd>lua require("gitsigns").prev_hunk()<CR>', {desc="Next git hunk"})
+vim.keymap.set('n', 'đh', '<Cmd>lua require("gitsigns").next_hunk()<CR>', {desc="Previous git hunk"})
+vim.keymap.set('n', 'šd', '[c', {desc="Previous diff hunk"}) -- :h jumpto-diffs diffs+diffview.nvim
+vim.keymap.set('n', 'đd', ']c', {desc="Next diff hunk"})
+vim.keymap.set('n', 'šg', '<Cmd>lua vim.diagnostic.goto_prev()<CR>', {desc="Previous diagnostic"})
+vim.keymap.set('n', 'đg', '<Cmd>lua vim.diagnostic.goto_next()<CR>', {desc="Next diagnostic"})
 vim.keymap.set('n', '-', '<Cmd>ChooseWin<CR>', {desc="Choose win"})
 vim.keymap.set( "n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})
 vim.keymap.set( "n", "<C-p>", ":lua vim.diagnostic.goto_prev()<CR>", {desc="Jump to previous diagnostic"})

@@ -522,4 +522,7 @@ vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
 
+-- return to the line we were the last time we opened this file
+vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]])
+
 -- vim: ts=2 sts=2 sw=2 et

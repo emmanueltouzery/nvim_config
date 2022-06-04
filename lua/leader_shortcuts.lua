@@ -126,3 +126,7 @@ vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {de
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
 vim.keymap.set("n", "<leader>clf", ":TroubleToggle lsp_references<cr>", {desc="Toggle lsp references"})
+
+-- MARKS
+require 'key-menu'.set('n', '<Space>m', {desc='Marks'})
+vim.keymap.set("n", "<leader>ma", ":lua add_global_mark()<cr>", {desc="Add mark"})

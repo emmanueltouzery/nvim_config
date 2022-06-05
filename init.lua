@@ -444,7 +444,7 @@ vim.opt.fillchars = vim.opt.fillchars + 'diff:╱,stl: '
 vim.o.relativenumber = true
 vim.opt.cursorline = true -- highlight the current line number
 vim.opt.clipboard = "unnamedplus"
-vim.opt.timeoutlen = 500 -- allow considerably more time to enter shortcuts
+-- vim.opt.timeoutlen = 500 -- allow considerably more time to enter shortcuts
 
 require("plugins.lualine")
 require("plugins.cmp")

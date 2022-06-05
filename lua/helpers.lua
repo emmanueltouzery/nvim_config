@@ -277,8 +277,21 @@ function diff_get_start_end_line()
 end
 
 function diffget_and_keep(put_after)
+    -- go to the start of my diff. if lines were deleted and the
+    -- the matching diff on the other side is shorter, i must go
+    -- to the start of my diff to really end up in the other diff
+    -- otherwise i end up AFTER the matching area on the right.
+    local startline_here, endline_here = diff_get_start_end_line()
+    vim.cmd(":" .. startline_here)
+
     -- switch to other window
     vim.cmd('wincmd l')
+    if not is_diff_line(vim.fn.line(".")) then
+      -- i ended up on a non-diff line on the other side
+      -- that can't be right, work around, assume the real
+      -- one is the previous line
+      vim.cmd(":" .. (vim.fn.line('.')-1))
+    end
     local startline_other, endline_other = diff_get_start_end_line()
     -- go to the start line of the hunk to simplify things
     -- vim.fn.feedkeys(startline .. 'G')
@@ -287,8 +300,6 @@ function diffget_and_keep(put_after)
 
     -- back to where i was
     vim.cmd('wincmd h')
-
-    local startline_here, endline_here = diff_get_start_end_line()
 
     if put_after then
         -- to paste after, we must move to the end of the block

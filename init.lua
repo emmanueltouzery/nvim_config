@@ -505,8 +505,14 @@ vim.cmd('autocmd FileType NeogitStatus setlocal nospell')
 vim.cmd("set spelllang=en,sl")
 -- https://vi.stackexchange.com/a/4003/38754
 -- don't spellcheck URLs in markdown files and similar
-vim.cmd([[autocmd FileType markdown syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])
 vim.cmd([[autocmd FileType NeogitCommitMessage syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])
+-- ignore words shorter than 4 (helps with short variables in code)
+-- http://www.panozzaj.com/blog/2016/03/21/ignore-urls-and-acroynms-while-spell-checking-vim/
+-- word 1 to 4 characters longs (typically variable name)
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
+-- word 1 to 4 characters longs (typically variable name), leading underscore
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
 
 -- word-wrapping in markdown files
 vim.cmd('autocmd FileType markdown setlocal wrap linebreak')

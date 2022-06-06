@@ -114,162 +114,162 @@ require('packer').startup(function(use)
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
   use {'sindrets/diffview.nvim', commit='08e4340f690d0b611a393eafb633b2fb62f78601',
-  config = function()
-    local actions = require("diffview.config").actions
-    require('diffview').setup {
-      keymaps = {
-        file_panel = {
-          ["-"] = false, -- i want this shortcut for choosewin
-          ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+    config = function()
+      local actions = require("diffview.config").actions
+      require('diffview').setup {
+        keymaps = {
+          file_panel = {
+            ["-"] = false, -- i want this shortcut for choosewin
+            ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+          }
         }
       }
-    }
-    require('diffview').init()
-  end
-}
-use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
-use {'emmanueltouzery/agitator.nvim', commit='7ceffd71ad3b58409b95fa0d0678bc349fb14abc'}
-use {'nvim-telescope/telescope-project.nvim', commit='d317c3cef6917d650d9a638c627b54d3e1173031'}
--- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
--- drop s and S due to lightspeed
-use {'maxbrunsfeld/vim-yankstack', commit='157a659c1b101c899935d961774fb5c8f0775370', config= function()
-  vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y']") 
-end} -- considered https://github.com/AckslD/nvim-neoclip.lua too
-use {'emmanueltouzery/vim-elixir', commit='735528cecc19ecffa002ffa20176e9984cced970'}
-use {'ellisonleao/glow.nvim', commit='c6685381d31df262b776775b9f4252f6c7fa98d0'}
-use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
-use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
-use {'lifepillar/vim-cheat40', commit='ae237b02f9031bc82a8ad9202bffee2bcef71ed1'}
-use {'ggandor/lightspeed.nvim', Commit='c5b93fc1d76a708cb698417326e04f4786a38d90', config = function()
-  require'lightspeed'.setup {
-    ignore_case = true,
+      require('diffview').init()
+    end
   }
-  vim.api.nvim_set_keymap('n', 's', '<Plug>Lightspeed_s', {silent = true})
-  vim.api.nvim_set_keymap('n', 'S', '<Plug>Lightspeed_S', {silent = true})
-end}
-use {'samoshkin/vim-mergetool', commit='0275a85256ad173e3cde586d54f66566c01b607f'}
-use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
-use {'vim-test/vim-test', commit='56bbfa295fe62123d2ebe8ed57dd002afab46097'}
--- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
-use {'dhruvasagar/vim-markify', commit='14158865c0f37a02a5d6d738437eb00a821b31ef', config = function()
-  vim.g.markify_error_text = ""
-  vim.g.markify_warning_text = ""
-  vim.g.markify_info_text = ""
-  vim.g.markify_info_texthl = "Todo"
-end}
-use {'jose-elias-alvarez/null-ls.nvim', commit='af192263b33764fa91d3fa578abd9e674a1984c7', config = function()
+  use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
+  use {'emmanueltouzery/agitator.nvim', commit='7ceffd71ad3b58409b95fa0d0678bc349fb14abc'}
+  use {'nvim-telescope/telescope-project.nvim', commit='d317c3cef6917d650d9a638c627b54d3e1173031'}
+  -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
+  -- drop s and S due to lightspeed
+  use {'maxbrunsfeld/vim-yankstack', commit='157a659c1b101c899935d961774fb5c8f0775370', config= function()
+    vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y']") 
+  end} -- considered https://github.com/AckslD/nvim-neoclip.lua too
+  use {'emmanueltouzery/vim-elixir', commit='735528cecc19ecffa002ffa20176e9984cced970'}
+  use {'ellisonleao/glow.nvim', commit='c6685381d31df262b776775b9f4252f6c7fa98d0'}
+  use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
+  use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
+  use {'lifepillar/vim-cheat40', commit='ae237b02f9031bc82a8ad9202bffee2bcef71ed1'}
+  use {'ggandor/lightspeed.nvim', Commit='c5b93fc1d76a708cb698417326e04f4786a38d90', config = function()
+    require'lightspeed'.setup {
+      ignore_case = true,
+    }
+    vim.api.nvim_set_keymap('n', 's', '<Plug>Lightspeed_s', {silent = true})
+    vim.api.nvim_set_keymap('n', 'S', '<Plug>Lightspeed_S', {silent = true})
+  end}
+  use {'samoshkin/vim-mergetool', commit='0275a85256ad173e3cde586d54f66566c01b607f'}
+  use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
+  use {'vim-test/vim-test', commit='56bbfa295fe62123d2ebe8ed57dd002afab46097'}
+  -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
+  use {'dhruvasagar/vim-markify', commit='14158865c0f37a02a5d6d738437eb00a821b31ef', config = function()
+    vim.g.markify_error_text = ""
+    vim.g.markify_warning_text = ""
+    vim.g.markify_info_text = ""
+    vim.g.markify_info_texthl = "Todo"
+  end}
+  use {'jose-elias-alvarez/null-ls.nvim', commit='af192263b33764fa91d3fa578abd9e674a1984c7', config = function()
 
-  require("null-ls").setup({
-    sources = {
-      -- require("null-ls").builtins.formatting.stylua,
-      require("null-ls").builtins.diagnostics.eslint,
-      require("null-ls").builtins.diagnostics.credo,
-      -- require("null-ls").builtins.completion.spell,
-      require("null-ls").builtins.formatting.prettier,
-      -- null_ls.builtins.formatting.mix,
-    },
-  })
-end,
-requires = {"nvim-lua/plenary.nvim", "neovim/nvim-lspconfig"} }
-use {'ruifm/gitlinker.nvim', commit='ff33d07', config = function()
-  require"gitlinker".setup({
-    opts = {
-      action_callback = function(url)
-        local human_readable_url = ''
-        if vim.fn.mode() == 'n' then
-          human_readable_url = _G.get_file_line()
-        else
-          human_readable_url = _G.get_file_line_sel()
-        end
-
-        vim.api.nvim_command('let @+ = \'' .. human_readable_url .. ' ' .. url .. '\'')
-      end,
-    },
-    callbacks = {
-      ["gitlab.*"] = require"gitlinker.hosts".get_gitlab_type_url
-    },
-    -- default mapping to call url generation with action_callback
-    mappings = "<leader>gy"
-  })
-end}
-use {'arkav/lualine-lsp-progress', commit='56842d097245a08d77912edf5f2a69ba29f275d7'}
-use {'stevearc/dressing.nvim', commit='55e4ceae81d9169f46ea4452ce6e8c58cca00651', config=function()
-  require('dressing').setup({
-    input = {
-      -- ESC won't close the modal, ability to use vim keys
-      insert_only = false,
-    }
-  })
-end}
-use {
-  "williamboman/nvim-lsp-installer",
-  commit = "b70099151c401014b875e3a375c751714fdd4144",
-  config = function()
-    require("nvim-lsp-installer").setup {
-      automatic_installation = true,
-    }
-    local lspconfig = require("lspconfig")
-    lspconfig.tsserver.setup {
-      on_attach = function(client)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
-      end,
-    }
-    lspconfig.rust_analyzer.setup {}
-    lspconfig.elixirls.setup {}
-    lspconfig.bashls.setup {}
+    require("null-ls").setup({
+      sources = {
+        -- require("null-ls").builtins.formatting.stylua,
+        require("null-ls").builtins.diagnostics.eslint,
+        require("null-ls").builtins.diagnostics.credo,
+        -- require("null-ls").builtins.completion.spell,
+        require("null-ls").builtins.formatting.prettier,
+        -- null_ls.builtins.formatting.mix,
+      },
+    })
   end,
-  after = "nvim-lspconfig",
-}
-use {'linty-org/key-menu.nvim', commit='14afd14d73488118c1cf8419e01f9353351f7bdb'}
-use {'lambdalisue/suda.vim', commit='6bffe36862faa601d2de7e54f6e85c1435e832d0'}
-use {'akinsho/toggleterm.nvim', commit='c525442a03b7bb229c48874abf53168eb38c5b9b', config = function()
-  require("toggleterm").setup{
-    direction = 'float',
-    float_opts = {
-      width = 140,
-      height = 45,
+    requires = {"nvim-lua/plenary.nvim", "neovim/nvim-lspconfig"} }
+  use {'ruifm/gitlinker.nvim', commit='ff33d07', config = function()
+    require"gitlinker".setup({
+      opts = {
+        action_callback = function(url)
+          local human_readable_url = ''
+          if vim.fn.mode() == 'n' then
+            human_readable_url = _G.get_file_line()
+          else
+            human_readable_url = _G.get_file_line_sel()
+          end
+
+          vim.api.nvim_command('let @+ = \'' .. human_readable_url .. ' ' .. url .. '\'')
+        end,
+      },
+callbacks = {
+        ["gitlab.*"] = require"gitlinker.hosts".get_gitlab_type_url
+      },
+      -- default mapping to call url generation with action_callback
+      mappings = "<leader>gy"
+    })
+  end}
+  use {'arkav/lualine-lsp-progress', commit='56842d097245a08d77912edf5f2a69ba29f275d7'}
+  use {'stevearc/dressing.nvim', commit='55e4ceae81d9169f46ea4452ce6e8c58cca00651', config=function()
+    require('dressing').setup({
+      input = {
+        -- ESC won't close the modal, ability to use vim keys
+        insert_only = false,
+      }
+    })
+  end}
+  use {
+    "williamboman/nvim-lsp-installer",
+    commit = "b70099151c401014b875e3a375c751714fdd4144",
+    config = function()
+      require("nvim-lsp-installer").setup {
+        automatic_installation = true,
+      }
+      local lspconfig = require("lspconfig")
+      lspconfig.tsserver.setup {
+        on_attach = function(client)
+          client.resolved_capabilities.document_formatting = false
+          client.resolved_capabilities.document_range_formatting = false
+        end,
+      }
+      lspconfig.rust_analyzer.setup {}
+      lspconfig.elixirls.setup {}
+      lspconfig.bashls.setup {}
+    end,
+    after = "nvim-lspconfig",
+  }
+  use {'linty-org/key-menu.nvim', commit='14afd14d73488118c1cf8419e01f9353351f7bdb'}
+  use {'lambdalisue/suda.vim', commit='6bffe36862faa601d2de7e54f6e85c1435e832d0'}
+  use {'akinsho/toggleterm.nvim', commit='c525442a03b7bb229c48874abf53168eb38c5b9b', config = function()
+    require("toggleterm").setup{
+      direction = 'float',
+      float_opts = {
+        width = 140,
+        height = 45,
+      }
     }
-  }
-  function _G.set_terminal_keymaps()
-    local opts = {noremap = true}
-    vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
-  end
-  -- if you only want these mappings for toggle term use term://*toggleterm#* instead
-  vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-end}
-use {'simrat39/symbols-outline.nvim', commit='15ae99c27360ab42e931be127d130611375307d5'}
-use {'TimUntersberger/neogit', commit='1453acd27c38fb4374093bc5c2c85dd1fc03d689', config = function()
-  require('neogit') .setup {
-    -- disable_context_highlighting = true,
-    signs = {
-      -- { CLOSED, OPENED }
-      section = { "▶", "▼" },
-      item = { "▶", "▼" },
-      hunk = { "", "" },
+    function _G.set_terminal_keymaps()
+      local opts = {noremap = true}
+      vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
+    end
+    -- if you only want these mappings for toggle term use term://*toggleterm#* instead
+    vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+  end}
+  use {'simrat39/symbols-outline.nvim', commit='15ae99c27360ab42e931be127d130611375307d5'}
+  use {'TimUntersberger/neogit', commit='1453acd27c38fb4374093bc5c2c85dd1fc03d689', config = function()
+    require('neogit') .setup {
+      -- disable_context_highlighting = true,
+      signs = {
+        -- { CLOSED, OPENED }
+        section = { "▶", "▼" },
+        item = { "▶", "▼" },
+        hunk = { "", "" },
+      }
     }
+  end}
+  use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5', config = function()
+    require("trouble").setup {
+      auto_preview = false -- partly hoping it'll fix some errors https://github.com/folke/trouble.nvim/issues/125#issuecomment-1023980225
+    }
+  end}
+  use {
+    'kyazdani42/nvim-tree.lua', commit='3806653d750cea567428ebc6014038da108d56bb',
+    requires = { 'kyazdani42/nvim-web-devicons', },
+    -- for some reason must call init outside of the config block, elsewhere
+    -- config = function() require'nvim-tree'.setup {} end
   }
-end}
-use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5', config = function()
-  require("trouble").setup {
-    auto_preview = false -- partly hoping it'll fix some errors https://github.com/folke/trouble.nvim/issues/125#issuecomment-1023980225
-  }
-end}
-use {
-  'kyazdani42/nvim-tree.lua', commit='3806653d750cea567428ebc6014038da108d56bb',
-  requires = { 'kyazdani42/nvim-web-devicons', },
-  -- for some reason must call init outside of the config block, elsewhere
-  -- config = function() require'nvim-tree'.setup {} end
-}
-use {"b3nj5m1n/kommentary", commit='533d768a140b248443da8346b88e88db704212ab', config = function()
-  require('kommentary.config')
-  .configure_language("default", {
-    prefer_single_line_comments = true,
-  })
-end}
-use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400e'
--- https://github.com/folke/todo-comments.nvim/issues/93 https://github.com/folke/todo-comments.nvim/issues/99
--- can't put the config inline, causes weird issues
+  use {"b3nj5m1n/kommentary", commit='533d768a140b248443da8346b88e88db704212ab', config = function()
+    require('kommentary.config')
+    .configure_language("default", {
+      prefer_single_line_comments = true,
+    })
+  end}
+  use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400e'
+    -- https://github.com/folke/todo-comments.nvim/issues/93 https://github.com/folke/todo-comments.nvim/issues/99
+    -- can't put the config inline, causes weird issues
   }
   use {"windwp/nvim-autopairs", commit='b9cc0a26f3b5610ce772004e1efd452b10b36bc9', config=function()
     require("nvim-autopairs").setup({

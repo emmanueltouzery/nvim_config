@@ -178,6 +178,13 @@ end
 -- with a failing test, open a popup centered on the relevant line in the text
 -- output.
 function _G.test_output_in_popup()
+  -- if a popup is already open, close it and exit
+  if vim.b.popup_win ~= nil and vim.api.nvim_win_is_valid(vim.b.popup_win) then
+    vim.api.nvim_win_close(vim.b.popup_win, true)
+    vim.b.popup_win = nil
+    return
+  end
+
   -- collect the quickfix text for this line so i can search for it in the popup
   local qf_entries = vim.fn.getqflist()
   local i = 1

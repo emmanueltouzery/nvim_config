@@ -517,6 +517,10 @@ vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\
 -- word-wrapping in markdown files
 vim.cmd('autocmd FileType markdown setlocal wrap linebreak')
 
+-- check if file changed outside of vim on focus
+-- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
+vim.cmd([[autocmd FocusGained * if mode() != 'c' | checktime | endif]])
+
 -- visible tab
 -- https://www.reddit.com/r/vim/comments/4hoa6e/what_do_you_use_for_your_listchars/
 vim.cmd("set list")

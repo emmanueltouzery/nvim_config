@@ -52,6 +52,7 @@ vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (
 vim.keymap.set("n", "<leader>ob", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>", {desc="Open file browser"})
 vim.keymap.set("n", "<leader>om", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
 vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}<CR>", {desc="Open keyboard shortcuts"})
+vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

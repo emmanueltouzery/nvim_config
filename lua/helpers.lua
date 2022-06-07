@@ -390,4 +390,48 @@ function _G.add_global_mark()
   print("All marks are used up!")
 end
 
+function _G.handleFileChanged()
+  -- position the popup bottom-right of the window
+  local width = vim.fn.winwidth(0)
+  local height = vim.fn.winheight(0)
+
+  local popup_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
+  vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
+
+  local opts = {
+    focusable = false,
+    style = "minimal",
+    border = "rounded",
+    relative = "win",
+    width = 55,
+    height = 5,
+    anchor = "SE",
+    row = height,
+    col = width,
+  }
+
+  local popup_win = vim.api.nvim_open_win(popup_buf, false, opts)
+
+  local reasonDesc = "because there was a conflict"
+  if vim.v.fcs_reason == "deleted" then
+    reasonDesc = "because it was deleted"
+  end
+
+  local lines = {
+    "WARNING", 
+    "The file for this buffer was edited elsewhere", 
+    "Cannot update the file automatically",
+    reasonDesc,
+    "Reload the file with :e! or force write it with :w!"
+  }
+  vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, lines)
+
+  vim.api.nvim_buf_add_highlight(popup_buf, -1, "Identifier", 0, 0, -1);
+  vim.api.nvim_buf_add_highlight(popup_buf, -1, "PreProc", 1, 0, -1);
+  vim.defer_fn(function()
+    vim.api.nvim_win_close(popup_win, true)
+  end, 5000)  
+end
+
 -- vim: ts=2 sts=2 sw=2 et

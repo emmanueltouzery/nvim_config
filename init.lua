@@ -532,6 +532,23 @@ vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
 
+-- I REALLY dislike the builtin vim blocking workflow when a file is edited
+-- on disk and there is a conflict. Implement a non-blocking popup
+vim.cmd([[
+function! ProcessFileChangedShell()
+  if v:fcs_reason == 'mode' || v:fcs_reason == 'time'
+    let v:fcs_choice = ''
+  elseif v:fcs_reason == 'changed'
+    let v:fcs_choice = 'reload'
+  else
+    " deleted or conflict
+    lua handleFileChanged()
+    let v:fcs_choice = ''
+  endif
+endfunction
+autocmd FileChangedShell * call ProcessFileChangedShell()
+]])
+
 -- return to the line we were the last time we opened this file
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]])
 

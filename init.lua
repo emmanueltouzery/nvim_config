@@ -96,6 +96,10 @@ require('packer').startup(function(use)
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
   use { "hrsh7th/cmp-buffer", commit = "12463cfcd9b14052f9effccbf1d84caa7a2d57f0" }
   use { "hrsh7th/cmp-path", commit = "466b6b8270f7ba89abd59f402c73f63c7331ff6e" }
+  -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
+  use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
+  -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
+  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '8014f6d120f72fe0a135025c4d41e3fe41fd411b'}
   use {'emmanueltouzery/doom-one.nvim', commit='af905579e85bf9c67efe5394af8949f07037825b', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
@@ -319,8 +323,6 @@ callbacks = {
     dashboard.config.opts.noautocmd = true
     alpha.setup(dashboard.config)
   end}
-  -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
-  use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
   use {'akinsho/bufferline.nvim', commit = 'e2b1e99deb077bf49f8e167d1320292e66b22477'}
   use {'emmanueltouzery/vim-dispatch-neovim', commit='72d8fb41aade2968a3786abd74c0936b599466d8'}

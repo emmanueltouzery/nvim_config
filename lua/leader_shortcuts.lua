@@ -120,6 +120,7 @@ vim.keymap.set("n", "<leader>cto", "<cmd>lua test_output_open()<cr>", {desc="ope
 require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})
 vim.keymap.set("n", "<leader>cqs", ":lua select_current_qf(false)<cr>", {desc="quickfix select current"})
 vim.keymap.set("n", "<leader>cqv", ":lua select_current_qf(true)<cr>", {desc="quickfix view & select current"})
+vim.keymap.set("n", "<leader>cqb", ":cbottom<cr>", {desc="quickfix go to bottom"})
 
 -- LSP
 require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})

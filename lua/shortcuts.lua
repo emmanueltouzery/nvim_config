@@ -8,6 +8,9 @@ vim.keymap.set('n', 'šd', '[c', {desc="Previous diff hunk"}) -- :h jumpto-diffs
 vim.keymap.set('n', 'đd', ']c', {desc="Next diff hunk"})
 vim.keymap.set('n', 'šg', '<Cmd>lua vim.diagnostic.goto_prev()<CR>', {desc="Previous diagnostic"})
 vim.keymap.set('n', 'đg', '<Cmd>lua vim.diagnostic.goto_next()<CR>', {desc="Next diagnostic"})
+vim.keymap.set('n', 'đs', ']S', {desc="Next misspelled word"})
+vim.keymap.set('n', 'šs', '[S', {desc="Previous misspelled word"})
+
 vim.keymap.set('n', '-', '<Cmd>ChooseWin<CR>', {desc="Choose win"})
 vim.keymap.set( "n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})
 vim.keymap.set( "n", "<C-p>", ":lua vim.diagnostic.goto_prev()<CR>", {desc="Jump to previous diagnostic"})

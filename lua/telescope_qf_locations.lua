@@ -60,7 +60,10 @@ _G.telescope_quickfix_locations = function(opts)
 
   local locations = {}
   for _, loc in ipairs(all_locations) do
-    if loc.lnum >= 1 then
+    local filename = loc.filename or vim.api.nvim_buf_get_name(loc.bufnr)
+    -- the lnum > 1 is a heuristic: in general things at the first line are useless.
+    -- consider maybe changing to >=1, to be seen
+    if loc.lnum > 1 and vim.fn.filereadable(filename) == 1 then
       table.insert(locations, loc)
     end
   end

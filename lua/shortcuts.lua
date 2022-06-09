@@ -10,6 +10,8 @@ vim.keymap.set('n', 'šg', '<Cmd>lua vim.diagnostic.goto_prev()<CR>', {desc="Pre
 vim.keymap.set('n', 'đg', '<Cmd>lua vim.diagnostic.goto_next()<CR>', {desc="Next diagnostic"})
 vim.keymap.set('n', 'đs', ']S', {desc="Next misspelled word"})
 vim.keymap.set('n', 'šs', '[S', {desc="Previous misspelled word"})
+vim.keymap.set('n', 'đq', '<cmd>lua next_quickfix()<cr>', {desc="Next quickfix location"})
+vim.keymap.set('n', 'šq', '<cmd>lua previous_quickfix()<cr>', {desc="Previous quickfix location"})
 
 vim.keymap.set('n', '-', '<Cmd>ChooseWin<CR>', {desc="Choose win"})
 vim.keymap.set( "n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})

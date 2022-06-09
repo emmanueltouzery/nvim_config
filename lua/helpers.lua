@@ -434,4 +434,87 @@ function _G.handleFileChanged()
   end, 5000)  
 end
 
+function _G.get_qf_locations(opts)
+  local qf_identifier = opts.id or vim.F.if_nil(opts.nr, "$")
+  local all_locations = vim.fn.getqflist({ [opts.id and "id" or "nr"] = qf_identifier, items = true }).items
+  local locations = {}
+  for _, loc in ipairs(all_locations) do
+    local filename = loc.filename or vim.api.nvim_buf_get_name(loc.bufnr)
+    -- the lnum > 1 is a heuristic: in general things at the first line are useless.
+    -- consider maybe changing to >=1, to be seen
+    if loc.lnum > 1 and vim.fn.filereadable(filename) == 1 then
+      table.insert(locations, loc)
+    end
+  end
+  return locations
+end
+
+function get_sorted_qf_locations()
+  local locations = _G.get_qf_locations({})
+
+  if vim.tbl_isempty(locations) then
+    return
+  end
+  table.sort(locations, function(a,b) 
+    local a_filename = a.filename or vim.api.nvim_buf_get_name(a.bufnr)
+    local b_filename = b.filename or vim.api.nvim_buf_get_name(b.bufnr)
+    if a_filename < b_filename then
+      return true
+    end
+    if a_filename > b_filename then
+      return false
+    end
+    -- same file
+    return a.lnum < b.lnum
+  end)
+  return locations
+end
+
+function _G.next_quickfix()
+  local sorted_qf_locations = get_sorted_qf_locations()
+
+  -- find the first record for my filename
+  local fname = vim.fn.expand('%:p')
+  local lnum = vim.fn.line('.')
+  local pick_next_fname = false
+  for i, entry in ipairs(sorted_qf_locations) do
+    local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+    if cur_fname == fname then
+      pick_next_fname = true
+      if entry.lnum > lnum then
+        vim.cmd(':' .. entry.lnum)
+        return
+      end
+    elseif pick_next_fname then
+      vim.cmd('e ' .. cur_fname)
+      vim.cmd(':' .. entry.lnum)
+      return
+    end
+  end
+end
+
+function _G.previous_quickfix()
+  local sorted_qf_locations = get_sorted_qf_locations()
+
+  -- find the first record for my filename
+  local fname = vim.fn.expand('%:p')
+  local lnum = vim.fn.line('.')
+  local pick_next_fname = false
+  for i = #sorted_qf_locations, 1, -1 do
+    entry = sorted_qf_locations[i]
+    local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+    if cur_fname == fname then
+      pick_next_fname = true
+      if entry.lnum < lnum then
+        vim.cmd(':' .. entry.lnum)
+        return
+      end
+    elseif pick_next_fname then
+      vim.cmd('e ' .. cur_fname)
+      vim.cmd(':' .. entry.lnum)
+      return
+    end
+  end
+end
+
 -- vim: ts=2 sts=2 sw=2 et

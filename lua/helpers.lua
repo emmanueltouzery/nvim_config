@@ -40,7 +40,7 @@ function _G.cur_file_project_root()
       end
     end
     -- no project that matches, return the current folder
-    return vim.fn.get_cwd()
+    return vim.fn.getcwd()
 end
 
 -- https://stackoverflow.com/a/34953646/516188

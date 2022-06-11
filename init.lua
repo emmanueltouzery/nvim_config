@@ -314,9 +314,20 @@ callbacks = {
       "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
       "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
     }
+    -- a bit messy to remap telescope-project key mappings: https://github.com/nvim-telescope/telescope-project.nvim/issues/84
+    -- I want telescope-live-grep-raw instead of the normal telescope-rg
+    local tel_proj_attach_mappings = [[
+      function(prompt_bufnr, map)
+        map('i', '<C-s>', function(nr)
+          require('telescope').extensions.live_grep_raw.live_grep_raw{
+            cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+          } 
+        end) 
+        return true 
+      end]]
     dashboard.section.buttons.val = {
       dashboard.button( "e", "  New file" , ":ene <BAR> startinsert <CR>"),
-      dashboard.button( "p", "  Open project" , "<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full' }<CR>"),
+      dashboard.button( "p", "  Open project" , [[<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full', attach_mappings = ]] .. tel_proj_attach_mappings:gsub('\n', ' ') .. [[ }<CR>]]),
       dashboard.button( "b", "  Open file browser" , "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>"), -- alt icon: פּ
       dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
     }

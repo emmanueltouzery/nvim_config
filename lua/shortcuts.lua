@@ -1,5 +1,7 @@
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {desc = "Jump to definition"})
 
+require 'key-menu'.set('n', 'đ')
+require 'key-menu'.set('n', 'š')
 vim.keymap.set('n', 'šq', '<Cmd>:cp<CR>', {desc="Next quickfix"})
 vim.keymap.set('n', 'đq', '<Cmd>:cn<CR>', {desc="Previous quickfix"})
 vim.keymap.set('n', 'šh', '<Cmd>lua require("gitsigns").prev_hunk()<CR>', {desc="Next git hunk"})

@@ -72,6 +72,7 @@ function! ToggleQuickFix()
 endfunction
  ]], false)
 vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
+vim.keymap.set("n", "<leader>tQ", ":TroubleToggle quickfix<cr>", {desc = "Toggle Trouble quickfix"})
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
 vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 

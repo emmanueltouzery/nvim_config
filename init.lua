@@ -529,10 +529,6 @@ vim.cmd('autocmd FileType markdown setlocal wrap linebreak')
 -- workaround for https://github.com/nvim-telescope/telescope.nvim/issues/559
 vim.cmd('autocmd BufRead * autocmd BufWinEnter * ++once normal! zx')
 
--- check if file changed outside of vim on focus
--- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
-vim.cmd([[autocmd FocusGained * if mode() != 'c' | checktime | endif]])
-
 -- visible tab
 -- https://www.reddit.com/r/vim/comments/4hoa6e/what_do_you_use_for_your_listchars/
 vim.cmd("set list")
@@ -542,6 +538,19 @@ vim.cmd("set listchars=tab:→\\ ,trail:·,nbsp:␣")
 vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
+
+vim.cmd("set title")
+vim.api.nvim_create_autocmd("DirChanged", {
+    pattern = "*",
+    callback = function(args)
+        vim.opt.titlestring = "nvim - " .. lualine_project()
+    end,
+    desc = "Update neovim window title",
+})
+
+-- check if file changed outside of vim on focus
+-- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
+vim.cmd([[autocmd FocusGained * if mode() != 'c' | checktime | endif]])
 
 -- I REALLY dislike the builtin vim blocking workflow when a file is edited
 -- on disk and there is a conflict. Implement a non-blocking popup

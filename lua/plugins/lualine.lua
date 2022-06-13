@@ -13,7 +13,7 @@ local function winnr()
   end
 end
 
-local function project()
+function _G.lualine_project()
   -- return ' ' .. vim.fn.getcwd():match("[^/]+$");
   return vim.fn.getcwd(vim.fn.winnr()):match("[^/]+$");
 end
@@ -98,7 +98,7 @@ if lualine then
       },
       -- lualine_a = {'mode'},
       lualine_b = {'branch', 'diff', 'diagnostics'},
-      lualine_c = {project, {'filename', path=1}}, -- path=1 => relative filename
+      lualine_c = {lualine_project, {'filename', path=1}}, -- path=1 => relative filename
       -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
       -- don't color the filetype icon, else it's not always visible with the 'nord' theme.
       lualine_x = { 'filesize', {'filetype', colored = false, icon_only = true}},
@@ -123,7 +123,7 @@ if lualine then
         {'diagnostics', color = {bg='#4c566a'} },
         {function(str) return "" end, color = {fg='#4c566a'}, padding=0 }
       },
-      lualine_c = {project, inactiveRelativePath},
+      lualine_c = {lualine_project, inactiveRelativePath},
       lualine_x = { 'filesize', {'filetype', colored = false, icon_only = true}},
       lualine_y = {'progress', scroll_indicator},
       lualine_z = {

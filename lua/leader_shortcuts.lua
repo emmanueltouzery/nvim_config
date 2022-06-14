@@ -45,6 +45,13 @@ vim.keymap.set("n", "<leader>wv", "<C-W>v", {desc = "Split window right"})
 vim.keymap.set("n", "<leader>wr", "<C-w>r", {desc="Window rotate"})
 vim.keymap.set("n", "<leader>wm", "<C-w>o", {desc="Window maximize"})
 
+-- PACKAGES
+require 'key-menu'.set('n', '<Space>p', {desc='Packages'})
+vim.keymap.set("n", "<leader>pp", "<cmd>PackerSync<cr>", { desc = "Packer sync"})
+vim.keymap.set("n", "<leader>pl", "<cmd>LspInstallInfo<cr>", { desc = "LSP install info"})
+vim.keymap.set("n", "<leader>pt", "<cmd>TSInstallInfo<cr>", { desc = "Tree-sitter install info"})
+vim.keymap.set("n", "<leader>pT", "<cmd>TSUpdate<cr>", { desc = "Tree-sitter update packages"})
+
 -- a bit messy to remap telescope-project key mappings: https://github.com/nvim-telescope/telescope-project.nvim/issues/84
 -- I want telescope-live-grep-raw instead of the normal telescope-rg
 local tel_proj_attach_mappings = [[

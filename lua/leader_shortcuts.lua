@@ -150,6 +150,10 @@ vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {de
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
 vim.keymap.set("n", "<leader>clf", ":TroubleToggle lsp_references<cr>", {desc="Toggle lsp references"})
+-- possible alternative from ":h lsp-faq":
+-- :lua vim.lsp.stop_client(vim.lsp.get_active_clients())
+-- :edit
+vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
 
 -- MARKS
 require 'key-menu'.set('n', '<Space>m', {desc='Marks'})

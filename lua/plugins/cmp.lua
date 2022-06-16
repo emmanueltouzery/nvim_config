@@ -53,7 +53,7 @@ cmp.setup {
     -- },
     ['<CR>'] = cmp.mapping(function(fallback) 
       -- workaround for https://github.com/hrsh7th/cmp-nvim-lsp-signature-help/issues/13
-      if cmp.get_selected_entry().source.name == 'nvim_lsp_signature_help' then
+      if cmp.get_selected_entry() ~= nil and cmp.get_selected_entry().source.name == 'nvim_lsp_signature_help' then
         fallback()
       else
         cmp.mapping.confirm {

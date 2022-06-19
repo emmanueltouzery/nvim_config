@@ -390,6 +390,9 @@ function _G.add_global_mark()
   print("All marks are used up!")
 end
 
+CONFLICT_ICON = '' -- semantically 罹 was a better option, but it's smaller
+DELETED_ICON = 'ﰸ'
+
 function _G.handleFileChanged()
   -- position the popup bottom-right of the window
   local width = vim.fn.winwidth(0)
@@ -414,12 +417,14 @@ function _G.handleFileChanged()
   local popup_win = vim.api.nvim_open_win(popup_buf, false, opts)
 
   local reasonDesc = "because there was a conflict"
+  local icon = CONFLICT_ICON
   if vim.v.fcs_reason == "deleted" then
     reasonDesc = "because it was deleted"
+    icon = DELETED_ICON
   end
 
   local lines = {
-    "WARNING", 
+    icon .. " WARNING", 
     "The file for this buffer was edited elsewhere", 
     "Cannot update the file automatically",
     reasonDesc,

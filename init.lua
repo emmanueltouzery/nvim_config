@@ -561,6 +561,8 @@ vim.api.nvim_create_autocmd("DirChanged", {
 -- check if file changed outside of vim on focus
 -- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
 vim.cmd([[autocmd FocusGained * if mode() != 'c' | checktime | endif]])
+vim.cmd([[autocmd BufWritePost * let b:conflict_status = '']])
+vim.cmd([[autocmd BufReadPost * let b:conflict_status = '']])
 
 -- I REALLY dislike the builtin vim blocking workflow when a file is edited
 -- on disk and there is a conflict. Implement a non-blocking popup
@@ -572,7 +574,11 @@ function! ProcessFileChangedShell()
     let v:fcs_choice = 'reload'
   else
     " deleted or conflict
-    lua handleFileChanged()
+    " don't warn the user again if we already warned
+    if !exists('b:conflict_status') || b:conflict_status != v:fcs_reason
+      let b:conflict_status = v:fcs_reason
+      lua handleFileChanged()
+    end
     let v:fcs_choice = ''
   endif
 endfunction

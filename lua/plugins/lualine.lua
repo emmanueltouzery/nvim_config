@@ -72,6 +72,16 @@ local function scroll_indicator()
   end
 end
 
+local function conflict_status()
+  if vim.b.conflict_status == 'deleted' then
+    return DELETED_ICON
+  end
+  if vim.b.conflict_status == 'conflict' then
+    return CONFLICT_ICON
+  end
+  return ''
+end
+
 local lualine = require('lualine')
 if lualine then
   lualine.setup {
@@ -98,7 +108,7 @@ if lualine then
       },
       -- lualine_a = {'mode'},
       lualine_b = {'branch', 'diff', 'diagnostics'},
-      lualine_c = {lualine_project, {'filename', path=1}}, -- path=1 => relative filename
+      lualine_c = {lualine_project, {conflict_status, color={fg='#ff6c6b', gui='bold'}}, {'filename', path=1}}, -- path=1 => relative filename
       -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
       -- don't color the filetype icon, else it's not always visible with the 'nord' theme.
       lualine_x = { 'filesize', {'filetype', colored = false, icon_only = true}},

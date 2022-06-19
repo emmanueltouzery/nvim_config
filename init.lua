@@ -222,6 +222,11 @@ callbacks = {
       lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {}
       lspconfig.bashls.setup {}
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+      lspconfig.cssls.setup {
+        capabilities = capabilities
+      }
     end,
     after = "nvim-lspconfig",
   }
@@ -471,6 +476,10 @@ vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.formatting_sync()]]
 
 vim.diagnostic.config({
   virtual_text = false,

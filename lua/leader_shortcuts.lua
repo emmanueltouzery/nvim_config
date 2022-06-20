@@ -14,6 +14,18 @@ require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})
 -- and check https://www.reddit.com/r/vim/comments/m6jl0b/i_made_a_plugin_a_replacement_for_bdelete_that/
 --":b#<bar>bd#<CR>",
 vim.keymap.set("n", "<leader>bd",  ":BD<cr>", {desc="Delete buffer"})
+vim.keymap.set("n", "<leader>bD",  ":bd!<cr>", {desc="Force delete buffer"})
+
+function open_buf_in_window(jump_to_target)
+  local target_win_idx = vim.api.nvim_eval("choosewin#start(range(1, winnr('$')), { 'noop': 1 })[1]")
+  local target_winnr = vim.api.nvim_list_wins()[target_win_idx]
+  vim.api.nvim_win_set_buf(target_winnr, vim.api.nvim_win_get_buf(0))
+  if jump_to_target then
+    vim.cmd(target_win_idx .. ' wincmd w')
+  end
+end
+vim.keymap.set("n", "<leader>bw",  "<cmd>lua open_buf_in_window(true)<cr>", {desc="Open cur. buffer in window+go there"})
+vim.keymap.set("n", "<leader>bW",  "<cmd>lua open_buf_in_window(false)<cr>", {desc="Open cur. buffer in window"})
 
 require 'key-menu'.set('n', '<Space>')
 
@@ -21,6 +33,7 @@ require 'key-menu'.set('n', '<Space>')
 require 'key-menu'.set('n', '<Space>f', {desc='File'})
 vim.keymap.set('n', '<leader>fn', "<cmd>vert new<cr>", {desc = "New file"})
 vim.keymap.set("n", "<leader>fs", ":w<cr>", {desc="Save file"})
+vim.keymap.set("n", "<leader>fS", ":wa<cr>", {desc="Save all files"})
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<cr>", {desc = "Find files"})
 vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent files"})
 vim.keymap.set("n", "<leader>fR", "<cmd>SudaRead<cr>", { desc = "Re-open file with sudo permissions"})
@@ -35,6 +48,11 @@ vim.keymap.set("n", "<leader>ss", "<cmd>Telescope lsp_document_symbols<cr>", { d
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw()<cr>", {desc="Search text raw"})
 vim.keymap.set( "n", "<leader>sS", "<cmd>Telescope lsp_workspace_symbols<CR>", {desc="Goto workspace symbol"})
+function ws_symbol_under_cursor()
+  local word = vim.fn.expand('<cword>')
+  require'telescope.builtin'.lsp_workspace_symbols {query=word}
+end
+vim.keymap.set( "n", "<leader>s*", "<cmd>lua ws_symbol_under_cursor()<CR>", {desc="Goto workspace symbol under cursor"})
 
 -- WINDOW
 require 'key-menu'.set('n', '<Space>w', {desc='Window'})
@@ -158,3 +176,10 @@ vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP cl
 -- MARKS
 require 'key-menu'.set('n', '<Space>m', {desc='Marks'})
 vim.keymap.set("n", "<leader>ma", ":lua add_global_mark()<cr>", {desc="Add mark"})
+
+-- VIM
+require 'key-menu'.set('n', '<Space>v', {desc='Vim'})
+vim.keymap.set("n", "<leader>vc", ":let @+=@:<cr>", {desc="Yank last ex command text"})
+vim.keymap.set("n", "<leader>vm", [[:let @+=substitute(execute('messages'), '\n\+', '\n', 'g')<cr>]], {desc="Yank vim messages output"})
+
+-- vim: ts=2 sts=2 sw=2 et

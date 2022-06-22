@@ -474,6 +474,10 @@ function get_sorted_qf_locations()
 end
 
 function _G.next_quickfix()
+  next_quickfix(false)
+end
+
+function next_quickfix(take_first)
   local sorted_qf_locations = get_sorted_qf_locations()
 
   -- find the first record for my filename
@@ -484,7 +488,7 @@ function _G.next_quickfix()
     local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
     if cur_fname == fname then
       pick_next_fname = true
-      if entry.lnum > lnum then
+      if entry.lnum > lnum or take_first then
         vim.cmd(':' .. entry.lnum)
         return
       end
@@ -494,9 +498,17 @@ function _G.next_quickfix()
       return
     end
   end
+  -- no match, wraparound, pick first in file if any
+  if not take_first then
+    next_quickfix(true)
+  end
 end
 
 function _G.previous_quickfix()
+  previous_quickfix(false)
+end
+
+function previous_quickfix(take_last)
   local sorted_qf_locations = get_sorted_qf_locations()
 
   -- find the first record for my filename
@@ -508,7 +520,7 @@ function _G.previous_quickfix()
     local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
     if cur_fname == fname then
       pick_next_fname = true
-      if entry.lnum < lnum then
+      if entry.lnum < lnum or take_last then
         vim.cmd(':' .. entry.lnum)
         return
       end
@@ -517,6 +529,10 @@ function _G.previous_quickfix()
       vim.cmd(':' .. entry.lnum)
       return
     end
+  end
+  -- no match, wraparound, pick last in file if any
+  if not take_last then
+    previous_quickfix(true)
   end
 end
 

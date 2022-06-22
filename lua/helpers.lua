@@ -226,8 +226,9 @@ function _G.test_output_in_popup()
     vim.cmd("nmap <buffer> q <C-W>c")
     vim.cmd("nmap <buffer> <Esc> <C-W>c")
     if text ~= nil then
-      -- search for the text, zz to center, select the line
-      vim.fn.feedkeys("/" .. text:gsub('/', '.') .. "\rzz")
+      -- search for :line_num\b, zz to center
+      vim.fn.feedkeys("/" .. ":" .. current_line .. "\\>\rzz")
+      -- vim.fn.feedkeys("/" .. text:gsub("([^%w])", '.') .. "\\|:" .. current_line .. "\rzz")
       -- vim.cmd("match Search /\%'.line('.').'l/'")
     end
   end

@@ -118,7 +118,15 @@ vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"}) -- that one 
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})
 vim.keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<CR>", {desc = "Browse git status"})
 vim.keymap.set("n", "<leader>gB", "<cmd>Telescope git_branches<CR>", {desc=  "Browse git branches"})
-vim.keymap.set("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", {desc ="Browse git commits"})
+
+function telescope_commits_mappings(prompt_bufnr, map)
+  map('i', '<C-r>i', function(nr)
+    commit=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    vim.cmd(":term! git rebase -i " .. commit)
+  end)
+  return true
+end
+vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commits{attach_mappings=telescope_commits_mappings}<CR>", {desc ="Browse git commits"})
 vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine()<cr>", {desc = "Time machine"})
 vim.keymap.set("n", "<leader>gB", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})

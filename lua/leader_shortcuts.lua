@@ -72,16 +72,15 @@ vim.keymap.set("n", "<leader>pT", "<cmd>TSUpdate<cr>", { desc = "Tree-sitter upd
 
 -- a bit messy to remap telescope-project key mappings: https://github.com/nvim-telescope/telescope-project.nvim/issues/84
 -- I want telescope-live-grep-raw instead of the normal telescope-rg
-local tel_proj_attach_mappings = [[
-  function(prompt_bufnr, map)
-    map('i', '<C-s>', function(nr)
-      require('telescope').extensions.live_grep_raw.live_grep_raw{
-        cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-      } 
-    end) 
-    return true 
-  end]]
-_G.telescope_project_command = [[<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full', attach_mappings = ]] .. tel_proj_attach_mappings:gsub('\n', ' ') .. [[ }<CR>]]
+function tel_proj_attach_mappings(prompt_bufnr, map)
+  map('i', '<C-s>', function(nr)
+    require('telescope').extensions.live_grep_raw.live_grep_raw{
+      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    } 
+  end) 
+  return true 
+end
+_G.telescope_project_command = [[<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full', attach_mappings = tel_proj_attach_mappings}<CR>]]
 
 -- OPEN
 require 'key-menu'.set('n', '<Space>o', {desc='Open'})

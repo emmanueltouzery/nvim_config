@@ -589,6 +589,6 @@ autocmd FileChangedShell * call ProcessFileChangedShell()
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]])
 
 -- https://github.com/groves/invim
-vim.cmd[[let $EDITOR='invim --split --remote-wait']]
+vim.cmd[[let $EDITOR='invim --tabedit --remote-wait']]
 
 -- vim: ts=2 sts=2 sw=2 et

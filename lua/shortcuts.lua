@@ -16,9 +16,9 @@ vim.keymap.set('n', 'šq', '<cmd>lua previous_quickfix()<cr>', {desc="Previous q
 vim.keymap.set('n', 'đq', '<cmd>lua next_quickfix()<cr>', {desc="Next quickfix location"})
 
 vim.keymap.set('n', '-', '<Cmd>ChooseWin<CR>', {desc="Choose win"})
-vim.keymap.set( "n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})
-vim.keymap.set( "n", "<C-p>", ":lua vim.diagnostic.goto_prev()<CR>", {desc="Jump to previous diagnostic"})
-vim.keymap.set( "n", "<C-n>", ":lua vim.diagnostic.goto_next()<CR>", {desc="Jump to next diagnostic"})
+vim.keymap.set("n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})
+vim.keymap.set("n", "<C-p>", ":lua vim.diagnostic.goto_prev({severity=vim.diagnostic.severity.ERROR})<CR>", {desc="Jump to previous diagnostic"})
+vim.keymap.set("n", "<C-n>", ":lua vim.diagnostic.goto_next({severity=vim.diagnostic.severity.ERROR})<CR>", {desc="Jump to next diagnostic"})
 
 -- https://github.com/b3nj5m1n/kommentary/issues/11
 vim.api.nvim_set_keymap('n', 'gCC', '<cmd>lua toggle_comment_custom_commentstring_curline()<cr>', { noremap = true, silent = true })

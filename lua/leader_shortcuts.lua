@@ -77,7 +77,12 @@ function tel_proj_attach_mappings(prompt_bufnr, map)
     require('telescope').extensions.live_grep_raw.live_grep_raw{
       cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     } 
-  end) 
+  end)
+  map('i', '<C-g>', function(nr)
+    require('telescope.builtin').git_status{
+      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    } 
+  end)
   return true 
 end
 _G.telescope_project_command = [[<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full', attach_mappings = tel_proj_attach_mappings}<CR>]]

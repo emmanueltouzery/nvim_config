@@ -532,6 +532,14 @@ vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match UrlNoSpell "\w\+:\/\/[
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
 -- word 1 to 4 characters longs (typically variable name), leading underscore
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
+-- word up to 5 chars with underscore in the middle (typically variable name)
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,2}_\(\w\|\d\)\{1,3}\>" contains=@NoSpell]])
+-- word up to 5 chars with underscore in the middle (typically variable name), leading underscore
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,2}_\(\w\|\d\)\{1,3}\>" contains=@NoSpell]])
+-- word up to 5 chars with underscore in the middle (typically variable name)
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell]])
+-- word up to 5 chars with underscore in the middle (typically variable name), leading underscore
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell]])
 -- colors eg #ffffff
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "#\<\([abcdefABCDEF]\|\d\)\{6}\>" contains=@NoSpell]])
 

@@ -532,6 +532,8 @@ vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match UrlNoSpell "\w\+:\/\/[
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
 -- word 1 to 4 characters longs (typically variable name), leading underscore
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
+-- colors eg #ffffff
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "#\<\([abcdefABCDEF]\|\d\)\{6}\>" contains=@NoSpell]])
 
 -- word-wrapping in markdown files
 vim.cmd('autocmd FileType markdown setlocal wrap linebreak')

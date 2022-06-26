@@ -89,8 +89,6 @@ require('packer').startup(function(use)
       },
     })
   end}
-  -- Additional textobjects for treesitter
-  use {'nvim-treesitter/nvim-treesitter-textobjects', commit='b1e850b77e57b2720c06d523d6fc4776ad6a5608'}
   use {'neovim/nvim-lspconfig', commit='b86a37caf7a4e53e62ba883aef5889b590260de9'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='033a817ced907c8bcdcbe3355d7ea67446264f4b'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
@@ -337,6 +335,7 @@ callbacks = {
       require'nvim_config_private'.setup{}
     end
   end}
+  use {'mfussenegger/nvim-treehopper', commit='59a589471c85ebf9479089c4ca1638021b9a10e3'}
 end)
 
 --Set highlight on search
@@ -412,39 +411,6 @@ require('nvim-treesitter.configs').setup {
   },
   indent = {
     enable = true,
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-      keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-      },
-    },
-    move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        [']m'] = '@function.outer',
-        [']]'] = '@class.outer',
-      },
-      goto_next_end = {
-        [']M'] = '@function.outer',
-        [']['] = '@class.outer',
-      },
-      goto_previous_start = {
-        ['[m'] = '@function.outer',
-        ['[['] = '@class.outer',
-      },
-      goto_previous_end = {
-        ['[M'] = '@function.outer',
-        ['[]'] = '@class.outer',
-      },
-    },
   },
 }
 

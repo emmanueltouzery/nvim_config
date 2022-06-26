@@ -167,7 +167,8 @@ vim.keymap.set("n", "<leader>hh", '<cmd>lua require"gitsigns".preview_hunk()<CR>
 require 'key-menu'.set('n', '<Space>c', {desc='Code'})
 vim.keymap.set("n", "<leader>cf", ":lua vim.lsp.buf.formatting_sync()<cr>", {desc="Code format"})
 vim.keymap.set("n", "<leader>cm", ":Glow<cr>", {desc="Markdown preview"})
-vim.keymap.set("n", "<leader>cw", ":set wrap! linebreak<cr>", {desc="toggle_linebreak"})
+vim.keymap.set("n", "<leader>cw", ":set wrap! linebreak<cr>", {desc="Toggle linebreak"})
+vim.keymap.set('n', '<leader>cs', ":lua require('tsht').nodes()<cr>", {desc="select custom block"})
 
 -- TESTS
 require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})

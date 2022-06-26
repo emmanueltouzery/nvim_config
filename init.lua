@@ -506,8 +506,8 @@ vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell]])
 -- word up to 5 chars with underscore in the middle (typically variable name), leading underscore
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell]])
--- colors eg #ffffff
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "#\<\([abcdefABCDEF]\|\d\)\{6}\>" contains=@NoSpell]])
+-- colors eg #ffffff or #ffffffff -- rgb(a)
+vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "#\([abcdefABCDEF]\|\d\)\{6,8}\>" contains=@NoSpell]])
 
 -- word-wrapping in markdown files
 vim.cmd('autocmd FileType markdown setlocal wrap linebreak')

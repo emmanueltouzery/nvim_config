@@ -170,7 +170,7 @@ vim.keymap.set("n", "<leader>cm", ":Glow<cr>", {desc="Markdown preview"})
 vim.keymap.set("n", "<leader>cw", ":set wrap! linebreak<cr>", {desc="Toggle linebreak"})
 require 'key-menu'.set('n', '<Space>cn', {desc='Code Nodes'})
 vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="select custom block"})
-vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="select custom block"})
+vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})
 
 -- TESTS
 require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})

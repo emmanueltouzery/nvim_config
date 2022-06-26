@@ -335,7 +335,7 @@ callbacks = {
       require'nvim_config_private'.setup{}
     end
   end}
-  use {'mfussenegger/nvim-treehopper', commit='59a589471c85ebf9479089c4ca1638021b9a10e3'}
+  use {'max397574/nvim-treehopper', commit='d4ab43eb481e7bd9c1a5bc87e3cf296ac4f85b6d'}
 end)
 
 --Set highlight on search

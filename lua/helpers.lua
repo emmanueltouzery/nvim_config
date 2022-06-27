@@ -8,6 +8,12 @@ function _G.my_open_tele()
     vim.fn.feedkeys(w)
 end
 
+function _G.my_open_tele_sel()
+    local w = get_visual_selection()
+    require("telescope").extensions.live_grep_raw.live_grep_raw()
+    vim.fn.feedkeys(w)
+end
+
 function _G.copy_to_clipboard(to_copy)
     vim.cmd("let @+ = '" .. to_copy .. "'")
 end
@@ -60,12 +66,36 @@ function _G.copy_file_line()
     print(to_copy)
 end
 
+function get_visual_selection()
+  -- https://github.com/neovim/neovim/pull/13896#issuecomment-774680224
+  -- local s_start = vim.fn.getpos("'<")
+  -- local s_end = vim.fn.getpos("'>")
+  local s_start = vim.fn.getpos("v")
+  local s_end = vim.fn.getcurpos()
+  if s_end[2] < s_start[2] or (s_end[2] == s_start[2] and s_end[3] < s_start[3]) then
+    e = s_start
+    s_start = s_end
+    s_end = e
+  end
+  local n_lines = math.abs(s_end[2] - s_start[2]) + 1
+  local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
+  print(vim.inspect(s_start) .. " / " .. vim.inspect(s_end) .. " / " .. vim.inspect(lines))
+  lines[1] = string.sub(lines[1], s_start[3], -1)
+  if n_lines == 1 then
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+  else
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+  end
+  return table.concat(lines, '\n')
+end
+
 function _G.get_file_line_sel()
     local file_path = cur_file_path_in_project()
-    -- local start_line = vim.fn.getpos("v")[2]
-    -- local end_line = vim.fn.getcurpos()[2]
-    local start_line = vim.fn.line("'<")
-    local end_line = vim.fn.line("'>")
+    -- https://github.com/neovim/neovim/pull/13896#issuecomment-774680224
+    local start_line = vim.fn.getpos("v")[2]
+    local end_line = vim.fn.getcurpos()[2]
+    -- local start_line = vim.fn.line("'<")
+    -- local end_line = vim.fn.line("'>")
     return "`" .. file_path .. ":" .. start_line .. "-" .. end_line .. "`"
 end
 

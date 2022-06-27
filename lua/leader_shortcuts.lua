@@ -166,7 +166,18 @@ vim.keymap.set("n", "<leader>hh", '<cmd>lua require"gitsigns".preview_hunk()<CR>
 
 -- CODE
 require 'key-menu'.set('n', '<Space>c', {desc='Code'})
-vim.keymap.set("n", "<leader>cf", ":lua vim.lsp.buf.formatting_sync()<cr>", {desc="Code format"})
+
+function format_buf()
+  if #vim.lsp.buf_get_clients() > 0 then
+    vim.lsp.buf.formatting_sync()
+  elseif vim.bo.filetype == 'json' then
+    -- i think this happens if the file is unsaved
+    vim.cmd(':%!prettier --parser json')
+  else
+    print("No LSP and unhandled filetype " .. vim.bo.filetype)
+  end
+end
+vim.keymap.set("n", "<leader>cf", ":lua format_buf()<cr>", {desc="Code format"})
 vim.keymap.set("n", "<leader>cm", ":Glow<cr>", {desc="Markdown preview"})
 vim.keymap.set("n", "<leader>cw", ":set wrap! linebreak<cr>", {desc="Toggle linebreak"})
 require 'key-menu'.set('n', '<Space>cn', {desc='Code Nodes'})

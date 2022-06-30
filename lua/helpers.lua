@@ -255,12 +255,12 @@ function _G.test_output_in_popup()
     vim.api.nvim_set_current_win(vim.b.popup_win)
     vim.cmd("nmap <buffer> q <C-W>c")
     vim.cmd("nmap <buffer> <Esc> <C-W>c")
-    if text ~= nil then
-      -- search for :line_num\b, zz to center
-      vim.fn.feedkeys("/" .. ":" .. current_line .. "\\>\rzz")
-      -- vim.fn.feedkeys("/" .. text:gsub("([^%w])", '.') .. "\\|:" .. current_line .. "\rzz")
-      -- vim.cmd("match Search /\%'.line('.').'l/'")
-    end
+    -- search for :line_num\b, zz to center
+    vim.fn.feedkeys("/" .. ":" .. current_line .. "\\>\rzz")
+    -- if text ~= nil then
+    -- vim.fn.feedkeys("/" .. text:gsub("([^%w])", '.') .. "\\|:" .. current_line .. "\rzz")
+    -- vim.cmd("match Search /\%'.line('.').'l/'")
+    -- end
   end
 end
 
@@ -282,13 +282,15 @@ function _G.test_output_open()
   end
   -- is there a terminal to embed?
   if vim.g.test_term_buf_id ~= nil and vim.fn.bufexists(vim.g.test_term_buf_id) == 1 then
+    local current_line = vim.fn.line('.')
     -- yes, open the buffer in the current window
     vim.cmd(":b" .. vim.g.test_term_buf_id)
-    if text ~= nil then
-      -- search for the text, zz to center, select the line
-      vim.fn.feedkeys("/" .. text:gsub('/', '.') .. "\rzz")
-      -- vim.cmd("match Search /\%'.line('.').'l/'")
-    end
+    -- search for :line_num\b, zz to center
+    vim.fn.feedkeys("/" .. ":" .. current_line .. "\\>\rzz")
+    -- if text ~= nil then
+    -- vim.fn.feedkeys("/" .. text:gsub("([^%w])", '.') .. "\\|:" .. current_line .. "\rzz")
+    -- vim.cmd("match Search /\%'.line('.').'l/'")
+    -- end
   end
 end
 

@@ -200,6 +200,13 @@ callbacks = {
       input = {
         -- ESC won't close the modal, ability to use vim keys
         insert_only = false,
+        get_config = function(opts)
+          if opts.kind == 'center_win' then
+            return {
+              relative = 'editor',
+            }
+          end
+        end
       }
     })
   end}
@@ -566,5 +573,8 @@ vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe 
 
 -- https://github.com/groves/invim
 vim.cmd[[let $EDITOR='invim --tabedit --remote-wait']]
+
+-- emphasize dressing.nvim window border some more
+vim.cmd[[hi FloatBorder guifg=#dfdad9]]
 
 -- vim: ts=2 sts=2 sw=2 et

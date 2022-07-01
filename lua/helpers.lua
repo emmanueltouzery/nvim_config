@@ -571,4 +571,12 @@ function previous_quickfix(take_last)
   end
 end
 
+function _G.max_win_in_new_tab()
+  local fname = vim.fn.expand('%:p')
+  local lnum = vim.fn.line('.')
+  vim.cmd(":tabnew")
+  vim.cmd(":e " .. fname)
+  vim.cmd(":" .. lnum)
+end
+
 -- vim: ts=2 sts=2 sw=2 et

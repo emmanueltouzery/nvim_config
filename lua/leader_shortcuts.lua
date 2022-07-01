@@ -64,6 +64,7 @@ vim.keymap.set("n", "<leader>ws", "<C-W>s", {desc = "Split window below"})
 vim.keymap.set("n", "<leader>wv", "<C-W>v", {desc = "Split window right"})
 vim.keymap.set("n", "<leader>wr", "<C-w>r", {desc="Window rotate"})
 vim.keymap.set("n", "<leader>wm", "<C-w>o", {desc="Window maximize"})
+vim.keymap.set("n", "<leader>wM", "<cmd>lua max_win_in_new_tab()<cr>", {desc="Window maximize in a new tab"})
 
 -- PACKAGES
 require 'key-menu'.set('n', '<Space>p', {desc='Packages'})

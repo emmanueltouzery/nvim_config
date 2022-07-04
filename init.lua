@@ -111,8 +111,9 @@ require('packer').startup(function(use)
     require("plugins.bufferline")
   end}
   use {'airblade/vim-rooter', commit='0415be8b5989e56f6c9e382a04906b7f719cfb38', config = function() 
-    vim.g['rooter_silent_chdir'] = 1 
-    vim.g['rooter_cd_cmd'] = 'lcd'
+    vim.g.rooter_silent_chdir = 1 
+    vim.g.rooter_cd_cmd = 'lcd'
+    vim.g.rooter_change_directory_for_non_project_files = 'current'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
   use {'sindrets/diffview.nvim', commit='ca297a7e526b42b1ea0e4bd6eebb36f2654125a',

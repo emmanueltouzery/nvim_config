@@ -579,4 +579,67 @@ function _G.max_win_in_new_tab()
   vim.cmd(":" .. lnum)
 end
 
+function enable_diagnostics(diag)
+  for i, ns in pairs(vim.diagnostic.get_namespaces()) do
+    if ns.name == diag then
+      vim.diagnostic.enable(0, i)
+      vim.b['disabled_dg_' .. i] = false
+    end
+  end
+end
+
+function disable_diagnostics(diag)
+  for i, ns in pairs(vim.diagnostic.get_namespaces()) do
+    if ns.name == diag then
+      vim.diagnostic.disable(0, i)
+      vim.b['disabled_dg_' .. i] = true
+    end
+  end
+end
+
+function _G.telescope_diagnostics()
+  local pickers = require "telescope.pickers"
+  local finders = require "telescope.finders"
+  local actions = require "telescope.actions"
+  local action_state = require "telescope.actions.state"
+
+  local diagnostic_signs = {}
+  for i, ns in pairs(vim.diagnostic.get_namespaces()) do
+    if ns.user_data.sign_group then
+      if vim.b['disabled_dg_' .. i] then
+        table.insert(diagnostic_signs, "Enable " .. ns.name)
+      else
+        table.insert(diagnostic_signs, "Disable " .. ns.name)
+      end
+    end
+  end
+
+  local opts = {
+    layout_config = {
+      height = 0.3,
+      width = 0.3,
+    }
+  }
+
+  pickers.new(opts, {
+    prompt_title = "LSP Diagnostics toggle",
+    finder = finders.new_table {
+      results = diagnostic_signs,
+    },
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        action_txt = selection[1]
+        if action_txt:sub(1, #"Enable") == "Enable" then
+          enable_diagnostics(strings.strcharpart(action_txt, #"Enable "))
+        else
+          disable_diagnostics(strings.strcharpart(action_txt, #"Disable "))
+        end
+      end)
+      return true
+    end,
+  }):find()
+end
+
 -- vim: ts=2 sts=2 sw=2 et

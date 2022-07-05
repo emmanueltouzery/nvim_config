@@ -143,7 +143,7 @@ require('packer').startup(function(use)
   use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
   use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
   use {'lifepillar/vim-cheat40', commit='ae237b02f9031bc82a8ad9202bffee2bcef71ed1'}
-  use {'ggandor/lightspeed.nvim', Commit='c5b93fc1d76a708cb698417326e04f4786a38d90', config = function()
+  use {'ggandor/lightspeed.nvim', commit='a4b4277', config = function()
     require'lightspeed'.setup {
       ignore_case = true,
     }

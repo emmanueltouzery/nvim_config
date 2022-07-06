@@ -343,7 +343,11 @@ callbacks = {
       require'nvim_config_private'.setup{}
     end
   end}
-  use {'max397574/nvim-treehopper', commit='d4ab43eb481e7bd9c1a5bc87e3cf296ac4f85b6d'}
+  -- combining changes from max397574 and Gelio
+  -- https://github.com/mfussenegger/nvim-treehopper/pull/14
+  -- https://github.com/mfussenegger/nvim-treehopper/issues/10#issuecomment-1126289736
+  -- and other improvements
+  use {'emmanueltouzery/nvim-treehopper', commit='ddf243f8c2f7c7efdf3a038c50ff5eaba31022e2'}
 end)
 
 --Set highlight on search

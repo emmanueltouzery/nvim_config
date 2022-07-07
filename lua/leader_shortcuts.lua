@@ -139,7 +139,7 @@ vim.keymap.set("n", "<leader>gB", "<cmd>Telescope git_branches<CR>", {desc=  "Br
 function telescope_commits_mappings(prompt_bufnr, map)
   map('i', '<C-r>i', function(nr)
     commit=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    vim.cmd(":term! git rebase -i " .. commit)
+    vim.cmd(":term! git rebase -i " .. commit .. "~")
   end)
   return true
 end

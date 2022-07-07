@@ -10,11 +10,11 @@ vim.keymap.set("n", "<leader>?", ":Cheat40<cr>", {desc="help"})
 -- BUFFER
 require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})
 -- https://stackoverflow.com/a/19619038/516188
--- if that doesn't cut it, consider https://github.com/qpkorr/vim-bufkill
--- and check https://www.reddit.com/r/vim/comments/m6jl0b/i_made_a_plugin_a_replacement_for_bdelete_that/
 --":b#<bar>bd#<CR>",
+-- that didn't cut it => https://github.com/qpkorr/vim-bufkill
+-- further options: https://www.reddit.com/r/vim/comments/m6jl0b/i_made_a_plugin_a_replacement_for_bdelete_that/
 vim.keymap.set("n", "<leader>bd",  ":BD<cr>", {desc="Delete buffer"})
-vim.keymap.set("n", "<leader>bD",  ":bd!<cr>", {desc="Force delete buffer"})
+vim.keymap.set("n", "<leader>bD",  ":BD!<cr>", {desc="Force delete buffer"})
 
 function open_buf_in_window(jump_to_target)
   local target_win_idx = vim.api.nvim_eval("choosewin#start(range(1, winnr('$')), { 'noop': 1 })[1]")

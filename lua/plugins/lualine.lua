@@ -27,7 +27,11 @@ end
 -- windows. instead of showing the relative path in the module, it
 -- shows the relative path from the home dir... do it by hand.
 local function inactiveRelativePath()
-  return vim.fn.expand('%:p'):gsub(escape_pattern(vim.fn.getcwd(vim.fn.winnr())) .. "/", "")
+  local fname = vim.fn.expand('%:p'):gsub(escape_pattern(vim.fn.getcwd(vim.fn.winnr())) .. "/", "")
+  if vim.bo.modified then
+    fname = fname .. "[+]"
+  end
+  return fname
 end
 
 local function scroll_indicator()

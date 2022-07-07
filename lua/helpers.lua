@@ -597,19 +597,27 @@ function disable_diagnostics(diag)
   end
 end
 
-function _G.telescope_diagnostics()
+function _G.telescope_enable_disable_diagnostics()
   local pickers = require "telescope.pickers"
   local finders = require "telescope.finders"
   local actions = require "telescope.actions"
   local action_state = require "telescope.actions.state"
 
+  local buf_lsp_client_ids = {}
+  for i, cl in pairs(vim.lsp.buf_get_clients()) do
+    buf_lsp_client_ids[cl.id] = true
+  end
+
   local diagnostic_signs = {}
   for i, ns in pairs(vim.diagnostic.get_namespaces()) do
     if ns.user_data.sign_group then
-      if vim.b['disabled_dg_' .. i] then
-        table.insert(diagnostic_signs, "Enable " .. ns.name)
-      else
-        table.insert(diagnostic_signs, "Disable " .. ns.name)
+      local id = tonumber(ns.name:gmatch("%d+$")()) -- extract the LSP id ... xxx.yy.123 -- id is 123
+      if buf_lsp_client_ids[id] ~= nil then
+        if vim.b['disabled_dg_' .. i] then
+          table.insert(diagnostic_signs, "Enable " .. ns.name)
+        else
+          table.insert(diagnostic_signs, "Disable " .. ns.name)
+        end
       end
     end
   end

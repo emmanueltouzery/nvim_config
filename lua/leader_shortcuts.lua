@@ -13,6 +13,7 @@ require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})
 --":b#<bar>bd#<CR>",
 -- that didn't cut it => https://github.com/qpkorr/vim-bufkill
 -- further options: https://www.reddit.com/r/vim/comments/m6jl0b/i_made_a_plugin_a_replacement_for_bdelete_that/
+-- and also https://github.com/mhinz/vim-sayonara
 vim.keymap.set("n", "<leader>bd",  ":BD<cr>", {desc="Delete buffer"})
 vim.keymap.set("n", "<leader>bD",  ":BD!<cr>", {desc="Force delete buffer"})
 

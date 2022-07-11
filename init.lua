@@ -527,6 +527,10 @@ vim.cmd([[autocmd BufNewFile,BufRead,BufEnter *.tsx syn match ShortNoSpell "\<T[
 -- word-wrapping in markdown files
 vim.cmd('autocmd FileType markdown setlocal wrap linebreak')
 
+-- matchpairs, switch between pairs of characters with %
+vim.cmd("autocmd FileType typescript setlocal matchpairs+=<:>") -- not needed for tsx
+vim.cmd("autocmd FileType rust setlocal matchpairs+=<:>")
+
 -- workaround for https://github.com/nvim-telescope/telescope.nvim/issues/559
 vim.cmd('autocmd BufRead * autocmd BufWinEnter * ++once normal! zx')
 

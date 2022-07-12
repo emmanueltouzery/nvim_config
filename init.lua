@@ -262,7 +262,10 @@ callbacks = {
         section = { "▶", "▼" },
         item = { "▶", "▼" },
         hunk = { "", "" },
-      }
+      },
+      integrations = {
+        diffview = true,
+      },
     }
   end}
   use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5', config = function()

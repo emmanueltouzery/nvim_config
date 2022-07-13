@@ -254,7 +254,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'simrat39/symbols-outline.nvim', commit='15ae99c27360ab42e931be127d130611375307d5'}
-  use {'TimUntersberger/neogit', commit='1453acd27c38fb4374093bc5c2c85dd1fc03d689', config = function()
+  use {'TimUntersberger/neogit', commit='da1f59c705bcefb54920f724c52cdeca42df486b', config = function()
     require('neogit') .setup {
       -- disable_context_highlighting = true,
       signs = {

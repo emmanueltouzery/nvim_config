@@ -116,7 +116,7 @@ require('packer').startup(function(use)
     vim.g.rooter_change_directory_for_non_project_files = 'current'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
-  use {'sindrets/diffview.nvim', commit='16c3985581ee65bccdfbebbe014b24a01adc7d1f',
+  use {'sindrets/diffview.nvim', commit='a1ab9602ee1d4c78e81bc6032edca6df480aa296',
     config = function()
       local actions = require("diffview.config").actions
       require('diffview').setup {

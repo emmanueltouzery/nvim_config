@@ -145,7 +145,7 @@ end
 
 function _G.ShowCommitAtLine()
     local commit_sha = require"agitator".git_blame_commit_for_line()
-    vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha)
+    vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. vim.fn.expand("%:p"))
 end
 
 -- TELESCOPE-PROJECT START

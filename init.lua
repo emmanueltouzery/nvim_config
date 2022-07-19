@@ -363,6 +363,7 @@ callbacks = {
   -- https://github.com/mfussenegger/nvim-treehopper/pull/14
   -- https://github.com/mfussenegger/nvim-treehopper/issues/10#issuecomment-1126289736
   -- and other improvements
+  -- alternative => https://github.com/ggandor/leap-ast.nvim
   use {'emmanueltouzery/nvim-treehopper', commit='ddf243f8c2f7c7efdf3a038c50ff5eaba31022e2'}
 end)
 

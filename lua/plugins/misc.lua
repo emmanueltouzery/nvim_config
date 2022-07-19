@@ -38,7 +38,7 @@ require'nvim-tree'.setup {
     },
   },
   filters = {
-    custom = { ".git" }, -- ignore .git
+    custom = { "^.git$" }, -- ignore .git folder
   },
 }
 

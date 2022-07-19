@@ -132,6 +132,13 @@ require('packer').startup(function(use)
             vim.api.nvim_win_set_cursor(0, { 1, 0 }) 
           end
         },
+        file_history_panel = {
+          log_options = {
+            single_file = {
+              follow = true,       -- Follow renames (only for single file)
+            }
+          }
+        }
       }
       require('diffview').init()
     end

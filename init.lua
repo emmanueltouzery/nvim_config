@@ -365,6 +365,9 @@ callbacks = {
   -- and other improvements
   -- alternative => https://github.com/ggandor/leap-ast.nvim
   use {'emmanueltouzery/nvim-treehopper', commit='ddf243f8c2f7c7efdf3a038c50ff5eaba31022e2'}
+  use {'kylechui/nvim-surround', commit='3b9cf9180839be932dfd679f8d286d9a714501fa', config=function()
+    require("nvim-surround").setup({})
+  end}
 end)
 
 --Set highlight on search

@@ -97,7 +97,7 @@ require('packer').startup(function(use)
   -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
   use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
-  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '8014f6d120f72fe0a135025c4d41e3fe41fd411b'}
+  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '57c4db7d3a663bd31ef60c4b5ed32683301247e9'}
   use {'emmanueltouzery/doom-one.nvim', commit='af905579e85bf9c67efe5394af8949f07037825b', config = function()
     require('doom-one').setup({
       cursor_coloring = true,

@@ -601,6 +601,16 @@ endfunction
 autocmd FileChangedShell * call ProcessFileChangedShell()
 ]])
 
+-- move by line, useful when we have word-wrapping
+vim.cmd([[
+nnoremap j gj
+nnoremap k gk
+nnoremap <Down> gj
+nnoremap <Up> gk
+vnoremap <Down> gj
+vnoremap <Up> gk
+]])
+
 -- return to the line we were the last time we opened this file
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]])
 

@@ -142,8 +142,17 @@ vim.keymap.set("n", "<leader>gB", "<cmd>Telescope git_branches<CR>", {desc=  "Br
 
 function telescope_commits_mappings(prompt_bufnr, map)
   map('i', '<C-r>i', function(nr)
-    commit=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     vim.cmd(":term! git rebase -i " .. commit .. "~")
+  end)
+  return true
+end
+function telescope_branches_mappings(prompt_bufnr, map)
+  local actions = require('telescope.actions')
+  map('i', '<C-d>', function(nr)
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    actions.close(prompt_bufnr)
+    vim.cmd(":DiffviewOpen " .. branch)
   end)
   return true
 end
@@ -161,7 +170,7 @@ vim.keymap.set("n", "<leader>gY", ":lua copy_file_line()<cr>", {desc="Copy line 
 vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy line and line number (sel)"})
 vim.keymap.set("n", "<leader>gR", '<cmd>lua require"gitsigns".reset_buffer()<CR>', {desc="reset buffer"})
 vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame line"})
-vim.keymap.set("n", "<leader>gr", '<cmd>lua require"telescope.builtin".git_branches{}<CR>', {desc="git bRanches"})
+vim.keymap.set("n", "<leader>gr", '<cmd>lua require"telescope.builtin".git_branches{attach_mappings=telescope_branches_mappings}<CR>', {desc="git bRanches"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set("n", "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})

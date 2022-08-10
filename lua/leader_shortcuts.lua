@@ -149,10 +149,26 @@ function telescope_commits_mappings(prompt_bufnr, map)
 end
 function telescope_branches_mappings(prompt_bufnr, map)
   local actions = require('telescope.actions')
-  map('i', '<C-d>', function(nr)
+  local action_state = require "telescope.actions.state"
+  map('i', '<C-f>', function(nr)
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. branch)
+  end)
+  map('i', '<C-d>', function(nr)
+    local current_picker = action_state.get_current_picker(prompt_bufnr)
+    current_picker:delete_selection(function(selection)
+      branch = require("telescope.actions.state").get_selected_entry(selection.bufnr).value
+      local Job = require'plenary.job'
+      Job:new({
+        command = 'git',
+        args = { 'branch', '-D', branch },
+        on_exit = function(j, return_val)
+          -- prints the sha of the tip of the deleted branch, useful for a manual undo
+          print(vim.inspect(j:result()))
+        end,
+      }):sync()
+    end)
   end)
   return true
 end

@@ -241,6 +241,7 @@ callbacks = {
       lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {}
       lspconfig.bashls.setup {}
+      lspconfig.jsonls.setup {}
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
       lspconfig.cssls.setup {

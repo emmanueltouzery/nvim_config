@@ -241,7 +241,13 @@ callbacks = {
       lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {}
       lspconfig.bashls.setup {}
-      lspconfig.jsonls.setup {}
+      lspconfig.jsonls.setup {
+        -- use null-ls & prettier for json indentation
+        on_attach = function(client)
+          client.resolved_capabilities.document_formatting = false
+          client.resolved_capabilities.document_range_formatting = false
+        end,
+      }
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
       lspconfig.cssls.setup {

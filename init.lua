@@ -116,7 +116,7 @@ require('packer').startup(function(use)
     vim.g.rooter_change_directory_for_non_project_files = 'current'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
-  use {'sindrets/diffview.nvim', commit='16c3985581ee65bccdfbebbe014b24a01adc7d1f',
+  use {'sindrets/diffview.nvim', commit='04cdfafee557c84e01724de8c6a4f24d40f7414f',
     config = function()
       local actions = require("diffview.config").actions
       require('diffview').setup {
@@ -125,12 +125,6 @@ require('packer').startup(function(use)
             ["-"] = false, -- i want this shortcut for choosewin
             ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
           }
-        },
-        hooks = {
-          -- https://github.com/sindrets/diffview.nvim/issues/174#issuecomment-1186233965
-          diff_buf_read = function(bufnr)
-            vim.api.nvim_win_set_cursor(0, { 1, 0 }) 
-          end
         },
         file_history_panel = {
           log_options = {

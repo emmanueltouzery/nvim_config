@@ -622,4 +622,9 @@ vim.cmd[[autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete]]
 -- emphasize dressing.nvim window border some more
 vim.cmd[[hi FloatBorder guifg=#dfdad9]]
 
+-- https://www.reddit.com/r/neovim/comments/ctrdtq/always_open_help_in_a_vertical_split/
+vim.cmd[[autocmd! FileType help :wincmd L]]
+vim.cmd[[autocmd! FileType man :wincmd L]]
+-- vim.cmd[[autocmd! BufEnter * if &ft ==# 'man' | wincmd L | endif]]
+
 -- vim: ts=2 sts=2 sw=2 et

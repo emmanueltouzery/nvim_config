@@ -143,6 +143,14 @@ function _G.goto_fileline()
   end)
 end
 
+function _G.open_manpage()
+  vim.ui.input({prompt="Open man page: ", kind="center_win"}, function(input)
+    if input ~= nil then
+      vim.cmd(":Man " .. input)
+    end
+  end)
+end
+
 function _G.ShowCommitAtLine()
     local commit_sha = require"agitator".git_blame_commit_for_line()
     vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. vim.fn.expand("%:p"))

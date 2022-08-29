@@ -247,6 +247,7 @@ callbacks = {
       lspconfig.cssls.setup {
         capabilities = capabilities
       }
+      lspconfig.graphql.setup {}
     end,
     after = "nvim-lspconfig",
   }
@@ -480,6 +481,7 @@ vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.formatting_sync()]]
 vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.formatting_sync()]]
 
 vim.diagnostic.config({
   virtual_text = false,

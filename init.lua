@@ -613,6 +613,25 @@ vim.api.nvim_create_autocmd("DirChanged", {
     desc = "Update neovim window title",
 })
 
+
+require'nvim-web-devicons'.set_icon {
+  graphql = {
+    -- not shipped in nvim-web-devicons at all
+    icon = "",
+    color = "#e00097",
+    cterm_color = "65",
+    name = "Graphql"
+  },
+  javascriptreact = {
+    -- change color compared to .tsx
+    -- and the builtin jsx
+    icon = "",
+    color = "#cbcb41",
+    cterm_color = "67",
+    name = "Jsx",
+  };
+}
+
 -- check if file changed outside of vim on focus
 -- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
 vim.cmd([[autocmd FocusGained * if mode() != 'c' | checktime | endif]])

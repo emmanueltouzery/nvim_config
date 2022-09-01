@@ -36,7 +36,7 @@ require 'key-menu'.set('n', '<Space>')
 
 -- FILES
 require 'key-menu'.set('n', '<Space>f', {desc='File'})
-vim.keymap.set('n', '<leader>fn', "<cmd>vert new<cr>", {desc = "New file"})
+vim.keymap.set('n', '<leader>fn', ":enew<cr>", {desc = "New file"})
 vim.keymap.set("n", "<leader>fs", ":w<cr>", {desc="Save file"})
 vim.keymap.set("n", "<leader>fS", ":wa<cr>", {desc="Save all files"})
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<cr>", {desc = "Find files"})

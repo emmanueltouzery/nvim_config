@@ -239,7 +239,7 @@ vim.keymap.set("n", "<leader>cqv", ":lua select_current_qf(true)<cr>", {desc="qu
 vim.keymap.set("n", "<leader>cqb", ":cbottom<cr>", {desc="quickfix go to bottom"})
 
 vim.cmd[[set errorformat^=ERROR\ in\ %f:%l:%c]] -- needed for tsc, typescript
-vim.keymap.set("n", "<leader>qc", ":cexpr @+<cr>", {desc="Quickfix from clipboard"})
+vim.keymap.set("n", "<leader>cqc", ":cexpr @+<cr>", {desc="Quickfix from clipboard"})
 
 -- LSP
 require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})

@@ -658,4 +658,33 @@ function _G.telescope_enable_disable_diagnostics()
   }):find()
 end
 
+-- https://www.reddit.com/r/neovim/comments/x4504j/popupfloating_window_partially_out_of_the_screen/?
+function _G.clamp_windows()
+  local screen_width = vim.api.nvim_eval('&columns')
+  for i, w in pairs(vim.api.nvim_list_wins()) do
+    local win_config = vim.api.nvim_win_get_config(w)
+    if win_config.zindex ~= nil then
+      local pos = vim.api.nvim_win_get_position(w)
+      local col = pos[2]
+      local width = vim.api.nvim_win_get_width(w)
+      if col+width > screen_width then
+        -- -- -2 due to popup borders
+        vim.api.nvim_win_set_width(w, screen_width - col -2)
+
+        -- start of code to move the popup instead of resizing it.
+        -- with relative=win i must compute the coords in the parent
+        -- window, it gets annoying
+        -- print(vim.inspect(vim.api.nvim_win_get_config(w)))
+        -- vim.api.nvim_win_set_config(w, {
+        --   relative= 'win',
+        --   anchor = 'SW',
+        --   col= screen_width - width,
+        --   row = pos[1],
+        --   win = win_config.win
+        -- })
+      end
+    end
+  end
+end
+
 -- vim: ts=2 sts=2 sw=2 et

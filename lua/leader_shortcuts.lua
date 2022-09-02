@@ -69,6 +69,7 @@ vim.keymap.set("n", "<leader>wv", "<C-W>v", {desc = "Split window right"})
 vim.keymap.set("n", "<leader>wr", "<C-w>r", {desc="Window rotate"})
 vim.keymap.set("n", "<leader>wm", "<C-w>o", {desc="Window maximize"})
 vim.keymap.set("n", "<leader>wM", "<cmd>lua max_win_in_new_tab()<cr>", {desc="Window maximize in a new tab"})
+vim.keymap.set("n", "<leader>wc", "<cmd>lua clamp_windows()<cr>", {desc="Clamp popups so they fit in the screen"})
 
 -- PACKAGES
 require 'key-menu'.set('n', '<Space>p', {desc='Packages'})
@@ -182,7 +183,7 @@ vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file
 vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", {desc="neogit"})
 vim.keymap.set("n", "<leader>gG", "<cmd>DiffviewOpen<cr>", {desc="Git two-way diff"})
 vim.keymap.set("n", "<leader>gm", ":MergetoolToggle<cr>", {desc="toggle_gitmerge"})
-vim.keymap.set("n", "<leader>gv", ":lua ShowCommitAtLine()<cr>", {desc="View commit"})
+vim.keymap.set("n", "<leader>gv", ":lua ShowCommitAtLine()<cr>", {desc="View commit for line"})
 vim.keymap.set("n", "<leader>gY", ":lua copy_file_line()<cr>", {desc="Copy line and line number"})
 vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy line and line number (sel)"})
 vim.keymap.set("n", "<leader>gR", '<cmd>lua require"gitsigns".reset_buffer()<CR>', {desc="reset buffer"})

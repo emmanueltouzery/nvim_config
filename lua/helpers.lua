@@ -527,15 +527,28 @@ function next_quickfix(take_first)
   local fname = vim.fn.expand('%:p')
   local lnum = vim.fn.line('.')
   local pick_next_fname = false
+
+  -- if the current file is not one of the quickfix files, pick the first match we find
+  local cur_fname_in_list = false
+  for i, entry in ipairs(sorted_qf_locations) do
+    local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+    if cur_fname == fname then
+      cur_fname_in_list = true
+    end
+  end
+  if not cur_fname_in_list then
+    pick_next_fname = true
+  end
+
   for i, entry in ipairs(sorted_qf_locations) do
     local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
     if cur_fname == fname then
       pick_next_fname = true
-      if entry.lnum > lnum or take_first then
+      if entry.lnum > lnum then
         vim.cmd(':' .. entry.lnum)
         return
       end
-    elseif pick_next_fname then
+    elseif pick_next_fname or take_first then
       vim.cmd('e ' .. cur_fname)
       vim.cmd(':' .. entry.lnum)
       return
@@ -558,16 +571,29 @@ function previous_quickfix(take_last)
   local fname = vim.fn.expand('%:p')
   local lnum = vim.fn.line('.')
   local pick_next_fname = false
+
+  -- if the current file is not one of the quickfix files, pick the first match we find
+  local cur_fname_in_list = false
+  for i, entry in ipairs(sorted_qf_locations) do
+    local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+    if cur_fname == fname then
+      cur_fname_in_list = true
+    end
+  end
+  if not cur_fname_in_list then
+    pick_next_fname = true
+  end
+
   for i = #sorted_qf_locations, 1, -1 do
     entry = sorted_qf_locations[i]
     local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
     if cur_fname == fname then
       pick_next_fname = true
-      if entry.lnum < lnum or take_last then
+      if entry.lnum < lnum then
         vim.cmd(':' .. entry.lnum)
         return
       end
-    elseif pick_next_fname then
+    elseif pick_next_fname or take_last then
       vim.cmd('e ' .. cur_fname)
       vim.cmd(':' .. entry.lnum)
       return

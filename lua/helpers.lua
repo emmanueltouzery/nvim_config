@@ -546,11 +546,13 @@ function next_quickfix(take_first)
       pick_next_fname = true
       if entry.lnum > lnum then
         vim.cmd(':' .. entry.lnum)
+        select_current_qf(false)
         return
       end
     elseif pick_next_fname or take_first then
       vim.cmd('e ' .. cur_fname)
       vim.cmd(':' .. entry.lnum)
+        select_current_qf(false)
       return
     end
   end
@@ -591,11 +593,13 @@ function previous_quickfix(take_last)
       pick_next_fname = true
       if entry.lnum < lnum then
         vim.cmd(':' .. entry.lnum)
+        select_current_qf(false)
         return
       end
     elseif pick_next_fname or take_last then
       vim.cmd('e ' .. cur_fname)
       vim.cmd(':' .. entry.lnum)
+        select_current_qf(false)
       return
     end
   end

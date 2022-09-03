@@ -32,8 +32,6 @@ require('packer').startup(function(use)
         file_ignore_patterns = { "^%.git/", "^node_modules/", "^__pycache__/" },
         mappings = {
           i = {
-            ['<C-u>'] = false,
-            ['<C-d>'] = false,
             ["<C-n>"] = actions.cycle_history_next,
             ["<C-p>"] = actions.cycle_history_prev,
           },

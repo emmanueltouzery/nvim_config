@@ -15,7 +15,7 @@ vim.g.lightspeed_no_default_keymaps = true
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit="cd9e6aaee01624c1a5423a783e7fd5bc8fc955c5", config = function()
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit="b79cd6c88b3d96b0f49cb7d240807cd59b610cd8", config = function()
     local actions = require("telescope.actions")
     require('telescope').setup {
       defaults = {
@@ -42,7 +42,7 @@ require('packer').startup(function(use)
           sort_lastused = true,
           mappings = {
             i = {
-              ["<c-d>"] = actions.delete_buffer + actions.move_to_top,
+              ["<c-Del>"] = actions.delete_buffer + actions.move_to_top,
             }
           }
         }

@@ -185,6 +185,7 @@ vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commi
 vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine()<cr>", {desc = "Time machine"})
 vim.keymap.set("n", "<leader>gB", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})
+vim.keymap.set("n", "<leader>gp", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
 vim.keymap.set("n", "<leader>gL", "<cmd>lua vim.cmd('DiffviewFileHistory ' .. cur_file_project_root())<cr>", {desc="project_history"})
 vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
 vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", {desc="neogit"})

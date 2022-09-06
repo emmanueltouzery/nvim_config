@@ -697,9 +697,12 @@ function _G.clamp_windows()
       local pos = vim.api.nvim_win_get_position(w)
       local col = pos[2]
       local width = vim.api.nvim_win_get_width(w)
+      local height = vim.api.nvim_win_get_height(w)
       if col+width > screen_width then
         -- -- -2 due to popup borders
         vim.api.nvim_win_set_width(w, screen_width - col -2)
+        -- increase height in case we need more due to text wrapping
+        vim.api.nvim_win_set_height(w, vim.fn.round(height * 1.1) + 1)
 
         -- start of code to move the popup instead of resizing it.
         -- with relative=win i must compute the coords in the parent

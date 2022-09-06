@@ -49,21 +49,23 @@ vim.keymap.set("n", "<leader>fW", ":noautocmd w<cr>", {desc="save_noindent"})
 
 -- SEARCH
 require 'key-menu'.set('n', '<Space>s', {desc='Search'})
-vim.keymap.set("n", "<leader>ss", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Goto LSP symbol"})
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>*", "<cmd>lua my_open_tele_sel()<cr>", {desc="Search selected text, raw"})
 vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw()<cr>", {desc="Search text raw"})
-vim.keymap.set( "n", "<leader>sS", "<cmd>Telescope lsp_workspace_symbols<CR>", {desc="Goto workspace symbol"})
+require 'key-menu'.set('n', '<Space>ss', {desc='Search LSP symbols'})
+vim.keymap.set("n", "<leader>ssf", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Goto file LSP symbol"})
+vim.keymap.set( "n", "<leader>ssw", "<cmd>Telescope lsp_workspace_symbols<CR>", {desc="Goto workspace LSP symbol"})
+function filter_lsp_workspace_symbols()
+  vim.ui.input({prompt="Enter LSP symbol filter please: ", kind="center_win"}, function(word)
+    if word ~= nil then
+      filter_lsp_symbols(word)
+    end
+  end)
+end
+vim.keymap.set( "n", "<leader>ssW", "<cmd>lua filter_lsp_workspace_symbols()<CR>", {desc="Filter workspace LSP symbols"})
 function ws_symbol_under_cursor()
   local word = vim.fn.expand('<cword>')
-  if #vim.lsp.buf_get_clients() == 0 then
-    -- no LSP clients. I'm probably in a floating window.
-    -- close it so we focus on the parent window that has a LSP
-    if vim.api.nvim_win_get_config(0).zindex > 0 then
-      vim.api.nvim_win_close(0, false)
-    end
-  end
-  require'telescope.builtin'.lsp_workspace_symbols {query=word}
+  filter_lsp_symbols(word)
 end
 vim.keymap.set( "n", "<leader>s*", "<cmd>lua ws_symbol_under_cursor()<CR>", {desc="Goto workspace symbol under cursor"})
 

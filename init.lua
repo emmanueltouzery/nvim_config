@@ -122,6 +122,11 @@ require('packer').startup(function(use)
           file_panel = {
             ["-"] = false, -- i want this shortcut for choosewin
             ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+            ["c"] = function() 
+              -- cc should commit from diffview same as from neogit
+              vim.cmd('Neogit')
+              vim.fn.feedkeys('c')
+            end
           }
         },
         file_history_panel = {

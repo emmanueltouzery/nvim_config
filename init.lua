@@ -87,7 +87,7 @@ require('packer').startup(function(use)
       },
     })
   end}
-  use {'neovim/nvim-lspconfig', commit='b86a37caf7a4e53e62ba883aef5889b590260de9'} -- Collection of configurations for built-in LSP client
+  use {'neovim/nvim-lspconfig', commit='8e65dbb6e187604cdaf0e0ef2e90c790760912e7'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='033a817ced907c8bcdcbe3355d7ea67446264f4b'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
   use { "hrsh7th/cmp-buffer", commit = "12463cfcd9b14052f9effccbf1d84caa7a2d57f0" }

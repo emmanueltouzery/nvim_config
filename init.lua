@@ -409,6 +409,7 @@ callbacks = {
   use {'kylechui/nvim-surround', commit='3b9cf9180839be932dfd679f8d286d9a714501fa', config=function()
     require("nvim-surround").setup({})
   end}
+  use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
 end)
 
 --Set highlight on search

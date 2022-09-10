@@ -119,6 +119,10 @@ require('packer').startup(function(use)
       local actions = require("diffview.config").actions
       require('diffview').setup {
         keymaps = {
+          view = {
+            ["šx"] = actions.prev_conflict,
+            ["đx"] = actions.next_conflict,
+          },
           file_panel = {
             ["-"] = false, -- i want this shortcut for choosewin
             ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
@@ -126,7 +130,9 @@ require('packer').startup(function(use)
               -- cc should commit from diffview same as from neogit
               vim.cmd('Neogit')
               vim.fn.feedkeys('c')
-            end
+            end,
+            ["šx"] = actions.prev_conflict,
+            ["đx"] = actions.next_conflict,
           }
         },
         file_history_panel = {

@@ -57,7 +57,7 @@ require('packer').startup(function(use)
     require("telescope").load_extension "file_browser"
   end}
   use { 'nvim-lualine/lualine.nvim', commit='c12b1673107c181e32ce54f2dc4c76a2a884d7ba'}
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit='27aeb2e715c32cbb99aa0b326b31739464b61644', config = function()
+  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit='d7e0bcbe45bd9d5d106a7b2e11dc15917d272c7a', config = function()
     require("gitsigns").setup {}
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library

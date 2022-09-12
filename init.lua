@@ -120,8 +120,14 @@ require('packer').startup(function(use)
       require('diffview').setup {
         keymaps = {
           view = {
-            ["šx"] = actions.prev_conflict,
-            ["đx"] = actions.next_conflict,
+            ["šx"] = function()
+              require'diffview.config'.actions.prev_conflict()
+              vim.fn.feedkeys('zz') -- center on screen
+            end,
+            ["đx"] = function()
+              require'diffview.config'.actions.next_conflict()
+              vim.fn.feedkeys('zz') -- center on screen
+            end
           },
           file_panel = {
             ["-"] = false, -- i want this shortcut for choosewin

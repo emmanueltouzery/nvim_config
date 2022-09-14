@@ -164,6 +164,11 @@ function telescope_branches_mappings(prompt_bufnr, map)
   map('i', '<C-f>', function(nr)
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
+    vim.cmd(":DiffviewOpen ..." .. branch)
+  end)
+  map('i', '<C-c>', function(nr) -- mnemonic Compare
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. branch)
   end)
   map('i', '<C-d>', function(nr)

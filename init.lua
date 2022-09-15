@@ -334,11 +334,6 @@ callbacks = {
       },
     }
   end}
-  use {'folke/trouble.nvim', commit='da61737d860ddc12f78e638152834487eabf0ee5', config = function()
-    require("trouble").setup {
-      auto_preview = false -- partly hoping it'll fix some errors https://github.com/folke/trouble.nvim/issues/125#issuecomment-1023980225
-    }
-  end}
   use {
     'kyazdani42/nvim-tree.lua', commit='c3ea264947671f44d836af5b7587e12c4b4611f9',
     requires = { 'kyazdani42/nvim-web-devicons', },

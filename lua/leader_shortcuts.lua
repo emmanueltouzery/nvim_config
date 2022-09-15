@@ -141,7 +141,6 @@ function! ToggleQuickFix()
 endfunction
  ]], false)
 vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
-vim.keymap.set("n", "<leader>tQ", ":TroubleToggle quickfix<cr>", {desc = "Toggle Trouble quickfix"})
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
 vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 vim.keymap.set("n", "<leader>tg", "<cmd>lua telescope_enable_disable_diagnostics()<cr>", {desc = "Toggle Diagnostics sources for buffer"})
@@ -255,8 +254,7 @@ require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
 vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
-vim.keymap.set("n", "<leader>clf", ":Trouble lsp_references<cr>", {desc="Display lsp references"})
-vim.keymap.set("n", "<leader>clF", ":TroubleClose<cr>", {desc="Close lsp references"})
+vim.keymap.set("n", "<leader>clf", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}}<cr>", {desc="Display lsp references"})
 -- possible alternative from ":h lsp-faq":
 -- :lua vim.lsp.stop_client(vim.lsp.get_active_clients())
 -- :edit

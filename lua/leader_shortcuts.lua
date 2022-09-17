@@ -148,7 +148,6 @@ vim.keymap.set("n", "<leader>tg", "<cmd>lua telescope_enable_disable_diagnostics
 -- GIT
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})
 vim.keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<CR>", {desc = "Browse git status"})
-vim.keymap.set("n", "<leader>gB", "<cmd>Telescope git_branches<CR>", {desc=  "Browse git branches"})
 
 function telescope_commits_mappings(prompt_bufnr, map)
   map('i', '<C-r>i', function(nr)

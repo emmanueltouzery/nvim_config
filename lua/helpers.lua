@@ -731,4 +731,18 @@ function _G.clamp_windows()
   end
 end
 
+function _G.clip_history()
+  local hist = vim.fn['yoink#getYankHistory']()
+  local select_hist = {}
+  for i, w in ipairs(hist) do
+    table.insert(select_hist, w.text)
+  end
+  vim.ui.select(select_hist, {prompt = 'Select item to copy'}, 
+  function(choice, idx)
+    if idx then
+      vim.fn.setreg('+', hist[idx].text, hist[idx].type)
+    end
+  end)
+end
+
 -- vim: ts=2 sts=2 sw=2 et

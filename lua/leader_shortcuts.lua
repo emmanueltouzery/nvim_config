@@ -113,6 +113,7 @@ vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc
 vim.keymap.set("n", "<leader>om", ":lua open_manpage()<cr>", {desc="Open man page"})
 vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}<CR>", {desc="Open keyboard shortcuts"})
 vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
+vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

@@ -410,7 +410,7 @@ callbacks = {
     alpha.setup(dashboard.config)
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
-  use {'akinsho/bufferline.nvim', commit = 'e2b1e99deb077bf49f8e167d1320292e66b22477'}
+  use {'akinsho/bufferline.nvim', commit = 'a703bb919aeb436eaa83bcbefdac51fbb92b4c74'}
   use {'emmanueltouzery/vim-dispatch-neovim', commit='72d8fb41aade2968a3786abd74c0936b599466d8'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()

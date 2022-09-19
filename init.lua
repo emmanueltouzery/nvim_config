@@ -74,6 +74,9 @@ require('packer').startup(function(use)
       playground = { enable = true },
       tree_docs = { enable = true },
       context_commentstring = { enable = true },
+      matchup = {
+        enable = true
+      },
       autotag = {
         enable = true,
         filetypes = {
@@ -428,6 +431,9 @@ callbacks = {
     require("nvim-surround").setup({})
   end}
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
+  -- language syntax-aware matchit. for instance, json {"test": "value}rest"}
+  -- or JSX <TextField<string> ... />, or things in comments which are correctly ignored
+  use {'andymass/vim-matchup', commit='ab8575d05f760da64321fefa88ed5d6cc8bb9369'}
 end)
 
 --Set highlight on search

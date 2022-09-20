@@ -137,6 +137,7 @@ require('packer').startup(function(use)
             ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
             ["c"] = function() 
               -- cc should commit from diffview same as from neogit
+              vim.cmd('DiffviewClose')
               vim.cmd('Neogit')
               vim.fn.feedkeys('c')
             end,

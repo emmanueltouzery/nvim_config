@@ -149,7 +149,6 @@ vim.keymap.set("n", "<leader>tg", "<cmd>lua telescope_enable_disable_diagnostics
 
 -- GIT
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})
-vim.keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<CR>", {desc = "Browse git status"})
 
 function telescope_commits_mappings(prompt_bufnr, map)
   map('i', '<C-r>i', function(nr)
@@ -193,7 +192,7 @@ vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commi
 vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine()<cr>", {desc = "Time machine"})
 vim.keymap.set("n", "<leader>gB", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})
-vim.keymap.set("n", "<leader>gp", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
+vim.keymap.set("n", "<leader>gs", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
 vim.keymap.set("n", "<leader>gL", "<cmd>lua vim.cmd('DiffviewFileHistory ' .. cur_file_project_root())<cr>", {desc="project_history"})
 vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
 vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", {desc="neogit"})
@@ -205,6 +204,8 @@ vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy l
 vim.keymap.set("n", "<leader>gR", '<cmd>lua require"gitsigns".reset_buffer()<CR>', {desc="reset buffer"})
 vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame line"})
 vim.keymap.set("n", "<leader>gr", '<cmd>lua require"telescope.builtin".git_branches{attach_mappings=telescope_branches_mappings}<CR>', {desc="git bRanches"})
+-- using neogit to push
+vim.keymap.set("n", "<leader>gp", '<cmd>lua run_command("git", {"pull", "--rebase", "--autostash"})<CR>', {desc="git pull"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set("n", "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})

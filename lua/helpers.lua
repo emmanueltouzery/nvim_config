@@ -789,4 +789,20 @@ function _G.telescope_jumplist()
     :find()
 end
 
+function _G.run_command(command, params)
+  Job:new {
+    command = command,
+    args = params,
+    on_exit = function(self, code, signal)
+      vim.schedule_wrap(function()
+        if code == 0 then
+          notif(command .. " executed successfully", vim.log.levels.INFO)
+        else
+          notif(command .. " failed!", vim.log.levels.ERROR)
+        end
+      end)()
+    end
+  }:start()
+end
+
 -- vim: ts=2 sts=2 sw=2 et

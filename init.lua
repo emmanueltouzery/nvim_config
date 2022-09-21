@@ -75,7 +75,8 @@ require('packer').startup(function(use)
       tree_docs = { enable = true },
       context_commentstring = { enable = true },
       matchup = {
-        enable = true
+        enable = true,
+        disable_virtual_text = true,
       },
       autotag = {
         enable = true,
@@ -434,7 +435,16 @@ callbacks = {
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
   -- language syntax-aware matchit. for instance, json {"test": "value}rest"}
   -- or JSX <TextField<string> ... />, or things in comments which are correctly ignored
-  use {'andymass/vim-matchup', commit='ab8575d05f760da64321fefa88ed5d6cc8bb9369'}
+  use {'andymass/vim-matchup', commit='ab8575d05f760da64321fefa88ed5d6cc8bb9369', config=function()
+    -- https://github.com/andymass/vim-matchup#customizing-the-highlighting-colors
+    vim.cmd [[
+      augroup matchup_matchparen_highlight
+        autocmd!
+        autocmd ColorScheme * hi MatchParen ctermfg=yellow guifg=yellow,\
+            hi MatchWord cterm=bold,underline gui=bold,underline ctermfg=NONE guifg=NONE
+      augroup END
+    ]]
+  end}
 end)
 
 --Set highlight on search

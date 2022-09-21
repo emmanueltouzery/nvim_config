@@ -803,6 +803,7 @@ function _G.run_command(command, params)
       end)()
     end
   }:start()
+  notif(command .. " launched...", vim.log.levels.INFO)
 end
 
 -- vim: ts=2 sts=2 sw=2 et

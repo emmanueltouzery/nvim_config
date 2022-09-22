@@ -807,6 +807,7 @@ function _G.run_command(command, params)
           local info = {command .. " failed!"}
           if error_msg ~= nil then
             table.insert(info, error_msg)
+            print(error_msg)
           end
           notif(info, vim.log.levels.ERROR)
         end

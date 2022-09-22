@@ -9,6 +9,7 @@ require'nvim-tree'.setup {
   update_focused_file = {
     enable = true,
   },
+  select_prompts = true,
   view = {
     mappings = {
       list = {

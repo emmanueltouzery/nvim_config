@@ -351,7 +351,7 @@ callbacks = {
     }
   end}
   use {
-    'kyazdani42/nvim-tree.lua', commit='c3ea264947671f44d836af5b7587e12c4b4611f9',
+    'kyazdani42/nvim-tree.lua', commit='540055be5f20a07156ae39b172e18fa167106e5d',
     requires = { 'kyazdani42/nvim-web-devicons', },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end

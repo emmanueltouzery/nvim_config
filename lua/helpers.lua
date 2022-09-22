@@ -790,20 +790,30 @@ function _G.telescope_jumplist()
 end
 
 function _G.run_command(command, params)
+  local error_msg = nil
   Job:new {
     command = command,
     args = params,
+    on_stderr = function(error, data, self)
+      if error_msg == nil then
+        error_msg = data
+      end
+    end,
     on_exit = function(self, code, signal)
       vim.schedule_wrap(function()
         if code == 0 then
-          notif(command .. " executed successfully", vim.log.levels.INFO)
+          notif({command .. " executed successfully"}, vim.log.levels.INFO)
         else
-          notif(command .. " failed!", vim.log.levels.ERROR)
+          local info = {command .. " failed!"}
+          if error_msg ~= nil then
+            table.insert(info, error_msg)
+          end
+          notif(info, vim.log.levels.ERROR)
         end
       end)()
     end
   }:start()
-  notif(command .. " launched...", vim.log.levels.INFO)
+  notif({command .. " launched..."}, vim.log.levels.INFO)
 end
 
 -- vim: ts=2 sts=2 sw=2 et

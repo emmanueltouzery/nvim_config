@@ -349,6 +349,7 @@ callbacks = {
         diffview = true,
       },
     }
+    vim.cmd[[autocmd User NeogitCommitComplete NvimTreeRefresh]]
   end}
   use {
     'kyazdani42/nvim-tree.lua', commit='540055be5f20a07156ae39b172e18fa167106e5d',

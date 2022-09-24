@@ -809,4 +809,69 @@ function _G.run_command(command, params)
   notif({command .. " launched..."}, vim.log.levels.INFO)
 end
 
+-- pasted and modified from telescope's lua/telescope/make_entry.lua
+-- make_entry.gen_from_git_commits
+function _G.custom_make_entry_gen_from_git_commits(opts)
+  local entry_display = require "telescope.pickers.entry_display"
+  opts = opts or {}
+
+  local displayer = entry_display.create {
+    separator = " ",
+    -- hl_chars = { ["("] = "TelescopeBorder", [")"] = "TelescopeBorder" }, --
+    items = {
+      { width = 8 },
+      { width = 16 },
+      { width = 10 },
+      { remaining = true },
+    },
+  }
+
+  local make_display = function(entry)
+    if entry.refs ~= nil then
+      return displayer {
+        { entry.value, "TelescopeResultsIdentifier" },
+        entry.auth,
+        entry.date,
+        { entry.refs .. " " .. entry.msg, "TelescopeResultsVariable" },
+      }
+    else
+      return displayer {
+        { entry.value, "TelescopeResultsIdentifier" },
+        entry.auth,
+        entry.date,
+        entry.msg,
+      }
+    end
+  end
+
+  return function(entry)
+    if entry == "" then
+      return nil
+    end
+
+    -- no optional regex groups in lua https://stackoverflow.com/questions/26044905
+    -- no repeat count... https://stackoverflow.com/questions/32884090/
+    local sha, auth, date, refs, msg = string.match(entry, "([^ ]+) (.+) (%d%d%d%d%-%d%d%-%d%d) (%([^)]+%)) (.+)")
+    if sha == nil then
+      sha, auth, date, msg = string.match(entry, "([^ ]+) (.+) (%d%d%d%d%-%d%d%-%d%d) (.+)")
+    end
+
+    if not msg then
+      sha = entry
+      msg = "<empty commit message>"
+    end
+
+    return {
+      value = sha,
+      ordinal = sha .. " " .. msg,
+      auth = auth,
+      date = date,
+      refs = refs,
+      msg = msg,
+      display = make_display,
+      current_file = opts.current_file,
+    }
+  end
+end
+
 -- vim: ts=2 sts=2 sw=2 et

@@ -32,6 +32,16 @@ vim.keymap.set("n", "<leader>bw",  "<cmd>lua open_buf_in_window(true)<cr>", {des
 vim.keymap.set("n", "<leader>bW",  "<cmd>lua open_buf_in_window(false)<cr>", {desc="Open cur. buffer in window"})
 vim.keymap.set("n", "<leader>bo", "<cmd>%bd|e#<cr>", {desc="Close all buffers but the current one"}) -- https://stackoverflow.com/a/42071865/516188
 
+function force_kill_other_bufs()
+  local curr_bufnr = vim.fn.bufnr()
+  for i, bufnr in pairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(bufnr) and bufnr ~= curr_bufnr then
+      vim.api.nvim_buf_delete(bufnr, {force=true})
+    end
+  end
+end
+vim.keymap.set("n", "<leader>bO", "<cmd>lua force_kill_other_bufs()<cr>", {desc="Force close all buffers but the current one"}) -- https://stackoverflow.com/a/42071865/516188
+
 require 'key-menu'.set('n', '<Space>')
 
 -- FILES

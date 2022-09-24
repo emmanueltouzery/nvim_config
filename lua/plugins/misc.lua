@@ -19,6 +19,11 @@ require'nvim-tree'.setup {
         -- drop C-e and C-x, i want the scrolling
         { key = "<C-e>", action = "" },
         { key = "<C-x>", action = "" },
+        -- drop s and S, i want lightning jumps
+        { key = "S", action = "" },
+        { key = "s", action = "" },
+        -- remap search to C-s
+        { key = "<c-s>", action = "search_node" },
       }
     }
   },

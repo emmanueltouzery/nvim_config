@@ -851,6 +851,7 @@ function _G.custom_make_entry_gen_from_git_commits(opts)
 
     -- no optional regex groups in lua https://stackoverflow.com/questions/26044905
     -- no repeat count... https://stackoverflow.com/questions/32884090/
+    -- can't hardcode the number of chars in the author due to lua regex multibyte snafu
     local sha, auth, date, refs, msg = string.match(entry, "([^ ]+) (.+) (%d%d%d%d%-%d%d%-%d%d) (%([^)]+%)) (.+)")
     if sha == nil then
       sha, auth, date, msg = string.match(entry, "([^ ]+) (.+) (%d%d%d%d%-%d%d%-%d%d) (.+)")

@@ -120,7 +120,8 @@ vim.keymap.set("n", "<leader>op", telescope_project_command, {desc="Open project
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
 vim.keymap.set("n", "<leader>ob", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>", {desc="Open file browser"})
 vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
-vim.keymap.set("n", "<leader>om", ":lua open_manpage()<cr>", {desc="Open man page"})
+vim.keymap.set("n", "<leader>om", ":Man ", {desc="Open man page"}) -- just open in command because I get smart completion
+vim.keymap.set("n", "<leader>oh", ":h ", {desc="Open vim help"}) -- just open in command because I get smart completion
 vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}<CR>", {desc="Open keyboard shortcuts"})
 vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
 vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})

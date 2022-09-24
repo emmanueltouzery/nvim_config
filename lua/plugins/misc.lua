@@ -16,6 +16,9 @@ require'nvim-tree'.setup {
         -- drop the - shortcut, i want it for vim-choosewin
         { key = "U", cb = tree_cb("dir_up") }, -- my change
         { key = "-", action = "" },
+        -- drop C-e and C-x, i want the scrolling
+        { key = "<C-e>", action = "" },
+        { key = "<C-x>", action = "" },
       }
     }
   },

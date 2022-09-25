@@ -726,9 +726,10 @@ vim.cmd[[autocmd! FileType man :wincmd L]]
 -- vim.cmd[[autocmd! BufEnter * if &ft ==# 'man' | wincmd L | endif]]
 
 -- move the cursor to the beginning of non-whitespace characters in a line
-vim.cmd[[
-nmap 0 ^
-nmap <Home> ^
-]]
+-- EDIT: undo. want to be able to move back to the 0th column in case of right scroll
+-- vim.cmd[[
+-- nmap 0 ^
+-- nmap <Home> ^
+-- ]]
 
 -- vim: ts=2 sts=2 sw=2 et

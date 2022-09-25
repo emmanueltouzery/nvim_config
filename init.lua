@@ -118,7 +118,7 @@ require('packer').startup(function(use)
     vim.g.rooter_change_directory_for_non_project_files = 'current'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
-  use {'sindrets/diffview.nvim', commit='9874907375d5192d87986c9e712dd6037c8eb6b3',
+  use {'sindrets/diffview.nvim', commit='6baa30d0a6f63da254c2d2c0638a426166973976',
     config = function()
       local actions = require("diffview.config").actions
       require('diffview').setup {
@@ -320,7 +320,7 @@ callbacks = {
   }
   use {'linty-org/key-menu.nvim', commit='14afd14d73488118c1cf8419e01f9353351f7bdb'}
   use {'lambdalisue/suda.vim', commit='6bffe36862faa601d2de7e54f6e85c1435e832d0'}
-  use {'akinsho/toggleterm.nvim', commit='c525442a03b7bb229c48874abf53168eb38c5b9b', config = function()
+  use {'akinsho/toggleterm.nvim', commit='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', config = function()
     require("toggleterm").setup{
       direction = 'float',
       float_opts = {
@@ -336,7 +336,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'simrat39/symbols-outline.nvim', commit='15ae99c27360ab42e931be127d130611375307d5'}
-  use {'TimUntersberger/neogit', commit='64245bb7f577bad0308d77dc1116ce7d8428f27f', config = function()
+  use {'TimUntersberger/neogit', commit='463820a83f4ba387655f370a17c87dc3100cdf0d', config = function()
     require('neogit') .setup {
       -- disable_context_highlighting = true,
       signs = {
@@ -375,7 +375,7 @@ callbacks = {
       enable_check_bracket_line = true,
     })
   end}
-  use {"goolord/alpha-nvim", commit="4781fcfea5ddc1a92d41b32dc325132ed6fce7a8", config=function()
+  use {"goolord/alpha-nvim", commit="0bb6fc0646bcd1cdb4639737a1cee8d6e08bcc31", config=function()
     local alpha = require'alpha'
     local dashboard = require'alpha.themes.dashboard'
     dashboard.section.header.val = {
@@ -430,7 +430,7 @@ callbacks = {
   -- and other improvements
   -- alternative => https://github.com/ggandor/leap-ast.nvim
   use {'emmanueltouzery/nvim-treehopper', commit='ddf243f8c2f7c7efdf3a038c50ff5eaba31022e2'}
-  use {'kylechui/nvim-surround', commit='3b9cf9180839be932dfd679f8d286d9a714501fa', config=function()
+  use {'kylechui/nvim-surround', commit='d91787d5a716623be7cec3be23c06c0856dc21b8', config=function()
     require("nvim-surround").setup({})
   end}
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}

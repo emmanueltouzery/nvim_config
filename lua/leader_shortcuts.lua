@@ -125,7 +125,8 @@ vim.keymap.set("n", "<leader>oh", ":h ", {desc="Open vim help"}) -- just open in
 vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}<CR>", {desc="Open keyboard shortcuts"})
 vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
 vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})
-vim.keymap.set("n", "<leader>oj", "<cmd>lua telescope_jumplist()<CR>", {desc="Open jump list"})
+vim.keymap.set("n", "<leader>ol", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location jump list"})
+vim.keymap.set("n", "<leader>oj", "<cmd>OverseerRun<CR>", {desc="Open job runner"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
@@ -134,6 +135,7 @@ vim.keymap.set("n", "<leader>ts", "<cmd>SymbolsOutline<CR>", {desc = "Toggle Sym
 vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
 vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>", {desc = "Toggle highlight of global marks"})
 vim.keymap.set("n", "<leader>tw", ":set wrap! linebreak<cr>", {desc = "Toggle word-wrapping"})
+vim.keymap.set("n", "<leader>tj", ":OverseerToggle<cr>", {desc = "Toggle jobs"})
 
 function toggle_diff()
   if vim.opt.diff:get() then

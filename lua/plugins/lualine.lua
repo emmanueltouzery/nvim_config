@@ -86,6 +86,14 @@ local function conflict_status()
   return ''
 end
 
+local function qf_errors()
+  local qflist = vim.fn.getqflist()
+  if #qflist > 0 then
+    return "綠" .. #qflist
+  end
+  return ''
+end
+
 local lualine = require('lualine')
 if lualine then
   lualine.setup {
@@ -100,6 +108,7 @@ if lualine then
         'DiffviewFiles',
         'packer',
         'cheat40',
+        'OverseerList'
       },
       theme = 'nord',
       component_separators = '|',
@@ -111,7 +120,7 @@ if lualine then
         { 'mode', fmt = function(str) return str:sub(1,3) end , separator = {left=nil, right=''} },
       },
       -- lualine_a = {'mode'},
-      lualine_b = {'branch', 'diff', 'diagnostics'},
+      lualine_b = {'branch', 'diff', 'diagnostics', {qf_errors, color={fg='#eabd7a'}}},
       lualine_c = {lualine_project, {conflict_status, color={fg='#ff6c6b', gui='bold'}}, {'filename', path=1}}, -- path=1 => relative filename
       -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
       -- don't color the filetype icon, else it's not always visible with the 'nord' theme.

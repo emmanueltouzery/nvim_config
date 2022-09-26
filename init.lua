@@ -446,6 +446,14 @@ callbacks = {
       augroup END
     ]]
   end}
+  use {'stevearc/overseer.nvim', commit='e649150c4f1f902f41dc78c12ef0762beee034d3', config=function()
+    require('overseer').setup{
+      task_list = {
+        direction = 'right',
+        default_detail = 2,
+      }
+    }
+  end}
 end)
 
 --Set highlight on search

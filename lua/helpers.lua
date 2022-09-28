@@ -875,4 +875,23 @@ function _G.custom_make_entry_gen_from_git_commits(opts)
   end
 end
 
+function _G.overseer_popup_running_task()
+  local overseer = require('overseer')
+  local tasks = overseer.list_tasks({ status=overseer.STATUS.RUNNING })
+  if #tasks > 1 then
+    local names = {}
+    for i, task in ipairs(tasks) do
+      table.insert(names, task.name)
+    end
+    vim.ui.select(names, {prompt = 'Select job to open'}, 
+    function(choice, idx)
+      if idx then
+        overseer.run_action(tasks[idx], "open float")
+      end
+    end)
+  elseif #tasks == 1 then
+    overseer.run_action(tasks[1], "open float")
+  end
+end
+
 -- vim: ts=2 sts=2 sw=2 et

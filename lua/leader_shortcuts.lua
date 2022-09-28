@@ -126,7 +126,6 @@ vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}
 vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
 vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})
 vim.keymap.set("n", "<leader>ol", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location jump list"})
-vim.keymap.set("n", "<leader>oj", "<cmd>OverseerRun<CR>", {desc="Open job runner"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
@@ -135,7 +134,6 @@ vim.keymap.set("n", "<leader>ts", "<cmd>SymbolsOutline<CR>", {desc = "Toggle Sym
 vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
 vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>", {desc = "Toggle highlight of global marks"})
 vim.keymap.set("n", "<leader>tw", ":set wrap! linebreak<cr>", {desc = "Toggle word-wrapping"})
-vim.keymap.set("n", "<leader>tj", ":OverseerToggle<cr>", {desc = "Toggle jobs"})
 
 function toggle_diff()
   if vim.opt.diff:get() then
@@ -282,5 +280,11 @@ vim.keymap.set("n", "<leader>ma", ":lua add_global_mark()<cr>", {desc="Add mark"
 require 'key-menu'.set('n', '<Space>v', {desc='Vim'})
 vim.keymap.set("n", "<leader>vc", ":let @+=@:<cr>", {desc="Yank last ex command text"})
 vim.keymap.set("n", "<leader>vm", [[:let @+=substitute(execute('messages'), '\n\+', '\n', 'g')<cr>]], {desc="Yank vim messages output"})
+
+-- JOBS
+require 'key-menu'.set('n', '<Space>j', {desc='Jobs'})
+vim.keymap.set("n", "<leader>jt", ":lua overseer_popup_running_task()<cr>", {desc="Open running job terminal"})
+vim.keymap.set("n", "<leader>jl", ":OverseerToggle<cr>", {desc="toggle jobs List"})
+vim.keymap.set("n", "<leader>js", "<cmd>OverseerRun<CR>", {desc="Start job"})
 
 -- vim: ts=2 sts=2 sw=2 et

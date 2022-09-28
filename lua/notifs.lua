@@ -106,5 +106,5 @@ function _G.notif(msg, level)
     local active_notifs = vim.g.active_notifs
     active_notifs[popup_win_closure] = nil
     vim.g.active_notifs = active_notifs
-  end, 1000)
+  end, 2000)
 end

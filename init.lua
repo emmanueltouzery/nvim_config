@@ -196,14 +196,7 @@ require('packer').startup(function(use)
     require("null-ls").setup({
       sources = {
         -- require("null-ls").builtins.formatting.stylua,
-        require("null-ls").builtins.diagnostics.eslint.with({
-          diagnostics_postprocess = function(diagnostic)
-            -- eslint can never be 'error', cap it to 'warn'
-            if diagnostic.severity == vim.diagnostic.severity["ERROR"] then
-              diagnostic.severity = vim.diagnostic.severity["WARN"]
-            end
-          end,
-        }),
+        require("null-ls").builtins.diagnostics.eslint,
         require("null-ls").builtins.diagnostics.credo,
         -- require("null-ls").builtins.completion.spell,
         require("null-ls").builtins.formatting.prettier,

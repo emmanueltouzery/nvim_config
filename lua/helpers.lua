@@ -520,10 +520,10 @@ function get_sorted_qf_locations()
 end
 
 function _G.next_quickfix()
-  next_quickfix(false)
+  next_quickfix()
 end
 
-function next_quickfix(take_first)
+function next_quickfix()
   local sorted_qf_locations = get_sorted_qf_locations()
 
   -- find the first record for my filename
@@ -552,24 +552,28 @@ function next_quickfix(take_first)
         select_current_qf(false)
         return
       end
-    elseif pick_next_fname or take_first then
+    elseif pick_next_fname then
       vim.cmd('e ' .. cur_fname)
       vim.cmd(':' .. entry.lnum)
-        select_current_qf(false)
+      select_current_qf(false)
       return
     end
   end
-  -- no match, wraparound, pick first in file if any
-  if not take_first then
-    next_quickfix(true)
+  -- no match, wraparound
+  if #sorted_qf_locations > 0 then
+    local entry = sorted_qf_locations[1]
+    local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+    vim.cmd('e ' .. cur_fname)
+    vim.cmd(':' .. entry.lnum)
+    select_current_qf(false)
   end
 end
 
 function _G.previous_quickfix()
-  previous_quickfix(false)
+  previous_quickfix()
 end
 
-function previous_quickfix(take_last)
+function previous_quickfix()
   local sorted_qf_locations = get_sorted_qf_locations()
 
   -- find the first record for my filename
@@ -599,16 +603,20 @@ function previous_quickfix(take_last)
         select_current_qf(false)
         return
       end
-    elseif pick_next_fname or take_last then
+    elseif pick_next_fname then
       vim.cmd('e ' .. cur_fname)
       vim.cmd(':' .. entry.lnum)
         select_current_qf(false)
       return
     end
   end
-  -- no match, wraparound, pick last in file if any
-  if not take_last then
-    previous_quickfix(true)
+  -- no match, wraparound
+  if #sorted_qf_locations > 0 then
+    local entry = sorted_qf_locations[#sorted_qf_locations]
+    local cur_fname = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+    vim.cmd('e ' .. cur_fname)
+    vim.cmd(':' .. entry.lnum)
+    select_current_qf(false)
   end
 end
 

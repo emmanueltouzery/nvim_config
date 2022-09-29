@@ -48,7 +48,7 @@ function _G.notif_format_msg(msg)
   return res
 end
 
-function _G.notif(msg, level)
+function _G.notif(msg, level, opts)
   local popup_buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
@@ -58,7 +58,7 @@ function _G.notif(msg, level)
   local msg_width = notif_length(msg)+2
 
   local offset = notif_max_offset()+1
-  local opts = {
+  local win_opts = {
     focusable = false,
     style = "minimal",
     border = "rounded",
@@ -72,7 +72,7 @@ function _G.notif(msg, level)
 
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, notif_format_msg(msg))
 
-  popup_win = vim.api.nvim_open_win(popup_buf, false, opts)
+  popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 
   if level == nil or level == vim.log.levels.INFO then
     vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifInfo,FloatBorder:NotifInfo")
@@ -95,7 +95,7 @@ function _G.notif(msg, level)
   -- not the scheduled one
   local popup_win_closure = popup_win .. ""
 
-  vim.defer_fn(function()
+  function hide_closure()
     local notif = vim.g.active_notifs[popup_win_closure]
     if vim.api.nvim_win_is_valid(notif.popup_win) then
       vim.api.nvim_win_close(notif.popup_win, true)
@@ -106,5 +106,10 @@ function _G.notif(msg, level)
     local active_notifs = vim.g.active_notifs
     active_notifs[popup_win_closure] = nil
     vim.g.active_notifs = active_notifs
-  end, 2000)
+  end
+  if not (opts or {}).dont_hide then
+    vim.defer_fn(hide_closure, 2000)
+  else
+    return hide_closure
+  end
 end

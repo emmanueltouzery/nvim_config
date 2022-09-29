@@ -285,6 +285,6 @@ vim.keymap.set("n", "<leader>vm", [[:let @+=substitute(execute('messages'), '\n\
 require 'key-menu'.set('n', '<Space>j', {desc='Jobs'})
 vim.keymap.set("n", "<leader>jt", ":lua overseer_popup_running_task()<cr>", {desc="Open running job terminal"})
 vim.keymap.set("n", "<leader>jl", ":OverseerToggle<cr>", {desc="toggle jobs List"})
-vim.keymap.set("n", "<leader>js", "<cmd>OverseerRun<CR>", {desc="Start job"})
+vim.keymap.set("n", "<leader>jr", "<cmd>OverseerRun<CR>", {desc="Run job"})
 
 -- vim: ts=2 sts=2 sw=2 et

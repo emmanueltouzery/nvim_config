@@ -53,8 +53,8 @@ function _G.notif(msg, level)
   vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
 
-  local width = vim.fn.winwidth(0)
-  local height = vim.fn.winheight(0)
+  local width = vim.api.nvim_get_option("columns")
+  local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
   local msg_width = notif_length(msg)+2
 
   local offset = notif_max_offset()+1
@@ -62,7 +62,7 @@ function _G.notif(msg, level)
     focusable = false,
     style = "minimal",
     border = "rounded",
-    relative = "win",
+    relative = "editor",
     width = msg_width,
     height = #msg,
     anchor = "SE",

@@ -174,7 +174,16 @@ function telescope_branches_mappings(prompt_bufnr, map)
   map('i', '<C-f>', function(nr)
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
-    vim.cmd(":DiffviewOpen ..." .. branch)
+    -- heuristics.. will see if it works out
+    if string.match(branch, "develop") then
+      -- i want to compare to develop. presumably i'm ahead, comparing behind
+      diffspec = branch .. "..."
+    else
+      -- i want to compare with another branch which isn't develop. i'm probably
+      -- on develop => presumably i'm behind, comparing ahead
+      diffspec = "..." .. branch
+    end
+    vim.cmd(":DiffviewOpen " .. diffspec)
   end)
   map('i', '<C-c>', function(nr) -- mnemonic Compare
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value

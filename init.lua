@@ -661,13 +661,6 @@ vim.api.nvim_create_autocmd("DirChanged", {
 
 
 require'nvim-web-devicons'.set_icon {
-  graphql = {
-    -- not shipped in nvim-web-devicons at all
-    icon = "",
-    color = "#e00097",
-    cterm_color = "65",
-    name = "Graphql"
-  },
   javascriptreact = {
     -- change color compared to .tsx
     -- and the builtin jsx

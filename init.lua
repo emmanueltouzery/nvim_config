@@ -443,12 +443,13 @@ callbacks = {
       augroup END
     ]]
   end}
-  use {'stevearc/overseer.nvim', commit='587bd91dbd4b7ebc4f12cd33394851f4ef64a406', config=function()
+  use {'stevearc/overseer.nvim', commit='0a4567533a4e0ffa94118055d5a6c1b7353f2e2a', config=function()
     require('overseer').setup{
       task_list = {
         direction = 'right',
         default_detail = 2,
-      }
+      },
+      template_timeout = 3000,
     }
   end}
 end)

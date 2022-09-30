@@ -119,6 +119,7 @@ require 'key-menu'.set('n', '<Space>o', {desc='Open'})
 vim.keymap.set("n", "<leader>op", telescope_project_command, {desc="Open project"})
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
 vim.keymap.set("n", "<leader>ob", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>", {desc="Open file browser"})
+vim.keymap.set("n", "<leader>of", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true, path=vim.fn.expand(\"%:p:h\"), select_buffer=true})<CR>", {desc="Open browser in current folder"})
 vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
 vim.keymap.set("n", "<leader>om", ":Man ", {desc="Open man page"}) -- just open in command because I get smart completion+history
 vim.keymap.set("n", "<leader>oh", ":h ", {desc="Open vim help"}) -- just open in command because I get smart completion+history

@@ -88,8 +88,14 @@ end
 
 local function qf_errors()
   local qflist = vim.fn.getqflist()
-  if #qflist > 0 then
-    return "綠" .. #qflist
+  local err_count = 0
+  for i, qfentry in ipairs(qflist) do
+    if qfentry.type == 'E' then
+      err_count = err_count + 1
+    end
+  end
+  if err_count > 0 then
+    return "綠" .. err_count
   end
   return ''
 end

@@ -259,8 +259,13 @@ callbacks = {
 
       lspconfig.tsserver.setup {
         on_attach = function(client)
-          client.resolved_capabilities.document_formatting = false
-          client.resolved_capabilities.document_range_formatting = false
+          if vim.version().minor > 7 then
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          else
+            client.resolved_capabilities.document_formatting = false
+            client.resolved_capabilities.document_range_formatting = false
+          end
         end,
 
         -- fix annoying quickfix opening because tsserver returns multiple matches
@@ -302,8 +307,13 @@ callbacks = {
       lspconfig.jsonls.setup {
         -- use null-ls & prettier for json indentation
         on_attach = function(client)
-          client.resolved_capabilities.document_formatting = false
-          client.resolved_capabilities.document_range_formatting = false
+          if vim.version().minor > 7 then
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          else
+            client.resolved_capabilities.document_formatting = false
+            client.resolved_capabilities.document_range_formatting = false
+          end
         end,
       }
       local capabilities = vim.lsp.protocol.make_client_capabilities()

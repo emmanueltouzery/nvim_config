@@ -92,14 +92,14 @@ require('packer').startup(function(use)
     })
   end}
   use {'neovim/nvim-lspconfig', commit='8e65dbb6e187604cdaf0e0ef2e90c790760912e7'} -- Collection of configurations for built-in LSP client
-  use {'hrsh7th/nvim-cmp', commit='033a817ced907c8bcdcbe3355d7ea67446264f4b'} -- Autocompletion plugin
+  use {'hrsh7th/nvim-cmp', commit='2427d06b6508489547cd30b6e86b1c75df363411'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
-  use { "hrsh7th/cmp-buffer", commit = "12463cfcd9b14052f9effccbf1d84caa7a2d57f0" }
-  use { "hrsh7th/cmp-path", commit = "466b6b8270f7ba89abd59f402c73f63c7331ff6e" }
+  use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
+  use { "hrsh7th/cmp-path", commit = "447c87cdd6e6d6a1d2488b1d43108bfa217f56e1" }
   -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
   use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
-  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '57c4db7d3a663bd31ef60c4b5ed32683301247e9'}
+  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3dd40097196bdffe5f868d5dddcc0aa146ae41eb'}
   use {'emmanueltouzery/doom-one.nvim', commit='af905579e85bf9c67efe5394af8949f07037825b', config = function()
     require('doom-one').setup({
       cursor_coloring = true,

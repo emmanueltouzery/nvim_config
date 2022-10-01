@@ -191,7 +191,7 @@ require('packer').startup(function(use)
     vim.g.markify_info_text = ""
     vim.g.markify_info_texthl = "Todo"
   end}
-  use {'jose-elias-alvarez/null-ls.nvim', commit='af192263b33764fa91d3fa578abd9e674a1984c7', config = function()
+  use {'jose-elias-alvarez/null-ls.nvim', commit='c0c19f32b614b3921e17886c541c13a72748d450', config = function()
 
     require("null-ls").setup({
       sources = {

@@ -11,6 +11,23 @@ require'nvim-tree'.setup {
   },
   select_prompts = true,
   view = {
+    centralize_selection = true,
+    signcolumn = "no",
+    float = {
+      enable = true,
+      open_win_config = function()
+        local width = vim.api.nvim_get_option("columns")
+        local float_width = 37
+        return {
+          relative = "editor",
+          border = "rounded",
+          width = float_width,
+          height = 50,
+          row = 1,
+          col = width - float_width - 2,
+        }
+      end,
+    },
     mappings = {
       list = {
         -- drop the - shortcut, i want it for vim-choosewin
@@ -39,7 +56,8 @@ require'nvim-tree'.setup {
   actions = {
     open_file = {
       window_picker = {
-        chars = '234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        enable = false,
+        -- chars = '234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
       }
     },
     remove_file = {

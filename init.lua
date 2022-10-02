@@ -611,7 +611,7 @@ vim.cmd("set spell")
 vim.cmd("set spelloptions=camel")
 vim.cmd("hi clear SpellCap")
 vim.cmd("au BufNewFile,BufRead,BufWritePost *.lua setlocal nospell")
-vim.cmd("au BufNewFile,BufRead,BufWritePost *.sh setlocal nospell")
+-- vim.cmd("au BufNewFile,BufRead,BufWritePost *.sh setlocal nospell")
 -- neogit has stuff like [c]ommit that don't spell check well
 -- and generally nothing mine to spell check there
 vim.cmd('autocmd FileType NeogitStatus setlocal nospell')

@@ -127,6 +127,7 @@ vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}
 vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
 vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})
 vim.keymap.set("n", "<leader>ol", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location jump list"})
+vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeFocus<CR>", {desc="Open file explorer"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

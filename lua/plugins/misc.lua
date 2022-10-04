@@ -45,6 +45,7 @@ require'nvim-tree'.setup {
     }
   },
   renderer = {
+    highlight_opened_files = "name",
     icons = {
       glyphs = {
         git = {
@@ -68,6 +69,7 @@ require'nvim-tree'.setup {
     custom = { "^.git$" }, -- ignore .git folder
   },
 }
+vim.cmd[[au Colorscheme * hi NvimTreeOpenedFile guifg=#ecbe7b]]
 
 vim.g.glow_width = 120
 vim.g.glow_border = "rounded"

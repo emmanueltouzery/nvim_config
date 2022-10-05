@@ -1,6 +1,5 @@
 vim.cmd("let g:choosewin_label = '1234567890'")
 vim.cmd("let g:choosewin_tablabel = 'abcdefghijklmnop'")
-
 local tree_cb = require("nvim-tree.config").nvim_tree_callback
 require'nvim-tree'.setup {
   diagnostics = {
@@ -16,6 +15,7 @@ require'nvim-tree'.setup {
     signcolumn = "no",
     float = {
       enable = true,
+      quit_on_focus_loss = false,
       open_win_config = function()
         local width = vim.api.nvim_get_option("columns")
         local float_width = 37
@@ -57,6 +57,7 @@ require'nvim-tree'.setup {
   },
   actions = {
     open_file = {
+     quit_on_open = false,
       window_picker = {
         enable = false,
         -- chars = '234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',

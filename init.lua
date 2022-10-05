@@ -359,7 +359,7 @@ callbacks = {
     vim.cmd[[autocmd User NeogitCommitComplete NvimTreeRefresh]]
   end}
   use {
-    'kyazdani42/nvim-tree.lua', commit='540055be5f20a07156ae39b172e18fa167106e5d',
+    'emmanueltouzery/nvim-tree.lua', commit='d1ababb367167ebf4144c3e8c68fb81bdaf52b37',
     requires = { 'kyazdani42/nvim-web-devicons', },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end

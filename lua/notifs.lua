@@ -4,7 +4,7 @@
 local Str = require'plenary.strings'
 
 vim.cmd [[
-hi def NotifInfo guifg=#80ff95
+hi def NotifInfo guifg=#528aa8
 hi def NotifWarning guifg=#fff454
 hi def NotifError guifg=#c44323
 ]]
@@ -51,6 +51,8 @@ end
 function _G.notif(msg, level, opts)
   local popup_buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
+  vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")
+  vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
   vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
 
   local width = vim.api.nvim_get_option("columns")
@@ -71,6 +73,8 @@ function _G.notif(msg, level, opts)
   }
 
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, notif_format_msg(msg))
+  vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
 
   popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 

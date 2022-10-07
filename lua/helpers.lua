@@ -125,7 +125,9 @@ function _G.goto_fileline()
       for _, project in pairs(get_project_objects()) do
         if vim.fn.filereadable(project.path .. "/" .. fname) == 1 then
           vim.cmd(":e " .. project.path .. "/" .. fname)
-          vim.cmd(":" .. line)
+          if string.match(line, "^%d+$") then
+            vim.cmd(":" .. line)
+          end
           return
         end
       end

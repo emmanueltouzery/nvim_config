@@ -24,7 +24,7 @@ require'nvim-tree'.setup {
           relative = "editor",
           border = "rounded",
           width = float_width,
-          height = height - 4,
+          height = height - 5,
           row = 1,
           col = width - float_width - 2,
         }

@@ -174,12 +174,13 @@ require('packer').startup(function(use)
   use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
   use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
   use {'lifepillar/vim-cheat40', commit='ae237b02f9031bc82a8ad9202bffee2bcef71ed1'}
-  use {'ggandor/lightspeed.nvim', commit='a4b4277', config = function()
+  use {'ggandor/lightspeed.nvim', commit='a5b79ddbd755ac8d21a8704c370b5f643dda94aa', config = function()
     require'lightspeed'.setup {
       ignore_case = true,
     }
     vim.api.nvim_set_keymap('n', 's', '<Plug>Lightspeed_s', {silent = true})
     vim.api.nvim_set_keymap('n', 'S', '<Plug>Lightspeed_S', {silent = true})
+    vim.api.nvim_set_keymap('n', 'gs', '<Plug>Lightspeed_omni_gs', {silent = true})
   end}
   use {'samoshkin/vim-mergetool', commit='0275a85256ad173e3cde586d54f66566c01b607f'}
   use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
@@ -343,7 +344,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'simrat39/symbols-outline.nvim', commit='15ae99c27360ab42e931be127d130611375307d5'}
-  use {'TimUntersberger/neogit', commit='463820a83f4ba387655f370a17c87dc3100cdf0d', config = function()
+  use {'TimUntersberger/neogit', commit='74c9e29b61780345d3ad9d7a4a4437607caead4a', config = function()
     require('neogit') .setup {
       -- disable_context_highlighting = true,
       signs = {

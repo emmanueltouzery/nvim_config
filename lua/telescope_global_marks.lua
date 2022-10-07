@@ -35,7 +35,7 @@ _G.telescope_global_marks = function(opts)
           relative_fname = path_project and path_project[2] or name,
           lnum = lnum,
           col = col,
-          filename = v.file or bufname,
+          filename = name or bufname,
         }
         -- only keep global marks (u="uppercase")
         if mark:match "%u" then

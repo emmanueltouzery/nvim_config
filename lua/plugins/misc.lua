@@ -18,12 +18,13 @@ require'nvim-tree'.setup {
       quit_on_focus_loss = false,
       open_win_config = function()
         local width = vim.api.nvim_get_option("columns")
+        local height = vim.api.nvim_get_option("lines")
         local float_width = 37
         return {
           relative = "editor",
           border = "rounded",
           width = float_width,
-          height = 50,
+          height = height - 4,
           row = 1,
           col = width - float_width - 2,
         }

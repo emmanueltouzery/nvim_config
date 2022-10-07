@@ -56,6 +56,7 @@ vim.keymap.set("n", "<leader>fw", "<cmd>SudaWrite<cr>", { desc = "Write file wit
 vim.keymap.set("n", "<leader>fp", ':lua copy_to_clipboard(cur_file_path_in_project())<cr>', {desc="Copy file path"}) -- ':let @+ = expand("%")<cr>',
 vim.keymap.set("n", "<leader>fP", ':let @+ = expand("%:p")<cr>', {desc="Copy file full path"})
 vim.keymap.set("n", "<leader>fW", ":noautocmd w<cr>", {desc="save_noindent"})
+vim.keymap.set("n", "<leader>fD", ":e ++ff=dos<cr>", {desc="reload file as DOS"}) -- https://vim.fandom.com/wiki/File_format many typescript library files have windows line endings except for the copyright header
 
 -- SEARCH
 require 'key-menu'.set('n', '<Space>s', {desc='Search'})

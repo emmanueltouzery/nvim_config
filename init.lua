@@ -126,11 +126,11 @@ require('packer').startup(function(use)
           view = {
             ["šx"] = function()
               require'diffview.config'.actions.prev_conflict()
-              vim.fn.feedkeys('zz') -- center on screen
+              vim.cmd("norm! zz") -- center on screen
             end,
             ["đx"] = function()
               require'diffview.config'.actions.next_conflict()
-              vim.fn.feedkeys('zz') -- center on screen
+              vim.cmd("norm! zz") -- center on screen
             end,
             ["gf"] = diffview_gf,
           },
@@ -224,7 +224,7 @@ require('packer').startup(function(use)
             human_readable_url = _G.get_file_line_sel()
           end
 
-          vim.api.nvim_command('let @+ = \'' .. human_readable_url .. ' ' .. url .. '\'')
+          vim.fn.setreg('+', human_readable_url .. ' ' .. url)
         end,
       },
 callbacks = {

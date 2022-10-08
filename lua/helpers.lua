@@ -15,7 +15,7 @@ function _G.my_open_tele_sel()
 end
 
 function _G.copy_to_clipboard(to_copy)
-    vim.cmd("let @+ = '" .. to_copy .. "'")
+    vim.fn.setreg('+', to_copy)
 end
 
 function _G.to_file_path_in_project(full_path)
@@ -62,7 +62,7 @@ end
 
 function _G.copy_file_line()
     local to_copy = get_file_line()
-    vim.cmd("let @+ = '" .. to_copy .. "'")
+    vim.fn.setreg('+', to_copy)
     print(to_copy)
 end
 
@@ -101,7 +101,7 @@ end
 
 function _G.copy_file_line_sel()
     local to_copy = get_file_line_sel()
-    vim.cmd("let @+ = '" .. to_copy .. "'")
+    vim.fn.setreg('+', to_copy)
     print(to_copy)
 end
 

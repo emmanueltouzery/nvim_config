@@ -25,7 +25,7 @@ function open_buf_in_window(jump_to_target)
   if jump_to_target then
     vim.cmd(target_win_idx .. ' wincmd w')
     vim.cmd(':' .. line)
-    vim.fn.feedkeys('zz')
+    vim.cmd("norm! zz") -- center on screen
   end
 end
 vim.keymap.set("n", "<leader>bw",  "<cmd>lua open_buf_in_window(true)<cr>", {desc="Open cur. buffer in window+go there"})

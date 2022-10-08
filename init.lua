@@ -232,7 +232,7 @@ callbacks = {
     })
   end}
   use {'arkav/lualine-lsp-progress', commit='56842d097245a08d77912edf5f2a69ba29f275d7'}
-  use {'stevearc/dressing.nvim', commit='76477792b34f8fed167b5aa61a325e4dab26c3d7', config=function()
+  use {'stevearc/dressing.nvim', commit='12b808a6867e8c38015488ad6cee4e3d58174182', config=function()
     require('dressing').setup({
       input = {
         -- ESC won't close the modal, ability to use vim keys
@@ -326,7 +326,7 @@ callbacks = {
     end,
     after = "nvim-lspconfig",
   }
-  use {'emmanueltouzery/key-menu.nvim', commit='99ec37f4fa44060f23409a72303dbff39da2930e'}
+  use {'linty-org/key-menu.nvim', commit='34c226a4bdadd59ca10f046e3d44f959504b12a4'}
   use {'lambdalisue/suda.vim', commit='6bffe36862faa601d2de7e54f6e85c1435e832d0'}
   use {'akinsho/toggleterm.nvim', commit='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', config = function()
     require("toggleterm").setup{
@@ -360,7 +360,7 @@ callbacks = {
     vim.cmd[[autocmd User NeogitCommitComplete NvimTreeRefresh]]
   end}
   use {
-    'emmanueltouzery/nvim-tree.lua', commit='d1ababb367167ebf4144c3e8c68fb81bdaf52b37',
+    'nvim-tree/nvim-tree.lua', commit='b4d704e88d57f2c7889aa01093038a7a5a4f3c5d',
     requires = { 'kyazdani42/nvim-web-devicons', },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
@@ -660,6 +660,9 @@ vim.cmd("set listchars=tab:→\\ ,trail:·,nbsp:␣")
 vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
+
+-- syntax highlight for fennel files
+vim.cmd('autocmd BufNewFile,BufRead *.fnl set ft=lisp')
 
 vim.cmd("set title")
 vim.api.nvim_create_autocmd("DirChanged", {

@@ -916,4 +916,15 @@ function _G.diffview_gf()
   end
 end
 
+function _G.get_nvimtree_window()
+  local wins = vim.api.nvim_list_wins()
+  for i, win in ipairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_buf_get_option(buf, "ft") == "NvimTree" then
+      return win
+    end
+  end
+  return nil
+end
+
 -- vim: ts=2 sts=2 sw=2 et

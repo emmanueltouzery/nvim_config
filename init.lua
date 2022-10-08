@@ -177,7 +177,7 @@ require('packer').startup(function(use)
   use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
   use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
   use {'lifepillar/vim-cheat40', commit='ae237b02f9031bc82a8ad9202bffee2bcef71ed1'}
-  use {'ggandor/lightspeed.nvim', commit='a5b79ddbd755ac8d21a8704c370b5f643dda94aa', config = function()
+  use {'emmanueltouzery/lightspeed.nvim', commit='b2961ae6360971c06dac0f5766df96a740ace050', config = function()
     require'lightspeed'.setup {
       ignore_case = true,
     }
@@ -363,7 +363,7 @@ callbacks = {
     vim.cmd[[autocmd User NeogitCommitComplete NvimTreeRefresh]]
   end}
   use {
-    'nvim-tree/nvim-tree.lua', commit='b4d704e88d57f2c7889aa01093038a7a5a4f3c5d',
+    'emmanueltouzery/nvim-tree.lua', commit='660fdae10cfb64db13568208d4b02d1a4f8f014c',
     requires = { 'kyazdani42/nvim-web-devicons', },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end

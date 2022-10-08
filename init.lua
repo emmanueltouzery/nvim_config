@@ -131,7 +131,8 @@ require('packer').startup(function(use)
             ["đx"] = function()
               require'diffview.config'.actions.next_conflict()
               vim.fn.feedkeys('zz') -- center on screen
-            end
+            end,
+            ["gf"] = diffview_gf,
           },
           file_panel = {
             ["-"] = false, -- i want this shortcut for choosewin
@@ -144,9 +145,11 @@ require('packer').startup(function(use)
             end,
             ["šx"] = actions.prev_conflict,
             ["đx"] = actions.next_conflict,
+            ["gf"] = diffview_gf,
           }
         },
         file_history_panel = {
+          ["gf"] = diffview_gf,
           log_options = {
             single_file = {
               follow = true,       -- Follow renames (only for single file)

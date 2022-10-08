@@ -904,4 +904,16 @@ function _G.overseer_popup_running_task()
   end
 end
 
+function _G.diffview_gf()
+  -- https://github.com/sindrets/diffview.nvim/issues/230
+  local file = require("diffview.lib").get_current_view():infer_cur_file()
+  if file then
+    vim.cmd[[:tabc]]
+    if vim.fn.winnr('$') > 1 then
+      vim.cmd[[ChooseWin]]
+    end
+    vim.cmd(":e " .. file.absolute_path)
+  end
+end
+
 -- vim: ts=2 sts=2 sw=2 et

@@ -70,6 +70,7 @@ function _G.notif(msg, level, opts)
     anchor = "SE",
     row = height - offset*3,
     col = width,
+    noautocmd = true,
   }
 
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, notif_format_msg(msg))

@@ -565,19 +565,35 @@ require("telescope_qf_locations")
 require("qftf")
 require("notifs")
 
-vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.formatting_sync()]]
+if vim.version().minor > 7 then
+  vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.format()]]
+  vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.format()]]
+else
+  vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.formatting_sync()]]
+  vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.formatting_sync()]]
+end
 
 vim.diagnostic.config({
   virtual_text = false,

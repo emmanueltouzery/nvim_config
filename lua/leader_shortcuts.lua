@@ -242,7 +242,11 @@ require 'key-menu'.set('n', '<Space>c', {desc='Code'})
 
 function format_buf()
   if #vim.lsp.buf_get_clients() > 0 then
-    vim.lsp.buf.formatting_sync()
+    if vim.version().minor > 7 then
+      vim.lsp.buf.format()
+    else
+      vim.lsp.buf.formatting_sync()
+    end
   elseif vim.bo.filetype == 'json' then
     -- i think this happens if the file is unsaved
     vim.cmd(':%!prettier --parser json')

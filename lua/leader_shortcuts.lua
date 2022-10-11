@@ -127,7 +127,7 @@ vim.keymap.set("n", "<leader>oh", ":h ", {desc="Open vim help"}) -- just open in
 vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}<CR>", {desc="Open keyboard shortcuts"})
 vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
 vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})
-vim.keymap.set("n", "<leader>ol", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location jump list"})
+vim.keymap.set("n", "<leader>oj", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location Jump list"})
 vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeFocus<CR>", {desc="Open file explorer"})
 
 -- TOGGLE

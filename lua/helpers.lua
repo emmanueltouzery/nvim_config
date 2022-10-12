@@ -927,4 +927,25 @@ function _G.get_nvimtree_window()
   return nil
 end
 
+function _G.remove_unused_imports()
+  if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
+    for i, diag in ipairs(vim.diagnostic.get(0)) do
+      if diag.code == "@typescript-eslint/no-unused-vars" 
+        and string.match(vim.api.nvim_buf_get_lines(0, diag.lnum, diag.lnum+1, true)[1], "^%s*import") 
+        then
+          for lnum=diag.lnum,diag.lnum+5 do
+            local line = vim.api.nvim_buf_get_lines(0, lnum, lnum+1, false)[1]
+            if string.match(line, ";") then
+              -- found the end of the import statement, delete the lines
+              vim.api.nvim_buf_set_lines(0, diag.lnum, lnum+1, false, {})
+              break
+            end
+          end
+        end
+      end
+    else
+      print("Not supported for this file type!")
+    end
+  end
+
 -- vim: ts=2 sts=2 sw=2 et

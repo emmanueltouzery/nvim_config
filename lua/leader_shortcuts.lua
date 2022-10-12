@@ -289,6 +289,7 @@ vim.keymap.set("n", "<leader>clf", "<cmd>lua require'telescope.builtin'.lsp_refe
 -- :lua vim.lsp.stop_client(vim.lsp.get_active_clients())
 -- :edit
 vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
+vim.keymap.set("n", "<leader>cli", "<cmd>lua remove_unused_imports()<CR>", {desc="Remove unused imports"})
 
 -- MARKS
 require 'key-menu'.set('n', '<Space>m', {desc='Marks'})

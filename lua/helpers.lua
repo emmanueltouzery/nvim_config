@@ -929,7 +929,12 @@ end
 
 function _G.remove_unused_imports()
   if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
-    for i, diag in ipairs(vim.diagnostic.get(0)) do
+    -- sort diagnostics: i want the bottom of the file first, because deleting lines shift line numbers
+    local sorted_diags = vim.diagnostic.get(0) 
+    table.sort(sorted_diags, function(a,b)
+      return a.lnum > b.lnum
+    end)
+    for i, diag in ipairs(sorted_diags) do
       if diag.code == "@typescript-eslint/no-unused-vars" 
         and string.match(vim.api.nvim_buf_get_lines(0, diag.lnum, diag.lnum+1, true)[1], "^%s*import") 
         then

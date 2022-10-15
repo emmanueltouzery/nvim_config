@@ -184,6 +184,8 @@ require('packer').startup(function(use)
     }
     vim.api.nvim_set_keymap('n', 's', '<Plug>Lightspeed_s', {silent = true})
     vim.api.nvim_set_keymap('n', 'S', '<Plug>Lightspeed_S', {silent = true})
+    vim.api.nvim_set_keymap('v', 's', '<Plug>Lightspeed_s', {silent = true})
+    vim.api.nvim_set_keymap('v', 'S', '<Plug>Lightspeed_S', {silent = true})
     vim.api.nvim_set_keymap('n', 'gs', '<Plug>Lightspeed_omni_gs', {silent = true})
   end}
   use {'samoshkin/vim-mergetool', commit='0275a85256ad173e3cde586d54f66566c01b607f'}
@@ -443,7 +445,13 @@ callbacks = {
   -- alternative => https://github.com/ggandor/leap-ast.nvim
   use {'emmanueltouzery/nvim-treehopper', commit='ddf243f8c2f7c7efdf3a038c50ff5eaba31022e2'}
   use {'kylechui/nvim-surround', commit='d91787d5a716623be7cec3be23c06c0856dc21b8', config=function()
-    require("nvim-surround").setup({})
+    require("nvim-surround").setup({
+      keymaps = {
+        -- https://github.com/ggandor/lightspeed.nvim/issues/31
+        -- fix conflict with lightspeed
+        visual = "gs",
+      }
+    })
   end}
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
   -- language syntax-aware matchit. for instance, json {"test": "value}rest"}

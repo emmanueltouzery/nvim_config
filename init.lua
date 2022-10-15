@@ -208,6 +208,7 @@ require('packer').startup(function(use)
           -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md#diagnostics-format
           diagnostics_format = "#{m} [#{c}]",
         }),
+        require("null-ls").builtins.code_actions.eslint, -- eslint code actions
         require("null-ls").builtins.diagnostics.credo,
         -- require("null-ls").builtins.completion.spell,
         require("null-ls").builtins.formatting.prettier,

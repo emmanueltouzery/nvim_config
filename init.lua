@@ -165,6 +165,7 @@ require('packer').startup(function(use)
   use {'nvim-telescope/telescope-project.nvim', commit='8cd22b696e14b353fe8ea9648a03364cb56c39d4'}
   -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
   -- drop s and S due to lightspeed
+  vim.g.yoinkIncludeDeleteOperations = 1
   use {'svermeulen/vim-yoink', commit='89ed6934679fdbc3c20f552b50b1f869f624cd22', config= function()
     vim.cmd[[nmap <M-p> <plug>(YoinkPostPasteSwapBack)]]
     vim.cmd[[nmap <M-P> <plug>(YoinkPostPasteSwapForward)]]

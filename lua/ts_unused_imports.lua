@@ -18,6 +18,18 @@ function add_comma_node(node)
   return nil, nil
 end
 
+function can_wipe_till_start_of_line(node)
+  local start_row, _, _, _ = node:range()
+  local can_wipe_till_start_of_line = false
+  local prev_sibling = node:prev_sibling()
+  if prev_sibling ~= nil then
+    local _, _, prev_item_end_row, _ = prev_sibling:range()
+    can_wipe_till_start_of_line = prev_item_end_row < start_row
+  end
+  return can_wipe_till_start_of_line
+end
+
+
 function can_wipe_eol(node)
   local _, _, end_row, _ = node:range()
   local can_wipe_eol = false
@@ -49,7 +61,7 @@ end
 
 function delete_node(node)
   local row_start, col_start, row_end, _ = node:range()
-  if col_start == 0 and can_wipe_eol(node) then
+  if can_wipe_till_start_of_line(node) and can_wipe_eol(node) then
     delete_lines(row_start, row_end)
   else
     delete_range(node:range())
@@ -58,7 +70,7 @@ end
 
 function delete_successive_nodes(node1, node2)
   local row_start1, col_start1, row_end1, _ = node1:range()
-  if col_start1 == 0 and can_wipe_eol(node2) then
+  if can_wipe_till_start_of_line(node1) and can_wipe_eol(node2) then
     local row_start2, col_start2, row_end2, _ = node2:range()
     delete_lines(row_start1, row_end2)
   else

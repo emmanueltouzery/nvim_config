@@ -130,7 +130,7 @@ function _G.remove_unused_imports()
     -- sort diagnostics: i want the bottom of the file first, because deleting lines shift line numbers
     local sorted_diags = vim.diagnostic.get(0) 
     table.sort(sorted_diags, function(a,b)
-      return a.lnum > b.lnum or a.col > b.col
+      return a.lnum > b.lnum or (a.lnum == b.lnum and a.col > b.col)
     end)
     for i, diag in ipairs(sorted_diags) do
       typescript_remove_unused_import(diag)

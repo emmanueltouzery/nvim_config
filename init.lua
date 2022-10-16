@@ -574,6 +574,7 @@ require("telescope_global_marks")
 require("telescope_qf_locations")
 require("qftf")
 require("notifs")
+require("ts_unused_imports")
 
 if vim.version().minor > 7 then
   vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]

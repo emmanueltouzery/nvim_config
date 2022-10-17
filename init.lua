@@ -91,6 +91,7 @@ require('packer').startup(function(use)
       },
     })
   end}
+  use {'JoosepAlviste/nvim-ts-context-commentstring', commit='2941f0064874b33e93d3a794a8a4e99f5f6ece56'}
   use {'neovim/nvim-lspconfig', commit='2dd9e060f21eecd403736bef07ec83b73341d955'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='2427d06b6508489547cd30b6e86b1c75df363411'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}

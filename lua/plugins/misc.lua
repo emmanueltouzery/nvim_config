@@ -43,6 +43,10 @@ require'nvim-tree'.setup {
         { key = "s", action = "" },
         -- remap search to C-s
         { key = "<c-s>", action = "search_node" },
+        -- override to open with no picker (same as `o`)
+        { key = "<CR>", action = "edit_no_picker" },
+        -- open with picker (same as `O`)
+        { key = "<M-CR>", action = "open_file" },
       }
     }
   },
@@ -60,8 +64,8 @@ require'nvim-tree'.setup {
     open_file = {
      quit_on_open = false,
       window_picker = {
-        enable = false,
-        -- chars = '234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        enable = true,
+        chars = '234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
       }
     },
     remove_file = {

@@ -65,7 +65,7 @@ require'nvim-tree'.setup {
      quit_on_open = false,
       window_picker = {
         enable = true,
-        chars = '234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
       }
     },
     remove_file = {

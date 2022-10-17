@@ -213,7 +213,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
 end
 -- vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commits{attach_mappings=telescope_commits_mappings}<CR>", {desc ="Browse git commits"})
 vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commits{attach_mappings=telescope_commits_mappings, entry_maker=custom_make_entry_gen_from_git_commits(), git_command={\"git\", \"log\", \"--pretty=tformat:%<(10)%h%<(16,trunc)%an %ad%d %s\", \"--date=short\", \"--\", \".\"}, layout_config={width=0.9, horizontal={preview_width=0.5}}}<CR>", {desc ="Browse git commits"})
-vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine()<cr>", {desc = "Time machine"})
+vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine({use_current_win=true})<cr>", {desc = "Time machine"})
 vim.keymap.set("n", "<leader>gB", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})
 vim.keymap.set("n", "<leader>gs", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})

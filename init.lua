@@ -91,7 +91,7 @@ require('packer').startup(function(use)
       },
     })
   end}
-  use {'neovim/nvim-lspconfig', commit='8e65dbb6e187604cdaf0e0ef2e90c790760912e7'} -- Collection of configurations for built-in LSP client
+  use {'neovim/nvim-lspconfig', commit='2dd9e060f21eecd403736bef07ec83b73341d955'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='2427d06b6508489547cd30b6e86b1c75df363411'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
@@ -161,7 +161,7 @@ require('packer').startup(function(use)
     end
   }
   use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
-  use {'emmanueltouzery/agitator.nvim', commit='70bbddc01afa70b06941620c88bb8709b1f7aade'}
+  use {'emmanueltouzery/agitator.nvim', commit='844fa6f65ef535f18435b4a08640b5b31f756f3a'}
   use {'nvim-telescope/telescope-project.nvim', commit='8cd22b696e14b353fe8ea9648a03364cb56c39d4'}
   -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
   -- drop s and S due to lightspeed

@@ -58,6 +58,12 @@ vim.keymap.set("n", "<leader>fP", ':let @+ = expand("%:p")<cr>', {desc="Copy fil
 vim.keymap.set("n", "<leader>fW", ":noautocmd w<cr>", {desc="save_noindent"})
 vim.keymap.set("n", "<leader>fD", ":e ++ff=dos<cr>", {desc="reload file as DOS"}) -- https://vim.fandom.com/wiki/File_format many typescript library files have windows line endings except for the copyright header
 
+function _G.quick_set_ft()
+  local filetypes = {"typescript", "json", "elixir", "rust", "lua"}
+  vim.ui.select(filetypes, {prompt="Pick filetype to switch to"}, function(choice) vim.cmd("set ft=" .. choice) end)
+end
+vim.keymap.set("n", "<leader>ft", ":lua quick_set_ft()<cr>", {desc="Quickly change to common file types"})
+
 -- SEARCH
 require 'key-menu'.set('n', '<Space>s', {desc='Search'})
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
@@ -250,6 +256,9 @@ function format_buf()
   elseif vim.bo.filetype == 'json' then
     -- i think this happens if the file is unsaved
     vim.cmd(':%!prettier --parser json')
+  elseif vim.bo.filetype == 'typescript' then
+    -- i think this happens if the file is unsaved
+    vim.cmd(':%!prettier --parser typescript')
   else
     print("No LSP and unhandled filetype " .. vim.bo.filetype)
   end

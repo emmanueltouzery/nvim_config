@@ -253,11 +253,10 @@ function format_buf()
     else
       vim.lsp.buf.formatting_sync()
     end
+    -- now fallbacks if no LSP
   elseif vim.bo.filetype == 'json' then
-    -- i think this happens if the file is unsaved
     vim.cmd(':%!prettier --parser json')
   elseif vim.bo.filetype == 'typescript' then
-    -- i think this happens if the file is unsaved
     vim.cmd(':%!prettier --parser typescript')
   else
     print("No LSP and unhandled filetype " .. vim.bo.filetype)

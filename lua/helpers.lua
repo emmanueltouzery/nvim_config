@@ -927,4 +927,12 @@ function _G.get_nvimtree_window()
   return nil
 end
 
+function _G.open_file_cur_dir()
+  local folder = vim.fn.expand('%:h')
+  require'telescope.builtin'.find_files {
+    search_dirs = {folder},
+    path_display = function(opts, p) return string.gsub(p, folder .. "/", "") end,
+  }
+end
+
 -- vim: ts=2 sts=2 sw=2 et

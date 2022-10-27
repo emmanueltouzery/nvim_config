@@ -62,6 +62,19 @@ cmp.setup {
         }(fallback)
       end
     end),
+    -- alt-enter is different from enter by inserting instead of replacing
+    -- https://www.reddit.com/r/neovim/comments/r8qcxl/nvimcmp_deletes_the_first_word_after_autocomplete/
+    ['<M-CR>'] = cmp.mapping(function(fallback) 
+      -- workaround for https://github.com/hrsh7th/cmp-nvim-lsp-signature-help/issues/13
+      if cmp.get_selected_entry() ~= nil and cmp.get_selected_entry().source.name == 'nvim_lsp_signature_help' then
+        fallback()
+      else
+        cmp.mapping.confirm {
+          behavior = cmp.ConfirmBehavior.Insert,
+          select = true,
+        }(fallback)
+      end
+    end),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()

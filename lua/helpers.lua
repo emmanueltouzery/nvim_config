@@ -1,16 +1,25 @@
 local Job = require'plenary.job'
 local strings = require'plenary.strings'
 
-function _G.my_open_tele()
+function _G.my_open_tele(cur_folder_only)
     local w = vim.fn.expand('<cword>')
-    -- require('telescope.builtin').live_grep()
-    require("telescope").extensions.live_grep_raw.live_grep_raw()
+    local params = {}
+    if cur_folder_only then
+      local folder = vim.fn.expand('%:h')
+      params.cwd = folder
+    end
+    require("telescope").extensions.live_grep_raw.live_grep_raw(params)
     vim.fn.feedkeys(w)
 end
 
-function _G.my_open_tele_sel()
+function _G.my_open_tele_sel(cur_folder_only)
     local w = get_visual_selection()
-    require("telescope").extensions.live_grep_raw.live_grep_raw()
+    local params = {}
+    if cur_folder_only then
+      local folder = vim.fn.expand('%:h')
+      params.cwd = folder
+    end
+    require("telescope").extensions.live_grep_raw.live_grep_raw(params)
     vim.fn.feedkeys(w)
 end
 

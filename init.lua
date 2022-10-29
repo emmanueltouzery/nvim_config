@@ -15,7 +15,7 @@ vim.g.lightspeed_no_default_keymaps = true
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit="b79cd6c88b3d96b0f49cb7d240807cd59b610cd8", config = function()
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit="0b1c41ad8052badca6e72eafa4bc5481152e483e", config = function()
     local actions = require("telescope.actions")
     require('telescope').setup {
       defaults = {

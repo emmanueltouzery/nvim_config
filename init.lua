@@ -266,10 +266,15 @@ callbacks = {
     })
   end}
   use {
-    "williamboman/nvim-lsp-installer",
-    commit = "b70099151c401014b875e3a375c751714fdd4144",
+    "williamboman/mason.nvim",
+    commit = "bf170f8379a3eaeed662f2c8e42dced96e78f429",
+  }
+  use {
+    "williamboman/mason-lspconfig.nvim",
+    commit = "a910b4d50f7a32d2f9057d636418a16843094b7c",
     config = function()
-      require("nvim-lsp-installer").setup {
+      require("mason").setup()
+      require("mason-lspconfig").setup {
         automatic_installation = true,
       }
       local lspconfig = require("lspconfig")

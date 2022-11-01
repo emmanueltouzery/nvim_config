@@ -108,7 +108,7 @@ vim.keymap.set("n", "<leader>wc", "<cmd>lua clamp_windows()<cr>", {desc="Clamp p
 -- PACKAGES
 require 'key-menu'.set('n', '<Space>p', {desc='Packages'})
 vim.keymap.set("n", "<leader>pp", "<cmd>PackerSync<cr>", { desc = "Packer sync"})
-vim.keymap.set("n", "<leader>pl", "<cmd>LspInstallInfo<cr>", { desc = "LSP install info"})
+vim.keymap.set("n", "<leader>pl", "<cmd>Mason<cr>", { desc = "LSP install info"})
 vim.keymap.set("n", "<leader>pt", "<cmd>TSInstallInfo<cr>", { desc = "Tree-sitter install info"})
 vim.keymap.set("n", "<leader>pT", "<cmd>TSUpdate<cr>", { desc = "Tree-sitter update packages"})
 

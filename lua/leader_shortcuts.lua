@@ -50,7 +50,7 @@ vim.keymap.set('n', '<leader>fn', ":enew<cr>", {desc = "New file"})
 vim.keymap.set("n", "<leader>fs", ":w<cr>", {desc="Save file"})
 vim.keymap.set("n", "<leader>fS", ":wa<cr>", {desc="Save all files"})
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<cr>", {desc = "Find files"})
-vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent files"})
+vim.keymap.set("n", "<leader>fr", "<cmd>lua require'telescope.builtin'.oldfiles{cwd_only=true}<cr>", { desc = "Recent files"})
 vim.keymap.set("n", "<leader>fR", "<cmd>SudaRead<cr>", { desc = "Re-open file with sudo permissions"})
 vim.keymap.set("n", "<leader>fw", "<cmd>SudaWrite<cr>", { desc = "Write file with sudo permissions"})
 vim.keymap.set("n", "<leader>fp", ':lua copy_to_clipboard(cur_file_path_in_project())<cr>', {desc="Copy file path"}) -- ':let @+ = expand("%")<cr>',

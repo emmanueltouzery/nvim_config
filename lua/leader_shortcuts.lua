@@ -193,7 +193,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     -- heuristics.. will see if it works out
-    if string.match(branch, "develop") then
+    if string.match(branch, "develop") or string.match(branch, "master") or string.match(branch, "main") then
       -- i want to compare to develop. presumably i'm ahead, comparing behind
       diffspec = branch .. "..."
     else

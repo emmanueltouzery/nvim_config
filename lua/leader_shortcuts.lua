@@ -301,10 +301,11 @@ vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {de
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
 vim.keymap.set("n", "<leader>clf", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}}<cr>", {desc="Display lsp references"})
--- possible alternative from ":h lsp-faq":
--- :lua vim.lsp.stop_client(vim.lsp.get_active_clients())
--- :edit
-vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
+
+-- i had issues after the mason migration where lsp restart would not restart all LSPs.. or i would lose some LSPs or something
+-- => bulletproof it with my own restart that really restarts everything
+-- vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
+vim.keymap.set("n", "<leader>clR", "<cmd>:lua lsp_restart_all()<CR>", {desc="Restart LSP clients for this buffer"})
 vim.keymap.set("n", "<leader>cli", "<cmd>lua remove_unused_imports()<CR>", {desc="Remove unused imports"})
 
 -- MARKS

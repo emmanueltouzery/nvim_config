@@ -977,6 +977,7 @@ function _G.lsp_restart_all()
   vim.defer_fn(function()
     require'null-ls.client'.try_add()
   end, 500)
+  vim.cmd[[edit]]
 end
 
 -- vim: ts=2 sts=2 sw=2 et

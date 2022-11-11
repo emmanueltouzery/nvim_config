@@ -249,7 +249,7 @@ callbacks = {
       mappings = "<leader>gy"
     })
   end}
-  use {'arkav/lualine-lsp-progress', commit='56842d097245a08d77912edf5f2a69ba29f275d7'}
+  use {'emmanueltouzery/lualine-lsp-progress', commit='323c172eb74dd2007682bc8f7aaf52dc0517d6cf'}
   use {'stevearc/dressing.nvim', commit='12b808a6867e8c38015488ad6cee4e3d58174182', config=function()
     require('dressing').setup({
       input = {

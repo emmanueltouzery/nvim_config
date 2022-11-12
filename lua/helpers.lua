@@ -977,7 +977,13 @@ function _G.lsp_restart_all()
   vim.defer_fn(function()
     require'null-ls.client'.try_add()
   end, 500)
+  local current_top_line = vim.fn.line('w0')
+  local current_line = vim.fn.line('.')
   vim.cmd[[edit]]
+  -- edit can move the scrollpos, restore it
+  vim.cmd(":" .. current_top_line)
+  vim.cmd("norm! zt") -- set to top of window
+  vim.cmd(":" .. current_line)
 end
 
 -- vim: ts=2 sts=2 sw=2 et

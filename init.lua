@@ -809,6 +809,9 @@ vnoremap <Down> gj
 vnoremap <Up> gk
 ]])
 
+-- the mouse right-click menu is annoying
+vim.opt.mousemodel = 'extend'
+
 -- return to the line we were the last time we opened this file
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]])
 

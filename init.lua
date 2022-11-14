@@ -276,10 +276,11 @@ callbacks = {
               telescope = {
                 sorter = require'telescope.sorters'.Sorter:new {
                   scoring_function = function(_, _, line)
-                    if string.match(line, 'null-ls') then
-                      return 1
+                    local order = tonumber(string.match(line, "^[%d]+"))
+                    if string.find(line, escape_pattern('null-ls')) then
+                      return order+100
                     else
-                      return 0
+                      return order
                     end
                   end,
                 },

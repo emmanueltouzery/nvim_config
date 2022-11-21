@@ -994,4 +994,18 @@ function _G.convert_dos()
   end
 end
 
+function _G.print_lsp_path()
+  if not require'nvim-navic'.is_available() then
+    print("Not supported for this file type")
+    return
+  end
+  local path = ""
+  for _, p in ipairs(require'nvim-navic'.get_data()) do
+    path = path .. "/" .. p.name
+  end
+  local val = path:sub(2) -- remove leading /
+  vim.fn.setreg('+', val)
+  print(val)
+end
+
 -- vim: ts=2 sts=2 sw=2 et

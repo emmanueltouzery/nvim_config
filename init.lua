@@ -363,13 +363,15 @@ callbacks = {
           end
         }
       }
+      local navic = require("nvim-navic")
 
       lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {}
       lspconfig.bashls.setup {}
       lspconfig.jsonls.setup {
         -- use null-ls & prettier for json indentation
-        on_attach = function(client)
+        on_attach = function(client, bufnr)
+          navic.attach(client, bufnr)
           if vim.version().minor > 7 then
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentRangeFormattingProvider = false
@@ -530,6 +532,7 @@ callbacks = {
       },
     }
   end}
+  use {'SmiteshP/nvim-navic', commit='40c0ab2640a0e17c4fad7e17f260414d18852ce6'}
 end)
 
 --Set highlight on search

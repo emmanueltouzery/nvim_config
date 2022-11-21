@@ -986,4 +986,12 @@ function _G.lsp_restart_all()
   vim.cmd(":" .. current_line)
 end
 
+function _G.convert_dos()
+  if vim.bo.modified then
+    vim.cmd(":%s/\r$//")
+  else
+    vim.cmd(":e ++ff=dos")
+  end
+end
+
 -- vim: ts=2 sts=2 sw=2 et

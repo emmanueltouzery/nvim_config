@@ -246,9 +246,9 @@ vim.keymap.set("n", "<leader>gr", '<cmd>lua require"telescope.builtin".git_branc
 vim.keymap.set("n", "<leader>gp", '<cmd>lua run_command("git", {"pull", "--rebase", "--autostash"})<CR>', {desc="git pull"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
-vim.keymap.set("n", "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})
+vim.keymap.set({"n", "v"}, "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})
 vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
-vim.keymap.set("n", "<leader>hr", '<cmd>lua require"gitsigns".reset_hunk()<CR>', {desc="reset hunk"})
+vim.keymap.set({"n", "v"}, "<leader>hr", '<cmd>lua require"gitsigns".reset_hunk()<CR>', {desc="reset hunk"})
 vim.keymap.set("n", "<leader>hh", '<cmd>lua require"gitsigns".preview_hunk()<CR>', {desc="preview hunk"})
 
 -- CODE

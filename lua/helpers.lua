@@ -979,7 +979,12 @@ function _G.lsp_restart_all()
   end, 500)
   local current_top_line = vim.fn.line('w0')
   local current_line = vim.fn.line('.')
-  vim.cmd[[edit]]
+
+  if vim.bo.modified then
+    vim.cmd[[echohl ErrorMsg | echo "Reload will work better if you save the file & re-trigger" | echohl None]]
+  else
+    vim.cmd[[edit]]
+  end
   -- edit can move the scrollpos, restore it
   vim.cmd(":" .. current_top_line)
   vim.cmd("norm! zt") -- set to top of window

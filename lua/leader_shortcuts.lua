@@ -62,7 +62,7 @@ vim.keymap.set("n", "<leader>fdd", ":lua open_file_cur_dir(false)<cr>", {desc="o
 vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="open a file from the current directory and Children dirs"})
 
 function _G.quick_set_ft()
-  local filetypes = {"typescript", "json", "elixir", "rust", "lua"}
+  local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff"}
   vim.ui.select(filetypes, {prompt="Pick filetype to switch to"}, function(choice) vim.cmd("set ft=" .. choice) end)
 end
 vim.keymap.set("n", "<leader>ft", ":lua quick_set_ft()<cr>", {desc="Quickly change to common file types"})

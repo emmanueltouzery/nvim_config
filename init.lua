@@ -530,6 +530,13 @@ callbacks = {
         direction = 'right',
         default_detail = 2,
       },
+      task_editor = {
+        bindings = {
+          n = {
+            ["<Esc>"] = "Cancel",
+          }
+        },
+      },
     }
   end}
   use {'SmiteshP/nvim-navic', commit='40c0ab2640a0e17c4fad7e17f260414d18852ce6'}

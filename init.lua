@@ -790,6 +790,10 @@ vim.cmd([[autocmd FocusGained * if mode() != 'c' | checktime | endif]])
 vim.cmd([[autocmd BufWritePost * let b:conflict_status = '']])
 vim.cmd([[autocmd BufReadPost * let b:conflict_status = '']])
 
+-- slightly more bright line number color than the OOB color for the doom-one theme
+-- otherwise i don't find it readable enough for fast jumps
+vim.cmd[[au Colorscheme * highlight LineNr guifg=#494949]]
+
 -- I REALLY dislike the builtin vim blocking workflow when a file is edited
 -- on disk and there is a conflict. Implement a non-blocking popup
 vim.cmd([[

@@ -47,8 +47,24 @@ vim.cmd("nmap <expr> db &diff? ':lua diffget_and_keep_before()<cr>' : 'db'")
 vim.cmd("nmap <expr> da &diff? ':lua diffget_and_keep_after()<cr>' : 'da'")
 
 --Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+-- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+-- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- combine dealing with word wrap AND adding the current pos to the jump stack
+-- in case of jk with count
+-- https://vi.stackexchange.com/a/9103/38754
+vim.cmd([[
+nnoremap <silent> k :<C-U>execute 'normal!' (v:count > 1 ? "m'" . v:count : '') . (v:count == 0 ? 'gk' : 'k')<CR>
+nnoremap <silent> j :<C-U>execute 'normal!' (v:count > 1 ? "m'" . v:count : '') . (v:count == 0 ? 'gj' : 'j')<CR>
+]])
+
+-- move by line, useful when we have word-wrapping
+vim.cmd([[
+nnoremap <Down> gj
+nnoremap <Up> gk
+vnoremap <Down> gj
+vnoremap <Up> gk
+]])
 
 -- https://vim.fandom.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 vim.cmd('inoremap <C-h> <C-\\><C-o>db')

@@ -815,16 +815,6 @@ endfunction
 autocmd FileChangedShell * call ProcessFileChangedShell()
 ]])
 
--- move by line, useful when we have word-wrapping
-vim.cmd([[
-nnoremap j gj
-nnoremap k gk
-nnoremap <Down> gj
-nnoremap <Up> gk
-vnoremap <Down> gj
-vnoremap <Up> gk
-]])
-
 -- the mouse right-click menu is annoying
 vim.opt.mousemodel = 'extend'
 

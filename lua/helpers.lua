@@ -1013,4 +1013,12 @@ function _G.print_lsp_path()
   print(val)
 end
 
+function _G.display_git_commit()
+  vim.ui.input({prompt="Enter git commit id:", kind="center_win"}, function(input)
+    if input ~= nil then
+      vim.cmd(":DiffviewOpen " .. input .. "^.." .. input)
+    end
+  end)
+end
+
 -- vim: ts=2 sts=2 sw=2 et

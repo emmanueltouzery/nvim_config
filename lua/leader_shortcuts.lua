@@ -235,6 +235,7 @@ vim.keymap.set("n", "<leader>gL", "<cmd>lua vim.cmd('DiffviewFileHistory ' .. cu
 vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
 vim.keymap.set("n", "<leader>gg", "<cmd>Neogit<cr>", {desc="neogit"})
 vim.keymap.set("n", "<leader>gG", "<cmd>DiffviewOpen<cr>", {desc="Git two-way diff"})
+vim.keymap.set("n", "<leader>gC", ":lua display_git_commit()<cr>", {desc="Git display commit"})
 vim.keymap.set("n", "<leader>gm", ":MergetoolToggle<cr>", {desc="toggle_gitmerge"})
 vim.keymap.set("n", "<leader>gv", ":lua ShowCommitAtLine()<cr>", {desc="View commit for line"})
 vim.keymap.set("n", "<leader>gY", ":lua copy_file_line()<cr>", {desc="Copy line and line number"})

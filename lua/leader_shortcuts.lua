@@ -114,7 +114,8 @@ vim.keymap.set("n", "<leader>pT", "<cmd>TSUpdate<cr>", { desc = "Tree-sitter upd
 
 -- a bit messy to remap telescope-project key mappings: https://github.com/nvim-telescope/telescope-project.nvim/issues/84
 -- I want telescope-live-grep-raw instead of the normal telescope-rg
-function tel_proj_attach_mappings(prompt_bufnr, map)
+-- also used by telescope_modified_git_projects
+function _G.tel_proj_attach_mappings(prompt_bufnr, map)
   map('i', '<C-s>', function(nr)
     require('telescope').extensions.live_grep_raw.live_grep_raw{
       cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
@@ -143,6 +144,7 @@ vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>",
 vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})
 vim.keymap.set("n", "<leader>oj", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location Jump list"})
 vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeFocus<CR>", {desc="Open file explorer"})
+vim.keymap.set("n", "<leader>ot", "<cmd>lua telescope_modified_git_projects()<CR>", {desc="Open touched projects"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

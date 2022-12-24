@@ -534,7 +534,7 @@ callbacks = {
       augroup END
     ]]
   end}
-  use {'stevearc/overseer.nvim', commit='3a03024787127bbf0a6993c425f9d790007a1a1d', config=function()
+  use {'emmanueltouzery/overseer.nvim', commit='f1b868cf8d26d74292bfe275b740bca06c75a7ad', config=function()
     require('overseer').setup{
       task_list = {
         direction = 'right',

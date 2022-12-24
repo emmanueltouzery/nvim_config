@@ -47,6 +47,16 @@ require('packer').startup(function(use)
           }
         }
       },
+      extensions = {
+        undo = {
+          side_by_side = true,
+          layout_strategy = "vertical",
+          layout_config = {
+            preview_height = 0.8,
+            preview_cutoff = 0,
+          },
+        },
+      },
     }
 
     -- Enable telescope fzf native
@@ -101,7 +111,7 @@ require('packer').startup(function(use)
   use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3dd40097196bdffe5f868d5dddcc0aa146ae41eb'}
-  use {'emmanueltouzery/doom-one.nvim', commit='af905579e85bf9c67efe5394af8949f07037825b', config = function()
+  use {'emmanueltouzery/doom-one.nvim', commit='d89ea4a9ea08759d58caefba6d7c2dc6b9ccd8c0', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
       diagnostics_color_text = false,
@@ -540,6 +550,10 @@ callbacks = {
     }
   end}
   use {'SmiteshP/nvim-navic', commit='40c0ab2640a0e17c4fad7e17f260414d18852ce6'}
+  use {'emmanueltouzery/telescope-undo.nvim', commit='58f239b983eb6d92f815381c58c33e6fd2c7be9c', requires = { 'nvim-telescope/telescope.nvim' },
+  config = function()
+    require("telescope").load_extension("undo")
+  end}
 end)
 
 --Set highlight on search

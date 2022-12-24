@@ -145,6 +145,7 @@ vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yan
 vim.keymap.set("n", "<leader>oj", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location Jump list"})
 vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeFocus<CR>", {desc="Open file explorer"})
 vim.keymap.set("n", "<leader>ot", "<cmd>lua telescope_modified_git_projects()<CR>", {desc="Open touched projects"})
+vim.keymap.set("n", "<leader>ou", "<cmd>lua require('telescope').extensions.undo.undo()<CR>", {desc="Open undo history"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

@@ -15,7 +15,10 @@ vim.g.lightspeed_no_default_keymaps = true
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit="0b1c41ad8052badca6e72eafa4bc5481152e483e", config = function()
+  use { 'nvim-telescope/telescope.nvim', requires = {
+    'nvim-lua/plenary.nvim',
+    { 'debugloop/telescope-undo.nvim', commit = 'f2ca7c914134c7e6eb9275ee09863141caa77a3f' },
+  }, commit="0b1c41ad8052badca6e72eafa4bc5481152e483e", config = function()
     local actions = require("telescope.actions")
     require('telescope').setup {
       defaults = {
@@ -50,14 +53,23 @@ require('packer').startup(function(use)
       extensions = {
         undo = {
           side_by_side = true,
+          diff_context_lines = 3,
           layout_strategy = "vertical",
           layout_config = {
             preview_height = 0.8,
             preview_cutoff = 0,
           },
+          mappings = {
+            i = {
+              ["<C-r>a"] = require("telescope-undo.actions").yank_additions,
+              ["<C-r>d"] = require("telescope-undo.actions").yank_deletions,
+              ["<cr>"] = require("telescope-undo.actions").restore,
+            },
+          },
         },
       },
     }
+    require("telescope").load_extension("undo")
 
     -- Enable telescope fzf native
     require('telescope').load_extension 'fzf'
@@ -133,6 +145,11 @@ require('packer').startup(function(use)
     config = function()
       local actions = require("diffview.config").actions
       require('diffview').setup {
+        -- view = {
+        --   merge_tool = {
+        --     layout = "diff4_mixed",
+        --   },
+        -- },
         keymaps = {
           view = {
             ["šx"] = function()
@@ -375,7 +392,7 @@ callbacks = {
       }
       local navic = require("nvim-navic")
 
-      lspconfig.rust_analyzer.setup {}
+      -- lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {}
       lspconfig.bashls.setup {}
       lspconfig.jsonls.setup {
@@ -549,11 +566,64 @@ callbacks = {
       },
     }
   end}
-  use {'SmiteshP/nvim-navic', commit='40c0ab2640a0e17c4fad7e17f260414d18852ce6'}
-  use {'emmanueltouzery/telescope-undo.nvim', commit='58f239b983eb6d92f815381c58c33e6fd2c7be9c', requires = { 'nvim-telescope/telescope.nvim' },
-  config = function()
-    require("telescope").load_extension("undo")
+  use {'mfussenegger/nvim-dap', commit='3d0d7312bb2a8491eb2927504e5cfa6e81b66de4', config=function()
+-- require'dap'.adapters.codelldb = {
+--   type = 'server',
+--   port = "20392",
+--   executable = {
+--     -- CHANGE THIS to your path!
+--     command = 'codelldb',
+--     args = {"--port", "20392"},
+
+--     -- On windows you may have to uncomment this:
+--     -- detached = false,
+--   }
+-- }
   end}
+  use {'/simrat39/rust-tools.nvim', commit='86a2b4e31f504c00715d0dd082a6b8b5d4afbf03', config=function()
+    local rt = require("rust-tools")
+
+    --https://github.com/LunarVim/LunarVim/issues/2894#issuecomment-1236420149
+-- https://github.com/simrat39/rust-tools.nvim#a-better-debugging-experience
+opts = {}
+local path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/") or ""
+local codelldb_path = path .. "adapter/codelldb"
+local liblldb_path = path .. "lldb/lib/liblldb.so"
+
+if vim.fn.filereadable(codelldb_path) and vim.fn.filereadable(liblldb_path) then
+  opts.dap = {
+    adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+  }
+else
+  local msg = "Either codelldb or liblldb is not readable."
+    .. "\n codelldb: "
+    .. codelldb_path
+    .. "\n liblldb: "
+    .. liblldb_path
+  vim.notify(msg, vim.log.levels.ERROR)
+end
+    -- print(vim.inspect(opts))
+
+rt.setup(opts)
+    -- rt.setup({
+    --   server = {
+    --     on_attach = function(_, bufnr)
+    --       -- Hover actions
+    --       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+    --       -- Code action groups
+    --       vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+    --     end,
+    --   },
+    --   -- dap = {
+    --   --   adapter = require('rust-tools.dap').get_codelldb_adapter(
+    --   --   "codelldb", "liblldb.so")
+    --   -- },
+    -- })
+  end}
+  use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
+    require("dapui").setup{}
+  end}
+  use {'SmiteshP/nvim-navic', commit='40c0ab2640a0e17c4fad7e17f260414d18852ce6'}
 end)
 
 --Set highlight on search

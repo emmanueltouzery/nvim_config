@@ -248,6 +248,7 @@ vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>',
 vim.keymap.set("n", "<leader>gr", '<cmd>lua require"telescope.builtin".git_branches{attach_mappings=telescope_branches_mappings, pattern="--sort=-committerdate"}<CR>', {desc="git bRanches"})
 -- using neogit to push
 vim.keymap.set("n", "<leader>gp", '<cmd>lua run_command("git", {"pull", "--rebase", "--autostash"})<CR>', {desc="git pull"})
+vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin"})<CR>', {desc="git fetch origin"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})

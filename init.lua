@@ -18,7 +18,7 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope.nvim', requires = {
     'nvim-lua/plenary.nvim',
     { 'debugloop/telescope-undo.nvim', commit = 'f2ca7c914134c7e6eb9275ee09863141caa77a3f' },
-  }, commit="0b1c41ad8052badca6e72eafa4bc5481152e483e", config = function()
+  }, commit="f7bceabcc9dc049141ab0ea9e6301c0d21dbda57", config = function()
     local actions = require("telescope.actions")
     require('telescope').setup {
       defaults = {

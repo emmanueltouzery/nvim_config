@@ -564,6 +564,11 @@ callbacks = {
           }
         },
       },
+      component_aliases = {
+        default = {
+          {"on_complete_dispose", timeout = 900}
+        }
+      }
     }
   end}
   use {'mfussenegger/nvim-dap', commit='3d0d7312bb2a8491eb2927504e5cfa6e81b66de4', config=function()

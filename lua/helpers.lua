@@ -50,7 +50,7 @@ end
 function _G.cur_file_project_root()
     local full_path = vim.fn.expand("%:p")
     for _, project in pairs(get_project_objects()) do
-      if full_path:match("^" .. escape_pattern(project.path)) then
+      if full_path:match("^" .. escape_pattern(project.path) .. '/') then
         return project.path
       end
     end

@@ -183,9 +183,15 @@ vim.keymap.set("n", "<leader>tg", "<cmd>lua telescope_enable_disable_diagnostics
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})
 
 function telescope_commits_mappings(prompt_bufnr, map)
+  local actions = require('telescope.actions')
   map('i', '<C-r>i', function(nr)
     commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     vim.cmd(":term! git rebase -i " .. commit .. "~")
+  end)
+  map('i', '<C-v>', function(nr)
+    commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    actions.close(prompt_bufnr)
+    vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
   end)
   return true
 end
@@ -211,7 +217,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. branch)
   end)
-  map('i', '<C-d>', function(nr)
+  map('i', '<C-d>', function(nr) -- delete
     local current_picker = action_state.get_current_picker(prompt_bufnr)
     current_picker:delete_selection(function(selection)
       branch = require("telescope.actions.state").get_selected_entry(selection.bufnr).value

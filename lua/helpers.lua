@@ -1022,4 +1022,24 @@ function _G.display_git_commit()
   end)
 end
 
+-- if the quickfix window is open, go to the bottom of quickfix
+-- if it's not open, search for a terminal window and go to the bottom of the terminal.
+function _G.quickfix_goto_bottom()
+  local term_winid = nil
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then
+      -- yes => scroll quickfix to the bottom
+      vim.cmd(":cbottom")
+      return
+    elseif string.match(vim.api.nvim_buf_get_name(buf), "^term://") then
+      term_winid = w
+    end
+  end
+  if term_winid ~= nil then
+    vim.cmd(vim.api.nvim_win_get_number(term_winid) .. ' wincmd w')
+    vim.cmd("norm! G")
+    vim.api.nvim_command('wincmd p') -- return to the original window
+  end
+end
 -- vim: ts=2 sts=2 sw=2 et

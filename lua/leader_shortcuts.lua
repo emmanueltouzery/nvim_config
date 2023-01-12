@@ -241,6 +241,15 @@ function telescope_branches_mappings(prompt_bufnr, map)
       }):sync()
     end)
   end)
+  map('i', '<C-h>', function(nr) -- history
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    actions.close(prompt_bufnr)
+    require'telescope.builtin'.git_commits{
+        attach_mappings=telescope_commits_mappings,
+        entry_maker=custom_make_entry_gen_from_git_commits(),
+        git_command={"git", "log", branch, "--pretty=tformat:%<(10)%h%<(16,trunc)%an %ad%d %s", "--date=short", "--", "."}, layout_config={width=0.9, horizontal={preview_width=0.5}}
+      }
+  end)
   return true
 end
 -- vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commits{attach_mappings=telescope_commits_mappings}<CR>", {desc ="Browse git commits"})

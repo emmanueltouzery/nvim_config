@@ -924,6 +924,13 @@ vim.cmd[[autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete]]
 -- emphasize dressing.nvim window border some more
 vim.cmd[[hi FloatBorder guifg=#dfdad9]]
 
+-- stay in visual mode after indenting with < and >
+-- https://superuser.com/a/310424/214371
+vim.cmd[[
+vnoremap < <gv
+vnoremap > >gv
+]]
+
 -- https://www.reddit.com/r/neovim/comments/ctrdtq/always_open_help_in_a_vertical_split/
 vim.cmd[[autocmd! FileType help :wincmd L]]
 vim.cmd[[autocmd! FileType man :wincmd L]]

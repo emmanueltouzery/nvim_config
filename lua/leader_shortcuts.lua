@@ -72,7 +72,8 @@ require 'key-menu'.set('n', '<Space>s', {desc='Search'})
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>*", "<cmd>lua my_open_tele_sel()<cr>", {desc="Search selected text, raw"})
 vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw()<cr>", {desc="Search text raw"})
-function _G.buffer_fuzzy_find()
+function _G.buffer_fuzzy_find(word_under_cursor)
+    local w = vim.fn.expand('<cword>')
   -- https://github.com/nvim-telescope/telescope.nvim/issues/1080
   -- keep lines ordered for in-buffer search as much as possible,
   -- ignore the match quality algorithm
@@ -80,8 +81,12 @@ function _G.buffer_fuzzy_find()
     return false
   end
   require'telescope.builtin'.current_buffer_fuzzy_find(opts)
+  if word_under_cursor then
+    vim.fn.feedkeys(w)
+  end
 end
-vim.keymap.set("n", "<leader>sb", "<cmd>lua buffer_fuzzy_find()<cr>", {desc="search in Buffer"})
+vim.keymap.set("n", "<leader>sb", "<cmd>lua buffer_fuzzy_find(false)<cr>", {desc="search in Buffer"})
+vim.keymap.set("n", "<leader>sB", "<cmd>lua buffer_fuzzy_find(true)<cr>", {desc="search in Buffer"})
 require 'key-menu'.set('n', '<Space>sd', {desc='Search in file Directory'})
 vim.keymap.set("n", "<leader>sdr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw({cwd=vim.fn.expand('%:h')})<cr>", {desc="Search text raw in Directory"})
 vim.keymap.set("n", "<leader>sd*", "<cmd>lua my_open_tele(true)<cr>", {desc="Search word under cursor, raw"})

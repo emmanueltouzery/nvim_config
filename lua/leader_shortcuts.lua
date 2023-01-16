@@ -85,10 +85,10 @@ function _G.buffer_fuzzy_find(word_under_cursor)
     vim.fn.feedkeys(w)
   end
 end
-vim.keymap.set("n", "<leader>sb", "<cmd>lua buffer_fuzzy_find(false)<cr>", {desc="search in Buffer"})
-vim.keymap.set("n", "<leader>sB", "<cmd>lua buffer_fuzzy_find(true)<cr>", {desc="search in Buffer"})
+vim.keymap.set("n", "<leader>sbb", "<cmd>lua buffer_fuzzy_find(false)<cr>", {desc="search in Buffer"})
+vim.keymap.set("n", "<leader>sb*", "<cmd>lua buffer_fuzzy_find(true)<cr>", {desc="search in Buffer"})
 require 'key-menu'.set('n', '<Space>sd', {desc='Search in file Directory'})
-vim.keymap.set("n", "<leader>sdr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw({cwd=vim.fn.expand('%:h')})<cr>", {desc="Search text raw in Directory"})
+vim.keymap.set("n", "<leader>sdd", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw({cwd=vim.fn.expand('%:h')})<cr>", {desc="Search text raw in Directory"})
 vim.keymap.set("n", "<leader>sd*", "<cmd>lua my_open_tele(true)<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>sd*", "<cmd>lua my_open_tele_sel(true)<cr>", {desc="Search selected text, raw"})
 require 'key-menu'.set('n', '<Space>ss', {desc='Search LSP symbols'})

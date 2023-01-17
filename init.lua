@@ -932,6 +932,10 @@ vnoremap < <gv
 vnoremap > >gv
 ]]
 
+-- open quickfix window below vertical splits
+-- https://stackoverflow.com/a/47077341/516188
+vim.cmd[[au FileType qf wincmd J]]
+
 -- https://www.reddit.com/r/neovim/comments/ctrdtq/always_open_help_in_a_vertical_split/
 vim.cmd[[autocmd! FileType help :wincmd L]]
 vim.cmd[[autocmd! FileType man :wincmd L]]

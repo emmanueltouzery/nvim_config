@@ -311,7 +311,8 @@ vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="se
 vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path"})
 vim.keymap.set('n', '<leader>cxi', ":lua elixir_add_inspect()<cr>", {desc="elixir add inspect"})
-vim.keymap.set('n', '<leader>cxa', ":lua elixir_view_docs()<cr>", {desc="elixir apidocs"})
+vim.keymap.set('n', '<leader>cxa', ":lua elixir_view_docs()<cr>", {desc="elixir apidocs (in cur buffer)"})
+vim.keymap.set('n', '<leader>cxA', ":lua elixir_view_docs({popup=true})<cr>", {desc="elixir apidocs (popup)"})
 
 -- TESTS
 require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})

@@ -737,7 +737,7 @@ require("telescope_modified_git_projects")
 require("qftf")
 require("notifs")
 require("ts_unused_imports")
-require("elixir_inspect")
+require("elixir")
 
 if vim.version().minor > 7 then
   vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]

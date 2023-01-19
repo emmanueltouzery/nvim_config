@@ -156,6 +156,8 @@ function _G.elixir_view_export_docs(export, opts)
       noautocmd = true,
     }
     popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
+  else
+    vim.cmd("enew")
   end
   vim.fn.termopen(table.concat(elixir_pa_flags({" -e 'require IEx.Helpers; IEx.Helpers.h(" .. export .. ")'"}), " "))
 end

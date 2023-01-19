@@ -84,7 +84,9 @@ function _G.elixir_view_docs(opts)
     end
   end
   -- https://stackoverflow.com/questions/58461572/get-a-list-of-all-elixir-modules-in-iex#comment103267199_58462672
-  vim.fn.jobstart(elixir_pa_flags({ "-e", ":erlang.loaded() |> Enum.sort() |> inspect(limit: :infinity) |> IO.puts" }), {
+  -- vim.fn.jobstart(elixir_pa_flags({ "-e", ":erlang.loaded() |> Enum.sort() |> inspect(limit: :infinity) |> IO.puts" }), {
+  -- https://github.com/elixir-lang/elixir/blob/60f86886c0f66c71790e61d754eada4e9fa0ace5/lib/iex/lib/iex/autocomplete.ex#L507
+  vim.fn.jobstart(elixir_pa_flags({ "-e", ":application.get_key(:elixir, :modules) |> inspect(limit: :infinity) |> IO.puts" }), {
     cwd='.',
     stdout_buffered = true,
     on_stdout = vim.schedule_wrap(function(j, output)

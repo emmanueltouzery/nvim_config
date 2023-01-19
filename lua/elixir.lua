@@ -51,22 +51,40 @@ end
 
 -- in theory I should load modules through -S mix but.. i couldn't make it work
 -- from neovim, it's slow and so on. In the end besides the stdlib i care about ecto...
-ECTO_MIX_FOLDER = './_build/dev/lib/ecto/ebin/'
+EXTRA_MIX_FOLDERS = {'./_build/dev/lib/ecto/ebin/'}
+
+function _G.elixir_pa_flags(flags)
+  res = {"elixir"}
+  for _, f in ipairs(EXTRA_MIX_FOLDERS) do
+    table.insert(res, "-pa")
+    table.insert(res, f)
+  end
+  for _, f in ipairs(flags) do
+    table.insert(res, f)
+  end
+  return res
+end
 
 function _G.elixir_view_docs(opts)
   modules = {}
-  if vim.fn.isdirectory(ECTO_MIX_FOLDER) == 1 then
-    -- the downside of the -pa loading of ecto modules is that it's on-demand loading, so
-    -- the modules are not discovered => list them by hand
-    -- https://elixirforum.com/t/by-what-mechanism-does-iex-load-beam-files/37102
-    modules = {'Ecto', 'Ecto.Association', 'Ecto.Association.BelongsTo', 'Ecto.Association.Has', 'Ecto.Association.ManyToMany', 'Ecto.Changeset', 'Ecto.Changeset.Relation',
-    'Ecto.Embedded', 'Ecto.Multi', 'Ecto.Query', 'Ecto.Query.Builder', 'Ecto.Query.Builder.Filter', 'Ecto.Query.Builder.From', 'Ecto.Query.Builder.Join',
-    'Ecto.Query.Builder.Preload', 'Ecto.Query.Builder.Select', 'Ecto.Query.Builder.Update', 'Ecto.Query.Planner', 'Ecto.Queryable', 'Ecto.Queryable.Atom',
-    'Ecto.Queryable.Ecto.Query', 'Ecto.Repo.Assoc', 'Ecto.Repo.Preloader', 'Ecto.Repo.Queryable', 'Ecto.Repo.Registry', 'Ecto.Repo.Schema', 'Ecto.Repo.Supervisor',
-    'Ecto.Repo.Transaction', 'Ecto.Schema.Loader', 'Ecto.Type', 'EctoEnum.Mixfile', 'EctoEnum.Type'}
+  for _, folder in ipairs(EXTRA_MIX_FOLDERS) do
+    if vim.fn.isdirectory(folder) == 1 then
+      -- the downside of the -pa loading of ecto modules is that it's on-demand loading, so
+      -- the modules are not discovered => list them by hand
+      -- https://elixirforum.com/t/by-what-mechanism-does-iex-load-beam-files/37102
+      local sd = vim.loop.fs_scandir(folder)
+      while true do
+        local name, type = vim.loop.fs_scandir_next(sd)
+        if name == nil then break end
+        if name:match("%.beam$") then
+          local module = name:gsub("%.beam$", ""):gsub("^Elixir%.", "")
+          table.insert(modules, module)
+        end
+      end
+    end
   end
   -- https://stackoverflow.com/questions/58461572/get-a-list-of-all-elixir-modules-in-iex#comment103267199_58462672
-  vim.fn.jobstart({ "elixir", "-pa", ECTO_MIX_FOLDER, "-e", ":erlang.loaded() |> Enum.sort() |> inspect(limit: :infinity) |> IO.puts" }, {
+  vim.fn.jobstart(elixir_pa_flags({ "-e", ":erlang.loaded() |> Enum.sort() |> inspect(limit: :infinity) |> IO.puts" }), {
     cwd='.',
     stdout_buffered = true,
     on_stdout = vim.schedule_wrap(function(j, output)
@@ -90,7 +108,7 @@ end
 function _G.elixir_view_module_docs(mod, opts)
   exports = {mod}
   -- https://stackoverflow.com/questions/52670918
-  vim.fn.jobstart({ "elixir", "-pa", ECTO_MIX_FOLDER, "-e", "require IEx.Helpers; IEx.Helpers.exports(" .. mod .. ")" }, {
+  vim.fn.jobstart(elixir_pa_flags({ "-e", "require IEx.Helpers; IEx.Helpers.exports(" .. mod .. ")" }), {
     cwd='.',
     stdout_buffered = true,
     on_stdout = vim.schedule_wrap(function(j, output)
@@ -137,5 +155,5 @@ function _G.elixir_view_export_docs(export, opts)
     }
     popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
   end
-  vim.fn.termopen("elixir -pa " .. ECTO_MIX_FOLDER .. " -e 'require IEx.Helpers; IEx.Helpers.h(" .. export .. ")'")
+  vim.fn.termopen(table.concat(elixir_pa_flags({" -e 'require IEx.Helpers; IEx.Helpers.h(" .. export .. ")'"}), " "))
 end

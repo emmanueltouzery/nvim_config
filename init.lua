@@ -228,7 +228,6 @@ require('packer').startup(function(use)
     vim.api.nvim_set_keymap('v', 'S', '<Plug>Lightspeed_S', {silent = true})
     vim.api.nvim_set_keymap('n', 'gs', '<Plug>Lightspeed_omni_gs', {silent = true})
   end}
-  use {'samoshkin/vim-mergetool', commit='0275a85256ad173e3cde586d54f66566c01b607f'}
   use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
   use {'vim-test/vim-test', commit='56bbfa295fe62123d2ebe8ed57dd002afab46097'}
   -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim

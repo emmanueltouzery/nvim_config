@@ -518,7 +518,7 @@ callbacks = {
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
   use {'akinsho/bufferline.nvim', commit = 'a703bb919aeb436eaa83bcbefdac51fbb92b4c74'}
-  use {'emmanueltouzery/vim-dispatch-neovim', commit='72d8fb41aade2968a3786abd74c0936b599466d8'}
+  use {'emmanueltouzery/vim-dispatch-neovim', commit='8b4f101d597f7a2e301e16627974321e927f6042'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
     if pcall(require, 'nvim_config_private') then
@@ -934,7 +934,7 @@ vnoremap > >gv
 
 -- open quickfix window below vertical splits
 -- https://stackoverflow.com/a/47077341/516188
-vim.cmd[[au FileType qf wincmd J]]
+vim.cmd[[au FileType qf wincmd J | 15wincmd_]]
 
 -- https://www.reddit.com/r/neovim/comments/ctrdtq/always_open_help_in_a_vertical_split/
 vim.cmd[[autocmd! FileType help :wincmd L]]

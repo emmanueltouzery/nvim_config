@@ -517,7 +517,7 @@ callbacks = {
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
   use {'akinsho/bufferline.nvim', commit = 'a703bb919aeb436eaa83bcbefdac51fbb92b4c74'}
-  use {'emmanueltouzery/vim-dispatch-neovim', commit='8b4f101d597f7a2e301e16627974321e927f6042'}
+  use {'emmanueltouzery/vim-dispatch-neovim', commit='8e9fe1a6dd7709d0948d2bcc76c620aabcb63017'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
     if pcall(require, 'nvim_config_private') then

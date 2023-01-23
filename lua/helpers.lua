@@ -1014,12 +1014,17 @@ function _G.print_lsp_path()
     return
   end
   local path = ""
-  for _, p in ipairs(require'nvim-navic'.get_data()) do
-    path = path .. "/" .. p.name
+  local data = require'nvim-navic'.get_data()
+  if data ~= nil then
+    for _, p in ipairs(data) do
+      path = path .. "/" .. p.name
+    end
+    local val = path:sub(2) -- remove leading /
+    vim.fn.setreg('+', val)
+    print(val)
+  else
+    print("No navigation data")
   end
-  local val = path:sub(2) -- remove leading /
-  vim.fn.setreg('+', val)
-  print(val)
 end
 
 function _G.display_git_commit()

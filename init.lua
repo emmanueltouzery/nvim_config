@@ -394,7 +394,11 @@ callbacks = {
       local navic = require("nvim-navic")
 
       -- lspconfig.rust_analyzer.setup {}
-      lspconfig.elixirls.setup {}
+      lspconfig.elixirls.setup {
+        on_attach = function(client, bufnr)
+          navic.attach(client, bufnr)
+        end,
+      }
       lspconfig.bashls.setup {}
       lspconfig.jsonls.setup {
         -- use null-ls & prettier for json indentation

@@ -93,7 +93,7 @@ vim.keymap.set("n", "<leader>sdd", "<cmd>lua require('telescope').extensions.liv
 vim.keymap.set("n", "<leader>sd*", "<cmd>lua my_open_tele(true)<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>sd*", "<cmd>lua my_open_tele_sel(true)<cr>", {desc="Search selected text, raw"})
 require 'key-menu'.set('n', '<Space>ss', {desc='Search LSP symbols'})
-vim.keymap.set("n", "<leader>ssf", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Goto file LSP symbol"})
+vim.keymap.set("n", "<leader>ssf", "<cmd>lua require'telescope.builtin'.lsp_document_symbols{symbol_width=80}<cr>", { desc = "Goto file LSP symbol"}) -- show_line=true would be another possible option
 vim.keymap.set( "n", "<leader>ssw", "<cmd>Telescope lsp_workspace_symbols<CR>", {desc="Goto workspace LSP symbol"})
 function filter_lsp_workspace_symbols()
   vim.ui.input({prompt="Enter LSP symbol filter please: ", kind="center_win"}, function(word)

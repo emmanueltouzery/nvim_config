@@ -139,9 +139,12 @@ function _G.elixir_view_behaviour_module_docs(mod, exports, opts)
           if string.match(line, "^@callback ") then
             local end_idx = string.find(line, "%(")
             cur_callback_name = string.sub(line, 11, end_idx-1)
-            if end_idx == #line or string.sub(line, end_idx+1, end_idx+1) == ')' then
+            if string.sub(line, end_idx+1, end_idx+1) == ')' then
               cur_callback_param_count = 0
               goto insert_callback
+            elseif end_idx == #line then
+              cur_callback_param_count = 0
+              goto skip_to_next
             else
               cur_callback_param_count = 1
             end

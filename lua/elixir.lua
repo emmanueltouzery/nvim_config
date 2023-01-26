@@ -121,6 +121,58 @@ function _G.elixir_view_module_docs(mod, opts)
       end
     end),
     on_exit = vim.schedule_wrap(function(j, output)
+      elixir_view_behaviour_module_docs(mod, exports, opts)
+    end)
+  })
+end
+
+function _G.elixir_view_behaviour_module_docs(mod, exports, opts)
+  vim.fn.jobstart(elixir_pa_flags({ "-e", "require IEx.Helpers; IEx.Helpers.b(" .. mod .. ")" }), {
+    cwd='.',
+    stdout_buffered = true,
+    on_stdout = vim.schedule_wrap(function(j, output)
+      local cur_callback_name = nil
+      local cur_callback_param_count = 0
+      local is_opening_bracket = false
+      for _, line in ipairs(output) do
+        if cur_callback_name == nil then
+          if string.match(line, "^@callback ") then
+            local end_idx = string.find(line, "%(")
+            cur_callback_name = string.sub(line, 11, end_idx-1)
+            if end_idx == #line or string.sub(line, end_idx+1, end_idx+1) == ')' then
+              cur_callback_param_count = 0
+              goto insert_callback
+            else
+              cur_callback_param_count = 1
+            end
+            for idx = end_idx, #line do
+              local char = string.sub(line, idx, idx)
+              if char == ',' then
+                cur_callback_param_count = cur_callback_param_count + 1
+              elseif not is_opening_bracket and char == ')' then
+                goto insert_callback
+              end 
+              is_opening_bracket = char == '('
+            end
+          end
+        else
+          if string.match(line, ",$") then
+            cur_callback_param_count = cur_callback_param_count + 1
+            goto skip_to_next
+          else
+            -- that was the last parameter
+            cur_callback_param_count = cur_callback_param_count + 1
+          end
+        end
+        ::insert_callback::
+        if cur_callback_name ~= nil then
+          table.insert(exports, "@" .. mod .. "." .. cur_callback_name .. "/" .. cur_callback_param_count)
+          cur_callback_name = nil
+        end
+        ::skip_to_next::
+      end
+    end),
+    on_exit = vim.schedule_wrap(function(j, output)
       vim.ui.select(exports, {prompt="Pick the function to view:"}, function(choice)
         if choice then
           elixir_view_export_docs(choice, opts)
@@ -159,5 +211,11 @@ function _G.elixir_view_export_docs(export, opts)
   else
     vim.cmd("enew")
   end
-  vim.fn.termopen(table.concat(elixir_pa_flags({" -e 'require IEx.Helpers; IEx.Helpers.h(" .. export .. ")'"}), " "))
+  local command = "h"
+  if string.match(export, "^@") then
+    export = string.sub(export, 2)
+    command = "b"
+  end
+  vim.fn.termopen(table.concat(elixir_pa_flags({
+    " -e 'require IEx.Helpers; IEx.Helpers." .. command .. "(" .. export .. ")'"}), " "))
 end

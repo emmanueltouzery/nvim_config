@@ -1078,3 +1078,16 @@ function _G.win_bring_qf_here()
     win_bring_qf_here()
   end
 end
+
+function _G.jump_to_qf()
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then
+      vim.cmd(vim.api.nvim_win_get_number(w) .. ' wincmd w')
+      return
+    end
+  end
+  -- no QF.. open it
+  vim.cmd("copen")
+  jump_to_qf()
+end

@@ -1055,4 +1055,26 @@ function _G.quickfix_goto_bottom()
     vim.api.nvim_command('wincmd p') -- return to the original window
   end
 end
--- vim: ts=2 sts=2 sw=2 et
+
+function _G.win_bring_qf_here()
+  local qf_buf_id = nil
+  for _, b in pairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_get_option(b, "ft") == "qf" then
+      qf_buf_id = b
+      break
+    end
+  end
+  if qf_buf_id ~= nil then
+    for _, w in pairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(w)
+      if buf == qf_buf_id then
+        vim.api.nvim_win_close(w, true)
+      end
+    end
+    vim.api.nvim_win_set_buf(0, qf_buf_id)
+  else
+    -- no QF.. open it
+    vim.cmd("copen")
+    win_bring_qf_here()
+  end
+end

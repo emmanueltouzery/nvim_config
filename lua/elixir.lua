@@ -45,7 +45,7 @@ function _G.elixir_add_inspect_sel()
   local line = vim.api.nvim_buf_get_lines(0, line-1, line, false)[1]
   local startcol = vim.fn.virtcol("'<")
   local endcol = vim.fn.virtcol("'>")
-  local seltext = line:sub(startcol, endcol)
+  local seltext = line:sub(startcol, endcol):gsub("^%s*", ""):gsub("%s*$", "")
   vim.cmd('norm! ' .. endcol .. '|a |> IO.inspect(label: "' .. seltext .. '")')
 end
 

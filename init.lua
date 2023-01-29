@@ -17,7 +17,7 @@ require('packer').startup(function(use)
   -- UI to select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = {
     'nvim-lua/plenary.nvim',
-    { 'debugloop/telescope-undo.nvim', commit = 'f2ca7c914134c7e6eb9275ee09863141caa77a3f' },
+    { 'emmanueltouzery/telescope-undo.nvim', commit = '8bab42ad4968fc17da996afe488d91e423f59003' },
   }, commit="f7bceabcc9dc049141ab0ea9e6301c0d21dbda57", config = function()
     local actions = require("telescope.actions")
     require('telescope').setup {
@@ -61,8 +61,22 @@ require('packer').startup(function(use)
           },
           mappings = {
             i = {
-              ["<C-r>a"] = require("telescope-undo.actions").yank_additions,
-              ["<C-r>d"] = require("telescope-undo.actions").yank_deletions,
+              ["<C-r>a"] = function(prompt_bufnr)
+                local base = require("telescope-undo.actions").yank_additions(prompt_bufnr)
+                local function with_notif()
+                    res = base()
+                    notif({"Copied " .. #res .. " lines to the clipboard"})
+                end
+                return with_notif
+              end,
+              ["<C-r>d"] = function(prompt_bufnr)
+                local base = require("telescope-undo.actions").yank_deletions(prompt_bufnr)
+                local function with_notif()
+                    res = base()
+                    notif({"Copied " .. #res .. " lines to the clipboard"})
+                end
+                return with_notif
+              end,
               ["<cr>"] = require("telescope-undo.actions").restore,
             },
           },

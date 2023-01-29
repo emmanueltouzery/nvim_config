@@ -17,7 +17,7 @@ require('packer').startup(function(use)
   -- UI to select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = {
     'nvim-lua/plenary.nvim',
-    { 'emmanueltouzery/telescope-undo.nvim', commit = '8bab42ad4968fc17da996afe488d91e423f59003' },
+    { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
   }, commit="f7bceabcc9dc049141ab0ea9e6301c0d21dbda57", config = function()
     local actions = require("telescope.actions")
     require('telescope').setup {

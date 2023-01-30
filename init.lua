@@ -127,7 +127,7 @@ require('packer').startup(function(use)
       },
     })
   end}
-  use {'JoosepAlviste/nvim-ts-context-commentstring', commit='2941f0064874b33e93d3a794a8a4e99f5f6ece56'}
+  use {'JoosepAlviste/nvim-ts-context-commentstring', commit='a0f89563ba36b3bacd62cf967b46beb4c2c29e52'}
   use {'neovim/nvim-lspconfig', commit='2dd9e060f21eecd403736bef07ec83b73341d955'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='2427d06b6508489547cd30b6e86b1c75df363411'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
@@ -232,16 +232,33 @@ require('packer').startup(function(use)
   use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
   use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
   use {'lifepillar/vim-cheat40', commit='ae237b02f9031bc82a8ad9202bffee2bcef71ed1'}
-  use {'emmanueltouzery/lightspeed.nvim', commit='b2961ae6360971c06dac0f5766df96a740ace050', config = function()
-    require'lightspeed'.setup {
-      ignore_case = true,
-    }
-    vim.api.nvim_set_keymap('n', 's', '<Plug>Lightspeed_s', {silent = true})
-    vim.api.nvim_set_keymap('n', 'S', '<Plug>Lightspeed_S', {silent = true})
-    vim.api.nvim_set_keymap('v', 's', '<Plug>Lightspeed_s', {silent = true})
-    vim.api.nvim_set_keymap('v', 'S', '<Plug>Lightspeed_S', {silent = true})
-    vim.api.nvim_set_keymap('n', 'gs', '<Plug>Lightspeed_omni_gs', {silent = true})
-  end}
+  use {
+    "ggandor/leap.nvim",
+    commit="ff4c3663e5a0a0ecbb3fffbc8318825def35d2aa",
+    config = function()
+
+    -- require("leap").add_default_mappings()
+      vim.api.nvim_set_keymap('n', 's', '<Plug>(leap-forward-to)', {silent = true})
+      vim.api.nvim_set_keymap('n', 'S', '<Plug>(leap-backward-to)', {silent = true})
+      vim.api.nvim_set_keymap('v', 's', '<Plug>(leap-forward-to)', {silent = true})
+      vim.api.nvim_set_keymap('v', 'S', '<Plug>(leap-backward-to)', {silent = true})
+      vim.api.nvim_set_keymap('n', 'gs', '<Plug>(leap-cross-window)', {silent = true})
+
+      -- The below settings make Leap's highlighting a bit closer to what you've been
+      -- used to in Lightspeed.
+      vim.api.nvim_set_hl(0, "LeapBackdrop", {link = "Comment"})
+      vim.api.nvim_set_hl(
+      0,
+      "LeapMatch",
+      {
+        fg = "white", -- for light themes, set to 'black' or similar
+        bold = true,
+        nocombine = true
+      }
+      )
+      require("leap").opts.highlight_unlabeled_phase_one_targets = true
+    end
+  }
   use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
   use {'vim-test/vim-test', commit='56bbfa295fe62123d2ebe8ed57dd002afab46097'}
   -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim

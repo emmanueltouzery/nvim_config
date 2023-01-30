@@ -222,3 +222,92 @@ function _G.elixir_view_export_docs(export, opts)
   vim.fn.termopen(table.concat(elixir_pa_flags({
     " -e 'require IEx.Helpers; IEx.Helpers." .. command .. "(" .. export .. ")'"}), " "))
 end
+
+function _G.inspect_point_candidate(winid)
+  local wininfo =  vim.fn.getwininfo(winid)[1]
+  local cur_line = vim.fn.line('.')
+  local cur_col = vim.fn.col('.')
+  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
+
+  local targets = {}
+
+  -- after the current WORD on this line
+  for idx = cur_col, #cur_line_str do
+    local char = string.sub(cur_line_str, idx, idx)
+    if char == ' ' then
+      table.insert(targets, { pos = { cur_line, idx }})
+      break
+    end
+  end
+
+  -- before the next ) on this line, if any
+  for idx = cur_col, #cur_line_str do
+    local char = string.sub(cur_line_str, idx, idx)
+    if char == ')' then
+      table.insert(targets, { pos = { cur_line, idx-1 }})
+      break
+    end
+  end
+
+  -- after the next ) up to 10 lines down
+  for idx = cur_line, cur_line+10 do
+    local idx_line_str = vim.api.nvim_buf_get_lines(0, idx-1, idx, false)[1]
+    if idx_line_str == nil then break end
+    local index_start = string.find(idx_line_str, "%)")
+    if index_start ~= nil then
+      table.insert(targets, { pos = { idx, index_start+1 }})
+      break
+    end
+  end
+
+  -- before the next , on this line, if any
+  for idx = cur_col, #cur_line_str do
+    local char = string.sub(cur_line_str, idx, idx)
+    if char == ',' then
+      table.insert(targets, { pos = { cur_line, idx-1 }})
+      break
+    end
+  end
+
+  -- end of the line
+  table.insert(targets, { pos = { cur_line, #cur_line_str }})
+
+  -- beginning of next line
+  table.insert(targets, { pos = { cur_line+1, 1 }})
+
+  -- before the next |> up to 10 lines down
+  for idx = cur_line+1, cur_line+10 do
+    local idx_line_str = vim.api.nvim_buf_get_lines(0, idx-1, idx, false)[1]
+    if idx_line_str == nil then break end
+    if string.match(idx_line_str, "^%s*%|>") then
+      table.insert(targets, { pos = { idx, 1 }})
+      break
+    end
+  end
+
+  if #targets >= 1 then
+    return targets
+  end
+end
+
+function _G.elixir_insert_inspect()
+  winid = vim.api.nvim_get_current_win()
+  local cur_line = vim.fn.line('.')
+  local cur_col = vim.fn.col('.')
+  require('leap').leap {
+    target_windows = { winid },
+    targets = inspect_point_candidate(winid),
+  }
+  local cur_line2 = vim.fn.line('.')
+  local cur_col2 = vim.fn.col('.')
+  -- assuming if the position didn't change the user cancelled
+  if cur_line2 ~= cur_line or cur_col2 ~= cur_col then
+    if cur_col2 == 1 then
+      vim.cmd("norm! O")
+    end
+    vim.cmd('norm! a|> IO.inspect(label: "")')
+    -- position the cursor in the quotes to enable quick rename
+    vim.cmd('norm! h')
+    vim.cmd('startinsert')
+  end
+end

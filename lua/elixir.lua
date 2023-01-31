@@ -180,7 +180,8 @@ function _G.inspect_point_candidate(winid)
 
   local targets = {}
 
-  local next_chars = {' ', ')', ']', '}', ','}
+  -- pick only the NEXT char
+  local next_chars = {' '}
   for _, next_char in ipairs(next_chars) do
     -- before the next cur char on this line, if any
     for idx = cur_col, #cur_line_str do
@@ -188,6 +189,31 @@ function _G.inspect_point_candidate(winid)
       if char == next_char then
         table.insert(targets, { pos = { cur_line, idx-2 }})
         break
+      end
+    end
+  end
+
+  -- pick ALL chars in this line -- before only
+  local next_chars = {','}
+  for _, next_char in ipairs(next_chars) do
+    -- before the next cur char on this line, if any
+    for idx = cur_col, #cur_line_str do
+      local char = string.sub(cur_line_str, idx, idx)
+      if char == next_char then
+        table.insert(targets, { pos = { cur_line, idx }, offset = -1 }) -- before
+      end
+    end
+  end
+
+  -- pick ALL chars in this line -- before and after
+  local next_chars = {')', ']', '}'}
+  for _, next_char in ipairs(next_chars) do
+    -- before the next cur char on this line, if any
+    for idx = cur_col, #cur_line_str do
+      local char = string.sub(cur_line_str, idx, idx)
+      if char == next_char then
+        table.insert(targets, { pos = { cur_line, idx }, offset = -1 }) -- before
+        table.insert(targets, { pos = { cur_line, idx+1 }, offset = -1 }) -- after
       end
     end
   end
@@ -204,7 +230,7 @@ function _G.inspect_point_candidate(winid)
   end
 
   -- end of the line
-  table.insert(targets, { pos = { cur_line, #cur_line_str }})
+  table.insert(targets, { pos = { cur_line, #cur_line_str }, append = true})
 
   -- beginning of next line
   table.insert(targets, { pos = { cur_line+1, 1 }})
@@ -231,11 +257,18 @@ function _G.elixir_insert_inspect_value()
     target_windows = { winid },
     targets = inspect_point_candidate(winid),
     action = function(target)
+      if target.offset then
+        target.pos[2] = target.pos[2] + target.offset
+      end
       vim.api.nvim_win_set_cursor(0, target.pos)
       if target.pos[2] == 1 then
         vim.cmd("norm! O")
       end
-      vim.cmd('norm! a|> IO.inspect(label: "")')
+      if target.append then
+        vim.cmd('norm! a|> IO.inspect(label: "")')
+      else
+        vim.cmd('norm! i|> IO.inspect(label: "")')
+      end
       -- position the cursor in the quotes to enable quick rename
       vim.cmd('norm! h')
       vim.cmd('startinsert')
@@ -300,10 +333,17 @@ function _G.elixir_insert_inspect_field()
         targets = inspect_point_candidate(winid),
         action = function(target)
           vim.api.nvim_win_set_cursor(0, target.pos)
+          if target.offset then
+            target.pos[2] = target.pos[2] + target.offset
+          end
           if target.pos[2] == 1 then
             vim.cmd("norm! O")
           end
-          vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
+          if target.append then
+            vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
+          else
+            vim.cmd('norm! i|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
+          end
           -- position the cursor in the quotes to enable quick rename
           vim.cmd('norm! 2h')
           vim.cmd('startinsert')

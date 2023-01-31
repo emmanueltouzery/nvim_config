@@ -1,54 +1,3 @@
-function _G.elixir_add_inspect()
-  local line = vim.fn.line('.')
-  local parser = require('nvim-treesitter.parsers').get_parser(0)
-  local ts_node = parser
-  :named_node_for_range({line-1, vim.fn.col('.'), line-1, vim.fn.col('.')})
-  local node_type = ts_node:type()
-  local is_identifier = nil
-  while ts_node ~= nil do
-    -- print(ts_node:type())
-    if ts_node:type() == "arguments" then
-      is_identifier = true
-      break
-    end
-    if ts_node:type() == "call" then
-      is_identifier = false
-      break
-    end
-    ts_node = ts_node:parent()
-  end
-  local line = vim.api.nvim_buf_get_lines(0, line-1, line, false)[1]
-  local name = vim.fn.expand('<cword>')
-  local is_chain_line = line:match("^%s*%|>") -- |> ...
-  is_identifier = is_identifier and not is_chain_line or
-    (node_type == "identifier" and line:match("^%s*" .. name .. "%s*="))
-  if is_identifier then
-    vim.cmd('norm! oIO.inspect(' .. name .. ', label: "' .. name .. '")')
-  else
-    local is_do_statement_line = line:match(" do%s*$") -- function xx() do
-    local is_assignment_line = line:match("^%s*[a-zA-Z_%d]+%s*=") -- xx = ...
-    local no_chain = is_do_statement_line or is_assignment_line
-    local name = line:gsub("^%s+", "")
-          local chain = '|> '
-          if no_chain then
-            chain = ''
-          end
-          vim.cmd('norm! o' .. chain .. 'IO.inspect(label: "' .. name .. '")')
-          -- position the cursor in the quotes to enable quick rename
-          vim.cmd('norm! 4h')
-    -- end
-  end
-end
-
-function _G.elixir_add_inspect_sel()
-  local line = vim.fn.line('.')
-  local line = vim.api.nvim_buf_get_lines(0, line-1, line, false)[1]
-  local startcol = vim.fn.virtcol("'<")
-  local endcol = vim.fn.virtcol("'>")
-  local seltext = line:sub(startcol, endcol):gsub("^%s*", ""):gsub("%s*$", "")
-  vim.cmd('norm! ' .. endcol .. '|a |> IO.inspect(label: "' .. seltext .. '")')
-end
-
 -- in theory I should load modules through -S mix but.. i couldn't make it work
 -- from neovim, it's slow and so on. In the end besides the stdlib i care about ecto...
 EXTRA_MIX_FOLDERS = {'./_build/dev/lib/ecto/ebin/'}
@@ -290,7 +239,7 @@ function _G.inspect_point_candidate(winid)
   end
 end
 
-function _G.elixir_insert_inspect()
+function _G.elixir_insert_inspect_value()
   winid = vim.api.nvim_get_current_win()
   local cur_line = vim.fn.line('.')
   local cur_col = vim.fn.col('.')
@@ -311,3 +260,73 @@ function _G.elixir_insert_inspect()
     vim.cmd('startinsert')
   end
 end
+
+function _G.inspect_point_candidate_param(winid)
+  local wininfo =  vim.fn.getwininfo(winid)[1]
+  local cur_line = vim.fn.line('.')
+  local cur_col = vim.fn.col('.')
+  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
+
+  local targets = {}
+
+  -- beginning of next 10 lines
+  for idx = cur_line, cur_line+10 do
+    local idx_line_str = vim.api.nvim_buf_get_lines(0, idx-1, idx, false)[1]
+    if idx_line_str == nil then break end
+    table.insert(targets, { pos = { idx+1, 1 }})
+  end
+
+  if #targets >= 1 then
+    return targets
+  end
+end
+
+function _G.elixir_insert_inspect_param()
+  winid = vim.api.nvim_get_current_win()
+  local cur_line = vim.fn.line('.')
+  local cur_col = vim.fn.col('.')
+  local param_name = vim.fn.expand("<cword>")
+  require('leap').leap {
+    target_windows = { winid },
+    targets = inspect_point_candidate_param(winid),
+  }
+  local cur_line2 = vim.fn.line('.')
+  local cur_col2 = vim.fn.col('.')
+  -- assuming if the position didn't change the user cancelled
+  if cur_line2 ~= cur_line or cur_col2 ~= cur_col then
+    if cur_col2 == 1 then
+      vim.cmd("norm! O")
+    end
+    vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '")')
+    -- position the cursor in the quotes to enable quick rename
+    vim.cmd('norm! h')
+    vim.cmd('startinsert')
+  end
+end
+
+function _G.elixir_insert_inspect_field()
+  vim.ui.input({prompt="Enter field name please: ", kind="center_win"}, function(field)
+    if field ~= nil then
+      winid = vim.api.nvim_get_current_win()
+      local cur_line = vim.fn.line('.')
+      local cur_col = vim.fn.col('.')
+      require('leap').leap {
+        target_windows = { winid },
+        targets = inspect_point_candidate(winid),
+      }
+      local cur_line2 = vim.fn.line('.')
+      local cur_col2 = vim.fn.col('.')
+      -- assuming if the position didn't change the user cancelled
+      if cur_line2 ~= cur_line or cur_col2 ~= cur_col then
+        if cur_col2 == 1 then
+          vim.cmd("norm! O")
+        end
+        vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
+        -- position the cursor in the quotes to enable quick rename
+        vim.cmd('norm! 2h')
+        vim.cmd('startinsert')
+      end
+    end
+  end)
+end
+

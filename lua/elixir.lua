@@ -241,24 +241,21 @@ end
 
 function _G.elixir_insert_inspect_value()
   winid = vim.api.nvim_get_current_win()
-  local cur_line = vim.fn.line('.')
   local cur_col = vim.fn.col('.')
   require('leap').leap {
     target_windows = { winid },
     targets = inspect_point_candidate(winid),
-  }
-  local cur_line2 = vim.fn.line('.')
-  local cur_col2 = vim.fn.col('.')
-  -- assuming if the position didn't change the user cancelled
-  if cur_line2 ~= cur_line or cur_col2 ~= cur_col then
-    if cur_col2 == 1 then
-      vim.cmd("norm! O")
+    action = function()
+      local cur_col2 = vim.fn.col('.')
+      if cur_col2 == 1 then
+        vim.cmd("norm! O")
+      end
+      vim.cmd('norm! a|> IO.inspect(label: "")')
+      -- position the cursor in the quotes to enable quick rename
+      vim.cmd('norm! h')
+      vim.cmd('startinsert')
     end
-    vim.cmd('norm! a|> IO.inspect(label: "")')
-    -- position the cursor in the quotes to enable quick rename
-    vim.cmd('norm! h')
-    vim.cmd('startinsert')
-  end
+  }
 end
 
 function _G.inspect_point_candidate_param(winid)
@@ -286,46 +283,47 @@ function _G.elixir_insert_inspect_param()
   local cur_line = vim.fn.line('.')
   local cur_col = vim.fn.col('.')
   local param_name = vim.fn.expand("<cword>")
+  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
+  local is_function_name = string.match(cur_line_str, "^%s*def%s+" .. param_name .. "%(")
   require('leap').leap {
     target_windows = { winid },
     targets = inspect_point_candidate_param(winid),
-  }
-  local cur_line2 = vim.fn.line('.')
-  local cur_col2 = vim.fn.col('.')
-  -- assuming if the position didn't change the user cancelled
-  if cur_line2 ~= cur_line or cur_col2 ~= cur_col then
-    if cur_col2 == 1 then
-      vim.cmd("norm! O")
+    action = function()
+      local cur_col2 = vim.fn.col('.')
+      if cur_col2 == 1 then
+        vim.cmd("norm! O")
+      end
+      if is_function_name then
+        vim.cmd('norm! aIO.inspect("' .. param_name .. '")')
+      else
+        vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '")')
+      end
+      -- position the cursor in the quotes to enable quick rename
+      vim.cmd('norm! h')
+      vim.cmd('startinsert')
     end
-    vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '")')
-    -- position the cursor in the quotes to enable quick rename
-    vim.cmd('norm! h')
-    vim.cmd('startinsert')
-  end
+  }
 end
 
 function _G.elixir_insert_inspect_field()
   vim.ui.input({prompt="Enter field name please: ", kind="center_win"}, function(field)
     if field ~= nil then
       winid = vim.api.nvim_get_current_win()
-      local cur_line = vim.fn.line('.')
       local cur_col = vim.fn.col('.')
       require('leap').leap {
         target_windows = { winid },
         targets = inspect_point_candidate(winid),
-      }
-      local cur_line2 = vim.fn.line('.')
-      local cur_col2 = vim.fn.col('.')
-      -- assuming if the position didn't change the user cancelled
-      if cur_line2 ~= cur_line or cur_col2 ~= cur_col then
-        if cur_col2 == 1 then
-          vim.cmd("norm! O")
+        action = function()
+          local cur_col2 = vim.fn.col('.')
+          if cur_col2 == 1 then
+            vim.cmd("norm! O")
+          end
+          vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
+          -- position the cursor in the quotes to enable quick rename
+          vim.cmd('norm! 2h')
+          vim.cmd('startinsert')
         end
-        vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
-        -- position the cursor in the quotes to enable quick rename
-        vim.cmd('norm! 2h')
-        vim.cmd('startinsert')
-      end
+      }
     end
   end)
 end

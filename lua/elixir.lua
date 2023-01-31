@@ -180,21 +180,15 @@ function _G.inspect_point_candidate(winid)
 
   local targets = {}
 
-  -- after the current WORD on this line
-  for idx = cur_col, #cur_line_str do
-    local char = string.sub(cur_line_str, idx, idx)
-    if char == ' ' then
-      table.insert(targets, { pos = { cur_line, idx }})
-      break
-    end
-  end
-
-  -- before the next ) on this line, if any
-  for idx = cur_col, #cur_line_str do
-    local char = string.sub(cur_line_str, idx, idx)
-    if char == ')' then
-      table.insert(targets, { pos = { cur_line, idx-1 }})
-      break
+  local next_chars = {' ', ')', ']', '}', ','}
+  for _, next_char in ipairs(next_chars) do
+    -- before the next cur char on this line, if any
+    for idx = cur_col, #cur_line_str do
+      local char = string.sub(cur_line_str, idx, idx)
+      if char == next_char then
+        table.insert(targets, { pos = { cur_line, idx-2 }})
+        break
+      end
     end
   end
 
@@ -205,15 +199,6 @@ function _G.inspect_point_candidate(winid)
     local index_start = string.find(idx_line_str, "%)")
     if index_start ~= nil then
       table.insert(targets, { pos = { idx, index_start+1 }})
-      break
-    end
-  end
-
-  -- before the next , on this line, if any
-  for idx = cur_col, #cur_line_str do
-    local char = string.sub(cur_line_str, idx, idx)
-    if char == ',' then
-      table.insert(targets, { pos = { cur_line, idx-1 }})
       break
     end
   end
@@ -245,9 +230,9 @@ function _G.elixir_insert_inspect_value()
   require('leap').leap {
     target_windows = { winid },
     targets = inspect_point_candidate(winid),
-    action = function()
-      local cur_col2 = vim.fn.col('.')
-      if cur_col2 == 1 then
+    action = function(target)
+      vim.api.nvim_win_set_cursor(0, target.pos)
+      if target.pos[2] == 1 then
         vim.cmd("norm! O")
       end
       vim.cmd('norm! a|> IO.inspect(label: "")')
@@ -288,9 +273,9 @@ function _G.elixir_insert_inspect_param()
   require('leap').leap {
     target_windows = { winid },
     targets = inspect_point_candidate_param(winid),
-    action = function()
-      local cur_col2 = vim.fn.col('.')
-      if cur_col2 == 1 then
+    action = function(target)
+      vim.api.nvim_win_set_cursor(0, target.pos)
+      if target.pos[2] == 1 then
         vim.cmd("norm! O")
       end
       if is_function_name then
@@ -313,9 +298,9 @@ function _G.elixir_insert_inspect_field()
       require('leap').leap {
         target_windows = { winid },
         targets = inspect_point_candidate(winid),
-        action = function()
-          local cur_col2 = vim.fn.col('.')
-          if cur_col2 == 1 then
+        action = function(target)
+          vim.api.nvim_win_set_cursor(0, target.pos)
+          if target.pos[2] == 1 then
             vim.cmd("norm! O")
           end
           vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')

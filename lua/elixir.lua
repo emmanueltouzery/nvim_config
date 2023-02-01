@@ -187,7 +187,7 @@ function _G.inspect_point_candidate(winid)
     for idx = cur_col, #cur_line_str do
       local char = string.sub(cur_line_str, idx, idx)
       if char == next_char then
-        table.insert(targets, { pos = { cur_line, idx-2 }})
+        table.insert(targets, { pos = { cur_line, idx }})
         break
       end
     end
@@ -212,8 +212,8 @@ function _G.inspect_point_candidate(winid)
     for idx = cur_col, #cur_line_str do
       local char = string.sub(cur_line_str, idx, idx)
       if char == next_char then
-        table.insert(targets, { pos = { cur_line, idx }, offset = -1 }) -- before
-        table.insert(targets, { pos = { cur_line, idx+1 }, offset = -1 }) -- after
+        table.insert(targets, { pos = { cur_line, idx-1 }, offset = 1 }) -- before
+        table.insert(targets, { pos = { cur_line, idx }, offset = -1, append = true }) -- after
       end
     end
   end
@@ -224,7 +224,7 @@ function _G.inspect_point_candidate(winid)
     if idx_line_str == nil then break end
     local index_start = string.find(idx_line_str, "%)")
     if index_start ~= nil then
-      table.insert(targets, { pos = { idx, index_start+1 }})
+      table.insert(targets, { pos = { idx, index_start }, append = true})
       break
     end
   end

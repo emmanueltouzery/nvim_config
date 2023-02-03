@@ -793,7 +793,14 @@ function _G.telescope_jumplist()
       prompt_title = "Jumplist",
       finder = finders.new_table {
         results = sorted_jumplist,
-        entry_maker = make_entry.gen_from_quickfix({path_display={'tail'}}),
+        entry_maker = make_entry.gen_from_quickfix({
+          -- path_display={'tail'}
+          path_display=function(opts, transformed_path)
+            -- compared to the basic strategy, also display icons
+            p = require'telescope.utils'.path_tail(transformed_path)
+            return require'telescope.utils'.transform_devicons(transformed_path ,p)
+          end
+        }),
       },
       previewer = conf.qflist_previewer({}),
       sorter = conf.generic_sorter({}),

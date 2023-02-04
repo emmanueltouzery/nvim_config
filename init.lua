@@ -97,7 +97,7 @@ require('packer').startup(function(use)
     require("gitsigns").setup {}
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='e2efbb6569dbe50e6604cfc2d5d0819eb07d5623', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='bd7b4b6eff2dcb4a8a65f55d51398e79fa3d4ec6', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown",

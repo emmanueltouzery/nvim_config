@@ -194,6 +194,7 @@ endfunction
 vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
 vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
+vim.keymap.set("n", "<leader>to", ":tabo<cr>", {desc="Delete other tabs"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 vim.keymap.set("n", "<leader>tg", "<cmd>lua telescope_enable_disable_diagnostics()<cr>", {desc = "Toggle Diagnostics sources for buffer"})
 
 -- GIT

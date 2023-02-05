@@ -64,7 +64,7 @@ vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="op
 vim.keymap.set('n', '<leader>f!', ":windo e!<cr>", {desc = "Reload all files from disk"})
 
 function _G.quick_set_ft()
-  local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown"}
+  local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html"}
   vim.ui.select(filetypes, {prompt="Pick filetype to switch to"}, function(choice) if choice ~= nil then vim.cmd("set ft=" .. choice) end end)
 end
 vim.keymap.set("n", "<leader>ft", ":lua quick_set_ft()<cr>", {desc="Quickly change to common file types"})
@@ -303,6 +303,8 @@ function format_buf()
     vim.cmd(':%!prettier --parser json')
   elseif vim.bo.filetype == 'typescript' then
     vim.cmd(':%!prettier --parser typescript')
+  elseif vim.bo.filetype == 'html' then
+    vim.cmd(':%!prettier --parser html')
   else
     print("No LSP and unhandled filetype " .. vim.bo.filetype)
   end

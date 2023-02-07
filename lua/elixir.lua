@@ -323,6 +323,48 @@ function _G.elixir_insert_inspect_param()
   }
 end
 
+function _G.inspect_point_candidate_label(winid)
+  local wininfo =  vim.fn.getwininfo(winid)[1]
+  local cur_line = vim.fn.line('.')
+  local cur_col = vim.fn.col('.')
+  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
+
+  local targets = {}
+
+  -- beginning of next 10 lines
+  for idx = cur_line-1, cur_line+10 do
+    local idx_line_str = vim.api.nvim_buf_get_lines(0, idx-1, idx, false)[1]
+    if idx_line_str == nil then break end
+    table.insert(targets, { pos = { idx+1, 1 }})
+  end
+
+  if #targets >= 1 then
+    return targets
+  end
+end
+
+function _G.elixir_insert_inspect_label()
+  winid = vim.api.nvim_get_current_win()
+  local cur_line = vim.fn.line('.')
+  local cur_col = vim.fn.col('.')
+  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
+  require('leap').leap {
+    target_windows = { winid },
+    targets = inspect_point_candidate_label(winid),
+    action = function(target)
+      vim.api.nvim_win_set_cursor(0, target.pos)
+      if target.pos[2] == 1 then
+        vim.cmd("norm! O")
+      end
+      vim.cmd('norm! aIO.inspect("")')
+      -- position the cursor in the quotes to enable quick rename
+      vim.cmd('norm! h')
+      vim.cmd('startinsert')
+    end
+  }
+end
+
+
 function _G.elixir_insert_inspect_field()
   vim.ui.input({prompt="Enter field name please: ", kind="center_win"}, function(field)
     if field ~= nil then

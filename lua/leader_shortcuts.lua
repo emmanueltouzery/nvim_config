@@ -319,6 +319,7 @@ vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & ya
 require 'key-menu'.set('n', '<Space>x', {desc='Elixir'})
 vim.keymap.set('n', '<leader>xiv', ":lua elixir_insert_inspect_value()<cr>", {desc="elixir add inspect value"})
 vim.keymap.set('n', '<leader>xip', ":lua elixir_insert_inspect_param()<cr>", {desc="elixir add inspect parameter"})
+vim.keymap.set('n', '<leader>xil', ":lua elixir_insert_inspect_label()<cr>", {desc="elixir add inspect label"})
 vim.keymap.set('n', '<leader>xif', ":lua elixir_insert_inspect_field()<cr>", {desc="elixir add inspect field"})
 require 'key-menu'.set('n', '<Space>xa', {desc='API'})
 vim.keymap.set('n', '<leader>xai', ":lua elixir_view_docs()<cr>", {desc="elixir apidocs (in cur buffer)"})

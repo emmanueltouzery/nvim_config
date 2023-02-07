@@ -836,6 +836,7 @@ vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
 -- SPELL CHECKING
 vim.cmd("set spell")
 vim.cmd("set spelloptions=camel")
+vim.cmd[[au FileType qf setlocal spelloptions=camel]] -- unsure why i need special treatment for QF, but it helps
 vim.cmd("hi clear SpellCap")
 vim.cmd("au BufNewFile,BufRead,BufWritePost *.lua setlocal nospell")
 if vim.version().minor <= 7 then

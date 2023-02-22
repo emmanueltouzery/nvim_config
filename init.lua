@@ -115,7 +115,7 @@ require('packer').startup(function(use)
     require("gitsigns").setup {}
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='bd7b4b6eff2dcb4a8a65f55d51398e79fa3d4ec6', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='e2efbb6569dbe50e6604cfc2d5d0819eb07d5623', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown",
@@ -173,7 +173,7 @@ require('packer').startup(function(use)
     vim.g.rooter_change_directory_for_non_project_files = 'current'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36'} -- fork which adds the "close window" feature
-  use {'sindrets/diffview.nvim', commit='168c8fc1e5729a00b7dd0317d393e6acf21faad7',
+  use {'sindrets/diffview.nvim', commit='11827d46e939b4748dbdb7e0df4982a63bd59d26',
     config = function()
       local actions = require("diffview.config").actions
       require('diffview').setup {

@@ -12,6 +12,24 @@ vim.g.doom_one_terminal_colors = true
 vim.g.BufKillCreateMappings = 0 -- vim-bufkill plugin
 vim.g.lightspeed_no_default_keymaps = true
 
+local entry_display = require("telescope.pickers.entry_display")
+_G.aerial_displayer = entry_display.create({
+    separator = " ",
+    items = {
+      { width = 2 },
+      { width = 32 },
+      { remaining = true },
+    },
+  })
+
+function _G.aerial_elixir_get_entry_text(item)
+  if item.parent and #item.parent.name < 20 then
+    return string.format("%s.%s", string.gsub(item.parent.name, "^.*%.", ""), item.name)
+  end
+  return item.name
+end
+
+
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
@@ -470,7 +488,43 @@ callbacks = {
     -- if you only want these mappings for toggle term use term://*toggleterm#* instead
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
-  use {'simrat39/symbols-outline.nvim', commit='15ae99c27360ab42e931be127d130611375307d5'}
+  use {'nvim-treesitter/playground'}
+  use {'stevearc/aerial.nvim', commit="8e2cbd32d166c2daf2041e7c9f0525618f407571", config = function()
+    local protocol = require("vim.lsp.protocol")
+    local function get_symbol_kind_name(kind_number)
+      return protocol.SymbolKind[kind_number] or "Unknown"
+    end
+    require("aerial").setup({
+      backends = { 
+        ['_'] = { "treesitter", "lsp", "markdown", "man" },
+        elixir = { "treesitter" },
+        typescript = { "treesitter" },
+        typescriptreact = { "treesitter" },
+      },
+      filter_kind = false,
+      icons = {
+        Field       = " פּ ",
+        Type        = " ",
+      },
+      k = 2,
+      post_parse_symbol = function(bufnr, item, ctx)
+        if ctx.backend_name == "treesitter" and ctx.lang == "typescript" then
+          local utils = require"nvim-treesitter.utils"
+          local value_node = (utils.get_at_path(ctx.match, "var_type") or {}).node
+          -- don't want to display in-function items
+          local cur_parent = value_node and value_node:parent()
+          while cur_parent do
+            if cur_parent:type() == "arrow_function" or cur_parent:type() == "function_declaration" then
+              return false
+            end
+            cur_parent = cur_parent:parent()
+          end
+        end
+        return true
+      end,
+    })
+    require('telescope').load_extension('aerial')
+  end}
   use {'TimUntersberger/neogit', commit='74c9e29b61780345d3ad9d7a4a4437607caead4a', config = function()
     require('neogit') .setup {
       -- disable_context_highlighting = true,

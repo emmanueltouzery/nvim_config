@@ -106,6 +106,32 @@ require('packer').startup(function(use)
     -- Enable telescope fzf native
     require('telescope').load_extension 'fzf'
   end}
+  use {
+    "nvim-neotest/neotest",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "jfpedroza/neotest-elixir",
+    }, config = function()
+      require("neotest").setup({
+        adapters = {
+          require("neotest-elixir"),
+        },
+        output = {
+          open_on_run = false
+        },
+        consumers = {
+          overseer = require("neotest.consumers.overseer"),
+        },
+        quickfix = {
+          open = function()
+            -- wincmd p to return where i was, don't want to focus QF
+            vim.cmd[[copen | wincmd p]]
+          end
+        }
+      })
+  end
+  }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', commit="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" }
   use { 'nvim-telescope/telescope-file-browser.nvim', commit='ea7905ed9b13bcf50e0ba4f3bff13330028d298c', config=function()
     require("telescope").load_extension "file_browser"
@@ -654,13 +680,37 @@ callbacks = {
           }
         },
       },
+      actions = {
+        ["Display at bottom"] = {
+          desc = "open terminal at bottom",
+          condition = function(task)
+            local bufnr = task:get_bufnr()
+            return bufnr and vim.api.nvim_buf_is_valid(bufnr)
+          end,
+          run = function(task)
+            local util = require("overseer.util")
+            vim.cmd([[botright split | resize 15]])
+            util.set_term_window_opts()
+            vim.api.nvim_win_set_buf(0, task:get_bufnr())
+            util.scroll_to_end(0)
+          end,
+        },
+      },
       component_aliases = {
         default = {
           { "display_duration", detail_level = 2 },
           "on_output_summarize",
           "on_exit_set_status",
           {"on_complete_dispose", timeout = 900}
-        }
+        },
+        default_neotest = {
+          "on_start_neotest_notif",
+          "on_complete_notif",
+          -- "on_output_summarize",
+          "on_exit_set_status",
+          -- "on_complete_notify",
+          "on_complete_dispose",
+        },
       }
     }
   end}

@@ -929,6 +929,36 @@ function _G.overseer_running_task_action(action)
   end
 end
 
+function _G.overseer_display_latest_test_output()
+  local overseer = require('overseer')
+  local tasks = overseer.list_tasks({ name="Neotest" })
+  if #tasks > 0 then
+    overseer.run_action(tasks[#tasks], "open float")
+  end
+end
+
+function _G.overseer_follow_test()
+  local overseer = require('overseer')
+  local tasks = overseer.list_tasks({ name="Neotest" })
+  if #tasks > 0 then
+    if vim.g.neotest_output_winnr ~= nil then
+      vim.api.nvim_win_close(vim.g.neotest_output_winnr, false)
+    end
+    overseer.run_action(tasks[#tasks], "Display at bottom")
+    vim.g.neotest_output_winnr = vim.fn.win_getid()
+    vim.cmd[[wincmd p]]
+  end
+end
+
+function _G.overseer_stop_tests()
+  local overseer = require('overseer')
+  local tasks = overseer.list_tasks({ name="Neotest" })
+  if #tasks > 0 then
+    overseer.run_action(tasks[#tasks], "stop")
+  end
+end
+
+
 function _G.diffview_gf()
   -- https://github.com/sindrets/diffview.nvim/issues/230
   local file = require("diffview.lib").get_current_view():infer_cur_file()

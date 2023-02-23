@@ -1015,12 +1015,12 @@ function _G.convert_dos()
   end
 end
 
-function _G.print_lsp_path()
+function _G.print_lsp_path(retry)
   local path_components = require'aerial'.get_location()
-  if #path_components == 0 then
+  if #path_components == 0 and retry == nil then
     vim.defer_fn(function()
-      print_lsp_path()
-    end,0)
+      print_lsp_path(true)
+    end, 50)
     return
   end
   print(vim.inspect(path_components))

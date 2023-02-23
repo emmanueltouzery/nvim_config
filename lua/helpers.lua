@@ -1016,22 +1016,21 @@ function _G.convert_dos()
 end
 
 function _G.print_lsp_path()
-  if not require'nvim-navic'.is_available() then
-    print("Not supported for this file type")
+  local path_components = require'aerial'.get_location()
+  if #path_components == 0 then
+    vim.defer_fn(function()
+      print_lsp_path()
+    end,0)
     return
   end
+  print(vim.inspect(path_components))
   local path = ""
-  local data = require'nvim-navic'.get_data()
-  if data ~= nil then
-    for _, p in ipairs(data) do
-      path = path .. "/" .. p.name
-    end
-    local val = path:sub(2) -- remove leading /
-    vim.fn.setreg('+', val)
-    print(val)
-  else
-    print("No navigation data")
+  for _, p in ipairs(path_components) do
+    path = path .. "/" .. p.name
   end
+  local val = path:sub(2) -- remove leading /
+  vim.fn.setreg('+', val)
+  print(val)
 end
 
 function _G.display_git_commit()

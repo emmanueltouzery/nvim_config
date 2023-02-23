@@ -440,26 +440,15 @@ callbacks = {
           end
         }
       }
-      local navic = require("nvim-navic")
 
       -- lspconfig.rust_analyzer.setup {}
-      lspconfig.elixirls.setup {
-        on_attach = function(client, bufnr)
-          navic.attach(client, bufnr)
-        end,
-      }
+      lspconfig.elixirls.setup {}
       lspconfig.bashls.setup {}
       lspconfig.jsonls.setup {
         -- use null-ls & prettier for json indentation
         on_attach = function(client, bufnr)
-          navic.attach(client, bufnr)
-          if vim.version().minor > 7 then
-            client.server_capabilities.documentFormattingProvider = false
-            client.server_capabilities.documentRangeFormattingProvider = false
-          else
-            client.resolved_capabilities.document_formatting = false
-            client.resolved_capabilities.document_range_formatting = false
-          end
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
         end,
       }
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -721,7 +710,6 @@ rt.setup(opts)
   use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
     require("dapui").setup{}
   end}
-  use {'SmiteshP/nvim-navic', commit='40c0ab2640a0e17c4fad7e17f260414d18852ce6'}
 end)
 
 --Set highlight on search

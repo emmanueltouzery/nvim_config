@@ -1023,7 +1023,6 @@ function _G.print_lsp_path(retry)
     end, 50)
     return
   end
-  print(vim.inspect(path_components))
   local path = ""
   for _, p in ipairs(path_components) do
     path = path .. "/" .. p.name

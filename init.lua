@@ -478,7 +478,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground'}
-  use {'stevearc/aerial.nvim', commit="8e2cbd32d166c2daf2041e7c9f0525618f407571", config = function()
+  use {'stevearc/aerial.nvim', commit="5b788392ec571621891e1b73887af5ac12056610", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"

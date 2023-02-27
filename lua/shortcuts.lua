@@ -1,4 +1,5 @@
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {desc = "Jump to definition"})
+-- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {desc = "Jump to definition"})
+vim.keymap.set('n', 'gd', "<cmd>lua lsp_goto_def_center()<cr>", {desc = "Jump to definition"})
 
 require 'key-menu'.set('n', 'đ')
 require 'key-menu'.set('n', 'š')

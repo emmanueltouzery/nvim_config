@@ -1096,3 +1096,14 @@ function _G.jump_to_qf()
   vim.cmd("copen")
   jump_to_qf()
 end
+
+-- https://github.com/neovim/neovim/pull/22413
+function _G.lsp_goto_def_center()
+  local params = vim.lsp.util.make_position_params()
+  vim.lsp.buf_request(0, 'textDocument/definition', params, function(err, result, ctx, config)
+    local client = vim.lsp.get_client_by_id(ctx.client_id)
+    local handler = client.handlers['textDocument/definition'] or vim.lsp.handlers['textDocument/definition']
+    handler(err, result, ctx, config)
+    vim.cmd[[norm! zz]]
+  end)
+end

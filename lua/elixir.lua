@@ -309,7 +309,13 @@ function _G.elixir_insert_inspect_param()
     action = function(target)
       vim.api.nvim_win_set_cursor(0, target.pos)
       if target.pos[2] == 1 then
+        -- setting 'set paste' to fix an issue where the first line of the function
+        -- is a comment, and without the set paste, here vim would insert a new
+        -- COMMENTED line.
+        -- https://superuser.com/a/963068/214371
+        vim.cmd[[set paste]]
         vim.cmd("norm! O")
+        vim.cmd[[set nopaste]]
       end
       if is_function_name then
         vim.cmd('norm! aIO.inspect("' .. param_name .. '")')

@@ -78,6 +78,16 @@ require'nvim-tree'.setup {
 }
 vim.cmd[[au Colorscheme * hi NvimTreeOpenedFile guifg=#ecbe7b]]
 
+local api = require("nvim-tree.api")
+local Event = api.events.Event
+api.events.subscribe(Event.FileCreated, function(data)
+  if string.match(data.fname, "%.tsx$") then
+    vim.api.nvim_exec([[!echo "import React from 'react';" > ]] .. data.fname, {output=false})
+  end
+end)
+
+vim.cmd[[autocmd BufNewFile *.tsx exe "norm iimport React from 'react';"]]
+
 -- more visible comments compared to the doom-nvim default
 -- nice in general, almost required in diff mode.
 vim.cmd[[au Colorscheme * hi Comment guifg=#808080]]

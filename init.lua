@@ -278,7 +278,12 @@ require('packer').startup(function(use)
     end
   }
   use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
-  use {'vim-test/vim-test', commit='56bbfa295fe62123d2ebe8ed57dd002afab46097'}
+  use {'vim-test/vim-test', commit='c63b94c1e5089807f4532e05f087351ddb5a207c', config = function()
+    -- https://github.com/vim-test/vim-test/issues/711
+    -- trigger tests also for non-test elixir files, useful to run all tests
+    -- also from a non-test file
+    vim.g["test#elixir#exunit#file_pattern"] = "^.*\\.exs\\?$"
+  end}
   -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
   use {'dhruvasagar/vim-markify', commit='14158865c0f37a02a5d6d738437eb00a821b31ef', config = function()
     vim.g.markify_error_text = ""

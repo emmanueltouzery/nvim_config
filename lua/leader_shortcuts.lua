@@ -139,6 +139,8 @@ vim.keymap.set("n", "<leader>wm", "<C-w>o", {desc="Window maximize"})
 vim.keymap.set("n", "<leader>wM", "<cmd>lua max_win_in_new_tab()<cr>", {desc="Window maximize in a new tab"})
 vim.keymap.set("n", "<leader>wc", "<cmd>lua clamp_windows()<cr>", {desc="Clamp popups so they fit in the screen"})
 vim.keymap.set("n", "<leader>wq", "<cmd>lua win_bring_qf_here()<cr>", {desc="Bring quickfix to this window"})
+-- workaround for.. sometimes this gets enabled. might be me hitting the wrong shortcut, or a neovim/plugin bug
+vim.keymap.set("n", "<leader>wS", "<cmd>windo set nocursorbind | windo set noscrollbind<cr>", {desc="Bring quickfix to this window"})
 
 -- PACKAGES
 require 'key-menu'.set('n', '<Space>p', {desc='Packages'})

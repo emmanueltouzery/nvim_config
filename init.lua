@@ -874,8 +874,8 @@ vim.cmd("hi DiagnosticError guifg=#ff6262")
 -- vim.api.nvim_set_hl(0, "TelescopeBorder", {fg="#88c0d0"})
 -- vim.api.nvim_set_hl(0, "TelescopePromptPrefix", {fg="#88c0d0"})
 
--- https://stackoverflow.com/a/14407121/516188
-vim.cmd("au BufRead,BufNewFile,BufEnter /home/emmanuel/projects/* setlocal sw=2")
+-- reasonable default, will get overwritten most of the time by autoindent or vim-sleuth
+vim.cmd("set sw=2")
 
 -- elixir: warnings as errors
 vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")

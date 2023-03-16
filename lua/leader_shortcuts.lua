@@ -20,9 +20,10 @@ vim.keymap.set("n", "<leader>bD",  ":BD!<cr>", {desc="Force delete buffer"})
 
 function open_buf_in_window(jump_to_target)
   local line = vim.fn.line('.')
+  local cur_buf = vim.api.nvim_win_get_buf(0)
   local target_win_idx = vim.api.nvim_eval("choosewin#start(range(1, winnr('$')), { 'noop': 1 })[1]")
   local target_winnr = vim.api.nvim_list_wins()[target_win_idx]
-  vim.api.nvim_win_set_buf(target_winnr, vim.api.nvim_win_get_buf(0))
+  vim.api.nvim_win_set_buf(target_winnr, cur_buf)
   if jump_to_target then
     vim.cmd(target_win_idx .. ' wincmd w')
     vim.cmd(':' .. line)

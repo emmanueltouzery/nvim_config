@@ -401,3 +401,42 @@ function _G.elixir_insert_inspect_field()
   end)
 end
 
+function _G.elixir_mark_multiple_clause_fns()
+  vim.cmd[[sign define clause text=練 texthl=TSFunction]]
+  local query = require("nvim-treesitter.query")
+  local parser = require('nvim-treesitter.parsers').get_parser(0)
+  local syntax_tree = parser:parse()[1]
+  local lang = parser:lang()
+  local prev_fname = nil
+  local multi_clause_counts = {}
+  for match in query.iter_group_results(0, "clauses", syntax_tree:root(), lang) do
+    local fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
+    if fn_name == prev_fname then
+      if multi_clause_counts[fn_name] then
+        multi_clause_counts[fn_name] = multi_clause_counts[fn_name] + 1
+      else
+        multi_clause_counts[fn_name] = 2
+      end
+    end
+    prev_fname = fn_name
+  end
+  local fname = vim.fn.expand("%:p")
+  local sign_id = 3094
+  if vim.b.signs_count then
+    for i=0,signs_count,1 do
+      vim.cmd("sign unplace " .. sign_id .. " file=" .. fname)
+    end
+  end
+  local signs_count = 0
+  for match in query.iter_group_results(0, "clauses", syntax_tree:root(), lang) do
+    local fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
+    if multi_clause_counts[fn_name] then
+      local line = vim.treesitter.get_node_range(match.name.node)+1
+      vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clause file=" .. fname .. "'")
+      signs_count = signs_count + 1
+    end
+  end
+  vim.b.signs_count = signs_count
+end
+vim.cmd [[au BufWinEnter,BufWritePost *.ex lua elixir_mark_multiple_clause_fns()]]
+vim.cmd [[au BufWinEnter,BufWritePost *.exs lua elixir_mark_multiple_clause_fns()]]

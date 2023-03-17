@@ -423,7 +423,7 @@ function _G.elixir_mark_multiple_clause_fns()
   local fname = vim.fn.expand("%:p")
   local sign_id = 3094
   if vim.b.signs_count then
-    for i=0,signs_count,1 do
+    for i=0,vim.b.signs_count,1 do
       vim.cmd("sign unplace " .. sign_id .. " file=" .. fname)
     end
   end

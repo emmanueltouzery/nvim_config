@@ -483,11 +483,12 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground'}
-  use {'stevearc/aerial.nvim', commit="5b788392ec571621891e1b73887af5ac12056610", config = function()
+  use {'stevearc/aerial.nvim', commit="ab85d57942b3d7e1a2530af1a083b77f4ba33cba", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
     end
+    vim.api.nvim_set_hl(0, 'AerialPrivate', { default = true, italic = true})
     require("aerial").setup({
       backends = { 
         ['_'] = { "treesitter", "lsp", "markdown", "man" },
@@ -515,6 +516,11 @@ callbacks = {
           end
         end
         return true
+      end,
+      get_highlight = function(symbol, is_icon)
+        if symbol.scope == "private" then
+          return "AerialPrivate"
+        end
       end,
     })
     require('telescope').load_extension('aerial')

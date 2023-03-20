@@ -195,6 +195,7 @@ vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc
 vim.keymap.set("n", "<leader>om", ":Man ", {desc="Open man page"}) -- just open in command because I get smart completion+history
 vim.keymap.set("n", "<leader>oh", ":h ", {desc="Open vim help"}) -- just open in command because I get smart completion+history
 vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}<CR>", {desc="Open keyboard shortcuts"})
+vim.keymap.set("n", "<leader>oH", "<cmd>lua require'telescope.builtin'.highlights{}<CR>", {desc="Open highlights"})
 vim.keymap.set("n", "<leader>oq", "<cmd>lua telescope_quickfix_locations{}<CR>", {desc="Open quickfix locations"})
 vim.keymap.set("n", "<leader>oy", "<cmd>lua clip_history()<CR>", {desc="Open yank stack"})
 vim.keymap.set("n", "<leader>oj", "<cmd>lua telescope_jumplist()<CR>", {desc="Open location Jump list"})

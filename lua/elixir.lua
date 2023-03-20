@@ -402,7 +402,9 @@ function _G.elixir_insert_inspect_field()
 end
 
 function _G.elixir_mark_multiple_clause_fns()
-  vim.cmd[[sign define clause text=練 texthl=TSFunction]]
+  vim.cmd[[sign define clause text=⡇ texthl=TSFunction]]
+  vim.cmd[[sign define clauseStart text=⡏ texthl=TSFunction]]
+  vim.cmd[[sign define clauseEnd text=⣇ texthl=TSFunction]]
   local query = require("nvim-treesitter.query")
   local parser = require('nvim-treesitter.parsers').get_parser(0)
   local syntax_tree = parser:parse()[1]
@@ -428,11 +430,24 @@ function _G.elixir_mark_multiple_clause_fns()
     end
   end
   local signs_count = 0
+  local cur_fname = nil
+  local count_for_fn = 0
   for match in query.iter_group_results(0, "clauses", syntax_tree:root(), lang) do
     local fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
     if multi_clause_counts[fn_name] then
       local line = vim.treesitter.get_node_range(match.name.node)+1
-      vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clause file=" .. fname .. "'")
+      if cur_fname ~= fn_name then
+        -- first for this function
+        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseStart file=" .. fname .. "'")
+        count_for_fn = 1
+      elseif count_for_fn + 1 == multi_clause_counts[fn_name] then
+        -- last for this function
+        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseEnd file=" .. fname .. "'")
+      else
+        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clause file=" .. fname .. "'")
+        count_for_fn = count_for_fn + 1
+      end
+      cur_fname = fn_name
       signs_count = signs_count + 1
     end
   end

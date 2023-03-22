@@ -260,6 +260,18 @@ function telescope_stash_mappings(prompt_bufnr, map)
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. stash_key .. "^.." .. stash_key)
   end)
+  map('i', '<C-d>', function(nr)
+    stash_key = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    actions.close(prompt_bufnr)
+    local Job = require'plenary.job'
+    Job:new({
+      command = 'git',
+      args = { 'stash', 'drop', stash_key },
+      on_exit = function(j, return_val)
+        print(vim.inspect(j:result()))
+      end,
+    }):sync()
+  end)
   return true
 end
 
@@ -334,6 +346,7 @@ vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin
 
 require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
 vim.keymap.set("n", "<leader>gho", '<cmd>lua require"telescope.builtin".git_stash{attach_mappings=telescope_stash_mappings}<CR>', {desc="list git stashes"})
+vim.keymap.set("n", "<leader>ghh", '<cmd>lua run_command("git", {"stash", "-u"})<CR>', {desc="git stash"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})

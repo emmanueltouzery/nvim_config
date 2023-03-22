@@ -407,6 +407,10 @@ function _G.elixir_mark_multiple_clause_fns()
   vim.cmd[[sign define clauseEnd text=⣇ texthl=TSFunction]]
   local query = require("nvim-treesitter.query")
   local parser = require('nvim-treesitter.parsers').get_parser(0)
+  if parser == nil then
+    -- getting this sometimes when displaying elixir code in popups or something
+    return
+  end
   local syntax_tree = parser:parse()[1]
   local lang = parser:lang()
   local prev_fname = nil

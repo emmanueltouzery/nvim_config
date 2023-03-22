@@ -252,6 +252,17 @@ function telescope_commits_mappings(prompt_bufnr, map)
   end)
   return true
 end
+
+function telescope_stash_mappings(prompt_bufnr, map)
+  local actions = require('telescope.actions')
+  map('i', '<C-v>', function(nr)
+    stash_key = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    actions.close(prompt_bufnr)
+    vim.cmd(":DiffviewOpen " .. stash_key .. "^.." .. stash_key)
+  end)
+  return true
+end
+
 function telescope_branches_mappings(prompt_bufnr, map)
   local actions = require('telescope.actions')
   local action_state = require "telescope.actions.state"
@@ -320,6 +331,9 @@ vim.keymap.set("n", "<leader>gr", '<cmd>lua require"telescope.builtin".git_branc
 -- using neogit to push
 vim.keymap.set("n", "<leader>gp", '<cmd>lua run_command("git", {"pull", "--rebase", "--autostash"})<CR>', {desc="git pull"})
 vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin"})<CR>', {desc="git fetch origin"})
+
+require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
+vim.keymap.set("n", "<leader>gho", '<cmd>lua require"telescope.builtin".git_stash{attach_mappings=telescope_stash_mappings}<CR>', {desc="list git stashes"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})

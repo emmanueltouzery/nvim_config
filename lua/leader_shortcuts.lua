@@ -371,6 +371,8 @@ function format_buf()
     vim.cmd(':%!prettier --parser typescript')
   elseif vim.bo.filetype == 'html' then
     vim.cmd(':%!prettier --parser html')
+  elseif vim.bo.filetype == 'elixir' then
+    vim.cmd(':%!mix format -')
   else
     print("No LSP and unhandled filetype " .. vim.bo.filetype)
   end

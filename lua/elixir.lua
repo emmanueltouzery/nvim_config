@@ -465,3 +465,43 @@ function _G.elixir_mark_multiple_clause_fns()
 end
 vim.cmd [[au BufWinEnter,BufWritePost *.ex lua elixir_mark_multiple_clause_fns()]]
 vim.cmd [[au BufWinEnter,BufWritePost *.exs lua elixir_mark_multiple_clause_fns()]]
+
+_G.telescope_elixir_stacktrace = function(opts)
+  local lines = vim.api.nvim_buf_get_lines(0, vim.fn.line('.'), vim.fn.line('.')+30, false)
+  local stack_items = {}
+  for i, line in ipairs(lines) do
+    if string.match(line, "^%s*$") then
+      break
+    end
+    local _, _, package, path, line, fnction = string.find(line, "(%([^%)]+%))%s([^:]+):(%d+):%s([^%s]+)")
+    local buffer = nil
+    for _, b in pairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
+        buffer = b
+      end
+    end
+    if buffer == nil then
+      vim.cmd(":e " .. path)
+      -- yeah, copy-paste the loop...
+      for _, b in pairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
+          buffer = b
+        end
+      end
+    end
+    table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line), valid = 1, text = string.match(fnction, "[^%.]+$")})
+  end
+  local pickers = require "telescope.pickers"
+  local finders = require "telescope.finders"
+  local conf = require("telescope.config").values
+
+  pickers.new(opts, {
+    prompt_title = "Stacktrace view",
+    finder = finders.new_table {
+      results = stack_items,
+      entry_maker = opts.entry_maker or gen_from_quickfix(opts),
+    },
+    previewer = conf.qflist_previewer(opts),
+    -- sorter = conf.generic_sorter(opts),
+  }):find()
+end

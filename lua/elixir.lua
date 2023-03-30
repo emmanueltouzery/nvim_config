@@ -467,12 +467,45 @@ vim.cmd [[au BufWinEnter,BufWritePost *.ex lua elixir_mark_multiple_clause_fns()
 vim.cmd [[au BufWinEnter,BufWritePost *.exs lua elixir_mark_multiple_clause_fns()]]
 
 _G.telescope_elixir_stacktrace = function(opts)
-  local lines = vim.api.nvim_buf_get_lines(0, vim.fn.line('.'), vim.fn.line('.')+30, false)
+  local lines = vim.api.nvim_buf_get_lines(0, vim.fn.line('.')-1, vim.fn.line('.'), false)
+  if string.match(lines[1], "stacktrace:") then
+    -- positioned on top of a stacktrace, read it
+    lines = vim.api.nvim_buf_get_lines(0, vim.fn.line('.'), vim.fn.line('.')+30, false)
+    telescope_elixir_stacktrace_display(lines)
+  else
+    -- get the terminal buffer
+    for _, b in pairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), "^term://") then
+        all_term_lines = vim.api.nvim_buf_get_lines(b, 0, -1, false)
+        for i, l in pairs(all_term_lines) do
+          if string.match(l, "stacktrace:") then
+            -- found the stacktrace in the terminal buffer
+            lines = vim.api.nvim_buf_get_lines(b, i, i+30, false)
+            telescope_elixir_stacktrace_display(lines)
+            return
+          end
+        end
+      end
+    end
+  end
+end
+
+function _G.telescope_elixir_stacktrace_display(lines)
   local stack_items = {}
-  for i, line in ipairs(lines) do
+  local i = 1
+  while i <= #lines do
+    line = lines[i]
     if string.match(line, "^%s*$") then
+      -- blank line, done with the stacktrace
       break
     end
+    
+    -- the line may have been truncated. in that case it'll continue next line, from column 0.
+    if string.match(lines[i+1], "^[^%s]") then
+      line = line .. lines[i+1]
+      i = i + 1
+    end
+
     local _, _, package, path, line_nr, fnction = string.find(line, "(%([^%)]+%))%s([^:]+):(%d+):%s([^%s]+)")
     if package == nil then
       -- sometimes the package is not listed...
@@ -494,6 +527,7 @@ _G.telescope_elixir_stacktrace = function(opts)
       end
     end
     table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line_nr), valid = 1, text = string.match(fnction, "[^%.]+$")})
+    i = i + 1
   end
   local pickers = require "telescope.pickers"
   local finders = require "telescope.finders"

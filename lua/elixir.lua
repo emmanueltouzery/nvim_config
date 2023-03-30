@@ -473,7 +473,11 @@ _G.telescope_elixir_stacktrace = function(opts)
     if string.match(line, "^%s*$") then
       break
     end
-    local _, _, package, path, line, fnction = string.find(line, "(%([^%)]+%))%s([^:]+):(%d+):%s([^%s]+)")
+    local _, _, package, path, line_nr, fnction = string.find(line, "(%([^%)]+%))%s([^:]+):(%d+):%s([^%s]+)")
+    if package == nil then
+      -- sometimes the package is not listed...
+      _, _, path, line_nr, fnction = string.find(line, "%s*([^:]+):(%d+):%s([^%s]+)")
+    end
     local buffer = nil
     for _, b in pairs(vim.api.nvim_list_bufs()) do
       if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
@@ -489,7 +493,7 @@ _G.telescope_elixir_stacktrace = function(opts)
         end
       end
     end
-    table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line), valid = 1, text = string.match(fnction, "[^%.]+$")})
+    table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line_nr), valid = 1, text = string.match(fnction, "[^%.]+$")})
   end
   local pickers = require "telescope.pickers"
   local finders = require "telescope.finders"

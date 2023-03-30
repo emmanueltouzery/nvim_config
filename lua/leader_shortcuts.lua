@@ -393,6 +393,7 @@ require 'key-menu'.set('n', '<Space>xa', {desc='API'})
 vim.keymap.set('n', '<leader>xai', ":lua elixir_view_docs()<cr>", {desc="elixir apidocs (in cur buffer)"})
 vim.keymap.set('n', '<leader>xap', ":lua elixir_view_docs({popup=true})<cr>", {desc="elixir apidocs (popup)"})
 vim.keymap.set('n', '<leader>xos', ":lua telescope_elixir_stacktrace({})<cr>", {desc="elixir open stacktrace"})
+vim.keymap.set('n', '<leader>xmi', ":lua elixir_match_error_details_indent({})<cr>", {desc="elixir indent match error details"})
 
 -- TESTS
 require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})

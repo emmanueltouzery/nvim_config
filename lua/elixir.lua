@@ -509,3 +509,11 @@ _G.telescope_elixir_stacktrace = function(opts)
     -- sorter = conf.generic_sorter(opts),
   }):find()
 end
+
+function _G.elixir_match_error_details_indent()
+  vim.cmd[[set ft=elixir]]
+  vim.cmd[[:%s/\n//g]]
+  vim.cmd[[%s/#Function/"#Function/g]]
+  vim.cmd[[%s/>,/>",/g]]
+  vim.cmd(':%!mix format -')
+end

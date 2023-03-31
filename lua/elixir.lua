@@ -518,15 +518,19 @@ function _G.telescope_elixir_stacktrace_display(lines)
       end
     end
     if buffer == nil then
-      vim.cmd(":e " .. path)
-      -- yeah, copy-paste the loop...
-      for _, b in pairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
-          buffer = b
+      if vim.fn.filereadable(path) == 1 then
+        vim.cmd(":e " .. path)
+        -- yeah, copy-paste the loop...
+        for _, b in pairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
+            buffer = b
+          end
         end
       end
     end
-    table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line_nr), valid = 1, text = string.match(fnction, "[^%.]+$")})
+    if buffer ~= nil then
+      table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line_nr), valid = 1, text = string.match(fnction, "[^%.]+$")})
+    end
     i = i + 1
   end
   local pickers = require "telescope.pickers"

@@ -551,8 +551,8 @@ end
 
 function _G.elixir_match_error_details_indent()
   vim.cmd[[set ft=elixir]]
-  vim.cmd[[:%s/\n//g]]
-  vim.cmd[[%s/#Function/"#Function/g]]
-  vim.cmd[[%s/>,/>",/g]]
+  vim.cmd[[:%s/\n//ge]]
+  vim.cmd[[%s/#Function/"#Function/ge]]
+  vim.cmd[[%s/>,/>",/ge]]
   vim.cmd(':%!mix format -')
 end

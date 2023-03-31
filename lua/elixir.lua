@@ -474,8 +474,9 @@ _G.telescope_elixir_stacktrace = function(opts)
     telescope_elixir_stacktrace_display(lines)
   else
     -- get the terminal buffer
-    for _, b in pairs(vim.api.nvim_list_bufs()) do
-      if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), "^term://") then
+    local b = vim.g.test_term_buf_id
+    -- for _, b in pairs(vim.api.nvim_list_bufs()) do
+    --   if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), "^term://") then
         all_term_lines = vim.api.nvim_buf_get_lines(b, 0, -1, false)
         for i, l in pairs(all_term_lines) do
           if string.match(l, "stacktrace:") then
@@ -485,8 +486,8 @@ _G.telescope_elixir_stacktrace = function(opts)
             return
           end
         end
-      end
-    end
+    --   end
+    -- end
   end
 end
 

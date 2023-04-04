@@ -502,7 +502,7 @@ function _G.telescope_elixir_stacktrace_display(lines)
     end
     
     -- the line may have been truncated. in that case it'll continue next line, from column 0.
-    if string.match(lines[i+1], "^[^%s]") then
+    if i+1 <= #lines and string.match(lines[i+1], "^[^%s]") then
       line = line .. lines[i+1]
       i = i + 1
     end
@@ -512,25 +512,28 @@ function _G.telescope_elixir_stacktrace_display(lines)
       -- sometimes the package is not listed...
       _, _, path, line_nr, fnction = string.find(line, "%s*([^:]+):(%d+):%s([^%s]+)")
     end
-    local buffer = nil
-    for _, b in pairs(vim.api.nvim_list_bufs()) do
-      if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
-        buffer = b
+    -- sometimes only package+function are listed. can't do anything without a path
+    if path ~= nil then
+      local buffer = nil
+      for _, b in pairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
+          buffer = b
+        end
       end
-    end
-    if buffer == nil then
-      if vim.fn.filereadable(path) == 1 then
-        vim.cmd(":e " .. path)
-        -- yeah, copy-paste the loop...
-        for _, b in pairs(vim.api.nvim_list_bufs()) do
-          if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
-            buffer = b
+      if buffer == nil then
+        if vim.fn.filereadable(path) == 1 then
+          vim.cmd(":e " .. path)
+          -- yeah, copy-paste the loop...
+          for _, b in pairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_loaded(b) and string.match(vim.api.nvim_buf_get_name(b), path) then
+              buffer = b
+            end
           end
         end
       end
-    end
-    if buffer ~= nil then
-      table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line_nr), valid = 1, text = string.match(fnction, "[^%.]+$")})
+      if buffer ~= nil then
+        table.insert(stack_items, {bufnr = buffer, lnum = tonumber(line_nr), valid = 1, text = string.match(fnction, "[^%.]+$")})
+      end
     end
     i = i + 1
   end

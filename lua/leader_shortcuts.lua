@@ -103,7 +103,8 @@ vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search wo
 vim.keymap.set("v", "<leader>*", "<cmd>lua my_open_tele_sel()<cr>", {desc="Search selected text, raw"})
 vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw()<cr>", {desc="Search text raw"})
 function _G.buffer_fuzzy_find(word_under_cursor)
-    local w = vim.fn.expand('<cword>')
+  local w = vim.fn.expand('<cword>')
+  local opts = {}
   -- https://github.com/nvim-telescope/telescope.nvim/issues/1080
   -- keep lines ordered for in-buffer search as much as possible,
   -- ignore the match quality algorithm

@@ -264,7 +264,8 @@ require('packer').startup(function(use)
 
       -- The below settings make Leap's highlighting a bit closer to what you've been
       -- used to in Lightspeed.
-      vim.api.nvim_set_hl(0, "LeapBackdrop", {link = "Comment"})
+      -- disable because this sometimes leaves some lines as highlighted as commented when they're not
+      -- vim.api.nvim_set_hl(0, "LeapBackdrop", {link = "Comment"})
       vim.api.nvim_set_hl(
       0,
       "LeapMatch",

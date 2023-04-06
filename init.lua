@@ -284,6 +284,10 @@ require('packer').startup(function(use)
     -- trigger tests also for non-test elixir files, useful to run all tests
     -- also from a non-test file
     vim.g["test#elixir#exunit#file_pattern"] = "^.*\\.exs\\?$"
+
+    -- need this to parse more errors from tests into quickfix when i have debugging statements
+    -- otherwise the test output may get truncated
+    vim.cmd[[set scrollback=40000]]
   end}
   -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
   use {'dhruvasagar/vim-markify', commit='14158865c0f37a02a5d6d738437eb00a821b31ef', config = function()

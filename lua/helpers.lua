@@ -633,10 +633,10 @@ function previous_quickfix()
 end
 
 function _G.max_win_in_new_tab()
-  local fname = vim.fn.expand('%:p')
+  local buf = vim.api.nvim_win_get_buf(0)
   local lnum = vim.fn.line('.')
   vim.cmd(":tabnew")
-  vim.cmd(":e " .. fname)
+  vim.cmd(":b " .. buf)
   vim.cmd(":" .. lnum)
 end
 

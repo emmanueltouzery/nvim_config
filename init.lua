@@ -495,6 +495,10 @@ callbacks = {
     end
     vim.api.nvim_set_hl(0, 'AerialPrivate', { default = true, italic = true})
     require("aerial").setup({
+      -- i find the lazy load is not all worth it for me
+      -- i don't notice the startup delay, but the first use
+      -- delay is reeeeally noticeable
+      lazy_load = false,
       backends = { 
         ['_'] = { "treesitter", "lsp", "markdown", "man" },
         elixir = { "treesitter" },

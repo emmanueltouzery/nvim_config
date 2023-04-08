@@ -1118,3 +1118,22 @@ function _G.lsp_goto_def_center()
     vim.cmd[[norm! zz]]
   end)
 end
+
+function _G.close_nonvisible_buffers()
+  visible_bufs = {}
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    table.insert(visible_bufs, buf)
+  end
+  deleted_count = 0
+  for _, b in pairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(b) and not vim.tbl_contains(visible_bufs, b) then
+      local force = vim.api.nvim_buf_get_option(b, "buftype") == "terminal"
+      local ok = pcall(vim.api.nvim_buf_delete, b, { force = force })
+      if ok then
+        deleted_count = deleted_count + 1
+      end
+    end
+  end
+  print("Deleted " .. deleted_count .. " buffers")
+end

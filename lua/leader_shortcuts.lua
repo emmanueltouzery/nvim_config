@@ -32,7 +32,8 @@ function open_buf_in_window(jump_to_target)
 end
 vim.keymap.set("n", "<leader>bw",  "<cmd>lua open_buf_in_window(true)<cr>", {desc="Open cur. buffer in window+go there"})
 vim.keymap.set("n", "<leader>bW",  "<cmd>lua open_buf_in_window(false)<cr>", {desc="Open cur. buffer in window"})
-vim.keymap.set("n", "<leader>bo", "<cmd>%bd|e#<cr>", {desc="Close all buffers but the current one"}) -- https://stackoverflow.com/a/42071865/516188
+-- vim.keymap.set("n", "<leader>bo", "<cmd>%bd|e#<cr>", {desc="Close all buffers but the current one"}) -- https://stackoverflow.com/a/42071865/516188
+vim.keymap.set("n", "<leader>bo", "<cmd>lua close_nonvisible_buffers()<cr>", {desc="Close all buffers but the visible ones"})
 
 function force_kill_other_bufs()
   local curr_bufnr = vim.fn.bufnr()

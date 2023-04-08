@@ -1092,7 +1092,18 @@ function _G.jump_to_qf()
       return
     end
   end
-  -- no QF.. open it
+  -- no QF.. do we have an open tests terminal?
+  -- i'm doing that because when running tests i'm first running them
+  -- in a terminal and later i rather display the QF. So I'd like the
+  -- same shortcut to work for QF & terminal, as they get "switched"
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if string.match(vim.api.nvim_buf_get_name(buf), "^term://") then
+      vim.cmd(vim.api.nvim_win_get_number(w) .. ' wincmd w')
+      return
+    end
+  end
+  -- no QF, and no tests terminal. Open the QF.
   vim.cmd("copen")
   jump_to_qf()
 end

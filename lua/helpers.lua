@@ -1151,6 +1151,7 @@ function _G.test_all_bg_run()
       break
     end
   end
+  vim.g.test_bg_jobid = jobid
   hide_test_running_notif = notif(
   {" Tests running..."}, 
   vim.log.levels.INFO, {dont_hide = true})

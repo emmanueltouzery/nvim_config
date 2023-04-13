@@ -285,6 +285,9 @@ require('packer').startup(function(use)
     -- also from a non-test file
     vim.g["test#elixir#exunit#file_pattern"] = "^.*\\.exs\\?$"
 
+    -- elixir: warnings as errors
+    vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
+
     -- need this to parse more errors from tests into quickfix when i have debugging statements
     -- otherwise the test output may get truncated
     vim.cmd[[set scrollback=40000]]
@@ -615,7 +618,7 @@ callbacks = {
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
   use {'akinsho/bufferline.nvim', commit = 'a703bb919aeb436eaa83bcbefdac51fbb92b4c74'}
-  use {'emmanueltouzery/vim-dispatch-neovim', commit='8e9fe1a6dd7709d0948d2bcc76c620aabcb63017'}
+  use {'emmanueltouzery/vim-dispatch-neovim', commit='82b525360aca42b93208084b876e818b36d352d1'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
     if pcall(require, 'nvim_config_private') then
@@ -891,9 +894,6 @@ vim.cmd("hi DiagnosticError guifg=#ff6262")
 
 -- reasonable default, will get overwritten most of the time by autoindent or vim-sleuth
 vim.cmd("set sw=2")
-
--- elixir: warnings as errors
-vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
 
 -- SPELL CHECKING
 vim.cmd("set spell")

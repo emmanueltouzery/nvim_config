@@ -1137,3 +1137,37 @@ function _G.close_nonvisible_buffers()
   end
   print("Deleted " .. deleted_count .. " buffers")
 end
+
+function _G.test_all_bg_run()
+  local all_jobs = vim.api.nvim_list_chans()
+  local all_job_ids_before = vim.tbl_map(function(ch) return ch.id end, all_jobs)
+  vim.cmd[[:TestSuite -strategy=dispatch_background]]
+  local all_jobs = vim.api.nvim_list_chans()
+  local all_job_ids_after = vim.tbl_map(function(ch) return ch.id end, all_jobs)
+  local jobid = nil
+  for _, id in pairs(all_job_ids_after) do
+    if not vim.tbl_contains(all_job_ids_before, id) then
+      jobid = id
+      break
+    end
+  end
+  hide_test_running_notif = notif(
+  {" Tests running..."}, 
+  vim.log.levels.INFO, {dont_hide = true})
+  vim.defer_fn(function()
+    test_all_bg_run_check_completion(jobid, hide_test_running_notif)
+  end, 1000)
+end
+
+function _G.test_all_bg_run_check_completion(jobid, hide_test_running_notif)
+  local success, _ = pcall(vim.fn.jobpid, jobid)
+  if not success then
+    -- the job doesn't exist anymore, done
+    hide_test_running_notif()
+  else
+    -- not done
+    vim.defer_fn(function()
+      test_all_bg_run_check_completion(jobid, hide_test_running_notif)
+    end, 1000)
+  end
+end

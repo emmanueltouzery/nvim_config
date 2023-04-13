@@ -403,9 +403,11 @@ vim.keymap.set("n", "<leader>ctf", ":TestFile -strategy=dispatch<cr>", {desc="te
 vim.keymap.set("n", "<leader>ctn", ":TestNearest -strategy=dispatch<cr>", {desc="test nearest"})
 vim.keymap.set("n", "<leader>ctl", ":TestLast -strategy=dispatch<cr>", {desc="test last"})
 vim.keymap.set("n", "<leader>cta", ":TestSuite -strategy=dispatch<cr>", {desc="test all"})
+vim.keymap.set("n", "<leader>ctA", ":lua test_all_bg_run()<cr>", {desc="test all, background run"})
 vim.keymap.set("n", "<leader>ctk", ":AbortDispatch<cr>", {desc="kill tests"})
 vim.keymap.set("n", "<leader>ctp", "<cmd>lua test_output_in_popup()<cr>", {desc="test output in popup"})
 vim.keymap.set("n", "<leader>cto", "<cmd>lua test_output_open()<cr>", {desc="open test output"})
+vim.keymap.set("n", "<leader>ctO", ":Copen<cr>", {desc="open test output for background run"})
 
 -- QUICKFIX
 require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})

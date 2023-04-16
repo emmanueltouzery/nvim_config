@@ -422,7 +422,13 @@ function _G.elixir_mark_multiple_clause_fns()
   local prev_fname = nil
   local multi_clause_counts = {}
   for match in query.iter_group_results(0, "clauses", syntax_tree:root(), lang) do
-    local fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
+    local fn_name = nil
+    if vim.version().minor >= 9 then
+      fn_name = vim.treesitter.get_node_text(match.name.node, 0)
+    else
+      fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
+    end
+    
     if fn_name == prev_fname then
       if multi_clause_counts[fn_name] then
         multi_clause_counts[fn_name] = multi_clause_counts[fn_name] + 1
@@ -443,7 +449,12 @@ function _G.elixir_mark_multiple_clause_fns()
   local cur_fname = nil
   local count_for_fn = 0
   for match in query.iter_group_results(0, "clauses", syntax_tree:root(), lang) do
-    local fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
+    local fn_name = nil
+    if vim.version().minor >= 9 then
+      fn_name = vim.treesitter.get_node_text(match.name.node, 0)
+    else
+      fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
+    end
     if multi_clause_counts[fn_name] then
       local line = vim.treesitter.get_node_range(match.name.node)+1
       if cur_fname ~= fn_name then

@@ -115,7 +115,7 @@ require('packer').startup(function(use)
     require("gitsigns").setup {}
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='e2efbb6569dbe50e6604cfc2d5d0819eb07d5623', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='da7f886ab5dde87b7c9bbae1c1eb99aa63a74e55', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown",
@@ -147,14 +147,14 @@ require('packer').startup(function(use)
   end}
   use {'JoosepAlviste/nvim-ts-context-commentstring', commit='a0f89563ba36b3bacd62cf967b46beb4c2c29e52'}
   use {'neovim/nvim-lspconfig', commit='2dd9e060f21eecd403736bef07ec83b73341d955'} -- Collection of configurations for built-in LSP client
-  use {'hrsh7th/nvim-cmp', commit='2427d06b6508489547cd30b6e86b1c75df363411'} -- Autocompletion plugin
-  use {'hrsh7th/cmp-nvim-lsp', commit='affe808a5c56b71630f17aa7c38e15c59fd648a8'}
+  use {'hrsh7th/nvim-cmp', commit='777450fd0ae289463a14481673e26246b5e38bf2'} -- Autocompletion plugin
+  use {'hrsh7th/cmp-nvim-lsp', commit='0e6b2ed705ddcff9738ec4ea838141654f12eeef'}
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
-  use { "hrsh7th/cmp-path", commit = "447c87cdd6e6d6a1d2488b1d43108bfa217f56e1" }
+  use { "hrsh7th/cmp-path", commit = "91ff86cd9c29299a64f968ebb45846c485725f23" }
   -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
-  use {'saadparwaiz1/cmp_luasnip', commit = 'a9de941bcbda508d0a45d28ae366bb3f08db2e36'}
+  use {'saadparwaiz1/cmp_luasnip', commit = '18095520391186d634a0045dacaa346291096566'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
-  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3dd40097196bdffe5f868d5dddcc0aa146ae41eb'}
+  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
   use {'emmanueltouzery/doom-one.nvim', commit='d89ea4a9ea08759d58caefba6d7c2dc6b9ccd8c0', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
@@ -409,6 +409,7 @@ callbacks = {
       local lspconfig = require("lspconfig")
       local log = require 'vim.lsp.log';
       local util = require 'vim.lsp.util'
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       lspconfig.tsserver.setup {
         on_attach = function(client)
@@ -459,8 +460,6 @@ callbacks = {
           client.server_capabilities.documentRangeFormattingProvider = false
         end,
       }
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
       lspconfig.cssls.setup {
         capabilities = capabilities
       }
@@ -486,7 +485,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
-  use {'stevearc/aerial.nvim', commit="ab85d57942b3d7e1a2530af1a083b77f4ba33cba", config = function()
+  use {'stevearc/aerial.nvim', commit="a6b86fd357f184ad9f146245f8d34c9df0f424fa", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
@@ -638,7 +637,7 @@ callbacks = {
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
   -- language syntax-aware matchit. for instance, json {"test": "value}rest"}
   -- or JSX <TextField<string> ... />, or things in comments which are correctly ignored
-  use {'andymass/vim-matchup', commit='ab8575d05f760da64321fefa88ed5d6cc8bb9369', config=function()
+  use {'andymass/vim-matchup', commit='57499f5ca9a66f233efa4faeb04571e5194863a6', config=function()
     -- https://github.com/andymass/vim-matchup#customizing-the-highlighting-colors
     vim.cmd [[
       augroup matchup_matchparen_highlight

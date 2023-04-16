@@ -361,11 +361,7 @@ require 'key-menu'.set('n', '<Space>c', {desc='Code'})
 
 function format_buf()
   if #vim.lsp.buf_get_clients() > 0 then
-    if vim.version().minor > 7 then
-      vim.lsp.buf.format()
-    else
-      vim.lsp.buf.formatting_sync()
-    end
+    vim.lsp.buf.format()
     -- now fallbacks if no LSP
   elseif vim.bo.filetype == 'json' then
     vim.cmd(':%!prettier --parser json')

@@ -412,13 +412,8 @@ callbacks = {
 
       lspconfig.tsserver.setup {
         on_attach = function(client)
-          if vim.version().minor > 7 then
-            client.server_capabilities.documentFormattingProvider = false
-            client.server_capabilities.documentRangeFormattingProvider = false
-          else
-            client.resolved_capabilities.document_formatting = false
-            client.resolved_capabilities.document_range_formatting = false
-          end
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
         end,
 
         -- fix annoying quickfix opening because tsserver returns multiple matches
@@ -837,35 +832,19 @@ require("notifs")
 require("ts_unused_imports")
 require("elixir")
 
-if vim.version().minor > 7 then
-  vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.format()]]
-  vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.format()]]
-else
-  vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.formatting_sync()]]
-  vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.formatting_sync()]]
-end
+vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.format()]]
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -906,10 +885,6 @@ vim.cmd[[au TermOpen * setlocal nospell]]
 
 vim.cmd("hi clear SpellCap")
 vim.cmd("au BufNewFile,BufRead,BufWritePost *.lua setlocal nospell")
-if vim.version().minor <= 7 then
-  -- neovim 0.8.0 is smarter about spellcheck, with tree-sitter
-  vim.cmd("au BufNewFile,BufRead,BufWritePost *.sh setlocal nospell")
-end
 -- neogit has stuff like [c]ommit that don't spell check well
 -- and generally nothing mine to spell check there
 vim.cmd('autocmd FileType NeogitStatus setlocal nospell')

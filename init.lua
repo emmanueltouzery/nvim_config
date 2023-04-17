@@ -1007,6 +1007,12 @@ vnoremap < <gv
 vnoremap > >gv
 ]]
 
+-- https://vim.fandom.com/wiki/Search_only_in_unfolded_text
+-- by default don't open folds when searching.
+-- "a search shows one hit per fold that contains the search target. The fold is not opened, 
+-- and is only found once, even if it contains several instances of the search target."
+vim.cmd[[set foldopen-=search]]
+
 -- open quickfix window below vertical splits
 -- https://stackoverflow.com/a/47077341/516188
 vim.cmd[[au FileType qf wincmd J | 15wincmd_]]

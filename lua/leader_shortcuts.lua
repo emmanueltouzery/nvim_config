@@ -85,18 +85,26 @@ function _G.quick_set_fm()
   local filetypes = {"syntax", "indent", "manual", "disable"}
   vim.ui.select(filetypes, {prompt="Pick fold method to switch to"}, function(choice)
     if choice ~= nil then
-      if choice == "disable" then
-        vim.cmd("set nofoldenable")
-      else
-        if choice == "syntax" then
-          vim.cmd("syntax on")
-        end
-        vim.cmd("set foldmethod=" .. choice .. " | set foldenable | set foldlevel=2")
-      end
+      set_fm(choice)
     end 
   end)
 end
-vim.keymap.set("n", "<leader>fm", ":lua quick_set_fm()<cr>", {desc="Quickly change foldng method"})
+
+function _G.set_fm(choice)
+  if choice == "disable" then
+    vim.cmd("set nofoldenable")
+  else
+    if choice == "syntax" then
+      vim.cmd("syntax on")
+    end
+    vim.cmd("setlocal foldmethod=" .. choice .. " | setlocal foldenable | set foldlevel=2")
+  end
+end
+
+vim.keymap.set("n", "<leader>fM", ":lua quick_set_fm()<cr>", {desc="Quickly change folding method"})
+vim.keymap.set("n", "<leader>fmi", ":lua set_fm('indent')<cr>", {desc="Set indent folding method"})
+vim.keymap.set("n", "<leader>fms", ":lua set_fm('syntax')<cr>", {desc="Set syntax folding method"})
+vim.keymap.set("n", "<leader>fmd", ":lua set_fm('disable')<cr>", {desc="Disable folding"})
 
 -- SEARCH
 require 'key-menu'.set('n', '<Space>s', {desc='Search'})

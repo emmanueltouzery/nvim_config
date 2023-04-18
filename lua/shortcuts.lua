@@ -17,6 +17,8 @@ vim.keymap.set('n', 'šq', '<cmd>lua previous_quickfix()<cr>', {desc="Previous q
 vim.keymap.set('n', 'đq', '<cmd>lua next_quickfix()<cr>', {desc="Next quickfix location"})
 vim.keymap.set('n', 'š%', '<plug>(matchup-[%)', {desc="Previous % marker"})
 vim.keymap.set('n', 'đ%', '<plug>(matchup-]%)', {desc="Next % marker"})
+vim.keymap.set('n', 'šf', '<cmd>lua previous_closed_fold()<cr>', {desc="Previous closed fold"})
+vim.keymap.set('n', 'đf', '<cmd>lua next_closed_fold()<cr>', {desc="Next closed fold"})
 
 vim.keymap.set('n', '-', '<Cmd>ChooseWin<CR>', {desc="Choose win"})
 vim.keymap.set("n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})

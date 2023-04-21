@@ -1,6 +1,6 @@
 -- in theory I should load modules through -S mix but.. i couldn't make it work
--- from neovim, it's slow and so on. In the end besides the stdlib i care about ecto...
-EXTRA_MIX_FOLDERS = {'./_build/dev/lib/ecto/ebin/'}
+-- from neovim, it's slow and so on. In the end besides the stdlib i care about a few modules...
+EXTRA_MIX_FOLDERS = {'./_build/dev/lib/ecto/ebin/', './_build/dev/lib/phoenix/ebin/'}
 
 function _G.elixir_pa_flags(flags)
   res = {"elixir"}

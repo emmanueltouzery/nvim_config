@@ -624,7 +624,7 @@ callbacks = {
   -- https://github.com/mfussenegger/nvim-treehopper/issues/10#issuecomment-1126289736
   -- and other improvements
   -- alternative => https://github.com/ggandor/leap-ast.nvim
-  use {'emmanueltouzery/nvim-treehopper', commit='ddf243f8c2f7c7efdf3a038c50ff5eaba31022e2'}
+  use {'emmanueltouzery/nvim-treehopper', commit='e1824c4'}
   use {'kylechui/nvim-surround', commit='d91787d5a716623be7cec3be23c06c0856dc21b8', config=function()
     require("nvim-surround").setup({
       keymaps = {

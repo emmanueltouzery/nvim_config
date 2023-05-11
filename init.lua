@@ -520,6 +520,9 @@ callbacks = {
             end
             cur_parent = cur_parent:parent()
           end
+        elseif ctx.backend_name == "lsp" and ctx.symbol and ctx.symbol.location and string.match(ctx.symbol.location.uri, "%.graphql$") then
+          -- for graphql it was easier to go with LSP. Use the symbol kind to keep only the toplevel queries/mutations
+          return ctx.symbol.kind == 5
         end
         return true
       end,

@@ -283,7 +283,8 @@ require('packer').startup(function(use)
     -- https://github.com/vim-test/vim-test/issues/711
     -- trigger tests also for non-test elixir files, useful to run all tests
     -- also from a non-test file
-    vim.g["test#elixir#exunit#file_pattern"] = "^.*\\.exs\\?$"
+    -- tolerate .ex, .exs, and .eex
+    vim.g["test#elixir#exunit#file_pattern"] = "^.*\\.ee\\?xs\\?$"
 
     -- elixir: warnings as errors
     vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")

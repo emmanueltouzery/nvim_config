@@ -120,7 +120,12 @@ require('packer').startup(function(use)
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown",
         "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java" },
-      highlight = { enable = true },
+      highlight = {
+        enable = true ,
+        -- syntax highlight for XML looks significantly worse with tree-sitter than regex,
+        -- and we use HTML support for XML
+        disable = {"html"},
+      },
       autopairs = {
         enable = true,
       },
@@ -144,6 +149,9 @@ require('packer').startup(function(use)
         },
       },
     })
+    -- currently not tree-sitter support for XML, use the HTML support instead
+    -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3295
+    vim.treesitter.language.register("html", "xml")
   end}
   use {'JoosepAlviste/nvim-ts-context-commentstring', commit='a0f89563ba36b3bacd62cf967b46beb4c2c29e52'}
   use {'neovim/nvim-lspconfig', commit='2dd9e060f21eecd403736bef07ec83b73341d955'} -- Collection of configurations for built-in LSP client
@@ -524,6 +532,17 @@ callbacks = {
         elseif ctx.backend_name == "lsp" and ctx.symbol and ctx.symbol.location and string.match(ctx.symbol.location.uri, "%.graphql$") then
           -- for graphql it was easier to go with LSP. Use the symbol kind to keep only the toplevel queries/mutations
           return ctx.symbol.kind == 5
+        elseif ctx.backend_name == "treesitter" and ctx.lang == "html" and vim.fn.expand("%:e") == "ui" then
+          -- in GTK UI files only display 'object' items (widgets), and display their
+          -- class instead of the tag name (which is always 'object')
+          if item.name == "object" then
+            local line = vim.api.nvim_buf_get_lines(bufnr, item.lnum-1, item.lnum, false)[1]
+            local _, _, class = string.find(line, [[class=.([^'"]+)]])
+            item.name = class
+            return true
+          else
+            return false
+          end
         end
         return true
       end,

@@ -693,7 +693,15 @@ callbacks = {
 
     --https://github.com/LunarVim/LunarVim/issues/2894#issuecomment-1236420149
 -- https://github.com/simrat39/rust-tools.nvim#a-better-debugging-experience
-opts = {}
+opts = {
+    server = {
+      on_attach = function(client, bufnr)
+        -- disable LSP based syntax highlighting https://github.com/simrat39/rust-tools.nvim/issues/365#issuecomment-1506286437
+        -- it takes time to appear so is jarring, plus i find it worse than tree-sitter
+        client.server_capabilities.semanticTokensProvider = nil
+      end
+    }
+}
 local path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/") or ""
 local codelldb_path = path .. "adapter/codelldb"
 local liblldb_path = path .. "lldb/lib/liblldb.so"

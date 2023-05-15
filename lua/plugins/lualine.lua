@@ -114,7 +114,8 @@ if lualine then
         'DiffviewFiles',
         'packer',
         'cheat40',
-        'OverseerList'
+        'OverseerList',
+        'aerial'
       },
       theme = 'nord',
       component_separators = '|',

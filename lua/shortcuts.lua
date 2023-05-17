@@ -19,6 +19,8 @@ vim.keymap.set('n', 'š%', '<plug>(matchup-[%)', {desc="Previous % marker"})
 vim.keymap.set('n', 'đ%', '<plug>(matchup-]%)', {desc="Next % marker"})
 vim.keymap.set('n', 'šf', '<cmd>lua previous_closed_fold()<cr>', {desc="Previous closed fold"})
 vim.keymap.set('n', 'đf', '<cmd>lua next_closed_fold()<cr>', {desc="Next closed fold"})
+vim.keymap.set('n', 'ša', '<cmd>:AerialPrev<cr>', {desc="Previous aerial symbol"})
+vim.keymap.set('n', 'đa', '<cmd>:AerialNext<cr>', {desc="Next aerial symbol"})
 
 vim.keymap.set('n', '-', '<Cmd>ChooseWin<CR>', {desc="Choose win"})
 vim.keymap.set("n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})

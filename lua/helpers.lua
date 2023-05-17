@@ -847,6 +847,38 @@ function _G.open_file_cur_dir(with_children)
   require'telescope.builtin'.find_files(params)
 end
 
+function _G.reopen_buffer()
+  if vim.bo.modified then
+    vim.cmd[[echohl ErrorMsg | echo "Refusing to reopen a modified buffer" | echohl None]]
+    return
+  end
+  local buf_name = vim.api.nvim_buf_get_name(0)
+  if buf_name == '' or buf_name == nil then
+    vim.cmd[[echohl ErrorMsg | echo "Refusing to reopen a buffer not tied to a file" | echohl None]]
+    return
+  end
+  -- get the id of the current buffer, to delete it later
+  local prev_bufnr = vim.api.nvim_win_get_buf(0)
+
+  -- display a blank buffer instead of the current one
+  vim.cmd(":enew")
+  -- get the id of the blank buffer, to delete it later
+  local blank_bufnr = vim.api.nvim_win_get_buf(0)
+
+  -- delete the prev buffer, possible now that we display a blank buffer
+  vim.api.nvim_buf_delete(prev_bufnr, {force=true})
+
+  -- wait a little, or else gitsigns and LSP get confused that
+  -- the buffer for a file changed under their feet
+  vim.defer_fn(function()
+    -- now reopen the buffer as we wanted...
+    vim.cmd(":e " .. buf_name)
+    -- and now delete the blank buffer
+    vim.api.nvim_buf_delete(blank_bufnr, {force=true})
+  end, 50)
+
+end
+
 function _G.lsp_restart_all()
   -- get clients that would match this buffer but aren't connected
   local other_matching_configs = require('lspconfig.util').get_other_matching_providers(vim.bo.filetype)

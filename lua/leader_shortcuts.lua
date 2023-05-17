@@ -34,6 +34,7 @@ vim.keymap.set("n", "<leader>bw",  "<cmd>lua open_buf_in_window(true)<cr>", {des
 vim.keymap.set("n", "<leader>bW",  "<cmd>lua open_buf_in_window(false)<cr>", {desc="Open cur. buffer in window"})
 -- vim.keymap.set("n", "<leader>bo", "<cmd>%bd|e#<cr>", {desc="Close all buffers but the current one"}) -- https://stackoverflow.com/a/42071865/516188
 vim.keymap.set("n", "<leader>bo", "<cmd>lua close_nonvisible_buffers()<cr>", {desc="Close all buffers but the visible ones"})
+vim.keymap.set("n", "<leader>bR", "<cmd>lua reopen_buffer()<cr>", {desc="Reopen the current buffer. Can be useful to reset LSP and similar"})
 
 function force_kill_other_bufs()
   local curr_bufnr = vim.fn.bufnr()

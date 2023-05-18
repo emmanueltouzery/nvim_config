@@ -349,7 +349,7 @@ callbacks = {
     })
   end}
   use {'emmanueltouzery/lualine-lsp-progress', commit='323c172eb74dd2007682bc8f7aaf52dc0517d6cf'}
-  use {'stevearc/dressing.nvim', commit='12b808a6867e8c38015488ad6cee4e3d58174182', config=function()
+  use {'stevearc/dressing.nvim', commit='66e4990240f92e31b0d5e4df6deb6bb0160ae832', config=function()
     require('dressing').setup({
       input = {
         -- ESC won't close the modal, ability to use vim keys

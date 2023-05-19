@@ -284,6 +284,13 @@ function _G.inspect_point_candidate_param(winid)
 
   local targets = {}
 
+  -- beginning of previous 2 lines
+  for idx = cur_line-3, cur_line do
+    local idx_line_str = vim.api.nvim_buf_get_lines(0, idx-1, idx, false)[1]
+    if idx_line_str == nil then break end
+    table.insert(targets, { pos = { idx+1, 1 }})
+  end
+
   -- beginning of next 10 lines
   for idx = cur_line-1, cur_line+10 do
     local idx_line_str = vim.api.nvim_buf_get_lines(0, idx-1, idx, false)[1]

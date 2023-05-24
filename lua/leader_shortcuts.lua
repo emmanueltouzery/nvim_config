@@ -308,6 +308,26 @@ function telescope_branches_mappings(prompt_bufnr, map)
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. branch)
   end)
+  map('i', '<C-enter>', function(nr) -- create a local branch to track an origin branch
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local cmd_output = {}
+    if string.match(branch, "^origin/") then
+      actions.close(prompt_bufnr)
+      vim.fn.jobstart('git checkout ' .. branch:gsub("^origin/", ""), {
+        stdout_buffered = true,
+        on_stdout = vim.schedule_wrap(function(j, output)
+          for _, line in ipairs(output) do
+            if #line > 0 then
+              table.insert(cmd_output, line)
+            end
+          end
+        end),
+        on_exit = vim.schedule_wrap(function(j, output)
+          notif(cmd_output)
+        end),
+      })
+    end
+  end)
   map('i', '<C-d>', function(nr) -- delete
     local current_picker = action_state.get_current_picker(prompt_bufnr)
     current_picker:delete_selection(function(selection)

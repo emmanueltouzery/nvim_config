@@ -1054,6 +1054,10 @@ vim.cmd[[autocmd! FileType help :wincmd L]]
 vim.cmd[[autocmd! FileType man :wincmd L]]
 -- vim.cmd[[autocmd! BufEnter * if &ft ==# 'man' | wincmd L | endif]]
 
+-- compared to the default, activate the 'linematch' extra option
+-- for nicer diff lines matching
+vim.cmd[[set diffopt=internal,filler,closeoff,linematch:60]]
+
 -- move the cursor to the beginning of non-whitespace characters in a line
 -- EDIT: undo. want to be able to move back to the 0th column in case of right scroll
 -- vim.cmd[[

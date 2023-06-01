@@ -15,7 +15,7 @@ function _G.elixir_pa_flags(flags)
 end
 
 function _G.elixir_view_docs(opts)
-  modules = {}
+  modules = {"Logger"} -- bring in the elixir logger by default, else it's not listed
   for _, folder in ipairs(EXTRA_MIX_FOLDERS) do
     if vim.fn.isdirectory(folder) == 1 then
       -- the downside of the -pa loading of ecto modules is that it's on-demand loading, so

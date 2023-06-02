@@ -15,22 +15,60 @@ function _G.elixir_pa_flags(flags)
 end
 
 function _G.elixir_view_docs(opts)
-  modules = {"Logger"} -- bring in the elixir logger by default, else it's not listed
-  for _, folder in ipairs(EXTRA_MIX_FOLDERS) do
-    if vim.fn.isdirectory(folder) == 1 then
-      -- the downside of the -pa loading of ecto modules is that it's on-demand loading, so
-      -- the modules are not discovered => list them by hand
-      -- https://elixirforum.com/t/by-what-mechanism-does-iex-load-beam-files/37102
-      local sd = vim.loop.fs_scandir(folder)
-      while true do
-        local name, type = vim.loop.fs_scandir_next(sd)
-        if name == nil then break end
-        if name:match("%.beam$") then
-          local module = name:gsub("%.beam$", ""):gsub("^Elixir%.", "")
-          table.insert(modules, module)
-        end
+  -- get some builtin module paths. These modules are in the load path, but may
+  -- not be loaded, but we want the docs for them. ExUnit and Logger are examples
+  -- of modules for which we need this.
+  module_paths={}
+  vim.fn.jobstart({
+    "elixir", "-e", [[
+      :code.get_path()
+      |> Enum.filter(fn p -> String.contains?(inspect(p), "elixir") && !String.contains?(inspect(p), ["/mix/", "/iex/", "elixir/ebin", "eex/ebin"]) end)
+      |> IO.inspect()
+    ]]
+  }, {
+    cwd='.',
+    stdout_buffered = true,
+    on_stdout = vim.schedule_wrap(function(j, output)
+      for mod in string.gmatch(table.concat(output), "'([^,%s%[%]]+)'") do
+        print("m" .. mod)
+        table.insert(module_paths, mod)
+      end
+    end),
+    on_exit = vim.schedule_wrap(function(j, output)
+      table.sort(module_paths)
+      print(vim.inspect(module_paths))
+      elixir_view_docs_with_runtime_folders(module_paths, opts)
+    end),
+  })
+end
+
+function _G.elixir_append_modules_in_folder(modules, folder)
+  if vim.fn.isdirectory(folder) == 1 then
+    -- the downside of the -pa loading of ecto modules is that it's on-demand loading, so
+    -- the modules are not discovered => list them by hand
+    -- https://elixirforum.com/t/by-what-mechanism-does-iex-load-beam-files/37102
+    --
+    -- alternative solution: load the module through elixir itself
+    -- elixir -e "IO.inspect(Application.load(:logger); Application.spec(:logger) |> Keyword.get(:modules))"
+    local sd = vim.loop.fs_scandir(folder)
+    while true do
+      local name, type = vim.loop.fs_scandir_next(sd)
+      if name == nil then break end
+      if name:match("%.beam$") then
+        local module = name:gsub("%.beam$", ""):gsub("^Elixir%.", "")
+        table.insert(modules, module)
       end
     end
+  end
+end
+
+function _G.elixir_view_docs_with_runtime_folders(runtime_module_folders, opts)
+  modules = {}
+  for _, folder in ipairs(runtime_module_folders) do
+    elixir_append_modules_in_folder(modules, folder)
+  end
+  for _, folder in ipairs(EXTRA_MIX_FOLDERS) do
+    elixir_append_modules_in_folder(modules, folder)
   end
   -- https://stackoverflow.com/questions/58461572/get-a-list-of-all-elixir-modules-in-iex#comment103267199_58462672
   -- vim.fn.jobstart(elixir_pa_flags({ "-e", ":erlang.loaded() |> Enum.sort() |> inspect(limit: :infinity) |> IO.puts" }), {

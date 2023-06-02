@@ -7,6 +7,7 @@ vim.keymap.set( "n", "<leader>.", "<cmd>Telescope file_browser hidden=true<CR>",
 vim.keymap.set( "n", "<leader>,", "<cmd>Telescope buffers show_all_buffers=true<CR>", {desc="Telescope buffers"})
 vim.keymap.set("n", "<leader>?", ":Cheat40<cr>", {desc="help"})
 vim.keymap.set("n", "<leader>q", "<cmd>lua jump_to_qf()<cr>", {desc="Jump to the quickfix window"})
+vim.keymap.set( "n", "<leader>;", "<cmd>Telescope resume<CR>", {desc="Resume telescope search"})
 
 -- BUFFER
 require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})

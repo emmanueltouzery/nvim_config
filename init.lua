@@ -383,6 +383,7 @@ callbacks = {
                     end
                   end,
                 },
+                cache_picker = false,
                 -- copied from the telescope dropdown theme
                 sorting_strategy = "ascending",
                 layout_strategy = "center",

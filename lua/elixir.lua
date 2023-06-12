@@ -638,7 +638,14 @@ end
 function _G.elixir_match_error_details_indent()
   vim.cmd[[set ft=elixir]]
   vim.cmd[[:%s/\n//ge]]
-  vim.cmd[[%s/#Function/"#Function/ge]]
-  vim.cmd[[%s/>,/>",/ge]]
+  vim.cmd[[:%s/\r//ge]]
+  -- the contents are now on a single line
+  local line = vim.tbl_filter(function(l) return l ~= nil end, vim.api.nvim_buf_get_lines(0, 0, 10, false))[1]
+  -- "objects" are things like #Thing<x="details">
+  local with_fixed_objects = string.gsub(line, "(#[%w%.]+<[^>]*>)", function(s)
+    -- #Thing<x="details"> -> "#Thing<x='details'>"
+    return "\"" .. string.gsub(s, "\"", "'") .. "\""
+  end)
+  vim.api.nvim_buf_set_lines(0, 0, 1, false, {with_fixed_objects})
   vim.cmd(':%!mix format -')
 end

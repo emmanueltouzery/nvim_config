@@ -272,7 +272,7 @@ function telescope_stash_mappings(prompt_bufnr, map)
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. stash_key .. "^.." .. stash_key)
   end)
-  map('i', '<C-d>', function(nr)
+  map('i', '<C-Del>', function(nr)
     stash_key = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     local Job = require'plenary.job'

@@ -329,7 +329,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
       })
     end
   end)
-  map('i', '<C-d>', function(nr) -- delete
+  map('i', '<C-Del>', function(nr) -- delete
     local current_picker = action_state.get_current_picker(prompt_bufnr)
     current_picker:delete_selection(function(selection)
       branch = require("telescope.actions.state").get_selected_entry(selection.bufnr).value

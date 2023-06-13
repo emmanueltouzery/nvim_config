@@ -73,8 +73,8 @@ _G.telescope_global_marks = function(opts)
     push_cursor_on_edit = true,
     push_tagstack_on_edit = true,
     attach_mappings = function(_, map)
-      map("i", "<c-d>", actions.delete_mark)
-      map("n", "<c-d>", actions.delete_mark)
+      map("i", "<c-Del>", actions.delete_mark)
+      map("n", "<c-Del>", actions.delete_mark)
       return true
     end,
   }):find()

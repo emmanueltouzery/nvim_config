@@ -214,11 +214,12 @@ vim.keymap.set("n", "<leader>oj", "<cmd>lua telescope_jumplist()<CR>", {desc="Op
 vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeFocus<CR>", {desc="Open file explorer"})
 vim.keymap.set("n", "<leader>ot", "<cmd>lua telescope_modified_git_projects()<CR>", {desc="Open touched projects"})
 vim.keymap.set("n", "<leader>ou", "<cmd>lua require('telescope').extensions.undo.undo()<CR>", {desc="Open undo history"})
+vim.keymap.set("n", "<leader>os", "<cmd>AerialOpen<CR>", {desc = "Open symbols"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
 vim.keymap.set("n", "<leader>te", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
-vim.keymap.set("n", "<leader>ts", "<cmd>AerialToggle!<CR>", {desc = "Toggle SymbolsOutline (LSP symbols)"})
+vim.keymap.set("n", "<leader>ts", "<cmd>AerialToggle!<CR>", {desc = "Toggle symbols"})
 vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
 vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>", {desc = "Toggle highlight of global marks"})
 vim.keymap.set("n", "<leader>tw", ":set wrap! linebreak<cr>", {desc = "Toggle word-wrapping"})

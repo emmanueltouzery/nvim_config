@@ -36,7 +36,6 @@ _G.git_branches = function(opts)
 end
 
 _G.git_branches_with_base = function(base, opts)
-  print(base)
   local format = "%(HEAD)"
   .. "%(refname)"
   .. "%(ahead-behind:origin/" .. base .. ")"
@@ -146,7 +145,8 @@ _G.git_branches_with_base = function(base, opts)
           return make_entry.set_default_entry_mt(entry, opts)
         end,
       },
-      previewer = previewers.git_branch_log.new(opts),
+      -- previewer = previewers.git_branch_log.new(opts),
+      previewer = git_foresta_branch_log.new(opts),
       sorter = conf.file_sorter(opts),
       attach_mappings = function(_, map)
         actions.select_default:replace(actions.git_checkout)
@@ -161,3 +161,153 @@ _G.git_branches_with_base = function(base, opts)
     })
     :find()
 end
+
+local defaulter = utils.make_default_callable
+local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
+local Job = require'plenary.job'
+
+function get_ansi_escape_cols(line)
+  local idx = 1
+  res = {}
+  cur_group = ""
+  while idx <= #line do
+    local c = string.byte(line, idx, idx)
+    if c == 27 then
+      table.insert(res, cur_group)
+      cur_group = ""
+      idx = get_ansi_escape_cols_handle_escape(line, idx, res)
+    else
+      cur_group = cur_group .. string.sub(line, idx, idx)
+    end
+    idx = idx + 1
+  end
+  if #cur_group > 0 then
+    table.insert(res, cur_group)
+  end
+  return res
+end
+
+function get_ansi_escape_cols_handle_escape(line, idx, res)
+  local second = string.sub(line, idx+2, idx+2)
+  local third = string.sub(line, idx+3, idx+3)
+  local fourth = string.sub(line, idx+4, idx+4)
+  if second == 'm' then
+    return idx+2
+  end
+  if second == '0' and third == 'm' then
+    return idx+3
+  end
+  if second == '3' and fourth == 'm' then
+    return idx+4
+  end
+  if third == ';' then
+    return idx+6
+  end
+  print("UNHANDLED=>" .. second .. " " .. third)
+end
+
+git_foresta_branch_log = defaulter(function(opts)
+  local highlight_buffer = function(bufnr, content, fields)
+    for i = 1, #content do
+      local line = content[i]
+      local cols = fields[i]
+      local date = cols[3]
+      local name = cols[9]
+      if date == nil or name == nil then
+        goto continue
+      end
+
+      -- highlight git commit sha
+      pcall(
+      vim.api.nvim_buf_add_highlight,
+      bufnr,
+      ns_previewer,
+      "TelescopeResultsIdentifier",
+      i - 1,
+      0,
+      9
+      )
+
+      -- highlight tag info if present
+      local _, cstart = line:find "%("
+      if cstart then
+        local cend = string.find(line, "%) ")
+        if cend then
+          pcall(
+            vim.api.nvim_buf_add_highlight,
+            bufnr,
+            ns_previewer,
+            "TelescopeResultsConstant",
+            i - 1,
+            cstart - 1,
+            cend
+          )
+        end
+      end
+
+      -- highlight date
+      local hstart, hend = string.find(line, escape_pattern(date))
+      if hstart then
+        if hend < #line then
+          pcall(
+            vim.api.nvim_buf_add_highlight,
+            bufnr,
+            ns_previewer,
+            "TelescopeResultsSpecialComment",
+            i - 1,
+            hstart-1,
+            hend
+          )
+        end
+      end
+
+      -- highlight username
+      local hstart, hend = string.find(line, escape_pattern(name))
+      if hstart then
+        if hend < #line then
+          pcall(
+            vim.api.nvim_buf_add_highlight,
+            bufnr,
+            ns_previewer,
+            "TelescopeResultsVariable",
+            i - 1,
+            hstart-1,
+            hend
+          )
+        end
+      end
+      ::continue::
+    end
+  end
+
+  return previewers.new_buffer_previewer {
+    title = "Git Branch Preview",
+    get_buffer_by_name = function(_, entry)
+      return entry.value
+    end,
+
+    define_preview = function(self, entry, status)
+      local args = {
+        "-c",
+        "git-foresta " .. entry.name .. " | head -n 500",
+        entry.value,
+      }
+
+      Job:new({
+        command = "sh",
+        args = args,
+        cwd = opts.cwd,
+        on_exit = vim.schedule_wrap(function(j)
+          if not vim.api.nvim_buf_is_valid(self.state.bufnr) then
+            return
+          end
+          local output = j:result()
+          local fields = vim.tbl_map(get_ansi_escape_cols, output)
+          local clean_output = vim.tbl_map(function(cols) return table.concat(cols) end, fields)
+          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, clean_output)
+          highlight_buffer(self.state.bufnr, clean_output, fields)
+        end),
+      }):start()
+    end,
+  }
+end, {})

@@ -9,27 +9,38 @@ local actions = require("telescope.actions")
 local entry_display = require("telescope.pickers.entry_display")
 local strings = require'plenary.strings'
 
+_G.match_whole = function(word)
+  -- https://stackoverflow.com/a/32854326/516188
+  return "%f[%w_]" .. word .. "%f[^%w_]"
+end
+
 _G.git_branches = function(opts)
   -- the base will be develop if a develop branch exists, otherwise master.
-  local lines = 0
+  local develop_exists = false
+  local master_exists = false
+  local main_exists = false
   vim.fn.jobstart(
-    { "git", "branch", "--list", "develop"},
+    { "git", "branch", "--list", "develop", "master", "main"},
     {
       stdout_buffered = true,
       on_stdout = vim.schedule_wrap(function(j, output)
         for _, line in ipairs(output) do
-          if #line > 0 then
-            lines = lines + 1
+          if string.match(line, match_whole("develop")) then
+            develop_exists = true
+          elseif string.match(line, match_whole("master")) then
+            master_exists = true
+          elseif string.match(line, match_whole("main")) then
+            main_exists = true
           end
         end
       end),
       on_exit = vim.schedule_wrap(function(j, output)
-        if lines > 0 then
-          -- develop exists
+        if develop_exists then
           git_branches_with_base('develop', opts)
-        else
-          -- develop doesn't exist
+        elseif master_exists then
           git_branches_with_base('master', opts)
+        else
+          git_branches_with_base('main', opts)
         end
       end),
     })

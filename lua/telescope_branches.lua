@@ -154,7 +154,7 @@ _G.git_branches_with_base = function(base, opts)
         map({ "i", "n" }, "<c-r>", actions.git_rebase_branch)
         map({ "i", "n" }, "<c-a>", actions.git_create_branch)
         map({ "i", "n" }, "<c-s>", actions.git_switch_branch)
-        map({ "i", "n" }, "<c-d>", actions.git_delete_branch)
+        map({ "i", "n" }, "<c-delete>", actions.git_delete_branch)
         map({ "i", "n" }, "<c-y>", actions.git_merge_branch)
         return true
       end,
@@ -289,7 +289,7 @@ git_foresta_branch_log = defaulter(function(opts)
     define_preview = function(self, entry, status)
       local args = {
         "-c",
-        "git-foresta " .. entry.name .. " | head -n 500",
+        "git-foresta " .. entry.name .. " | head -n 1500",
         entry.value,
       }
 

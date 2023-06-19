@@ -311,7 +311,7 @@ git_foresta_branch_log = defaulter(function(opts)
     define_preview = function(self, entry, status)
       local args = {
         "-c",
-        "git-foresta " .. entry.name .. " --style=10 | head -n 1500",
+        "git-foresta " .. entry.name .. " --style=10 --no-status | head -n 1500",
         entry.value,
       }
 

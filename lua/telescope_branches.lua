@@ -239,21 +239,32 @@ git_foresta_branch_log = defaulter(function(opts)
       9
       )
 
-      -- highlight tag info if present
-      local _, cstart = line:find "%("
-      if cstart then
-        local cend = string.find(line, "%) ")
-        if cend then
-          pcall(
-            vim.api.nvim_buf_add_highlight,
-            bufnr,
-            ns_previewer,
-            "TelescopeResultsConstant",
-            i - 1,
-            cstart - 1,
-            cend
-          )
+      -- highlight tag info if present; it'll be in brackets and highlighted
+      local cur_col = 0
+      local cur_offset = 0
+      local tag_info_start = nil
+      local tag_info_end = nil
+      while cur_col < #cols do
+        if cols[cur_col] == " (" then
+          tag_info_start = cur_offset
         end
+        if cols[cur_col] == ")" and tag_info_start ~= nil then
+          tag_info_end = cur_offset
+          break
+        end
+        cur_col = cur_col + 1
+        cur_offset = cur_offset + #cols[cur_col]
+      end
+      if tag_info_end ~= nil then
+        pcall(
+        vim.api.nvim_buf_add_highlight,
+        bufnr,
+        ns_previewer,
+        "TelescopeResultsConstant",
+        i - 1,
+        tag_info_start-1,
+        tag_info_end
+        )
       end
 
       -- highlight date

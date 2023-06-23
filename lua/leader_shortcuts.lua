@@ -68,7 +68,7 @@ vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="op
 vim.keymap.set('n', '<leader>f!', ":windo e! | windo Gitsigns refresh<cr>", {desc = "Reload all files from disk"})
 
 function _G.quick_set_ft()
-  local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html", "config", "other"}
+  local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html", "config", "sql", "other"}
   vim.ui.select(filetypes, {prompt="Pick filetype to switch to"}, function(choice)
     if choice == "other" then
       vim.ui.input({prompt="Enter filetype", kind="center_win"}, function(word)
@@ -402,6 +402,11 @@ function format_buf()
     vim.cmd(':%!prettier --parser html')
   elseif vim.bo.filetype == 'elixir' then
     vim.cmd(':%!mix format -')
+  elseif vim.bo.filetype == 'sql' then
+    -- npx will install the app on first use... in theory i could use mason to set it up, but it's lacking
+    -- an "ensure_installed" option: https://github.com/williamboman/mason.nvim/issues/103
+    -- https://github.com/williamboman/mason.nvim/issues/130 https://github.com/williamboman/mason.nvim/issues/1338
+    vim.cmd(':%!npx sql-formatter --language postgresql')
   else
     print("No LSP and unhandled filetype " .. vim.bo.filetype)
   end

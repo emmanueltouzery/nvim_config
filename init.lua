@@ -759,7 +759,7 @@ rt.setup(opts)
   use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
     require("dapui").setup{}
   end}
-  use {'stevearc/stickybuf.nvim', commit='6848454b6a3c769575282e183849d49ed896e0bb', config=function()
+  use {'stevearc/stickybuf.nvim', commit='771caf43582ecddef90a17f7a07f234cfee01005', config=function()
     require("stickybuf").setup()
   end}
 end)

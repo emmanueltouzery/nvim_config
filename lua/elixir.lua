@@ -7,7 +7,7 @@ function _G.get_extra_mix_folders(opts)
     local processed_libs = {}
     local base_path = './_build/dev/lib/'
     local sd = vim.loop.fs_scandir(base_path)
-    while true do
+    while sd ~= nil and true do
       local name, type = vim.loop.fs_scandir_next(sd)
       if name == nil then break end
       processed_libs[name] = true
@@ -16,7 +16,7 @@ function _G.get_extra_mix_folders(opts)
 
     local base_path = './_build/test/lib/'
     local sd = vim.loop.fs_scandir(base_path)
-    while true do
+    while sd ~= nil and true do
       local name, type = vim.loop.fs_scandir_next(sd)
       if name == nil then break end
       if not processed_libs[name] then

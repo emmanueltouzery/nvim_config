@@ -226,11 +226,32 @@ vim.keymap.set("n", "<leader>tw", ":set wrap! linebreak<cr>", {desc = "Toggle wo
 vim.keymap.set("n", "<leader>tS", ":set spell!<CR>", {desc = "Toggle Spellcheck"})
 
 function toggle_diff()
-  if vim.opt.diff:get() then
+  -- remember which is the current window
+  local cur_win = vim.api.nvim_get_current_win()
+
+  -- some windows may not be in diff mode, these that I ignore in this function
+  -- => check if any window is in diff mode
+  local has_diff = false
+  local wins = vim.api.nvim_list_wins()
+  for i, win in pairs(wins) do
+    has_diff = has_diff or vim.api.nvim_win_call(win, function() return vim.opt.diff:get() end)
+  end
+
+  if has_diff then
     vim.cmd("windo diffoff")
   else
-    vim.cmd("windo diffthis")
+    -- used to do a plain 'windo diffthis', but i want to exclude some window types
+    local wins = vim.api.nvim_list_wins()
+    for i, win in pairs(wins) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
+      if not vim.tbl_contains({"NvimTree", "packer", "cheat40", "OverseerList", "aerial"}, buf_ft) then
+        vim.api.nvim_win_call(win, function() vim.cmd("diffthis") end)
+      end
+    end
   end
+  -- restore the original current window
+  vim.api.nvim_set_current_win(cur_win)
 end
 vim.keymap.set("n", "<leader>tf", ":lua toggle_diff()<cr>", {desc = "Toggle diff"})
 

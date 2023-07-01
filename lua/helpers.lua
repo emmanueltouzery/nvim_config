@@ -1104,16 +1104,21 @@ function _G.display_lsp_references()
     -- 2. the symbol under the cursor must be a function (not a constant)
     -- in the case of typescript, tree-sitter actually tells me that functions are variables
     -- but LSP semantic tokens know.
-    local is_function = false
+    local can_use_incoming_calls = false
     local inspect = vim.inspect_pos()
     if inspect.semantic_tokens then
       for _, token in ipairs(inspect.semantic_tokens) do
-        if token.opts.hl_group_link == 'Function' then
-          is_function = true
+        -- Structure comes in handy for JSX/TSX classes, for which incoming calls works too
+        if token.opts.hl_group_link == 'Function' or token.opts.hl_group_link == 'Structure' then
+          can_use_incoming_calls = true
         end
       end
     end
-    if is_function then
+    if vim.tbl_contains(vim.treesitter.get_captures_at_cursor(), "method") then
+      -- needed for react class methods
+      can_use_incoming_calls = true
+    end
+    if can_use_incoming_calls then
       require'telescope.builtin'.lsp_incoming_calls{path_display={'tail'}}
       return
     end

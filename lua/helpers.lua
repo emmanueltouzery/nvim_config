@@ -1085,3 +1085,40 @@ function _G.test_all_bg_run_check_completion(jobid, hide_test_running_notif)
     end, 1000)
   end
 end
+
+function _G.lsp_check_capabilities(feature, bufnr)
+  local clients = vim.lsp.buf_get_clients(bufnr)
+  for _, client in pairs(clients) do
+    if client.server_capabilities[feature] then
+      return true
+    end
+  end
+  return false
+end
+
+function _G.display_lsp_references()
+  -- first try incoming_calls, if applicable
+
+  -- 1. the LSP server must support it
+  if lsp_check_capabilities('callHierarchyProvider', 0) then
+    -- 2. the symbol under the cursor must be a function (not a constant)
+    -- in the case of typescript, tree-sitter actually tells me that functions are variables
+    -- but LSP semantic tokens know.
+    local is_function = false
+    local inspect = vim.inspect_pos()
+    if inspect.semantic_tokens then
+      for _, token in ipairs(inspect.semantic_tokens) do
+        if token.opts.hl_group_link == 'Function' then
+          is_function = true
+        end
+      end
+    end
+    if is_function then
+      require'telescope.builtin'.lsp_incoming_calls{path_display={'tail'}}
+      return
+    end
+  end
+
+  -- cannot use incoming_calls, fallback to references
+  require'telescope.builtin'.lsp_references{path_display={'tail'}}
+end

@@ -8,7 +8,6 @@ function _G.telescope_display_call_hierarchy()
 
   local displayer = entry_display.create {
     separator = " ",
-    -- hl_chars = { ["﬌"] = "TelescopeBorder"},
     items = {
       { width = 35, },
     },
@@ -17,6 +16,12 @@ function _G.telescope_display_call_hierarchy()
   local make_display = function(entry)
     return displayer {
       { entry.name, "TelescopeResultsIdentifier" },
+    }
+  end
+
+  local make_display_nested = function(entry)
+    return displayer {
+      { entry.name, "TelescopeResultsFunction" },
     }
   end
 
@@ -33,14 +38,18 @@ function _G.telescope_display_call_hierarchy()
       end
 
       pickers.new({}, {
-        prompt_title = "Incoming calls",
+        prompt_title = "Incoming calls: " .. call_hierarchy_item.name,
         finder = finders.new_table {
           results = data,
           entry_maker = function(entry)
             -- print(vim.inspect(entry))
             entry.name = entry.desc
             entry.ordinal = entry.desc
-            entry.display = make_display
+            if entry.depth ~= nil and entry.depth > 0 then
+              entry.display = make_display_nested
+            else
+              entry.display = make_display
+            end
             entry.path = entry.item.item.from.uri:gsub("^file:..", "")
             entry.lnum = entry.item.item.fromRanges[1].start.line+1
             return entry
@@ -77,5 +86,5 @@ function _G.print_hierarchy(item, depth, res)
   for _, nested_h in pairs(item.nested_hierarchy) do
     print_hierarchy(nested_h, depth + 1, res)
   end
-  table.insert(res, {item = item, desc = prefix .. item.item.from.name})
+  table.insert(res, {item = item, desc = prefix .. item.item.from.name, depth = depth})
 end

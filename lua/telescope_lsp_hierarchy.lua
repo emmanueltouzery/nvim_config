@@ -10,18 +10,21 @@ function _G.telescope_display_call_hierarchy()
     separator = " ",
     items = {
       { width = 35, },
+      { remaining = true },
     },
   }
 
   local make_display = function(entry)
     return displayer {
       { entry.name, "TelescopeResultsIdentifier" },
+      { entry.path:match("[^/]+/[^/]+$"), "Special" },
     }
   end
 
   local make_display_nested = function(entry)
     return displayer {
       { entry.name, "TelescopeResultsFunction" },
+      { entry.path:match("[^/]+/[^/]+$"), "Special" },
     }
   end
 

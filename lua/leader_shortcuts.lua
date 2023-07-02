@@ -480,6 +480,7 @@ vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {de
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
 vim.keymap.set("n", "<leader>clf", "<cmd>lua display_lsp_references()<cr>", {desc="Display lsp references"})
+vim.keymap.set("n", "<leader>clh", "<cmd>lua telescope_display_call_hierarchy()<cr>", {desc="Display lsp call hierarchy"})
 
 -- i had issues after the mason migration where lsp restart would not restart all LSPs.. or i would lose some LSPs or something
 -- => bulletproof it with my own restart that really restarts everything

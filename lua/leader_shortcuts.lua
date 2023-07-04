@@ -65,7 +65,7 @@ vim.keymap.set("n", "<leader>fD", ":lua convert_dos()<cr>", {desc="reload file a
 require 'key-menu'.set('n', '<Space>fd', {desc='file Directory'})
 vim.keymap.set("n", "<leader>fdd", ":lua open_file_cur_dir(false)<cr>", {desc="open a file from the current Directory"})
 vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="open a file from the current directory and Children dirs"})
-vim.keymap.set('n', '<leader>f!', ":windo e! | windo Gitsigns refresh<cr>", {desc = "Reload all files from disk"})
+vim.keymap.set('n', '<leader>f!', ":lua reload_all()<cr>", {desc = "Reload all files from disk"})
 
 function _G.quick_set_ft()
   local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html", "config", "sql", "other"}
@@ -306,6 +306,32 @@ function telescope_stash_mappings(prompt_bufnr, map)
       end,
     }):sync()
   end)
+  actions.select_default:replace(function(prompt_bufnr)
+    -- copy-pasted from telescope actions.git_apply_stash + added the reload_all()
+    local action_state = require "telescope.actions.state"
+    local actions = require("telescope.actions")
+    local utils = require "telescope.utils"
+
+    local selection = action_state.get_selected_entry()
+    if selection == nil then
+      utils.__warn_no_selection "actions.git_apply_stash"
+      return
+    end
+    actions.close(prompt_bufnr)
+    local _, ret, stderr = utils.get_os_command_output { "git", "stash", "apply", "--index", selection.value }
+    if ret == 0 then
+      reload_all()
+      utils.notify("actions.git_apply_stash", {
+        msg = string.format("applied: '%s' ", selection.value),
+        level = "INFO",
+      })
+    else
+      utils.notify("actions.git_apply_stash", {
+        msg = string.format("Error when applying: %s. Git returned: '%s'", selection.value, table.concat(stderr, " ")),
+        level = "ERROR",
+      })
+    end
+  end)
   return true
 end
 
@@ -400,7 +426,7 @@ vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin
 
 require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
 vim.keymap.set("n", "<leader>gho", '<cmd>lua require"telescope.builtin".git_stash{attach_mappings=telescope_stash_mappings}<CR>', {desc="list git stashes"})
-vim.keymap.set("n", "<leader>ghh", '<cmd>lua run_command("git", {"stash", "-u"})<CR>', {desc="git stash"})
+vim.keymap.set("n", "<leader>ghh", '<cmd>lua run_command("git", {"stash", "-u"}, reload_all)<CR>', {desc="git stash"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})

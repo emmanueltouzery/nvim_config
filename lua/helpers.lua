@@ -689,7 +689,7 @@ function _G.telescope_jumplist()
     :find()
 end
 
-function _G.run_command(command, params)
+function _G.run_command(command, params, cb)
   local error_msg = nil
   Job:new {
     command = command,
@@ -703,6 +703,9 @@ function _G.run_command(command, params)
       vim.schedule_wrap(function()
         if code == 0 then
           notif({command .. " executed successfully"}, vim.log.levels.INFO)
+          if cb then
+            cb()
+          end
         else
           local info = {command .. " failed!"}
           if error_msg ~= nil then
@@ -1115,4 +1118,8 @@ function _G.display_lsp_references()
       end)
     end
   end)
+end
+
+function _G.reload_all()
+  vim.cmd "windo e! | windo Gitsigns refresh"
 end

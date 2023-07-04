@@ -1097,33 +1097,22 @@ function _G.lsp_check_capabilities(feature, bufnr)
 end
 
 function _G.display_lsp_references()
-  -- first try incoming_calls, if applicable
-
-  -- 1. the LSP server must support it
-  if lsp_check_capabilities('callHierarchyProvider', 0) then
-    -- 2. the symbol under the cursor must be a function (not a constant)
-    -- in the case of typescript, tree-sitter actually tells me that functions are variables
-    -- but LSP semantic tokens know.
-    local can_use_incoming_calls = false
-    local inspect = vim.inspect_pos()
-    if inspect.semantic_tokens then
-      for _, token in ipairs(inspect.semantic_tokens) do
-        -- Structure comes in handy for JSX/TSX classes, for which incoming calls works too
-        if token.opts.hl_group_link == 'Function' or token.opts.hl_group_link == 'Structure' then
-          can_use_incoming_calls = true
+  -- first try incoming_calls... if it would return results, display incoming calls
+  -- otherwise display lsp references.
+  -- incoming calls won't work for constants, or functions which may be refered to by
+  -- name or function pointer instead of being directly called.
+  local by_lsp = vim.lsp.buf_request(0, 'textDocument/prepareCallHierarchy', vim.lsp.util.make_position_params(), function(err, result)
+    if #result >= 1 then
+      local call_hierarchy_item = result[1]
+      vim.lsp.buf_request(0, 'callHierarchy/incomingCalls', { item = call_hierarchy_item }, function(err, result, ctx, config)
+        if #result > 0 then
+          -- incoming calls will return values, use that
+          require'telescope.builtin'.lsp_incoming_calls{path_display={'tail'}}
+        else
+          -- cannot use incoming_calls, fallback to references
+          require'telescope.builtin'.lsp_references{path_display={'tail'}}
         end
-      end
+      end)
     end
-    if vim.tbl_contains(vim.treesitter.get_captures_at_cursor(), "method") then
-      -- needed for react class methods
-      can_use_incoming_calls = true
-    end
-    if can_use_incoming_calls then
-      require'telescope.builtin'.lsp_incoming_calls{path_display={'tail'}}
-      return
-    end
-  end
-
-  -- cannot use incoming_calls, fallback to references
-  require'telescope.builtin'.lsp_references{path_display={'tail'}}
+  end)
 end

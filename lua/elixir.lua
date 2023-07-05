@@ -190,44 +190,63 @@ function _G.elixir_view_behaviour_module_docs(mod, exports, opts)
       end
     end),
     on_exit = vim.schedule_wrap(function(j, output)
-      vim.ui.select(exports, {prompt="Pick the function to view:"}, function(choice)
-        if choice then
-          elixir_view_export_docs(choice, opts)
-        end
-      end)
+      telescope_view_module_docs(exports, opts)
     end)
   })
 end
 
-function _G.elixir_view_export_docs(export, opts)
-  if opts and opts.popup then
-    local popup_buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
-    vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")
-    vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
-    vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
+function _G.telescope_view_module_docs(exports, opts)
+  local pickers = require "telescope.pickers"
+  local finders = require "telescope.finders"
+  local previewers = require("telescope.previewers")
+  local conf = require("telescope.config").values
 
-    local width = vim.api.nvim_get_option("columns")
-    local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
-    local popup_width = 90
-    local popup_height = 50
-
-    local win_opts = {
-      focusable = true,
-      style = "minimal",
-      border = "rounded",
-      relative = "editor",
-      width = popup_width,
-      height = popup_height,
-      anchor = "NW",
-      row = (height-popup_height)/2,
-      col = (width-popup_width)/2,
-      noautocmd = true,
+  local function entry_maker(entry)
+    return {
+      value = entry,
+      ordinal = entry,
+      display = entry,
+      contents = entry
     }
-    popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
-  else
-    vim.cmd("enew")
   end
+
+  pickers.new({}, {
+    prompt_title = "Module exports",
+    sorting_strategy = 'ascending',
+    finder = finders.new_table {
+      results = exports,
+      entry_maker = entry_maker,
+    },
+    previewer = previewers.new_termopen_previewer({
+      get_command = function(entry, status)
+        export = entry.contents
+        local command = "h"
+        if string.match(export, "^@") then
+          export = string.sub(export, 2)
+          command = "b"
+        end
+        return elixir_pa_flags(opts, {
+          "-e", "require IEx.Helpers; IEx.Helpers." .. command .. "(" .. export .. ")"
+        })
+      end
+    }),
+    sorter = conf.generic_sorter(opts),
+    attach_mappings = function(p, map)
+      map("i", "<cr>", function(prompt_nr)
+        local action_state = require "telescope.actions.state"
+        local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
+        local entry = action_state.get_selected_entry()
+        elixir_view_export_docs(entry.contents, opts)
+      end)
+      tel_proj_attach_mappings(p, map)
+      return true
+    end,
+  }):find()
+
+end
+
+function _G.elixir_view_export_docs(export, opts)
+  vim.cmd("enew")
   local command = "h"
   if string.match(export, "^@") then
     export = string.sub(export, 2)

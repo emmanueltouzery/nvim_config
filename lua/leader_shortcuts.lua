@@ -471,10 +471,8 @@ vim.keymap.set('n', '<leader>xip', ":lua elixir_insert_inspect_param()<cr>", {de
 vim.keymap.set('n', '<leader>xil', ":lua elixir_insert_inspect_label()<cr>", {desc="elixir add inspect label"})
 vim.keymap.set('n', '<leader>xif', ":lua elixir_insert_inspect_field()<cr>", {desc="elixir add inspect field"})
 require 'key-menu'.set('n', '<Space>xa', {desc='API'})
-vim.keymap.set('n', '<leader>xai', ":lua elixir_view_docs()<cr>", {desc="elixir apidocs (in cur buffer)"})
-vim.keymap.set('n', '<leader>xAi', ":lua elixir_view_docs({include_mix_libs=true})<cr>", {desc="elixir apidocs (in cur buffer+mix libraries)"})
-vim.keymap.set('n', '<leader>xap', ":lua elixir_view_docs({popup=true})<cr>", {desc="elixir apidocs (popup)"})
-vim.keymap.set('n', '<leader>xAp', ":lua elixir_view_docs({popup=true, include_mix_libs=true})<cr>", {desc="elixir apidocs (popup+mix libraries)"})
+vim.keymap.set('n', '<leader>xap', ":lua elixir_view_docs({})<cr>", {desc="elixir apidocs (popup)"})
+vim.keymap.set('n', '<leader>xAp', ":lua elixir_view_docs({include_mix_libs=true})<cr>", {desc="elixir apidocs (popup+mix libraries)"})
 vim.keymap.set('n', '<leader>xos', ":lua telescope_elixir_stacktrace({})<cr>", {desc="elixir open stacktrace"})
 vim.keymap.set('n', '<leader>xmi', ":lua elixir_match_error_details_indent({})<cr>", {desc="elixir indent match error details"})
 

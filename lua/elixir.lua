@@ -501,6 +501,18 @@ function _G.elixir_insert_inspect_field()
 end
 
 function _G.elixir_mark_multiple_clause_fns()
+  -- we don't want to consider two functions in two different
+  -- modules in the same file to be clauses of the same function.
+  -- so besides the function name we also consider the line number
+  -- of the start of the parent block (module)
+  function parent_block(node)
+    local cur_node = node:parent()
+    while cur_node:type() ~= "do_block" do
+      cur_node = cur_node:parent()
+    end
+    return cur_node
+  end
+
   vim.cmd[[sign define clause text=⡇ texthl=TSFunction]]
   vim.cmd[[sign define clauseStart text=⡏ texthl=TSFunction]]
   vim.cmd[[sign define clauseEnd text=⣇ texthl=TSFunction]]
@@ -512,25 +524,23 @@ function _G.elixir_mark_multiple_clause_fns()
   end
   local syntax_tree = parser:parse()[1]
   local lang = parser:lang()
-  local prev_fname = nil
+  local prev_key = nil
   local multi_clause_counts = {}
   for match in query.iter_group_results(0, "clauses", syntax_tree:root(), lang) do
-    local fn_name = nil
-    if vim.version().minor >= 9 then
-      fn_name = vim.treesitter.get_node_text(match.name.node, 0)
-    else
-      fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
-    end
+    local fn_name = vim.treesitter.get_node_text(match.name.node, 0)
+    local parent_lnum = vim.treesitter.get_node_range(parent_block(match.name.node))+1
+    local key = fn_name .. "/" .. parent_lnum
     
-    if fn_name == prev_fname then
-      if multi_clause_counts[fn_name] then
-        multi_clause_counts[fn_name] = multi_clause_counts[fn_name] + 1
+    if key == prev_key then
+      if multi_clause_counts[key] then
+        multi_clause_counts[key] = multi_clause_counts[key] + 1
       else
-        multi_clause_counts[fn_name] = 2
+        multi_clause_counts[key] = 2
       end
     end
-    prev_fname = fn_name
+    prev_key = key
   end
+  -- print(vim.inspect(multi_clause_counts))
   local fname = vim.fn.expand("%:p")
   local sign_id = 3094
   if vim.b.signs_count then
@@ -542,19 +552,17 @@ function _G.elixir_mark_multiple_clause_fns()
   local cur_fname = nil
   local count_for_fn = 0
   for match in query.iter_group_results(0, "clauses", syntax_tree:root(), lang) do
-    local fn_name = nil
-    if vim.version().minor >= 9 then
-      fn_name = vim.treesitter.get_node_text(match.name.node, 0)
-    else
-      fn_name = vim.treesitter.query.get_node_text(match.name.node, 0)
-    end
-    if multi_clause_counts[fn_name] then
+    local fn_name = vim.treesitter.get_node_text(match.name.node, 0)
+    local parent_lnum = vim.treesitter.get_node_range(parent_block(match.name.node))+1
+    local key = fn_name .. "/" .. parent_lnum
+
+    if multi_clause_counts[key] then
       local line = vim.treesitter.get_node_range(match.name.node)+1
       if cur_fname ~= fn_name then
         -- first for this function
         vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseStart file=" .. fname .. "'")
         count_for_fn = 1
-      elseif count_for_fn + 1 == multi_clause_counts[fn_name] then
+      elseif count_for_fn + 1 == multi_clause_counts[key] then
         -- last for this function
         vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseEnd file=" .. fname .. "'")
       else

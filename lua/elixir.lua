@@ -225,9 +225,11 @@ function _G.telescope_view_module_docs(exports, opts)
           export = string.sub(export, 2)
           command = "b"
         end
-        return elixir_pa_flags(opts, {
-          "-e", "require IEx.Helpers; IEx.Helpers." .. command .. "(" .. export .. ")"
+        -- https://stackoverflow.com/a/52706650/516188
+        local base_cmd = elixir_pa_flags(opts, {
+          "-e", "'Application.put_env(:iex, :colors, [enabled: true]); require IEx.Helpers; IEx.Helpers." .. command .. "(" .. export .. ")'"
         })
+        return {"sh", "-c", table.concat(base_cmd, " ") .. " | less -RS +0 --tilde"}
       end
     }),
     sorter = conf.generic_sorter(opts),

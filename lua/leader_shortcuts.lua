@@ -352,7 +352,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     end
     vim.cmd(":DiffviewOpen " .. diffspec)
   end)
-  map('i', '<C-c>', function(nr) -- mnemonic Compare
+  map('i', '<C-p>', function(nr) -- mnemonic Compare
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. branch)
@@ -392,7 +392,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
       }):sync()
     end)
   end)
-  map('i', '<C-h>', function(nr) -- history
+  map('i', '<C-c>', function(nr) -- commits
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     require'telescope.builtin'.git_commits{
@@ -400,6 +400,11 @@ function telescope_branches_mappings(prompt_bufnr, map)
         entry_maker=custom_make_entry_gen_from_git_commits(),
         git_command={"git", "log", branch, "--pretty=tformat:%<(10)%h%<(16,trunc)%an %ad%d %s", "--date=short", "--", "."}, layout_config={width=0.9, horizontal={preview_width=0.5}}
       }
+  end)
+  map('i', '<C-h>', function(nr) -- history
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    actions.close(prompt_bufnr)
+    vim.cmd('DiffviewFileHistory ' .. cur_file_project_root() .. " --range=" .. branch)
   end)
   return true
 end

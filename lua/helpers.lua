@@ -1126,6 +1126,5 @@ function _G.display_lsp_references()
 end
 
 function _G.reload_all()
-  -- TODO maybe 'vim.cmd("checktime")' would be enough
-  vim.cmd "windo e! | windo Gitsigns refresh"
+  vim.cmd("checktime")
 end

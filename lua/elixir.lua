@@ -506,9 +506,13 @@ function _G.elixir_mark_multiple_clause_fns()
   -- so besides the function name we also consider the line number
   -- of the start of the parent block (module)
   function parent_block(node)
-    local cur_node = node:parent()
+    local cur_node = node
     while cur_node:type() ~= "do_block" do
-      cur_node = cur_node:parent()
+      if cur_node:parent() == nil then
+        return cur_node
+      else
+        cur_node = cur_node:parent()
+      end
     end
     return cur_node
   end

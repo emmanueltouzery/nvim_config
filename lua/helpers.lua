@@ -168,6 +168,10 @@ end
 
 function _G.ShowCommitAtLine()
     local commit_sha = require"agitator".git_blame_commit_for_line()
+    show_commit(commit_sha)
+end
+
+function _G.show_commit(commit_sha)
     vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. vim.fn.expand("%:p"))
 end
 
@@ -822,6 +826,13 @@ function _G.diffview_gf()
       vim.cmd[[ChooseWin]]
     end
     vim.cmd(":e " .. file.absolute_path)
+  end
+end
+
+function _G.diffview_conflict_view_commit(which)
+  local merge_ctx = require("diffview.lib").get_current_view().merge_ctx
+  if merge_ctx then
+    show_commit(merge_ctx[which].hash)
   end
 end
 

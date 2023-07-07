@@ -465,6 +465,10 @@ vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="se
 vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path", silent=true})
 
+require 'key-menu'.set('n', '<Space>cC', {desc='Code Conflicts'})
+vim.keymap.set('n', '<leader>cCo', ":lua diffview_conflict_view_commit('ours')<cr>", {desc="conflict show OURS commit", silent=true})
+vim.keymap.set('n', '<leader>cCt', ":lua diffview_conflict_view_commit('theirs')<cr>", {desc="conflict show THEIRS commit", silent=true})
+
 require 'key-menu'.set('n', '<Space>x', {desc='Elixir'})
 vim.keymap.set('n', '<leader>xiv', ":lua elixir_insert_inspect_value()<cr>", {desc="elixir add inspect value"})
 vim.keymap.set('n', '<leader>xip', ":lua elixir_insert_inspect_param()<cr>", {desc="elixir add inspect parameter"})

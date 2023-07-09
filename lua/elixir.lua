@@ -404,6 +404,7 @@ end
 function _G.telescope_view_module_docs(lib_path, lib, exports, opts)
   local pickers = require "telescope.pickers"
   local finders = require "telescope.finders"
+  local sorters = require "telescope.sorters"
   local previewers = require("telescope.previewers")
   local conf = require("telescope.config").values
 
@@ -416,6 +417,9 @@ function _G.telescope_view_module_docs(lib_path, lib, exports, opts)
     }
   end
 
+  local Sorter = sorters.Sorter
+  local fuzzy_sorter = sorters.get_generic_fuzzy_sorter(opts)
+  local basic_sorter = conf.generic_sorter(opts)
   pickers.new({}, {
     prompt_title = "Module exports",
     sorting_strategy = 'ascending',
@@ -443,6 +447,32 @@ function _G.telescope_view_module_docs(lib_path, lib, exports, opts)
       end
     }),
     sorter = conf.generic_sorter(opts),
+    -- sorter = Sorter:new {
+    --   -- scoring_function = function(_, prompt, line, entry, cb_add, cb_filter)
+    --   --   score = basic_sorter.scoring_function(prompt, line, entry, cb_add, cb_filter)
+    --   --   return score
+    --   -- end,
+    --   scoring_function = basic_sorter.scoring_function,
+    --   highlighter = basic_sorter.highlighter,
+    -- },
+    -- sorter = Sorter:new {
+    --   scoring_function = function(_, prompt, line, entry, cb_add, cb_filter)
+    --     local base_score = fuzzy_sorter:scoring_function(prompt, line, cb_add, cb_filter)
+
+    --     if base_score == FILTERED then
+    --       return FILTERED
+    --     end
+
+    --     if not base_score or base_score == 0 then
+    --       print("keepig " .. line .. " => " .. base_score)
+    --       return entry.index
+    --     else
+    --       return FILTERED
+    --     end
+    --   end,
+    --   highlighter = fuzzy_sorter.highlighter,
+    -- },
+    -- sorter = sorters.fuzzy_with_index_bias(opts),
     attach_mappings = function(p, map)
       map("i", "<cr>", function(prompt_nr)
         local action_state = require "telescope.actions.state"

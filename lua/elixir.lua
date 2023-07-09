@@ -63,12 +63,14 @@ function _G.elixir_view_docs(opts)
     end),
     on_exit = vim.schedule_wrap(function(j, output)
       table.sort(module_paths)
+      print(vim.inspect(module_paths))
       elixir_view_docs_with_runtime_folders(module_paths, opts)
     end),
   })
 end
 
 function _G.elixir_append_modules_in_folder(modules, folder)
+  print(folder)
   if vim.fn.isdirectory(folder) == 1 then
     -- the downside of the -pa loading of ecto modules is that it's on-demand loading, so
     -- the modules are not discovered => list them by hand
@@ -76,6 +78,7 @@ function _G.elixir_append_modules_in_folder(modules, folder)
     --
     -- alternative solution: load the module through elixir itself
     -- elixir -e "IO.inspect(Application.load(:logger); Application.spec(:logger) |> Keyword.get(:modules))"
+    -- elixir -pa ./_build/dev/lib/ecto/ebin/ -e "IO.inspect(Application.load(:ecto)); Application.spec(:ecto) |> Keyword.get(:modules) |> IO.inspect()"
     local sd = vim.loop.fs_scandir(folder)
     while true do
       local name, type = vim.loop.fs_scandir_next(sd)
@@ -88,31 +91,135 @@ function _G.elixir_append_modules_in_folder(modules, folder)
   end
 end
 
+function _G.timestamp()
+  local time, ms = vim.loop.gettimeofday()
+  return time .. "." .. ms .. " "
+end
+
 function _G.elixir_view_docs_with_runtime_folders(runtime_module_folders, opts)
-  modules = {}
-  for _, folder in ipairs(runtime_module_folders) do
-    elixir_append_modules_in_folder(modules, folder)
-  end
-  local extra_mix_folders = get_extra_mix_folders(opts)
-  for _, folder in ipairs(extra_mix_folders) do
-    elixir_append_modules_in_folder(modules, folder)
-  end
+  -- elixir -e "File.ls!('./_build/dev/lib') |> Enum.flat_map(fn m_str -> Code.append_path(\"./_build/dev/lib/#{m_str}/ebin\"); Application.load(String.to_atom(m_str)); Application.spec(String.to_atom(m_str)) |> Keyword.get(:modules) end) |> Enum.filter(fn m -> String.match?(Atom.to_string(m), ~r/[A-Z]/) end) |> IO.inspect()"
+  -- read these modules in iex not in lua. then pipe them in, in the elixir shell
+  exports = {}
+  print("before calling elixir: " .. timestamp())
+
+  -- for _, folder in ipairs(runtime_module_folders) do
+  --   elixir_append_modules_in_folder(modules, folder)
+  -- end
+  -- local extra_mix_folders = get_extra_mix_folders(opts)
+  -- for _, folder in ipairs(extra_mix_folders) do
+  --   elixir_append_modules_in_folder(modules, folder)
+  -- end
+  -- print(vim.inspect(#modules))
   -- https://stackoverflow.com/questions/58461572/get-a-list-of-all-elixir-modules-in-iex#comment103267199_58462672
   -- vim.fn.jobstart(elixir_pa_flags({ "-e", ":erlang.loaded() |> Enum.sort() |> inspect(limit: :infinity) |> IO.puts" }), {
   -- https://github.com/elixir-lang/elixir/blob/60f86886c0f66c71790e61d754eada4e9fa0ace5/lib/iex/lib/iex/autocomplete.ex#L507
-  vim.fn.jobstart(elixir_pa_flags(opts, { "-e", ":application.get_key(:elixir, :modules) |> inspect(limit: :infinity) |> IO.puts" }), {
+  -- 
+  -- vim.fn.jobstart({"elixir", "-e", [[
+  --   defmodule Mods do
+  --     def get_modules(path) do
+  --       File.ls!(path)
+  --       |> Enum.flat_map(fn m_str ->
+  --         Code.append_path("#{path}/#{m_str}/ebin");
+  --         Application.load(String.to_atom(m_str));
+  --         Application.spec(String.to_atom(m_str)) |> Keyword.get(:modules)
+  --       end)
+  --       |> Enum.filter(fn m -> String.match?(Atom.to_string(m), ~r/[A-Z]/) end)
+  --     end
+  --   end
+  --   all_modules = MapSet.union(
+  --      MapSet.union(
+  --        MapSet.new(elem(:application.get_key(:elixir, :modules), 1)),
+  --        MapSet.new(Mods.get_modules('./_build/test/lib'))),
+  --        MapSet.new(Mods.get_modules('./_build/dev/lib')))
+  --   require IEx.Helpers;
+  --   all_modules |> Enum.each(fn mod -> IO.puts("BEHAVIORS #{mod}"); IEx.Helpers.b(Macro.escape(mod)); IO.puts("EXPORTS"); IEx.Helpers.exports(mod) end)
+  -- ]]}, {
+  vim.fn.jobstart({"elixir", "-e", [[
+    defmodule Mods do
+      def get_modules(path) do
+        File.ls!(path)
+        |> Enum.flat_map(fn m_str ->
+          Code.append_path("#{path}/#{m_str}/ebin");
+          Application.load(String.to_atom(m_str));
+          Application.spec(String.to_atom(m_str)) |> Keyword.get(:modules)
+        end)
+        |> Enum.filter(fn m -> String.match?(Atom.to_string(m), ~r/[A-Z]/) end)
+      end
+    end
+    all_modules = MapSet.union(
+       MapSet.union(
+         MapSet.new(elem(:application.get_key(:elixir, :modules), 1) |> Enum.filter(fn m -> String.match?(Atom.to_string(m), ~r/[A-Z]/) end)),
+         MapSet.new(Mods.get_modules('./_build/test/lib'))),
+         MapSet.new(Mods.get_modules('./_build/dev/lib')))
+    require IEx.Helpers;
+    all_modules |> Enum.each(fn mod ->
+      IO.puts("BEHAVIORS #{mod}")
+      IEx.Helpers.b(Macro.escape(mod))
+      IO.puts("EXPORTS")
+        IO.inspect(mod.__info__(:macros))
+        IO.inspect(mod.__info__(:functions))
+    end)
+  ]]}, {
+  -- vim.fn.jobstart(elixir_pa_flags{"elixir", "-e", [[
+  --   defmodule Mods do
+  --     def get_modules(path) do
+  --       File.ls!(path)
+  --       |> Enum.flat_map(fn m_str ->
+  --         Code.append_path("#{path}/#{m_str}/ebin");
+  --         Application.load(String.to_atom(m_str));
+  --         Application.spec(String.to_atom(m_str)) |> Keyword.get(:modules)
+  --       end)
+  --       |> Enum.filter(fn m -> String.match?(Atom.to_string(m), ~r/[A-Z]/) end)
+  --     end
+  --   end
+  --   all_modules = MapSet.union(
+  --      MapSet.union(
+  --        MapSet.new(elem(:application.get_key(:elixir, :modules), 1)),
+  --        MapSet.new(Mods.get_modules('./_build/test/lib'))),
+  --        MapSet.new(Mods.get_modules('./_build/dev/lib')))
+  --   require IEx.Helpers;
+  --   all_modules |> Enum.each(fn mod -> IO.puts("BEHAVIORS #{mod}"); IEx.Helpers.b(Macro.escape(mod)); IO.puts("EXPORTS"); IEx.Helpers.exports(mod) end)
+  -- ]]}, {
+  -- vim.fn.jobstart(elixir_pa_flags(opts, { "-e", "require IEx.Helpers; :application.get_key(:elixir, :modules) |> elem(1) |> Enum.filter(fn m -> String.match?(\"#{m}\", ~r/^[A-Z]/) end) |> Enum.each(fn m -> IO.inspect(m); IEx.Helpers.b(m) end) |> inspect(limit: :infinity) |> IO.puts" }), {
+  -- vim.fn.jobstart(elixir_pa_flags(opts, { "-e", "require IEx.Helpers; :application.get_key(:elixir, :modules) |> elem(1) |> Enum.filter(fn m -> String.match?(\"#{m}\", ~r/^[A-Z]/) end) |> Enum.each(fn m -> IO.inspect(m) end) |> inspect(limit: :infinity) |> IO.puts" }), {
     cwd='.',
     stdout_buffered = true,
     on_stdout = vim.schedule_wrap(function(j, output)
-      for mod in string.gmatch(output[1], "([^,%s%[%]]+)") do
-        if mod:match("^[A-Z]") then
-          table.insert(modules, mod)
+      print("on_stdout" .. timestamp())
+      local cur_module = nil
+      local cur_block = {}
+      local cur_line = 1
+      print("output is " .. #output)
+      while cur_line < #output do
+        -- first read behaviors
+        _, _, cur_module = string.find(output[cur_line], "^BEHAVIORS (.+)")
+        if cur_module == nil then
+          error("line " .. cur_line .. ": Expected BEHAVIORS line, got " .. output[cur_line])
+        end
+        cur_line = cur_line + 1
+        local behaviors_block = {}
+        while output[cur_line] ~= "EXPORTS" do
+          table.insert(behaviors_block, output[cur_line])
+          cur_line = cur_line + 1
+        end
+        cur_line = cur_line + 1
+        local exports_block = {}
+        while cur_line < #output and string.sub(output[cur_line], 1, #"BEHAVIORS ") ~= "BEHAVIORS " do
+          table.insert(exports_block, output[cur_line])
+          cur_line = cur_line + 1
+        end
+
+        for _, line in ipairs(exports_block) do
+          for export in string.gmatch(line, "([^%s]+)") do
+            table.insert(exports, cur_module .. "." .. export)
+          end
         end
       end
     end),
     on_exit = vim.schedule_wrap(function(j, output)
-      table.sort(modules)
-      vim.ui.select(modules, {prompt="Pick the module to view:"}, function(choice) 
+      print("on_exit" .. timestamp())
+      table.sort(exports)
+      vim.ui.select(exports, {prompt="Pick the module to view:"}, function(choice) 
         if choice then
           elixir_view_module_docs(choice, opts)
         end
@@ -124,7 +231,7 @@ end
 function _G.elixir_view_module_docs(mod, opts)
   exports = {mod}
   -- https://stackoverflow.com/questions/52670918
-  vim.fn.jobstart(elixir_pa_flags(opts, { "-e", "require IEx.Helpers; IEx.Helpers.exports(" .. mod .. ")" }), {
+  vim.fn.jobstart(elixir_pa_flags(opts, { "-e", "IO.inspect(Code.loaded_files()) ; require IEx.Helpers; IEx.Helpers.exports(" .. mod .. ")" }), {
     cwd='.',
     stdout_buffered = true,
     on_stdout = vim.schedule_wrap(function(j, output)

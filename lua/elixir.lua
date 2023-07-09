@@ -1,5 +1,6 @@
-function _G.get_extra_mix_folders(opts)
-  extra_mix_folders = {"core"}
+function _G.get_extra_mix_folders(opts, cb)
+  extra_mix_folders = {}
+  extra_mix_folders["core"] = ""
 
   -- if opts and opts.include_mix_libs then
     -- in theory I should load modules through -S mix but.. i couldn't make it work
@@ -11,21 +12,42 @@ function _G.get_extra_mix_folders(opts)
       local name, type = vim.loop.fs_scandir_next(sd)
       if name == nil then break end
       processed_libs[name] = true
-      table.insert(extra_mix_folders, name)
+      extra_mix_folders[name] = base_path .. name .. "/ebin"
     end
 
-    local base_path = './_build/test/lib/'
-    local sd = vim.loop.fs_scandir(base_path)
+    base_path = './_build/test/lib/'
+    sd = vim.loop.fs_scandir(base_path)
     while sd ~= nil and true do
       local name, type = vim.loop.fs_scandir_next(sd)
       if name == nil then break end
       if not processed_libs[name] then
-        table.insert(extra_mix_folders, name)
+        extra_mix_folders[name] = base_path .. name .. "/ebin"
       end
     end
   -- end
 
-  return extra_mix_folders
+  vim.fn.jobstart({"elixir", "-e", [[
+    :code.get_path()
+      |> Enum.filter(fn p -> String.contains?(inspect(p), "elixir") end)
+      |> IO.inspect()
+  ]]}, {
+    cwd='.',
+    stdout_buffered = true,
+    on_stdout = vim.schedule_wrap(function(j, output)
+      for mod in string.gmatch(table.concat(output), "'([^,%s%[%]]+)'") do
+        print(mod)
+        local _, _, name = mod:find("/([^/]*)/ebin$")
+        print(name)
+        extra_mix_folders[name] = mod
+      end
+    end),
+    on_exit = vim.schedule_wrap(function(j, output)
+      print("O>" .. vim.inspect(j))
+      table.sort(extra_mix_folders)
+      print(vim.inspect(extra_mix_folders))
+      cb(extra_mix_folders)
+    end),
+  })
 end
 
 function _G.elixir_pa_flags(opts, flags)
@@ -231,27 +253,27 @@ function _G.elixir_view_docs_with_runtime_folders(runtime_module_folders, opts)
     --   end)
     -- end)
   -- })
-      vim.ui.select(get_extra_mix_folders(), {prompt="Pick the lib to view:"}, function(choice) 
-        if choice then
-          elixir_view_library_docs(choice, opts)
-        end
-      end)
+  get_extra_mix_folders({}, function(folders)
+    vim.ui.select(vim.tbl_keys(folders), {prompt="Pick the lib to view:"}, function(choice) 
+      if choice then
+        elixir_view_library_docs(folders, choice, opts)
+      end
+    end)
+  end)
 end
 
-function _G.elixir_view_library_docs(lib, opts)
+function _G.elixir_view_library_docs(folders, lib, opts)
   exports = {mod}
   -- https://stackoverflow.com/questions/52670918
-  local lib_path = './_build/dev/lib/'
-  if vim.fn.isdirectory(lib_path .. lib) ~= 1 then
-    lib_path = './_build/test/lib/'
-  end
+  local lib_path = folders[lib]
+  print("lib_path => " .. lib_path)
 
     -- all_modules = MapSet.union(
     --    MapSet.union(
     --      MapSet.new(elem(:application.get_key(:elixir, :modules), 1)),
     --      MapSet.new(Mods.get_modules('./_build/test/lib'))),
     --      MapSet.new(Mods.get_modules('./_build/dev/lib')))
-  vim.fn.jobstart({"elixir", "-pa", lib_path .. lib .. "/ebin", "-e", string.gsub([[
+  vim.fn.jobstart({"elixir", "-pa", lib_path, "-e", string.gsub([[
     mods = if :>lib< == :core do
       elem(:application.get_key(:elixir, :modules), 1)
     else
@@ -410,9 +432,13 @@ function _G.telescope_view_module_docs(lib_path, lib, exports, opts)
           command = "b"
         end
         -- https://stackoverflow.com/a/52706650/516188
-        local base_cmd = {"elixir", "-pa", lib_path .. lib .. "/ebin",
-          "-e", "'Application.load(:" .. lib .. "); Application.put_env(:iex, :colors, [enabled: true]); require IEx.Helpers; IEx.Helpers." .. command .. "(" .. export .. ")'"
-        }
+        local base_cmd = {"elixir"}
+        if #lib_path > 0 then
+          table.insert(base_cmd, "-pa")
+          table.insert(base_cmd, lib_path)
+        end
+        table.insert(base_cmd, "-e")
+        table.insert(base_cmd, "'Application.load(:" .. lib .. "); Application.put_env(:iex, :colors, [enabled: true]); require IEx.Helpers; IEx.Helpers." .. command .. "(" .. export .. ")'")
         return {"sh", "-c", table.concat(base_cmd, " ") .. " | less -RS +0 --tilde"}
       end
     }),

@@ -427,6 +427,10 @@ function _G.telescope_view_module_docs(lib_path, lib, exports, opts)
       results = exports,
       entry_maker = entry_maker,
     },
+    tiebreak = function()
+      -- respect the original sorting in case of same score
+      return false
+    end,
     previewer = previewers.new_termopen_previewer({
       get_command = function(entry, status)
         export = entry.contents
@@ -458,17 +462,19 @@ function _G.telescope_view_module_docs(lib_path, lib, exports, opts)
     -- sorter = Sorter:new {
     --   scoring_function = function(_, prompt, line, entry, cb_add, cb_filter)
     --     local base_score = fuzzy_sorter:scoring_function(prompt, line, cb_add, cb_filter)
-
-    --     if base_score == FILTERED then
-    --       return FILTERED
+    --     if base_score == -1 then
+    --       print(vim.inspect(entry) .. " -> " .. base_score)
+    --       return -1
     --     end
+    --     return entry.index
 
-    --     if not base_score or base_score == 0 then
-    --       print("keepig " .. line .. " => " .. base_score)
-    --       return entry.index
-    --     else
-    --       return FILTERED
-    --     end
+
+    --     -- if not base_score or base_score == 0 then
+    --     --   print("keepig " .. line .. " => " .. base_score)
+    --     --   return entry.index
+    --     -- else
+    --     --   return FILTERED
+    --     -- end
     --   end,
     --   highlighter = fuzzy_sorter.highlighter,
     -- },

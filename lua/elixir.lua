@@ -549,7 +549,7 @@ function _G.elixir_mark_multiple_clause_fns()
   local sign_id = 3094
   if vim.b.signs_count then
     for i=0,vim.b.signs_count,1 do
-      vim.cmd("sign unplace " .. sign_id .. " file=" .. fname)
+      vim.cmd("sign unplace " .. sign_id)
     end
   end
   local signs_count = 0
@@ -564,13 +564,13 @@ function _G.elixir_mark_multiple_clause_fns()
       local line = vim.treesitter.get_node_range(match.name.node)+1
       if cur_fname ~= fn_name then
         -- first for this function
-        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseStart file=" .. fname .. "'")
+        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseStart'")
         count_for_fn = 1
       elseif count_for_fn + 1 == multi_clause_counts[key] then
         -- last for this function
-        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseEnd file=" .. fname .. "'")
+        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clauseEnd'")
       else
-        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clause file=" .. fname .. "'")
+        vim.cmd("exe ':sign place " .. sign_id .. " line=" .. line .. " name=clause'")
         count_for_fn = count_for_fn + 1
       end
       cur_fname = fn_name

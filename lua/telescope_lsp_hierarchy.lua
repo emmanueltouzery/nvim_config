@@ -84,7 +84,7 @@ end
 function _G.print_hierarchy(item, depth, res)
   local prefix = string.rep(" ", depth)
   if depth > 0 then
-    prefix = prefix ..  "﬌ "
+    prefix = prefix ..  "󰘍 "
   end
   for _, nested_h in pairs(item.nested_hierarchy) do
     print_hierarchy(nested_h, depth + 1, res)

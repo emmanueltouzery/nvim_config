@@ -495,7 +495,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
-  use {'stevearc/aerial.nvim', commit="a6b86fd357f184ad9f146245f8d34c9df0f424fa", config = function()
+  use {'stevearc/aerial.nvim', commit="fb1f08c9f90e8b0c04b2f2c5d95d06288a14c5b2", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
@@ -514,8 +514,8 @@ callbacks = {
       },
       filter_kind = false,
       icons = {
-        Field       = " פּ ",
-        Type        = " ",
+        Field       = " 󰙅 ",
+        Type        = "󰊄 ",
       },
       k = 2,
       post_parse_symbol = function(bufnr, item, ctx)
@@ -572,7 +572,7 @@ callbacks = {
   end}
   use {
     'nvim-tree/nvim-tree.lua', commit='c446527056e92a57b51e2f79be47c28ba8ed43e4',
-    requires = { 'kyazdani42/nvim-web-devicons', commit='b34362b20a4942b3245f958e73ebe1b09b020ad1' },
+    requires = { 'nvim-tree/nvim-web-devicons', commit='9ab9b0b894b2388a9dbcdee5f00ce72e25d85bf9' },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
   }
@@ -628,8 +628,8 @@ callbacks = {
     dashboard.section.buttons.val = {
       dashboard.button( "e", "  New file" , ":ene <BAR> startinsert <CR>"),
       dashboard.button( "p", "  Open project" , _G.telescope_project_command),
-      dashboard.button( "b", "  Open file browser" , "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>"), -- alt icon: פּ
-      dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
+      dashboard.button( "b", "  Open file browser" , "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>"), -- alt icon: 󰙅
+      dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
     }
     dashboard.config.opts.noautocmd = true
     alpha.setup(dashboard.config)
@@ -843,7 +843,9 @@ require('nvim-treesitter.configs').setup {
 
 -- guifont = "JetBrains Mono Nerd Font"
 -- or 10.9 or 11
-vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h10.6"
+-- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h10.6"
+-- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h9.8"
+vim.opt.guifont = "JetBrainsMonoNL Nerd Font:h9.8"
 -- the stl is related to https://vi.stackexchange.com/a/34849/38754
 -- workaround for carets in the statusline
 vim.opt.fillchars = vim.opt.fillchars + 'diff:╱,stl: '

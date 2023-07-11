@@ -1,14 +1,14 @@
 local function winnr()
   local nr = vim.fn.winnr()
-  if nr == 1 then return ''
-  elseif nr == 2 then return ''
-  elseif nr == 3 then return ''
-  elseif nr == 4 then return ''
-  elseif nr == 5 then return ''
-  elseif nr == 6 then return ''
-  elseif nr == 7 then return ''
-  elseif nr == 8 then return ''
-  elseif nr == 9 then return ''
+  if nr == 1 then return '󰎦'
+  elseif nr == 2 then return '󰎩'
+  elseif nr == 3 then return '󰎬'
+  elseif nr == 4 then return '󰎮'
+  elseif nr == 5 then return '󰎰'
+  elseif nr == 6 then return '󰎵'
+  elseif nr == 7 then return '󰎸'
+  elseif nr == 8 then return '󰎻'
+  elseif nr == 9 then return '󰎾'
   else return ''
   end
 end
@@ -95,7 +95,7 @@ local function qf_errors()
     end
   end
   if err_count > 0 then
-    return "綠" .. err_count
+    return "󰐾" .. err_count
   end
   return ''
 end

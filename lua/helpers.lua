@@ -453,8 +453,8 @@ function _G.add_global_mark()
   print("All marks are used up!")
 end
 
-CONFLICT_ICON = '' -- semantically 罹 was a better option, but it's smaller
-DELETED_ICON = 'ﰸ'
+CONFLICT_ICON = '' -- semantically 󰓧 was a better option, but it's smaller
+DELETED_ICON = '󰜺'
 
 function _G.handleFileChanged()
   -- position the popup bottom-right of the window

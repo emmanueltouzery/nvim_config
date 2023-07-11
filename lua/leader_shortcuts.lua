@@ -383,7 +383,15 @@ vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin
 
 require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
 vim.keymap.set("n", "<leader>gho", '<cmd>lua telescope_git_list_stashes{}<CR>', {desc="list git stashes"})
-vim.keymap.set("n", "<leader>ghh", '<cmd>lua run_command("git", {"stash", "-u"}, reload_all)<CR>', {desc="git stash"})
+
+function _G.git_do_stash()
+  vim.ui.input({prompt="Enter a name for the stash: ", kind="center_win"}, function(input)
+    if input ~= nil then
+      run_command("git", {"stash", "push", "-m", input, "-u"}, reload_all)
+    end
+  end)
+end
+vim.keymap.set("n", "<leader>ghh", '<cmd>lua git_do_stash()<CR>', {desc="git stash"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})

@@ -95,7 +95,7 @@ local function qf_errors()
     end
   end
   if err_count > 0 then
-    return "󰐾" .. err_count
+    return "󰐾 " .. err_count
   end
   return ''
 end

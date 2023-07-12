@@ -845,7 +845,7 @@ require('nvim-treesitter.configs').setup {
 -- or 10.9 or 11
 -- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h10.6"
 -- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h9.8"
-vim.opt.guifont = "JetBrainsMonoNL Nerd Font:h9.8"
+vim.opt.guifont = "JetBrainsMono Nerd Font:h9.8"
 -- the stl is related to https://vi.stackexchange.com/a/34849/38754
 -- workaround for carets in the statusline
 vim.opt.fillchars = vim.opt.fillchars + 'diff:╱,stl: '

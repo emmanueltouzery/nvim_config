@@ -110,7 +110,7 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope-file-browser.nvim', commit='ea7905ed9b13bcf50e0ba4f3bff13330028d298c', config=function()
     require("telescope").load_extension "file_browser"
   end}
-  use { 'nvim-lualine/lualine.nvim', commit='a52f078026b27694d2290e34efa61a6e4a690621'}
+  use { 'nvim-lualine/lualine.nvim', commit='05d78e9fd0cdfb4545974a5aa14b1be95a86e9c9'}
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit='f98c85e7c3d65a51f45863a34feb4849c82f240f', config = function()
     require("gitsigns").setup {}
   end}

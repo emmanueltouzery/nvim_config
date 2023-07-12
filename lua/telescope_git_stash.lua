@@ -10,18 +10,21 @@ function telescope_stash_mappings(prompt_bufnr, map)
   end)
   map('i', '<C-Del>', function(nr)
     stash_key = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    actions.close(prompt_bufnr)
-    local Job = require'plenary.job'
-    Job:new({
-      command = 'git',
-      args = { 'stash', 'drop', stash_key },
-      on_exit = function(j, return_val)
-        print(vim.inspect(j:result()))
-      end,
-    }):sync()
+    local action_state = require "telescope.actions.state"
+    local current_picker = action_state.get_current_picker(prompt_bufnr)
+    current_picker:delete_selection(function()
+      local Job = require'plenary.job'
+      Job:new({
+        command = 'git',
+        args = { 'stash', 'drop', stash_key },
+        -- on_exit = function(j, return_val)
+        --   print(vim.inspect(j:result()))
+        -- end,
+      }):sync()
+    end)
   end)
   actions.select_default:replace(function(prompt_bufnr)
-    -- copy-pasted from telescope actions.git_apply_stash + added the reload_all()
+    -- copy-pasted from telescope actions.git_apply_stash + added the reload_all() and changed apply to pop
     local action_state = require "telescope.actions.state"
     local actions = require("telescope.actions")
     local utils = require "telescope.utils"
@@ -32,13 +35,13 @@ function telescope_stash_mappings(prompt_bufnr, map)
       return
     end
     actions.close(prompt_bufnr)
-    local _, ret, stderr = utils.get_os_command_output { "git", "stash", "apply", "--index", selection.value }
+    local _, ret, stderr = utils.get_os_command_output { "git", "stash", "pop", "--index", selection.value }
     if ret == 0 then
       reload_all()
-      utils.notify("actions.git_apply_stash", {
-        msg = string.format("applied: '%s' ", selection.value),
-        level = "INFO",
-      })
+      -- utils.notify("actions.git_apply_stash", {
+      --   msg = string.format("applied: '%s' ", selection.value),
+      --   level = "INFO",
+      -- })
     else
       utils.notify("actions.git_apply_stash", {
         msg = string.format("Error when applying: %s. Git returned: '%s'", selection.value, table.concat(stderr, " ")),

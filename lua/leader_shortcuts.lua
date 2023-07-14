@@ -142,6 +142,7 @@ function _G.telescope_center_mappings(prompt_bufnr, map)
   map('i', '<Cr>',  actions.select_default + actions.center)
   return true
 end
+vim.keymap.set("n", "<leader>ssp", "<cmd>lua require('aerial').prev_up()<cr>", { desc = "Goto parent symbol"})
 vim.keymap.set("n", "<leader>ssf", "<cmd>lua require('telescope').extensions.aerial.aerial({get_entry_text=aerial_elixir_get_entry_text,displayer=aerial_displayer,attach_mappings=telescope_center_mappings})<cr>", { desc = "Goto file LSP symbol"})
 vim.keymap.set( "n", "<leader>ssw", "<cmd>Telescope lsp_workspace_symbols<CR>", {desc="Goto workspace LSP symbol"})
 function filter_lsp_workspace_symbols()

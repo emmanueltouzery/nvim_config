@@ -519,13 +519,15 @@ callbacks = {
       },
       k = 2,
       post_parse_symbol = function(bufnr, item, ctx)
-        if ctx.backend_name == "treesitter" and ctx.lang == "typescript" then
+        if ctx.backend_name == "treesitter" and (ctx.lang == "typescript" or ctx.lang == "tsx") then
           local utils = require"nvim-treesitter.utils"
           local value_node = (utils.get_at_path(ctx.match, "var_type") or {}).node
           -- don't want to display in-function items
           local cur_parent = value_node and value_node:parent()
           while cur_parent do
-            if cur_parent:type() == "arrow_function" or cur_parent:type() == "function_declaration" then
+            if cur_parent:type() == "arrow_function" 
+              or cur_parent:type() == "function_declaration"
+              or cur_parent:type() == "method_definition" then
               return false
             end
             cur_parent = cur_parent:parent()

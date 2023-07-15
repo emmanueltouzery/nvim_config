@@ -233,7 +233,7 @@ require('packer').startup(function(use)
     end
   }
   use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
-  use {'emmanueltouzery/agitator.nvim', commit='08269e13'}
+  use {'emmanueltouzery/agitator.nvim', commit='eb20ad5cf1fe0fb6c25f0c14eeb3fc5e8c259982'}
   use {'nvim-telescope/telescope-project.nvim', commit='8cd22b696e14b353fe8ea9648a03364cb56c39d4'}
   -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
   -- drop s and S due to lightspeed

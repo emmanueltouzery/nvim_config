@@ -1117,7 +1117,7 @@ function _G.display_lsp_references()
   -- name or function pointer instead of being directly called.
   if lsp_check_capabilities('callHierarchyProvider', 0) then
     local by_lsp = vim.lsp.buf_request(0, 'textDocument/prepareCallHierarchy', vim.lsp.util.make_position_params(), function(err, result)
-      if #result >= 1 then
+      if result ~= nil and #result >= 1 then
         local call_hierarchy_item = result[1]
         vim.lsp.buf_request(0, 'callHierarchy/incomingCalls', { item = call_hierarchy_item }, function(err, result, ctx, config)
           if #result > 0 then

@@ -432,6 +432,7 @@ vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {des
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path", silent=true})
 
 require 'key-menu'.set('n', '<Space>cC', {desc='Code Conflicts'})
+vim.keymap.set('n', '<leader>cCb', ":lua diffview_conflict_view_commit('base')<cr>", {desc="conflict show BASE commit", silent=true})
 vim.keymap.set('n', '<leader>cCo', ":lua diffview_conflict_view_commit('ours')<cr>", {desc="conflict show OURS commit", silent=true})
 vim.keymap.set('n', '<leader>cCt', ":lua diffview_conflict_view_commit('theirs')<cr>", {desc="conflict show THEIRS commit", silent=true})
 

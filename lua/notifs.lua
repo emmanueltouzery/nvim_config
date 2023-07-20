@@ -3,6 +3,22 @@
 
 local Str = require'plenary.strings'
 
+local aug = vim.api.nvim_create_augroup("Notifs", {})
+vim.api.nvim_create_autocmd("FocusGained", {
+  desc = "Track editor focus for notifs",
+  group = aug,
+  callback = function()
+    vim.g.notifs_focused = true
+  end,
+})
+vim.api.nvim_create_autocmd("FocusLost", {
+  desc = "Track editor focus for notifs",
+  group = aug,
+  callback = function()
+    vim.g.notifs_focused = false
+  end,
+})
+
 vim.cmd [[
 hi def NotifInfo guifg=#528aa8
 hi def NotifWarning guifg=#fff454
@@ -49,6 +65,11 @@ function _G.notif_format_msg(msg)
 end
 
 function _G.notif(msg, level, opts)
+  if not vim.g.notifs_focused then
+    local system_notif_msg = {unpack(msg)}
+    local title = table.remove(system_notif_msg, 1)
+    vim.fn.jobstart({"notify-send", title, table.concat(system_notif_msg, "\n"), "--icon=dialog-information"})
+  end
   local popup_buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")

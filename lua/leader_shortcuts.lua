@@ -359,6 +359,10 @@ function telescope_branches_mappings(prompt_bufnr, map)
     actions.close(prompt_bufnr)
     vim.cmd('DiffviewFileHistory ' .. cur_file_project_root() .. " --range=" .. branch)
   end)
+  map('i', '<C-g>', function(nr) -- copy branch name
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    copy_to_clipboard(branch)
+  end)
   return true
 end
 -- vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commits{attach_mappings=telescope_commits_mappings}<CR>", {desc ="Browse git commits"})

@@ -158,6 +158,8 @@ function ws_symbol_under_cursor()
   filter_lsp_symbols(word)
 end
 vim.keymap.set( "n", "<leader>s*", "<cmd>lua ws_symbol_under_cursor()<CR>", {desc="Goto workspace symbol under cursor"})
+require 'key-menu'.set('n', '<Space>sc', {desc='Search code'})
+vim.keymap.set( "n", "<leader>scd", "<cmd>lua search_code_deps()<CR>", {desc="Search code deps"})
 
 -- WINDOW
 require 'key-menu'.set('n', '<Space>w', {desc='Window'})

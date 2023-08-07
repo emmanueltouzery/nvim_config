@@ -1139,3 +1139,11 @@ end
 function _G.reload_all()
   vim.cmd("checktime")
 end
+
+function _G.search_code_deps()
+  if vim.fn.isdirectory("node_modules") then
+    require('telescope').extensions.live_grep_raw.live_grep_raw({cwd="node_modules"})
+  else
+    vim.cmd[[echohl ErrorMsg | echo "Not handled for this project type" | echohl None]]
+  end
+end

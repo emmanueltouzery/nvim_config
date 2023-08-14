@@ -101,6 +101,7 @@ cmp.setup {
     { name = "path" },
     { name = "buffer" },
     { name = 'nvim_lsp_signature_help' },
+    { name = 'emoji', max_item_count = 3 },
   },
   formatting = {
     format = function(entry, item)

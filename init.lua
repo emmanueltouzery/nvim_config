@@ -159,6 +159,7 @@ require('packer').startup(function(use)
   use {'hrsh7th/cmp-nvim-lsp', commit='0e6b2ed705ddcff9738ec4ea838141654f12eeef'}
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
   use { "hrsh7th/cmp-path", commit = "91ff86cd9c29299a64f968ebb45846c485725f23" }
+  use { "hrsh7th/cmp-emoji", commit = "19075c36d5820253d32e2478b6aaf3734aeaafa0" }
   -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
   use {'saadparwaiz1/cmp_luasnip', commit = '18095520391186d634a0045dacaa346291096566'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
@@ -850,7 +851,7 @@ require('nvim-treesitter.configs').setup {
 -- or 10.9 or 11
 -- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h10.6"
 -- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h9.8"
-vim.opt.guifont = "JetBrainsMono Nerd Font:h9.8"
+vim.opt.guifont = "JetBrainsMono Nerd Font,Noto Color Emoji:h9.8"
 -- the stl is related to https://vi.stackexchange.com/a/34849/38754
 -- workaround for carets in the statusline
 vim.opt.fillchars = vim.opt.fillchars + 'diff:╱,stl: '

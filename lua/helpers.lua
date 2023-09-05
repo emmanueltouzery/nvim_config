@@ -1112,6 +1112,7 @@ end
 
 function _G.reload_all()
   vim.cmd("checktime")
+  vim.cmd("Gitsigns refresh")
 end
 
 function _G.search_code_deps()

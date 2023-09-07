@@ -978,6 +978,7 @@ vim.cmd("set listchars=tab:→\\ ,trail:·,nbsp:␣")
 vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
+vim.cmd('autocmd BufNewFile,BufRead *.service set syntax=systemd')
 
 -- syntax highlight for fennel files
 vim.cmd('autocmd BufNewFile,BufRead *.fnl set ft=lisp')

@@ -112,7 +112,12 @@ require('packer').startup(function(use)
   end}
   use { 'nvim-lualine/lualine.nvim', commit='05d78e9fd0cdfb4545974a5aa14b1be95a86e9c9'}
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, commit='fef5d90953f0a730483b44745fae5938ba8227f8', config = function()
-    require("gitsigns").setup {}
+    require("gitsigns").setup {
+      signs = {
+        untracked = { text = '⡂' },
+      },
+    }
+    vim.cmd[[highlight GitSignsUntracked guibg=#171717]]
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use {'nvim-treesitter/nvim-treesitter', commit='103ecdf7585f90cad16659fb5dd957b6fdfda864', config=function()

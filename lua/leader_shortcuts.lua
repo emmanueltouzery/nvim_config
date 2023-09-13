@@ -218,6 +218,7 @@ vim.keymap.set("n", "<leader>oe", "<cmd>NvimTreeFocus<CR>", {desc="Open file exp
 vim.keymap.set("n", "<leader>ot", "<cmd>lua telescope_modified_git_projects()<CR>", {desc="Open touched projects"})
 vim.keymap.set("n", "<leader>ou", "<cmd>lua require('telescope').extensions.undo.undo()<CR>", {desc="Open undo history"})
 vim.keymap.set("n", "<leader>os", "<cmd>AerialOpen<CR>", {desc = "Open symbols"})
+vim.keymap.set("n", "<leader>od", "<cmd>DevdocsOpen<CR>", {desc = "Open devdocs"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

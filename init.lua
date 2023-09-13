@@ -773,6 +773,28 @@ rt.setup(opts)
   use {'stevearc/stickybuf.nvim', commit='aa5d300198aef3f46fd3da90908c5afbf917ef99', config=function()
     require("stickybuf").setup()
   end}
+  use {"luckasRanarison/nvim-devdocs", 
+    commit = '981788048f38fd519894eb9d0449fe0571ca5980',
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config=function()
+      require("nvim-devdocs").setup({
+        float_win = { -- passed to nvim_open_win(), see :h api-floatwin
+          relative = "editor",
+          height = 45,
+          width = 90,
+          border = "rounded",
+        },
+        previewer_cmd = 'glow',
+        cmd_args = { "-s", "dark", "-w", "80" },
+        picker_cmd = 'glow',
+        picker_cmd_args = { "-s", "dark", "-w", "80", "-p" },
+        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "gtk-4.0" },
+      })
+    end}
 end)
 
 --Set highlight on search

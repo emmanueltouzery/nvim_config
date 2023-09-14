@@ -792,7 +792,7 @@ rt.setup(opts)
         cmd_args = { "-s", "dark", "-w", "80" },
         picker_cmd = 'glow',
         picker_cmd_args = { "-s", "dark", "-w", "80", "-p" },
-        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "gtk-4.0" },
+        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "gtk-4.0", "openjdk-8" },
       })
     end}
 end)

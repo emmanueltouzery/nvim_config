@@ -68,7 +68,7 @@ vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="op
 vim.keymap.set('n', '<leader>f!', ":lua reload_all()<cr>", {desc = "Reload all files from disk"})
 
 function _G.quick_set_ft()
-  local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html", "config", "sql", "other"}
+  local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html", "config", "sql", "strace", "other"}
   vim.ui.select(filetypes, {prompt="Pick filetype to switch to"}, function(choice)
     if choice == "other" then
       vim.ui.input({prompt="Enter filetype", kind="center_win"}, function(word)

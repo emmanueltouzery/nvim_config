@@ -215,7 +215,7 @@ require('packer').startup(function(use)
               -- cc should commit from diffview same as from neogit
               vim.cmd('DiffviewClose')
               vim.cmd('Neogit')
-              vim.fn.feedkeys('c')
+              require'neogit'.open({ "commit" })
             end,
             ["šx"] = actions.prev_conflict,
             ["đx"] = actions.next_conflict,
@@ -566,7 +566,7 @@ callbacks = {
     })
     require('telescope').load_extension('aerial')
   end}
-  use {'TimUntersberger/neogit', commit='74c9e29b61780345d3ad9d7a4a4437607caead4a', config = function()
+  use {'TimUntersberger/neogit', commit='9d9355137b1e2503a47fedfc395e75a8330163e8', config = function()
     require('neogit') .setup {
       -- disable_context_highlighting = true,
       signs = {

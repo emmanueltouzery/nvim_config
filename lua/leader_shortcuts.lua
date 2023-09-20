@@ -175,6 +175,9 @@ vim.keymap.set("n", "<leader>wq", "<cmd>lua win_bring_qf_here()<cr>", {desc="Bri
 -- workaround for.. sometimes this gets enabled. might be me hitting the wrong shortcut, or a neovim/plugin bug
 vim.keymap.set("n", "<leader>wS", "<cmd>windo set nocursorbind | windo set noscrollbind<cr>", {desc="Disable cursor bind & scroll lock"})
 
+require 'key-menu'.set('n', '<Space>wf', {desc='Window diFF'})
+vim.keymap.set("n", "<leader>wfj", "<cmd>lua window_diff_json()<cr>", {desc="window diff JSON"})
+
 -- PACKAGES
 require 'key-menu'.set('n', '<Space>p', {desc='Packages'})
 vim.keymap.set("n", "<leader>pp", "<cmd>PackerSync<cr>", { desc = "Packer sync"})

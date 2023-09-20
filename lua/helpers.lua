@@ -1122,3 +1122,56 @@ function _G.search_code_deps()
     vim.cmd[[echohl ErrorMsg | echo "Not handled for this project type" | echohl None]]
   end
 end
+
+-- using https://github.com/josephburnett/jd
+function _G.window_diff_json()
+  local wins = vim.api.nvim_list_wins()
+  if #wins ~= 2 then
+    vim.cmd[[echohl ErrorMsg | echo "JSON diff only possible with two windows" | echohl None]]
+    return
+  end
+  local on_disk = nil
+  local other = nil
+  for _, w in pairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    local buf_name = vim.api.nvim_buf_get_name(buf) 
+    local is_saved = buf_name ~= nil and vim.fn.filereadable(buf_name) == 1 and not vim.api.nvim_buf_get_option(buf, 'modified')
+    if is_saved and on_disk == nil then
+      on_disk = buf_name
+    else
+      other = buf
+    end
+  end
+  if on_disk == nil then
+    vim.cmd[[echohl ErrorMsg | echo "JSON diff only possible with at least one file on disk and unmodified" | echohl None]]
+    return
+  end
+  local output_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(output_buf, "ft", "diff")
+
+  local width = vim.api.nvim_get_option("columns")
+  local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
+
+  local jobid = vim.fn.jobstart("jd " .. on_disk, {
+    on_stdout = vim.schedule_wrap(function(j, output)
+      vim.api.nvim_buf_set_lines(output_buf, -1, -1, true, output)
+    end),
+    on_exit = vim.schedule_wrap(function(j, output)
+      vim.api.nvim_buf_set_option(output_buf, 'modifiable', false)
+      vim.api.nvim_buf_set_option(output_buf, "readonly", true)
+      vim.api.nvim_open_win(output_buf, true, {
+        row = (height - 50) / 2,
+        col = (width - 120) / 2,
+        width = 120,
+        height = 50,
+        relative = "editor",
+        style = "minimal",
+        border = "rounded",
+        title = "JSON diff",
+        title_pos = "center"
+      })
+    end)
+  })
+  vim.fn.chansend(jobid, vim.api.nvim_buf_get_lines(other, 0, -1, false))
+  vim.fn.chanclose(jobid, 'stdin')
+end

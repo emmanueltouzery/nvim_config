@@ -467,7 +467,9 @@ callbacks = {
       }
 
       -- lspconfig.rust_analyzer.setup {}
-      lspconfig.elixirls.setup {}
+      lspconfig.elixirls.setup {
+        cmd = { "elixir-ls" }; -- for some reason I must specify the command. I think I shouldn't have to, due to mason
+      }
       lspconfig.bashls.setup {}
       lspconfig.jsonls.setup {
         -- use null-ls & prettier for json indentation

@@ -412,11 +412,11 @@ callbacks = {
   end}
   use {
     "williamboman/mason.nvim",
-    commit = "bf170f8379a3eaeed662f2c8e42dced96e78f429",
+    commit = "d66c60e17dd6fd8165194b1d14d21f7eb2c1697a",
   }
   use {
     "williamboman/mason-lspconfig.nvim",
-    commit = "a910b4d50f7a32d2f9057d636418a16843094b7c",
+    commit = "2451adb9bdb0fd32140bf3aa8dbc17ff60050db3",
     config = function()
       require("mason").setup()
       require("mason-lspconfig").setup {

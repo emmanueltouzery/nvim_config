@@ -777,7 +777,7 @@ rt.setup(opts)
     require("stickybuf").setup()
   end}
   use {"luckasRanarison/nvim-devdocs", 
-    commit = '785ea8877090074d1a55db81aac37826a9b40ebb',
+    commit = '8e0cb37b2bd35f6025074b3d4c6f62d77b21836c',
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
@@ -795,7 +795,7 @@ rt.setup(opts)
         cmd_args = { "-s", "dark", "-w", "80" },
         picker_cmd = 'glow',
         picker_cmd_args = { "-s", "dark", "-w", "80", "-p" },
-        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8" },
+        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust"},
       })
     end}
 end)

@@ -139,3 +139,9 @@ function _G.notif(msg, level, opts)
     return hide_closure
   end
 end
+
+vim.notify = function(msg, level, opts)
+  if opts.title == "Neogit" then
+    notif({msg}, level)
+  end
+end

@@ -141,7 +141,9 @@ function _G.notif(msg, level, opts)
 end
 
 vim.notify = function(msg, level, opts)
-  if opts.title == "Neogit" then
+  if opts and opts.title == "Neogit" then
     notif({msg}, level)
+  else
+    print(msg)
   end
 end

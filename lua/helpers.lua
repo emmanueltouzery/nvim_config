@@ -1213,3 +1213,12 @@ function _G.window_diff_json()
   vim.fn.chansend(jobid, vim.api.nvim_buf_get_lines(other, 0, -1, false))
   vim.fn.chanclose(jobid, 'stdin')
 end
+
+function _G.string_to_buffer(str)
+  local lines = {}
+  for line in str:gmatch("([^\n]*)\n?") do
+    table.insert(lines, line)
+  end
+  local fbuf = vim.api.nvim_create_buf(true, false)
+  vim.api.nvim_buf_set_lines(fbuf, -1, -1, false, lines)
+end

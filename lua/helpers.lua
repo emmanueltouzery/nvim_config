@@ -1157,7 +1157,7 @@ end
 -- using https://github.com/josephburnett/jd
 function _G.window_diff_json()
   local wins = {}
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
     local buf = vim.api.nvim_win_get_buf(win)
     local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
     if not vim.tbl_contains(DiffExcludeFTs, buf_ft) then

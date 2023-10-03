@@ -1003,6 +1003,7 @@ vim.cmd('autocmd BufRead * autocmd BufWinEnter * ++once normal! zx')
 -- https://www.reddit.com/r/vim/comments/4hoa6e/what_do_you_use_for_your_listchars/
 vim.cmd("set list")
 vim.cmd("set listchars=tab:→\\ ,trail:·,nbsp:␣")
+vim.cmd[[au Colorscheme * highlight Whitespace guifg=#999999 ctermfg=lightgray]]
 
 -- for instance nginx configuration files
 vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')

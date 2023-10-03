@@ -320,7 +320,7 @@ git_foresta_branch_log = defaulter(function(opts)
         args = args,
         cwd = opts.cwd,
         on_exit = vim.schedule_wrap(function(j)
-          if not vim.api.nvim_buf_is_valid(self.state.bufnr) then
+          if self.state.bufnr == nil or not vim.api.nvim_buf_is_valid(self.state.bufnr) then
             return
           end
           local output = j:result()

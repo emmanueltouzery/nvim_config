@@ -115,7 +115,8 @@ if lualine then
         'packer',
         'cheat40',
         'OverseerList',
-        'aerial'
+        'aerial',
+        'agitator'
       },
       theme = 'nord',
       component_separators = '|',

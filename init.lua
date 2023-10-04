@@ -221,6 +221,10 @@ require('packer').startup(function(use)
             ["šx"] = actions.prev_conflict,
             ["đx"] = actions.next_conflict,
             ["gf"] = diffview_gf,
+            ["F"] = function() -- jump to first file in the diff
+              local view = require'diffview.lib'.get_current_view()
+              view:set_file(view.panel.files[1], false, true)
+            end,
           },
           file_history_panel = {
             ["gf"] = diffview_gf,

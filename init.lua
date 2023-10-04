@@ -207,27 +207,41 @@ require('packer').startup(function(use)
               require'diffview.config'.actions.next_conflict()
               vim.cmd("norm! zz") -- center on screen
             end,
-            ["gf"] = diffview_gf,
+            {"n", "gf", diffview_gf,
+              {desc = "Goto File"},
+            },
           },
           file_panel = {
             ["-"] = false, -- i want this shortcut for choosewin
-            ["s"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
-            ["c"] = function() 
+            {"n", "s", actions.toggle_stage_entry,
+              {desc = "Stage / unstage the selected entry"},
+            },
+            {"n", "c",
+              function()
               -- cc should commit from diffview same as from neogit
               vim.cmd('DiffviewClose')
               vim.cmd('Neogit')
               require'neogit'.open({ "commit" })
             end,
-            ["šx"] = actions.prev_conflict,
-            ["đx"] = actions.next_conflict,
-            ["gf"] = diffview_gf,
-            ["F"] = function() -- jump to first file in the diff
-              local view = require'diffview.lib'.get_current_view()
-              view:set_file(view.panel.files[1], false, true)
-            end,
+              {desc = "Invoke diffview"}
+            },
+            {"n", "šx", actions.prev_conflict, {desc = "Go to previous conflict"}},
+            {"n", "đx", actions.next_conflict, {desc = "Go to next conflict"}},
+            {"n", "gf", diffview_gf,
+              {desc = "Goto File"},
+            },
+            {"n", "F",
+              function() -- jump to first file in the diff
+                local view = require'diffview.lib'.get_current_view()
+                view:set_file(view.panel.files[1], false, true)
+              end,
+              {desc = "Jump to first file"},
+            },
           },
           file_history_panel = {
-            ["gf"] = diffview_gf,
+            {"n", "gf", diffview_gf,
+              {desc = "Goto File"},
+            },
           },
         },
         file_history_panel = {

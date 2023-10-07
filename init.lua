@@ -791,8 +791,26 @@ rt.setup(opts)
   use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
     require("dapui").setup{}
   end}
-  use {'stevearc/stickybuf.nvim', commit='aa5d300198aef3f46fd3da90908c5afbf917ef99', config=function()
-    require("stickybuf").setup()
+  use {'stevearc/stickybuf.nvim', commit='92d07c71c7a7397da45a4473f9325b2beb8de7b9', config=function()
+    require("stickybuf").setup({
+      get_auto_pin = function(bufnr)
+        -- pin if any of the windows of the current tab have a DiffviewFiles filetype
+        -- (that's the filetype of the diffview sidebar, no switching buffers in that tab)
+        for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          local buf = vim.api.nvim_win_get_buf(win)
+          local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
+          if buf_ft == "DiffviewFiles" then
+            -- this is a diffview tab, pin all the windows, and also
+            -- disable creating new windows (which would be the default
+            -- behavior of handle_foreign_buffer)
+            return {
+              handle_foreign_buffer = function(bufnr) end
+            }
+          end
+        end
+        return require("stickybuf").should_auto_pin(bufnr)
+      end
+    })
   end}
   use {"luckasRanarison/nvim-devdocs", 
     commit = '8e0cb37b2bd35f6025074b3d4c6f62d77b21836c',

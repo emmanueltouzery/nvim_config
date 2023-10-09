@@ -10,6 +10,7 @@ local Str = require'plenary.strings'
 local Path = require'plenary.path'
 
 _G.telescope_global_marks = function(opts)
+  vim.cmd("rsh") -- read shada file
   local get_marks_table = function()
     local global_marks = {
       items = vim.fn.getmarklist(),

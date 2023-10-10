@@ -794,21 +794,34 @@ rt.setup(opts)
   use {'stevearc/stickybuf.nvim', commit='92d07c71c7a7397da45a4473f9325b2beb8de7b9', config=function()
     require("stickybuf").setup({
       get_auto_pin = function(bufnr)
-        -- pin if any of the windows of the current tab have a DiffviewFiles filetype
-        -- (that's the filetype of the diffview sidebar, no switching buffers in that tab)
-        for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-          local buf = vim.api.nvim_win_get_buf(win)
-          local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
-          if buf_ft == "DiffviewFiles" then
-            -- this is a diffview tab, pin all the windows, and also
-            -- disable creating new windows (which would be the default
-            -- behavior of handle_foreign_buffer)
-            return {
-              handle_foreign_buffer = function(bufnr) end
-            }
-          end
+        local buf_ft = vim.api.nvim_buf_get_option(bufnr, "ft")
+        if buf_ft == "DiffviewFiles" then
+          -- this is a diffview tab, disable creating new windows
+          -- (which would be the default behavior of handle_foreign_buffer)
+          return {
+            handle_foreign_buffer = function(bufnr) end
+          }
         end
-        return require("stickybuf").should_auto_pin(bufnr)
+
+        -- applying stickybuf on all the windows of the diffview tab was overoptimistic, i think
+        -- because diffview itself changes buffers inside windows, and stickybuf doesn't know whether
+        -- the user tried to do that, or diffview... So that causes issues.
+
+      --   -- pin if any of the windows of the current tab have a DiffviewFiles filetype
+      --   -- (that's the filetype of the diffview sidebar, no switching buffers in that tab)
+      --   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      --     local buf = vim.api.nvim_win_get_buf(win)
+      --     local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
+      --     if buf_ft == "DiffviewFiles" then
+      --       -- this is a diffview tab, pin all the windows, and also
+      --       -- disable creating new windows (which would be the default
+      --       -- behavior of handle_foreign_buffer)
+      --       return {
+      --         handle_foreign_buffer = function(bufnr) end
+      --       }
+      --     end
+      --   end
+      --   return require("stickybuf").should_auto_pin(bufnr)
       end
     })
   end}

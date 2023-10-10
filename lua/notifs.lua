@@ -143,6 +143,9 @@ end
 vim.notify = function(msg, level, opts)
   if opts and opts.title == "Neogit" then
     notif({msg}, level)
+  elseif level == vim.log.levels.ERROR then
+    notif({msg}, level)
+    print(msg) -- notif truncates/can't recall it
   else
     print(msg)
   end

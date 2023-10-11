@@ -238,6 +238,8 @@ function _G.telescope_view_module_docs(exports, opts)
         local action_state = require "telescope.actions.state"
         local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
         local entry = action_state.get_selected_entry()
+        local actions = require("telescope.actions")
+        actions.close(prompt_nr)
         elixir_view_export_docs(entry.contents, opts)
       end)
       tel_proj_attach_mappings(p, map)
@@ -248,7 +250,8 @@ function _G.telescope_view_module_docs(exports, opts)
 end
 
 function _G.elixir_view_export_docs(export, opts)
-  vim.cmd("enew")
+  local buf = vim.api.nvim_create_buf(true, false)
+  vim.api.nvim_win_set_buf(0, buf)
   local command = "h"
   if string.match(export, "^@") then
     export = string.sub(export, 2)

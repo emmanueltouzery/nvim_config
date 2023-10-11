@@ -446,7 +446,12 @@ function _G.add_global_mark()
     if used_marks[mark] == nil then
       vim.fn.feedkeys("m" .. mark)
       vim.cmd("redraw!")
-      vim.cmd("wshada!")
+      -- not sure why defer_fn is needed, but without it,
+      -- the state doesn't seem synced -- other nvim instances
+      -- don't see the change despite calling rshada
+      vim.defer_fn(function()
+        vim.cmd("wshada!")
+      end, 1000)
       return
     end
   end

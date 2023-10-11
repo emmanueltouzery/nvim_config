@@ -822,6 +822,14 @@ function _G.overseer_running_task_action(action)
   end
 end
 
+function _G.overseer_dispose_completed_jobs()
+  local overseer = require('overseer')
+  local tasks = overseer.list_tasks({ status={overseer.STATUS.SUCCESS, overseer.STATUS.CANCELED, overseer.STATUS.FAILURE} })
+  for i, task in ipairs(tasks) do
+    task:dispose()
+  end
+end
+
 function _G.diffview_gf()
   -- https://github.com/sindrets/diffview.nvim/issues/230
   local file = require("diffview.lib").get_current_view():infer_cur_file()

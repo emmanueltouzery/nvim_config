@@ -237,6 +237,20 @@ require('packer').startup(function(use)
               end,
               {desc = "Jump to first file"},
             },
+            {"n", "<leader>cm", function()
+              local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
+              local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+              local path = require("plenary.path")
+              local fname = "/tmp/emm-diff.md"
+              local f = path:new(fname)
+              f:write(table.concat(lines, "\n"), "w")
+              require'glow'.glow(fname)
+              vim.defer_fn(function()
+                f:rm()
+              end, 1000)
+            end,
+              {desc = "Display markdown"},
+            },
           },
           file_history_panel = {
             {"n", "gf", diffview_gf,

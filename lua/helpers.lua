@@ -137,6 +137,7 @@ function _G.goto_fileline()
           vim.cmd(":e " .. project.path .. "/" .. fname)
           if string.match(line, "^%d+$") then
             vim.cmd(":" .. line)
+            vim.cmd("norm! zz") -- center on screen
           end
           return
         end
@@ -158,6 +159,7 @@ function _G.goto_fileline()
         if output ~= nil and #output > 0 and vim.fn.filereadable(project.path .. "/" .. output[1]) == 1 then
           vim.cmd(":e " .. project.path .. "/" .. output[1])
           vim.cmd(":" .. line)
+          vim.cmd("norm! zz") -- center on screen
           return
         end
       end

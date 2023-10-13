@@ -423,8 +423,8 @@ vim.keymap.set('n', '<leader>xip', ":lua elixir_insert_inspect_param()<cr>", {de
 vim.keymap.set('n', '<leader>xil', ":lua elixir_insert_inspect_label()<cr>", {desc="elixir add inspect label"})
 vim.keymap.set('n', '<leader>xif', ":lua elixir_insert_inspect_field()<cr>", {desc="elixir add inspect field"})
 require 'key-menu'.set('n', '<Space>xa', {desc='API'})
-vim.keymap.set('n', '<leader>xac', ":lua elixir_view_docs({})<cr>", {desc="elixir apidocs (core only)"})
-vim.keymap.set('n', '<leader>xaa', ":lua elixir_view_docs({include_mix_libs=true})<cr>", {desc="elixir apidocs (all)"})
+vim.keymap.set('n', '<leader>xac', ":lua require'elixir-extras'.elixir_view_docs({})<cr>", {desc="elixir apidocs (core only)"})
+vim.keymap.set('n', '<leader>xaa', ":lua require'elixir-extras'.elixir_view_docs({include_mix_libs=true})<cr>", {desc="elixir apidocs (all)"})
 vim.keymap.set('n', '<leader>xos', ":lua telescope_elixir_stacktrace({})<cr>", {desc="elixir open stacktrace"})
 vim.keymap.set('n', '<leader>xmi', ":lua elixir_match_error_details_indent({})<cr>", {desc="elixir indent match error details"})
 

@@ -112,11 +112,7 @@ function _G.elixir_view_docs_with_runtime_folders(runtime_module_folders, opts)
     end),
     on_exit = vim.schedule_wrap(function(j, output)
       table.sort(modules)
-      vim.ui.select(modules, {prompt="Pick the module to view:"}, function(choice) 
-        if choice then
-          elixir_view_module_docs(choice, opts)
-        end
-      end)
+      telescope_view_module_docs(modules, opts, "view_telescope_module")
     end)
   })
 end
@@ -195,7 +191,7 @@ function _G.elixir_view_behaviour_module_docs(mod, exports, opts)
   })
 end
 
-function _G.telescope_view_module_docs(exports, opts)
+function _G.telescope_view_module_docs(exports, opts, action)
   local pickers = require "telescope.pickers"
   local finders = require "telescope.finders"
   local previewers = require("telescope.previewers")
@@ -235,12 +231,21 @@ function _G.telescope_view_module_docs(exports, opts)
     sorter = conf.generic_sorter(opts),
     attach_mappings = function(p, map)
       map("i", "<cr>", function(prompt_nr)
-        local action_state = require "telescope.actions.state"
-        local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
-        local entry = action_state.get_selected_entry()
-        local actions = require("telescope.actions")
-        actions.close(prompt_nr)
-        elixir_view_export_docs(entry.contents, opts)
+        if action == "view_telescope_module" then
+          local action_state = require "telescope.actions.state"
+          local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
+          local entry = action_state.get_selected_entry()
+          local actions = require("telescope.actions")
+          actions.close(prompt_nr)
+          elixir_view_module_docs(entry.contents, opts)
+        else
+          local action_state = require "telescope.actions.state"
+          local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
+          local entry = action_state.get_selected_entry()
+          local actions = require("telescope.actions")
+          actions.close(prompt_nr)
+          elixir_view_export_docs(entry.contents, opts)
+        end
       end)
       tel_proj_attach_mappings(p, map)
       return true

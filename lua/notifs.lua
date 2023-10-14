@@ -59,7 +59,7 @@ end
 function _G.notif_format_msg(msg)
   local res = {}
   for i, m in ipairs(msg) do
-    table.insert(res, " " .. force_length(m, max_length))
+    table.insert(res, " " .. force_length(string.gsub(m, "\n", " "), max_length))
   end
   return res
 end

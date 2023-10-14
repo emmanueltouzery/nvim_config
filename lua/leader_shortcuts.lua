@@ -55,7 +55,7 @@ vim.keymap.set('n', '<leader>fn', ":enew<cr>", {desc = "New file"})
 vim.keymap.set("n", "<leader>fs", ":w<cr>", {desc="Save file"})
 vim.keymap.set("n", "<leader>fS", ":wa<cr>", {desc="Save all files"})
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<cr>", {desc = "Find files"})
-vim.keymap.set("n", "<leader>fr", "<cmd>lua require'telescope.builtin'.oldfiles{cwd_only=true}<cr>", { desc = "Recent files"})
+vim.keymap.set("n", "<leader>fr", "<cmd>lua telescope_recent_or_all()<cr>", { desc = "Recent files"})
 vim.keymap.set("n", "<leader>fR", "<cmd>SudaRead<cr>", { desc = "Re-open file with sudo permissions"})
 vim.keymap.set("n", "<leader>fw", "<cmd>SudaWrite<cr>", { desc = "Write file with sudo permissions"})
 vim.keymap.set("n", "<leader>fp", ':lua copy_to_clipboard(cur_file_path_in_project())<cr>', {desc="Copy file path"}) -- ':let @+ = expand("%")<cr>',
@@ -192,14 +192,20 @@ function _G.tel_proj_attach_mappings(prompt_bufnr, map)
   map('i', '<C-s>', function(nr)
     require('telescope').extensions.live_grep_raw.live_grep_raw{
       cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    } 
+    }
   end)
   map('i', '<C-g>', function(nr)
     require('telescope.builtin').git_status{
       cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    } 
+    }
   end)
-  return true 
+  map('i', '<C-r>', function(nr)
+    telescope_recent_or_all{
+      cwd_only=true,
+      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    }
+  end)
+  return true
 end
 _G.telescope_project_command = [[<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full', attach_mappings = tel_proj_attach_mappings}<CR>]]
 

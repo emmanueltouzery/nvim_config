@@ -1240,7 +1240,7 @@ end
 
 vim.cmd[[ highlight MyHighlightGroup ctermbg=blue guibg=blue ]]
 
-function _G.window_highlight_add()
+function _G.window_highlight_set()
   vim.ui.input({prompt="Enter pattern", kind="center_win", default="^\\s*test.*"}, function(pattern)
     vim.w.my_highlight = vim.fn.matchadd("MyHighlightGroup", pattern)
   end)

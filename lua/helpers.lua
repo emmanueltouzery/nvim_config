@@ -1237,3 +1237,15 @@ function _G.string_to_buffer(str)
   local fbuf = vim.api.nvim_create_buf(true, false)
   vim.api.nvim_buf_set_lines(fbuf, -1, -1, false, lines)
 end
+
+vim.cmd[[ highlight MyHighlightGroup ctermbg=blue guibg=blue ]]
+
+function _G.window_highlight_add()
+  vim.ui.input({prompt="Enter pattern", kind="center_win", default="^\\s*test.*"}, function(pattern)
+    vim.w.my_highlight = vim.fn.matchadd("MyHighlightGroup", pattern)
+  end)
+end
+
+function _G.window_highlight_clear()
+  vim.fn.matchdelete(vim.w.my_highlight)
+end

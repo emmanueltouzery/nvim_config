@@ -178,6 +178,10 @@ vim.keymap.set("n", "<leader>wS", "<cmd>windo set nocursorbind | windo set noscr
 require 'key-menu'.set('n', '<Space>wf', {desc='Window diFF'})
 vim.keymap.set("n", "<leader>wfj", "<cmd>lua window_diff_json()<cr>", {desc="window diff JSON"})
 
+require 'key-menu'.set('n', '<Space>wh', {desc='Window highlight'})
+vim.keymap.set("n", "<leader>wha", "<cmd>lua window_highlight_add()<cr>", {desc="window highlight add"})
+vim.keymap.set("n", "<leader>whc", "<cmd>lua window_highlight_clear()<cr>", {desc="window highlight clear"})
+
 -- PACKAGES
 require 'key-menu'.set('n', '<Space>p', {desc='Packages'})
 vim.keymap.set("n", "<leader>pp", "<cmd>PackerSync<cr>", { desc = "Packer sync"})

@@ -841,7 +841,7 @@ rt.setup(opts)
       --       }
       --     end
       --   end
-      --   return require("stickybuf").should_auto_pin(bufnr)
+        return require("stickybuf").should_auto_pin(bufnr)
       end
     })
   end}

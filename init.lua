@@ -846,7 +846,7 @@ rt.setup(opts)
     })
   end}
   use {"luckasRanarison/nvim-devdocs", 
-    commit = '8e0cb37b2bd35f6025074b3d4c6f62d77b21836c',
+    commit = '382e1710b9e82731485bd11cb3306675f127b5e6',
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",

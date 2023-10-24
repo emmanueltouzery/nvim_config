@@ -607,7 +607,7 @@ callbacks = {
     })
     require('telescope').load_extension('aerial')
   end}
-  use {'NeogitOrg/neogit', commit='c4f4cd0116cbd969aa0f485c9f4154df1c3f3662', config = function()
+  use {'NeogitOrg/neogit', commit='51a6e6c8952b361300be57b36c8e1b973880cdd7', config = function()
     require('neogit') .setup {
       -- disable_context_highlighting = true,
       signs = {
@@ -811,7 +811,7 @@ rt.setup(opts)
   use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
     require("dapui").setup{}
   end}
-  use {'stevearc/stickybuf.nvim', commit='92d07c71c7a7397da45a4473f9325b2beb8de7b9', config=function()
+  use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e', config=function()
     require("stickybuf").setup({
       get_auto_pin = function(bufnr)
         local buf_ft = vim.api.nvim_buf_get_option(bufnr, "ft")

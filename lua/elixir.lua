@@ -111,7 +111,7 @@ function _G.inspect_point_candidate_param(winid)
   local targets = {}
 
   -- beginning of previous 2 lines
-  for idx = cur_line-3, cur_line do
+  for idx = math.max(0, cur_line-3), cur_line do
     local idx_line_str = vim.api.nvim_buf_get_lines(0, idx-1, idx, false)[1]
     if idx_line_str == nil then break end
     table.insert(targets, { pos = { idx+1, 1 }})

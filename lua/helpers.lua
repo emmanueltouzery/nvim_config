@@ -828,7 +828,7 @@ function _G.overseer_dispose_completed_jobs()
   local overseer = require('overseer')
   local tasks = overseer.list_tasks({ status={overseer.STATUS.SUCCESS, overseer.STATUS.CANCELED, overseer.STATUS.FAILURE} })
   for i, task in ipairs(tasks) do
-    task:dispose()
+    task:dispose(true)
   end
 end
 

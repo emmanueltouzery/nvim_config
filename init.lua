@@ -867,6 +867,8 @@ rt.setup(opts)
         ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust"},
       })
     end}
+    vim.g.any_jump_disable_default_keybindings = 1
+  use {"pechorin/any-jump.vim", commit="770ef708ae3f13322430fcc663d7dfb864756b9b"}
 end)
 
 --Set highlight on search

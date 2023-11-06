@@ -119,6 +119,28 @@ local Event = api.events.Event
 api.events.subscribe(Event.FileCreated, function(data)
   if string.match(data.fname, "%.tsx$") then
     vim.api.nvim_exec([[!echo "import React from 'react';" > ]] .. data.fname, {output=false})
+  elseif string.match(data.fname, "%.java$") then
+    local folders = vim.split(data.fname, '/')
+    local package_elements = {}
+    for i = #folders-1, 1, -1 do
+      if folders[i] == 'java' then
+        break
+      else
+        table.insert(package_elements, folders[i])
+      end
+    end
+    local package_name = ""
+    for i = #package_elements, 1, -1 do
+      if #package_name > 0 then
+        package_name = package_name .. "."
+      end
+      package_name = package_name .. package_elements[i]
+    end
+    local class_name = string.gsub(folders[#folders], ".java$", "")
+    local path = require("plenary.path")
+    path.new(data.fname):write(
+      "package " .. package_name .. ";\n\npublic class " .. class_name .. " {\n\n}", 'w'
+    )
   end
 end)
 

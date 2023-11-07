@@ -505,7 +505,7 @@ callbacks = {
         }
       }
 
-      -- lspconfig.rust_analyzer.setup {}
+      lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {
         cmd = { "elixir-ls" }; -- for some reason I must specify the command. I think I shouldn't have to, due to mason
       }
@@ -760,54 +760,54 @@ callbacks = {
 --   }
 -- }
   end}
-  use {'/simrat39/rust-tools.nvim', commit='86a2b4e31f504c00715d0dd082a6b8b5d4afbf03', config=function()
-    local rt = require("rust-tools")
+--   use {'/simrat39/rust-tools.nvim', commit='86a2b4e31f504c00715d0dd082a6b8b5d4afbf03', config=function()
+--     local rt = require("rust-tools")
 
-    --https://github.com/LunarVim/LunarVim/issues/2894#issuecomment-1236420149
--- https://github.com/simrat39/rust-tools.nvim#a-better-debugging-experience
-opts = {
-    server = {
-      on_attach = function(client, bufnr)
-        -- disable LSP based syntax highlighting https://github.com/simrat39/rust-tools.nvim/issues/365#issuecomment-1506286437
-        -- it takes time to appear so is jarring, plus i find it worse than tree-sitter
-        client.server_capabilities.semanticTokensProvider = nil
-      end
-    }
-}
-local path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/") or ""
-local codelldb_path = path .. "adapter/codelldb"
-local liblldb_path = path .. "lldb/lib/liblldb.so"
+--     --https://github.com/LunarVim/LunarVim/issues/2894#issuecomment-1236420149
+-- -- https://github.com/simrat39/rust-tools.nvim#a-better-debugging-experience
+-- opts = {
+--     server = {
+--       on_attach = function(client, bufnr)
+--         -- disable LSP based syntax highlighting https://github.com/simrat39/rust-tools.nvim/issues/365#issuecomment-1506286437
+--         -- it takes time to appear so is jarring, plus i find it worse than tree-sitter
+--         client.server_capabilities.semanticTokensProvider = nil
+--       end
+--     }
+-- }
+-- local path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/") or ""
+-- local codelldb_path = path .. "adapter/codelldb"
+-- local liblldb_path = path .. "lldb/lib/liblldb.so"
 
-if vim.fn.filereadable(codelldb_path) and vim.fn.filereadable(liblldb_path) then
-  opts.dap = {
-    adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
-  }
-else
-  local msg = "Either codelldb or liblldb is not readable."
-    .. "\n codelldb: "
-    .. codelldb_path
-    .. "\n liblldb: "
-    .. liblldb_path
-  vim.notify(msg, vim.log.levels.ERROR)
-end
-    -- print(vim.inspect(opts))
+-- if vim.fn.filereadable(codelldb_path) and vim.fn.filereadable(liblldb_path) then
+--   opts.dap = {
+--     adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+--   }
+-- else
+--   local msg = "Either codelldb or liblldb is not readable."
+--     .. "\n codelldb: "
+--     .. codelldb_path
+--     .. "\n liblldb: "
+--     .. liblldb_path
+--   vim.notify(msg, vim.log.levels.ERROR)
+-- end
+--     -- print(vim.inspect(opts))
 
-rt.setup(opts)
-    -- rt.setup({
-    --   server = {
-    --     on_attach = function(_, bufnr)
-    --       -- Hover actions
-    --       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-    --       -- Code action groups
-    --       vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-    --     end,
-    --   },
-    --   -- dap = {
-    --   --   adapter = require('rust-tools.dap').get_codelldb_adapter(
-    --   --   "codelldb", "liblldb.so")
-    --   -- },
-    -- })
-  end}
+-- rt.setup(opts)
+--     -- rt.setup({
+--     --   server = {
+--     --     on_attach = function(_, bufnr)
+--     --       -- Hover actions
+--     --       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+--     --       -- Code action groups
+--     --       vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+--     --     end,
+--     --   },
+--     --   -- dap = {
+--     --   --   adapter = require('rust-tools.dap').get_codelldb_adapter(
+--     --   --   "codelldb", "liblldb.so")
+--     --   -- },
+--     -- })
+--   end}
   use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
     require("dapui").setup{}
   end}
@@ -868,6 +868,7 @@ rt.setup(opts)
       })
     end}
     vim.g.any_jump_disable_default_keybindings = 1
+    vim.g.any_jump_center_screen_after_jump = true
   use {"pechorin/any-jump.vim", commit="770ef708ae3f13322430fcc663d7dfb864756b9b"}
 end)
 

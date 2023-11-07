@@ -928,13 +928,13 @@ function _G.lsp_restart_all()
   end
 
   -- handle null-ls separately as it's not managed by lspconfig
-  nullls_client = require'null-ls.client'.get_client()
-  if nullls_client ~= nil then
-    nullls_client.stop()
-  end
-  vim.defer_fn(function()
-    require'null-ls.client'.try_add()
-  end, 500)
+  -- nullls_client = require'null-ls.client'.get_client()
+  -- if nullls_client ~= nil then
+  --   nullls_client.stop()
+  -- end
+  -- vim.defer_fn(function()
+  --   require'null-ls.client'.try_add()
+  -- end, 500)
   local current_top_line = vim.fn.line('w0')
   local current_line = vim.fn.line('.')
 

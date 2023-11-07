@@ -353,25 +353,25 @@ require('packer').startup(function(use)
     vim.g.markify_info_text = ""
     vim.g.markify_info_texthl = "Todo"
   end}
-  use {'jose-elias-alvarez/null-ls.nvim', commit='c0c19f32b614b3921e17886c541c13a72748d450', config = function()
+  -- use {'jose-elias-alvarez/null-ls.nvim', commit='c0c19f32b614b3921e17886c541c13a72748d450', config = function()
 
-    require("null-ls").setup({
-      sources = {
-        -- require("null-ls").builtins.formatting.stylua,
-        require("null-ls").builtins.diagnostics.eslint.with({
-          -- eslint: display rule name
-          -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md#diagnostics-format
-          diagnostics_format = "#{m} [#{c}]",
-        }),
-        require("null-ls").builtins.code_actions.eslint, -- eslint code actions
-        require("null-ls").builtins.diagnostics.credo,
-        -- require("null-ls").builtins.completion.spell,
-        require("null-ls").builtins.formatting.prettier,
-        -- null_ls.builtins.formatting.mix,
-      },
-    })
-  end,
-    requires = {"nvim-lua/plenary.nvim", "neovim/nvim-lspconfig"} }
+  --   require("null-ls").setup({
+  --     sources = {
+  --       -- require("null-ls").builtins.formatting.stylua,
+  --       require("null-ls").builtins.diagnostics.eslint.with({
+  --         -- eslint: display rule name
+  --         -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md#diagnostics-format
+  --         diagnostics_format = "#{m} [#{c}]",
+  --       }),
+  --       require("null-ls").builtins.code_actions.eslint, -- eslint code actions
+  --       require("null-ls").builtins.diagnostics.credo,
+  --       -- require("null-ls").builtins.completion.spell,
+  --       require("null-ls").builtins.formatting.prettier,
+  --       -- null_ls.builtins.formatting.mix,
+  --     },
+  --   })
+  -- end,
+  --   requires = {"nvim-lua/plenary.nvim", "neovim/nvim-lspconfig"} }
   use {'ruifm/gitlinker.nvim', commit='ff33d07', config = function()
     require"gitlinker".setup({
       opts = {
@@ -418,16 +418,16 @@ callbacks = {
           if opts.kind == 'codeaction' then
             return {
               telescope = {
-                sorter = require'telescope.sorters'.Sorter:new {
-                  scoring_function = function(_, _, line)
-                    local order = tonumber(string.match(line, "^[%d]+"))
-                    if string.find(line, escape_pattern('null-ls')) then
-                      return order+100
-                    else
-                      return order
-                    end
-                  end,
-                },
+                -- sorter = require'telescope.sorters'.Sorter:new {
+                --   scoring_function = function(_, _, line)
+                --     local order = tonumber(string.match(line, "^[%d]+"))
+                --     if string.find(line, escape_pattern('null-ls')) then
+                --       return order+100
+                --     else
+                --       return order
+                --     end
+                --   end,
+                -- },
                 cache_picker = false,
                 -- copied from the telescope dropdown theme
                 sorting_strategy = "ascending",
@@ -870,6 +870,71 @@ callbacks = {
     vim.g.any_jump_disable_default_keybindings = 1
     vim.g.any_jump_center_screen_after_jump = true
   use {"pechorin/any-jump.vim", commit="770ef708ae3f13322430fcc663d7dfb864756b9b"}
+  use {"mfussenegger/nvim-lint", commit="7746f952827dabfb70194518c99c93d5651b8f19", config=function()
+    local lint = require("lint")
+    lint.linters_by_ft = {
+      javascript = { "eslint" },
+      javascriptreact = { "eslint" },
+      typescript = { "eslint" },
+      typescriptreact = { "eslint" },
+      elixir = { "credo" }
+    }
+    local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
+    -- lifted from https://github.com/stevearc/dotfiles/blob/master/.config/nvim/lua/plugins/lint.lua
+    -- also see https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/linting.lua
+    local uv = vim.uv or vim.loop
+    local timer = assert(uv.new_timer())
+    triggered = false
+    local DEBOUNCE_MS = 500
+    -- local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
+    -- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged", "InsertLeave" }, {
+    --   group = aug,
+    --   callback = function()
+    --             lint.try_lint(nil, { ignore_errors = true })
+    --             lint.try_lint(nil, { ignore_errors = true })
+    --   end,
+    -- })
+    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged", "InsertLeave" }, {
+      group = aug,
+      callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        timer:stop()
+        timer:start(
+          DEBOUNCE_MS,
+          0,
+          vim.schedule_wrap(function()
+            if vim.api.nvim_buf_is_valid(bufnr) then
+              vim.api.nvim_buf_call(bufnr, function()
+                lint.try_lint(nil, { ignore_errors = true })
+              end)
+            end
+          end)
+        )
+      end,
+    })
+  end}
+  use {"stevearc/conform.nvim", commit="3f8927532bc8ce4fc4b5b75eab1bf8f1fc83f6b9", config=function()
+    require("conform").setup({
+      formatters_by_ft = {
+        javascript = { "prettier" },
+        javascriptreact = { "prettier" },
+        typescript = { "prettier" },
+        typescriptreact = { "prettier" },
+        markdown = { "prettier" },
+        json = { "prettier" },
+        css = { "prettier" },
+        scss = { "prettier" },
+        less = { "prettier" },
+        graphql = { "prettier" },
+      },
+    })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", },
+      callback = function(args)
+        require("conform").format({ bufnr = args.buf })
+      end,
+    })
+  end}
 end)
 
 --Set highlight on search
@@ -984,16 +1049,6 @@ require("elixir")
 vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.md lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.css lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.scss lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.less lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.graphql lua vim.lsp.buf.format()]]
 
 vim.diagnostic.config({
   virtual_text = false,

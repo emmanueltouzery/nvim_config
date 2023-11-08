@@ -232,6 +232,7 @@ vim.keymap.set("n", "<leader>ot", "<cmd>lua telescope_modified_git_projects()<CR
 vim.keymap.set("n", "<leader>ou", "<cmd>lua require('telescope').extensions.undo.undo()<CR>", {desc="Open undo history"})
 vim.keymap.set("n", "<leader>os", "<cmd>AerialOpen<CR>", {desc = "Open symbols"})
 vim.keymap.set("n", "<leader>od", "<cmd>DevdocsOpen<CR>", {desc = "Open devdocs"})
+vim.keymap.set("n", "<leader>oi", "<cmd>ConformInfo<CR>", {desc = "Open indent infos"}) -- useful if formatting fails, can see info
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

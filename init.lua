@@ -468,6 +468,7 @@ callbacks = {
 
       lspconfig.tsserver.setup {
         on_attach = function(client)
+        -- use prettier for JS indentation (through conform.nvim)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
         end,
@@ -508,10 +509,16 @@ callbacks = {
       lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {
         cmd = { "elixir-ls" }; -- for some reason I must specify the command. I think I shouldn't have to, due to mason
+        -- use conform.nvim for elixir indentation, because it can give me the mix fmt output
+        -- which sometimes pinpoints the syntax error
+        on_attach = function(client, bufnr)
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end,
       }
       lspconfig.bashls.setup {}
       lspconfig.jsonls.setup {
-        -- use null-ls & prettier for json indentation
+        -- use prettier for json indentation (through conform.nvim)
         on_attach = function(client, bufnr)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
@@ -913,7 +920,7 @@ callbacks = {
       end,
     })
   end}
-  use {"stevearc/conform.nvim", commit="3f8927532bc8ce4fc4b5b75eab1bf8f1fc83f6b9", config=function()
+  use {"stevearc/conform.nvim", commit="161d95bfbb1ad1a2b89ba2ea75ca1b5e012a111e", config=function()
     require("conform").setup({
       formatters_by_ft = {
         javascript = { "prettier" },
@@ -926,10 +933,11 @@ callbacks = {
         scss = { "prettier" },
         less = { "prettier" },
         graphql = { "prettier" },
+        elixir = { "mix" },
       },
     })
     vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", },
+      pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", },
       callback = function(args)
         require("conform").format({ bufnr = args.buf })
       end,
@@ -1046,8 +1054,6 @@ require("notifs")
 require("ts_unused_imports")
 require("elixir")
 
-vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]
-vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 
 vim.diagnostic.config({

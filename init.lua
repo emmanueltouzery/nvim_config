@@ -905,6 +905,11 @@ callbacks = {
       typescriptreact = { "eslint" },
       elixir = { "credo" }
     }
+
+    -- customize credo, remove the --strict flag
+    local credo = require('lint').linters.credo
+    credo.args = vim.tbl_filter(function(p) return p ~= "--strict" end, credo.args)
+
     local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
     -- lifted from https://github.com/stevearc/dotfiles/blob/master/.config/nvim/lua/plugins/lint.lua
     -- also see https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/linting.lua

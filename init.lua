@@ -251,6 +251,25 @@ require('packer').startup(function(use)
             end,
               {desc = "Display markdown"},
             },
+            {"n", "<leader>x", function()
+              if vim.w.orig_width == nil then
+                local bufnr = vim.api.nvim_win_get_buf(0)
+                local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+                local maxcols = 0
+                for _, line in ipairs(lines) do
+                  local cols = #line
+                  if cols > maxcols then
+                    maxcols = cols
+                  end
+                end
+                vim.w.orig_width = vim.api.nvim_win_get_width(0)
+                vim.api.nvim_win_set_width(0, maxcols)
+              else
+                vim.api.nvim_win_set_width(0, vim.w.orig_width)
+                vim.w.orig_width = nil
+              end
+            end, {desc = "Toggle expansion of file panel to fit"}
+            };
           },
           file_history_panel = {
             {"n", "gf", diffview_gf,

@@ -16,5 +16,4 @@ npm i -g prettier
 
 <https://github.com/josephburnett/jd> -- for json diff integration
 
-Set up https://github.com/mhinz/neovim-remote so that you have `nvr` in your path and executable to get nicer $EDITOR from within the neovim terminal. This also enables a shortcut for git interactive rebase from within neovim-remote
-(I used the 'from zip' https://github.com/mhinz/neovim-remote/blob/master/INSTALLATION.md#from-zip approach to avoid using `pip`)
+Set up https://github.com/emmanueltouzery/invim in your path and executable to get nicer $EDITOR from within the neovim terminal.

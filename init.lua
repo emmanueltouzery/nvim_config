@@ -1231,7 +1231,7 @@ vim.opt.mousemodel = 'extend'
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]])
 
 -- https://github.com/groves/invim
-vim.cmd[[let $EDITOR='nvr --remote-tab-wait']]
+vim.cmd[[let $EDITOR='invim --tabedit --remote-wait']]
 vim.cmd[[autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete]]
 
 -- emphasize dressing.nvim window border some more

@@ -273,6 +273,21 @@ function telescope_commits_mappings(prompt_bufnr, map)
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
   end)
+  map('i', '<C-f>', function(nr)
+    local action_state = require "telescope.actions.state"
+    local picker = action_state.get_current_picker(nr)
+
+    local commits = {}
+    for _, entry in ipairs(picker:get_multi_selection()) do
+      table.insert(commits, entry.value)
+    end
+    if #commits ~= 2 then
+      print("Must select two commits for diff")
+    else
+      actions.close(prompt_bufnr)
+      vim.cmd(":DiffviewOpen " .. commits[1] .. "^.." .. commits[2])
+    end
+  end)
   return true
 end
 

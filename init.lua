@@ -895,7 +895,7 @@ callbacks = {
     end}
     vim.g.any_jump_disable_default_keybindings = 1
     vim.g.any_jump_center_screen_after_jump = true
-  use {"pechorin/any-jump.vim", commit="770ef708ae3f13322430fcc663d7dfb864756b9b"}
+  use {"emmanueltouzery/any-jump.vim", commit="6b18279473ff1078d9931886267bf113303637b2"}
   use {"mfussenegger/nvim-lint", commit="7746f952827dabfb70194518c99c93d5651b8f19", config=function()
     local lint = require("lint")
     lint.linters_by_ft = {

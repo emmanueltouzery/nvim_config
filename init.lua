@@ -633,14 +633,28 @@ callbacks = {
       post_parse_symbol = function(bufnr, item, ctx)
         if ctx.backend_name == "treesitter" and (ctx.lang == "typescript" or ctx.lang == "tsx") then
           local utils = require"nvim-treesitter.utils"
-          local value_node = (utils.get_at_path(ctx.match, "var_type") or {}).node
+
           -- don't want to display in-function items
+          local value_node = (utils.get_at_path(ctx.match, "var_type") or {}).node
           local cur_parent = value_node and value_node:parent()
           while cur_parent do
-            if cur_parent:type() == "arrow_function" 
+            if cur_parent:type() == "arrow_function"
               or cur_parent:type() == "function_declaration"
               or cur_parent:type() == "method_definition" then
               return false
+            end
+            cur_parent = cur_parent:parent()
+          end
+
+          -- find out whether the function is public or private
+          -- this combines with get_highlight for which we highlight
+          -- private symbols differently
+          item.scope = "private"
+          local value_node = (utils.get_at_path(ctx.match, "type") or {}).node
+          local cur_parent = value_node and value_node:parent()
+          while cur_parent do
+            if cur_parent:type() == "export_statement" then
+              item.scope = nil
             end
             cur_parent = cur_parent:parent()
           end

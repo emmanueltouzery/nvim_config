@@ -532,63 +532,26 @@ function _G.max_win_in_new_tab()
   vim.cmd(":" .. lnum)
 end
 
-function enable_diagnostics(i)
-  vim.diagnostic.enable(0, i)
-  vim.b['disabled_dg_' .. i] = false
-end
+function _G.toggle_linting()
+  local lint_aucmds = vim.api.nvim_get_autocmds({group = "Lint"})
+  local is_disable = lint_aucmds ~= nil and #lint_aucmds > 0
+  if is_disable then
+    notif({"Disabling linting"})
+  else
+    notif({"Enabling linting"})
+  end
 
-function disable_diagnostics(i)
-  vim.diagnostic.disable(0, i)
-  vim.b['disabled_dg_' .. i] = true
-end
-
-function _G.telescope_enable_disable_diagnostics()
-  local pickers = require "telescope.pickers"
-  local finders = require "telescope.finders"
-  local actions = require "telescope.actions"
-  local action_state = require "telescope.actions.state"
-
-  local diagnostic_signs = {}
-  for i, ns in pairs(vim.diagnostic.get_namespaces()) do
-    -- if ns.user_data.sign_group then
-    if vim.b['disabled_dg_' .. i] then
-      table.insert(diagnostic_signs, { display = "Enable " .. ns.name, value = i, ordinal = i, contents = ns.name })
-    else
-      table.insert(diagnostic_signs, { display = "Disable " .. ns.name, value = i, ordinal = i, contents = ns.name })
+  if is_disable then
+    vim.cmd("au! Lint")
+    for i, ns in pairs(vim.diagnostic.get_namespaces()) do
+      if not string.match(ns.name, "vim.lsp") then
+        vim.diagnostic.reset(i)
+      end
     end
-    -- end
+  else
+    nvim_lint_create_autocmds()
+    vim.api.nvim_exec_autocmds("BufEnter", {group = "Lint"})
   end
-
-  local function entry_maker(entry)
-    return entry
-  end
-
-  local opts = {
-    layout_config = {
-      height = 0.3,
-      width = 0.3,
-    }
-  }
-
-  pickers.new(opts, {
-    prompt_title = "LSP Diagnostics toggle",
-    finder = finders.new_table {
-      results = diagnostic_signs,
-      entry_maker = entry_maker,
-    },
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        actions.close(prompt_bufnr)
-        local selection = action_state.get_selected_entry()
-        if selection.display:sub(1, #"Enable") == "Enable" then
-          enable_diagnostics(selection.value)
-        else
-          disable_diagnostics(selection.value)
-        end
-      end)
-      return true
-    end,
-  }):find()
 end
 
 -- https://www.reddit.com/r/neovim/comments/x4504j/popupfloating_window_partially_out_of_the_screen/?

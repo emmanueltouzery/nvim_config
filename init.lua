@@ -29,6 +29,42 @@ function _G.aerial_elixir_get_entry_text(item)
   return item.name
 end
 
+function _G.nvim_lint_create_autocmds()
+    local lint = require'lint'
+    local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
+    -- lifted from https://github.com/stevearc/dotfiles/blob/master/.config/nvim/lua/plugins/lint.lua
+    -- also see https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/linting.lua
+    local uv = vim.uv or vim.loop
+    local timer = assert(uv.new_timer())
+    triggered = false
+    local DEBOUNCE_MS = 500
+    -- local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
+    -- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged", "InsertLeave" }, {
+    --   group = aug,
+    --   callback = function()
+    --             lint.try_lint(nil, { ignore_errors = true })
+    --             lint.try_lint(nil, { ignore_errors = true })
+    --   end,
+    -- })
+    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged", "InsertLeave" }, {
+      group = aug,
+      callback = function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        timer:stop()
+        timer:start(
+          DEBOUNCE_MS,
+          0,
+          vim.schedule_wrap(function()
+            if vim.api.nvim_buf_is_valid(bufnr) then
+              vim.api.nvim_buf_call(bufnr, function()
+                lint.try_lint(nil, { ignore_errors = true })
+              end)
+            end
+          end)
+        )
+      end,
+    })
+end
 
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
@@ -910,39 +946,7 @@ callbacks = {
     local credo = require('lint').linters.credo
     credo.args = vim.tbl_filter(function(p) return p ~= "--strict" end, credo.args)
 
-    local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
-    -- lifted from https://github.com/stevearc/dotfiles/blob/master/.config/nvim/lua/plugins/lint.lua
-    -- also see https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/linting.lua
-    local uv = vim.uv or vim.loop
-    local timer = assert(uv.new_timer())
-    triggered = false
-    local DEBOUNCE_MS = 500
-    -- local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
-    -- vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged", "InsertLeave" }, {
-    --   group = aug,
-    --   callback = function()
-    --             lint.try_lint(nil, { ignore_errors = true })
-    --             lint.try_lint(nil, { ignore_errors = true })
-    --   end,
-    -- })
-    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "TextChanged", "InsertLeave" }, {
-      group = aug,
-      callback = function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        timer:stop()
-        timer:start(
-          DEBOUNCE_MS,
-          0,
-          vim.schedule_wrap(function()
-            if vim.api.nvim_buf_is_valid(bufnr) then
-              vim.api.nvim_buf_call(bufnr, function()
-                lint.try_lint(nil, { ignore_errors = true })
-              end)
-            end
-          end)
-        )
-      end,
-    })
+    nvim_lint_create_autocmds()
   end}
   use {"stevearc/conform.nvim", commit="161d95bfbb1ad1a2b89ba2ea75ca1b5e012a111e", config=function()
     require("conform").setup({

@@ -532,22 +532,14 @@ function _G.max_win_in_new_tab()
   vim.cmd(":" .. lnum)
 end
 
-function enable_diagnostics(diag)
-  for i, ns in pairs(vim.diagnostic.get_namespaces()) do
-    if ns.name == diag then
-      vim.diagnostic.enable(0, i)
-      vim.b['disabled_dg_' .. i] = false
-    end
-  end
+function enable_diagnostics(i)
+  vim.diagnostic.enable(0, i)
+  vim.b['disabled_dg_' .. i] = false
 end
 
-function disable_diagnostics(diag)
-  for i, ns in pairs(vim.diagnostic.get_namespaces()) do
-    if ns.name == diag then
-      vim.diagnostic.disable(0, i)
-      vim.b['disabled_dg_' .. i] = true
-    end
-  end
+function disable_diagnostics(i)
+  vim.diagnostic.disable(0, i)
+  vim.b['disabled_dg_' .. i] = true
 end
 
 function _G.telescope_enable_disable_diagnostics()
@@ -556,23 +548,19 @@ function _G.telescope_enable_disable_diagnostics()
   local actions = require "telescope.actions"
   local action_state = require "telescope.actions.state"
 
-  local buf_lsp_client_ids = {}
-  for i, cl in pairs(vim.lsp.buf_get_clients()) do
-    buf_lsp_client_ids[cl.id] = true
-  end
-
   local diagnostic_signs = {}
   for i, ns in pairs(vim.diagnostic.get_namespaces()) do
-    if ns.user_data.sign_group then
-      local id = tonumber(ns.name:gmatch("%d+$")()) -- extract the LSP id ... xxx.yy.123 -- id is 123
-      if buf_lsp_client_ids[id] ~= nil then
-        if vim.b['disabled_dg_' .. i] then
-          table.insert(diagnostic_signs, "Enable " .. ns.name)
-        else
-          table.insert(diagnostic_signs, "Disable " .. ns.name)
-        end
-      end
+    -- if ns.user_data.sign_group then
+    if vim.b['disabled_dg_' .. i] then
+      table.insert(diagnostic_signs, { display = "Enable " .. ns.name, value = i, ordinal = i, contents = ns.name })
+    else
+      table.insert(diagnostic_signs, { display = "Disable " .. ns.name, value = i, ordinal = i, contents = ns.name })
     end
+    -- end
+  end
+
+  local function entry_maker(entry)
+    return entry
   end
 
   local opts = {
@@ -586,16 +574,16 @@ function _G.telescope_enable_disable_diagnostics()
     prompt_title = "LSP Diagnostics toggle",
     finder = finders.new_table {
       results = diagnostic_signs,
+      entry_maker = entry_maker,
     },
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-        action_txt = selection[1]
-        if action_txt:sub(1, #"Enable") == "Enable" then
-          enable_diagnostics(strings.strcharpart(action_txt, #"Enable "))
+        if selection.display:sub(1, #"Enable") == "Enable" then
+          enable_diagnostics(selection.value)
         else
-          disable_diagnostics(strings.strcharpart(action_txt, #"Disable "))
+          disable_diagnostics(selection.value)
         end
       end)
       return true

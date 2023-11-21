@@ -542,9 +542,13 @@ function _G.toggle_linting()
   end
 
   if is_disable then
+    -- the reason i do app-wide and not buffer-wide is because of this,
+    -- can't disable autocmds only for the current buffer that i can see.
+    -- probably should use nvim_del_augroup_by_name() as well, but for now this works
     vim.cmd("au! Lint")
     for i, ns in pairs(vim.diagnostic.get_namespaces()) do
       if not string.match(ns.name, "vim.lsp") then
+        -- https://github.com/neovim/neovim/issues/25131
         vim.diagnostic.reset(i)
       end
     end

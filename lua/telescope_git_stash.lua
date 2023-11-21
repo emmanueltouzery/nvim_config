@@ -3,7 +3,7 @@
 
 function telescope_stash_mappings(prompt_bufnr, map)
   local actions = require('telescope.actions')
-  map('i', '<C-v>', function(nr)
+  map('i', '<C-f>', function(nr)
     stash_key = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     vim.cmd(":DiffviewOpen " .. stash_key .. "^.." .. stash_key)

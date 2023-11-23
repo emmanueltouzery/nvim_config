@@ -61,6 +61,7 @@ _G.telescope_quickfix_locations = function(opts)
     return
   end
 
+  local actions = require("telescope.actions")
   pickers.new(opts, {
     prompt_title = "Quickfix",
     finder = finders.new_table {
@@ -69,5 +70,9 @@ _G.telescope_quickfix_locations = function(opts)
     },
     previewer = conf.qflist_previewer(opts),
     sorter = conf.generic_sorter(opts),
+    attach_mappings = function(_, map)
+      map('i', '<Cr>',  actions.select_default + actions.center)
+      return true
+    end,
   }):find()
 end

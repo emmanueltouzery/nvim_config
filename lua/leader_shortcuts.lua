@@ -257,7 +257,7 @@ vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle qu
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
 vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 vim.keymap.set("n", "<leader>to", ":tabo<cr>", {desc="Delete other tabs"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
-vim.keymap.set("n", "<leader>tg", "<cmd>lua toggle_linting()<cr>", {desc = "Toggle linting for the whole neovim"})
+vim.keymap.set("n", "<leader>tl", "<cmd>lua toggle_linting()<cr>", {desc = "Toggle linting for the whole neovim"})
 
 -- GIT
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})

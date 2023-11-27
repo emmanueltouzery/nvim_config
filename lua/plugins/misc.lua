@@ -1,42 +1,42 @@
 vim.cmd("let g:choosewin_label = '1234567890'")
 vim.cmd("let g:choosewin_tablabel = 'abcdefghijklmnop'")
 
-local tree_cb = require("nvim-tree.config").nvim_tree_callback
--- local function nvim_tree_on_attach(bufnr)
---   local api = require "nvim-tree.api"
+-- local tree_cb = require("nvim-tree.config").nvim_tree_callback
+local function nvim_tree_on_attach(bufnr)
+  local api = require "nvim-tree.api"
 
---   local function opts(desc)
---     return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
---   end
+  local function opts(desc)
+    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
 
---   -- default mappings
---   api.config.mappings.default_on_attach(bufnr)
+  -- default mappings
+  api.config.mappings.default_on_attach(bufnr)
 
---   -- custom mappings
+  -- custom mappings
 
---   -- drop the - shortcut, i want it for vim-choosewin
---   vim.keymap.del('n', '-', { buffer = bufnr })
---   vim.keymap.set('n', 'U', api.tree.change_root_to_parent, opts('Up'))
+  -- drop the - shortcut, i want it for vim-choosewin
+  vim.keymap.del('n', '-', { buffer = bufnr })
+  vim.keymap.set('n', 'U', api.tree.change_root_to_parent, opts('Up'))
 
---   -- drop C-e and C-x, i want the scrolling
---   vim.keymap.del('n', '<C-e>', { buffer = bufnr })
---   vim.keymap.del('n', '<C-x>', { buffer = bufnr })
+  -- drop C-e and C-x, i want the scrolling
+  vim.keymap.del('n', '<C-e>', { buffer = bufnr })
+  vim.keymap.del('n', '<C-x>', { buffer = bufnr })
 
---   -- drop s and S, i want lightning jumps
---   vim.keymap.del('n', 'S', { buffer = bufnr })
---   vim.keymap.del('n', 's', { buffer = bufnr })
+  -- drop s and S, i want lightning jumps
+  vim.keymap.del('n', 'S', { buffer = bufnr })
+  vim.keymap.del('n', 's', { buffer = bufnr })
 
---   -- remap search to C-s
---   vim.keymap.set('n', '<C-s>', api.tree.search_node, opts('Search'))
+  -- remap search to C-s
+  vim.keymap.set('n', '<C-s>', api.tree.search_node, opts('Search'))
 
---   -- override to open with no picker (same as `o`)
---   vim.keymap.set('n', '<CR>',       api.node.open.edit,                  opts('Open'))
---   -- open with picker (same as `O`)
---   vim.keymap.set('n', '<M-CR>',       api.node.open.no_window_picker,      opts('Open: No Window Picker'))
--- end
+  -- override to open with no picker (same as `o`)
+  vim.keymap.set('n', '<CR>',       api.node.open.edit,                  opts('Open'))
+  -- open with picker (same as `O`)
+  vim.keymap.set('n', '<M-CR>',       api.node.open.no_window_picker,      opts('Open: No Window Picker'))
+end
 
 require'nvim-tree'.setup {
-  -- on_attach = nvim_tree_on_attach,
+  on_attach = nvim_tree_on_attach,
   diagnostics = {
     enable = true,
   },
@@ -65,25 +65,6 @@ require'nvim-tree'.setup {
         }
       end,
     },
-    mappings = {
-      list = {
-        -- drop the - shortcut, i want it for vim-choosewin
-        { key = "U", cb = tree_cb("dir_up") }, -- my change
-        { key = "-", action = "" },
-        -- drop C-e and C-x, i want the scrolling
-        { key = "<C-e>", action = "" },
-        { key = "<C-x>", action = "" },
-        -- drop s and S, i want lightning jumps
-        { key = "S", action = "" },
-        { key = "s", action = "" },
-        -- remap search to C-s
-        { key = "<c-s>", action = "search_node" },
-        -- override to open with no picker (same as `o`)
-        { key = "<CR>", action = "edit_no_picker" },
-        -- open with picker (same as `O`)
-        { key = "<M-CR>", action = "open_file" },
-      }
-    }
   },
   renderer = {
     group_empty = true,
@@ -142,6 +123,7 @@ api.events.subscribe(Event.FileCreated, function(data)
       "package " .. package_name .. ";\n\npublic class " .. class_name .. " {\n\n}", 'w'
     )
   end
+  -- require'nvim-tree.api'.tree.find_file(data.fname)
 end)
 
 vim.cmd[[autocmd BufNewFile *.tsx exe "norm iimport React from 'react';"]]

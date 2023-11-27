@@ -683,7 +683,7 @@ callbacks = {
     })
     require('telescope').load_extension('aerial')
   end}
-  use {'NeogitOrg/neogit', commit='51a6e6c8952b361300be57b36c8e1b973880cdd7', config = function()
+  use {'NeogitOrg/neogit', commit='3c4db5d1040909879136ea49ca67d68896f5a3b1', config = function()
     require('neogit') .setup {
       -- disable_context_highlighting = true,
       signs = {

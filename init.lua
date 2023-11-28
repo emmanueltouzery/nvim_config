@@ -195,7 +195,6 @@ require('packer').startup(function(use)
     -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3295
     vim.treesitter.language.register("html", "xml")
   end}
-  use {'JoosepAlviste/nvim-ts-context-commentstring', commit='a0f89563ba36b3bacd62cf967b46beb4c2c29e52'}
   use {'neovim/nvim-lspconfig', commit='2dd9e060f21eecd403736bef07ec83b73341d955'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='777450fd0ae289463a14481673e26246b5e38bf2'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='0e6b2ed705ddcff9738ec4ea838141654f12eeef'}

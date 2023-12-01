@@ -268,7 +268,7 @@ require('packer').startup(function(use)
             {"n", "F",
               function() -- jump to first file in the diff
                 local view = require'diffview.lib'.get_current_view()
-                view:set_file(view.panel.files[1], false, true)
+                view:set_file(view.panel:ordered_file_list()[1], false, true)
               end,
               {desc = "Jump to first file"},
             },

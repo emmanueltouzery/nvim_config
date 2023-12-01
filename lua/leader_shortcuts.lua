@@ -432,6 +432,8 @@ function format_buf()
     vim.cmd(':%!prettier --parser typescript')
   elseif vim.bo.filetype == 'html' then
     vim.cmd(':%!prettier --parser html')
+  elseif vim.bo.filetype == 'xml' then
+    vim.cmd(':%!xmllint --format -')
   elseif vim.bo.filetype == 'elixir' then
     vim.cmd(':%!mix format -')
   elseif vim.bo.filetype == 'sql' then

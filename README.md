@@ -17,3 +17,5 @@ npm i -g prettier
 <https://github.com/josephburnett/jd> -- for json diff integration
 
 Set up https://github.com/emmanueltouzery/invim in your path and executable to get nicer $EDITOR from within the neovim terminal.
+
+`xmllint` for XML indentation

@@ -622,7 +622,7 @@ callbacks = {
       },
       filter_kind = false,
       icons = {
-        Field       = " 󰙅 ",
+        Field       = "󰙅 ",
         Type        = "󰊄 ",
       },
       treesitter = {

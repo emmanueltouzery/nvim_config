@@ -91,7 +91,19 @@ require('packer').startup(function(use)
           i = {
             ["<C-n>"] = actions.cycle_history_next,
             ["<C-p>"] = actions.cycle_history_prev,
+
+              -- https://github.com/nvim-telescope/telescope.nvim/issues/2115#issuecomment-1366575821
+            ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
+            ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
+            ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
+            ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
           },
+          n = {
+            ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
+            ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
+            ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
+            ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
+          }
         },
       },
       pickers = {

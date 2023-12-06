@@ -173,7 +173,7 @@ require('packer').startup(function(use)
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
       ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown",
-        "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy" },
+        "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql" },
       highlight = {
         enable = true ,
         -- syntax highlight for XML looks significantly worse with tree-sitter than regex,
@@ -996,6 +996,27 @@ callbacks = {
         require("conform").format({ bufnr = args.buf })
       end,
     })
+  end}
+  use {"tpope/vim-dadbod", commit="738cfc2ea6a1510fe23cba9006fef9291be70f7b"}
+  use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
+    vim.g.db_ui_use_nerd_fonts = 1
+    -- vim.g.db_ui_use_nvim_notify = 1
+
+    -- can use my own notifications, but i actually prefer theirs
+    -- vim.notify = function(msg, level, opts)
+    --   if opts and (opts.title == "Neogit" or opts.title == "[DBUI]") then
+    --     if level == "info" then -- needed for DBUI/dadbod-ui
+    --       level = vim.log.levels.INFO
+    --     end
+
+  end}
+  use {"kristijanhusak/vim-dadbod-completion", commit="c920cb0ba3dff4b1b0ed373e1c0b3007dec696c2", config=function()
+    vim.cmd[[autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })]]
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "dbout",
+      callback=function(ev)
+        vim.api.nvim_win_set_height(0, 40)
+      end})
   end}
 end)
 

@@ -112,6 +112,7 @@ cmp.setup {
         buffer = "[Buf]",
         nvim_lua = "[Lua]",
         path = "[Path]",
+        ['vim-dadbod-completion'] = "[DB]",
       })[entry.source.name]
       item.dup = ({
         buffer = 1,

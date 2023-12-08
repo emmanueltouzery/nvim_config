@@ -1128,6 +1128,7 @@ require("qftf")
 require("notifs")
 require("ts_unused_imports")
 require("elixir")
+require("database")
 
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 

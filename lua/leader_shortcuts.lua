@@ -135,6 +135,7 @@ vim.keymap.set("n", "<leader>sd*", "<cmd>lua my_open_tele(true)<cr>", {desc="Sea
 vim.keymap.set("v", "<leader>sd*", "<cmd>lua my_open_tele_sel(true)<cr>", {desc="Search selected text, raw"})
 require 'key-menu'.set('n', '<Space>ss', {desc='Search LSP symbols'})
 -- vim.keymap.set("n", "<leader>ssf", "<cmd>lua require'telescope.builtin'.lsp_document_symbols{symbol_width=80}<cr>", { desc = "Goto file LSP symbol"}) -- show_line=true would be another possible option
+vim.keymap.set("n", "<leader>sD", "<cmd>:DevdocsGrep<cr>", {desc="Search in apidocs"})
 
 -- telescope display+center vertically
 function _G.telescope_center_mappings(prompt_bufnr, map)

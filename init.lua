@@ -936,8 +936,9 @@ callbacks = {
       end
     })
   end}
-  use {"luckasRanarison/nvim-devdocs", 
-    commit = '382e1710b9e82731485bd11cb3306675f127b5e6',
+  -- using my fork until https://github.com/luckasRanarison/nvim-devdocs/pull/66 is merged
+  use {"emmanueltouzery/nvim-devdocs",
+    commit = '21067763a09b507b65c0194ff163cc8801698546',
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",

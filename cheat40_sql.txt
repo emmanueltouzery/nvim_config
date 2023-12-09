@@ -1,0 +1,12 @@
+Press q to dismiss, <Tab> to lose focus
+Query flags {{{1
+Expanded display         \x
+# \a non-aligned cols
+# \f field separator
+CSV export               \f ',' \a
+Save to file             \o fname
+}}}
+SQL functions {{{1
+Format JSONB             jsonb_pretty()
+Format JSON              json_pretty()
+}}}

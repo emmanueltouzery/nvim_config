@@ -1,12 +1,16 @@
 Press q to dismiss, <Tab> to lose focus
-Query flags {{{1
+Postgres Query flags {{{1
 Expanded display         \x
 # \a non-aligned cols
 # \f field separator
 CSV export               \f ',' \a
 Save to file             \o fname
+Tables with sizes        \dt+
+Functions                \df
+Functions + system fns   \dfS
+Pipe results             \o | command
 }}}
-SQL functions {{{1
+Postgres SQL functions {{{1
 Format JSONB             jsonb_pretty()
 Format JSON              json_pretty()
 }}}

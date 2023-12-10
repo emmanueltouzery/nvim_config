@@ -13,4 +13,6 @@ Pipe results             \o | command
 Postgres SQL functions {{{1
 Format JSONB             jsonb_pretty()
 Format JSON              json_pretty()
+# can be cast to jsonb using ::jsonb
+Array to JSON            array_to_json()
 }}}

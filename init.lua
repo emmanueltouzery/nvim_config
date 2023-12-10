@@ -1001,7 +1001,7 @@ callbacks = {
       end,
     })
   end}
-  use {"emmanueltouzery/vim-dadbod", commit="a4d0866716a314def5b55095cf3ba1a971e80783"} -- my fork until https://github.com/tpope/vim-dadbod/pull/151 is merged
+  use {"emmanueltouzery/vim-dadbod", commit="6bc5008df26f7bca8b06a3b11ac08b6e56959ac7"} -- my fork until https://github.com/tpope/vim-dadbod/pull/151 is merged
   use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
     vim.g.db_ui_use_nerd_fonts = 1
     -- vim.g.db_ui_use_nvim_notify = 1

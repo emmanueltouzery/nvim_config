@@ -1093,7 +1093,7 @@ function _G.search_code_deps()
   end
 end
 
-DiffExcludeFTs = {"NvimTree", "packer", "cheat40", "OverseerList", "aerial", "AgitatorTimeMachine"}
+DiffExcludeFTs = {"NvimTree", "packer", "cheat40", "OverseerList", "aerial", "AgitatorTimeMachine", "qf"}
 
 function _G.toggle_diff()
   -- remember which is the current window

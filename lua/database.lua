@@ -32,6 +32,83 @@ function _G.pick_local_pg_db()
   })
 end
 
+function _G.open_saved_query()
+  local folder = string.gsub(vim.g.db_ui_save_location, '~', vim.loop.os_homedir())
+  local sd = vim.loop.fs_scandir(folder)
+  local saved_queries = {}
+  while true do
+    local name, type = vim.loop.fs_scandir_next(sd)
+    if name == nil then break end
+    if type == 'directory' then
+      local nested_path = folder .. "/" .. name
+      local nested_sd = vim.loop.fs_scandir(nested_path)
+      while true do
+        local nested_name, nested_type = vim.loop.fs_scandir_next(nested_sd)
+        if nested_name == nil then break end
+        table.insert(saved_queries, name .. "/" .. nested_name)
+      end
+    end
+  end
+
+  local pickers = require "telescope.pickers"
+  local previewers = require "telescope.previewers"
+  local finders = require "telescope.finders"
+  local conf = require("telescope.config").values
+  local actions = require("telescope.actions")
+  local putils = require("telescope.previewers.utils")
+  local opts = {}
+
+  pickers.new(opts, {
+    prompt_title = "Saved queries",
+    finder = finders.new_table {
+      results = saved_queries,
+      entry_maker = function(val)
+        entry = {}
+        entry.value = folder .. "/" .. val
+        entry.ordinal = val
+        entry.display = val
+        return entry
+      end,
+    },
+    -- previewer = conf.file_previewer(opts),
+    previewer = previewers.new_buffer_previewer {
+      title = "Query",
+
+      get_buffer_by_name = function(_, entry)
+        return entry.value
+      end,
+
+      define_preview = function(self, entry)
+        conf.buffer_previewer_maker(entry.value, self.state.bufnr, {
+          bufname = self.state.bufname,
+          winid = self.state.winid,
+          callback = function(bufnr)
+            putils.regex_highlighter(bufnr, "sql")
+          end,
+        })
+      end,
+    },
+    sorter = conf.generic_sorter(opts),
+    attach_mappings = function(_, map)
+      map('i', '<Cr>',  function(prompt_bufnr)
+        filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+        local Path = require("plenary.path")
+        actions.close(prompt_bufnr)
+        -- copy to the clipboard
+        vim.fn.setreg('+', Path.new(filename):read())
+      end)
+      map('i', '<C-o>',  function(prompt_bufnr)
+        filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+        local Path = require("plenary.path")
+        vim.fn.jobstart({"xdg-open", Path.new(filename):parent().filename})
+      end)
+      return true
+    end,
+  }):find()
+end
+
+
 require 'key-menu'.set('n', '<Space>d', {desc='Database'})
 vim.keymap.set("n", "<leader>do", ":tabnew | :DBUIToggle<cr>", {desc="Database open"})
 vim.keymap.set("n", "<leader>dp", ":lua pick_local_pg_db()<cr>", {desc="open local Postgres Database"})
+vim.keymap.set("n", "<leader>ds", ":lua open_saved_query()<cr>", {desc="Database Saved query to clipboard"})

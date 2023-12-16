@@ -83,7 +83,7 @@ function _G.open_saved_query()
           bufname = self.state.bufname,
           winid = self.state.winid,
           callback = function(bufnr)
-            putils.regex_highlighter(bufnr, "sql")
+            putils.highlighter(bufnr, "sql")
           end,
         })
       end,

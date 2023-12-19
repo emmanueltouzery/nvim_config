@@ -368,8 +368,7 @@ require('packer').startup(function(use)
   end}
   use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
   use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
-  -- my fork, until https://github.com/lifepillar/vim-cheat40/pull/11 is maybe merged
-  use {'emmanueltouzery/vim-cheat40', commit='94bba432f3f2cc4d7e662a1b796f89a360757707', config=function()
+  use {'lifepillar/vim-cheat40', commit='22c505b9334abc603fc23a3776360ab3a86e0ab5', config=function()
     vim.cmd[[autocmd! FileType cheat40 :set signcolumn=no]]
   end}
   use {

@@ -10,39 +10,20 @@ local Str = require'plenary.strings'
 local Path = require'plenary.path'
 
 _G.telescope_global_marks = function(opts)
-  vim.cmd("rsh") -- read shada file
   local get_marks_table = function()
-    local global_marks = {
-      items = vim.fn.getmarklist(),
-      name_func = function(mark, _)
-        -- get buffer name if it is opened, otherwise get file name
-        return vim.api.nvim_get_mark(mark, {})[4]
-      end,
-    }
+    local global_marks = load_my_marks()
     local marks_table = {}
-    local bufname = vim.api.nvim_buf_get_name(opts.bufnr or 0)
-    for _, cnf in ipairs { global_marks } do
-      for _, v in ipairs(cnf.items) do
-        -- strip the first single quote character
-        local mark = string.sub(v.mark, 2, 3)
-        local _, lnum, col, _ = unpack(v.pos)
-        -- need to use plenary to expand the path, else when the buffer is
-        -- opened, I get ~ for the start of the path and I can't find the project.
-        local name = Path.new(cnf.name_func(mark, lnum)):expand()
-        local path_project = to_file_path_in_project(name)
-        local row = {
-          mark = mark,
-          project = path_project and path_project[1]:match("[^/]+$") or "-",
-          relative_fname = path_project and path_project[2] or name,
-          lnum = lnum,
-          col = col,
-          filename = name or bufname,
-        }
-        -- only keep global marks (u="uppercase")
-        if mark:match "%u" then
-          table.insert(marks_table, row)
-        end
-      end
+    for _, mark in ipairs(global_marks) do
+      local project_root = string.gsub(mark[2], "/" .. mark[1], "")
+      local project = project_root:match("[^/]+$")
+      local row = {
+        project = project,
+        relative_fname = mark[1],
+        lnum = mark[3],
+        col = 1,
+        filename = mark[2],
+      }
+      table.insert(marks_table, row)
     end
     return marks_table
   end
@@ -58,11 +39,7 @@ _G.telescope_global_marks = function(opts)
   actions.delete_mark = function(prompt_bufnr)
     local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
     local entry = action_state.get_selected_entry()
-    vim.cmd("delmarks " .. entry.mark)
-    -- https://github.com/neovim/neovim/issues/7198#issuecomment-323649157
-    -- without wshada! the marks would return after a nvim restart...
-    -- also slightly related: https://stackoverflow.com/a/32138657/516188
-    vim.cmd("wshada!")
+    remove_global_mark(entry.filename, entry.lnum)
     current_picker:refresh(gen_new_finder(), { reset_prompt = true })
   end
 
@@ -82,13 +59,11 @@ _G.telescope_global_marks = function(opts)
 end
 
 function global_marks_entry_maker()
-  local width1 = 1
-  local width2 = 9
-  local total_width = width1 + width2 + 2 -- two separator spaces
+  local width2 = 18
+  local total_width = width2 + 2 -- two separator spaces
   local displayer = entry_display.create {
     separator = " ",
     items = {
-      { width = width1 },
       { width = width2 },
       { remaining = true },
     },
@@ -101,7 +76,7 @@ function global_marks_entry_maker()
     local true_len = len - total_width
     local relative_fname = utils.transform_path({__length = true_len}, entry.relative_fname)
     return displayer {
-      {entry.mark, "TelescopeResultsNumber"},
+      -- {entry.mark, "TelescopeResultsNumber"},
       {entry.project, "TelescopeResultsTitle"},
       relative_fname,
     }
@@ -111,11 +86,10 @@ function global_marks_entry_maker()
     return {
       valid = true,
 
-      value = entry.mark .. " " .. entry.filename,
-      ordinal = entry.mark,
+      value = entry.filename,
+      ordinal = entry.filename,
       display = make_display,
 
-      mark = entry.mark,
       project = entry.project,
       relative_fname = entry.relative_fname,
 

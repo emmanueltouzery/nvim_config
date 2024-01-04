@@ -29,6 +29,7 @@ vim.keymap.set("n", "<C-n>", ":lua vim.diagnostic.goto_next({severity=vim.diagno
 
 -- https://github.com/b3nj5m1n/kommentary/issues/11
 vim.api.nvim_set_keymap('n', 'gCC', '<cmd>lua toggle_comment_custom_commentstring_curline()<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'gR', '<cmd>lua recomment_last_selection_custom_commentstring()<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', 'gC', ':<C-u>lua toggle_comment_custom_commentstring_sel()<cr>', { noremap = true, silent = true })
 
 -- resizing splits

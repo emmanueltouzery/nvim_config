@@ -405,6 +405,17 @@ function _G.toggle_comment_custom_commentstring_sel()
   _G.toggle_comment_custom_commentstring(startline, endline)
 end
 
+-- we previously commented "normally" but should have used the alternate
+-- commenting => reselect the previous, uncomment, reselect and comment with alternate
+function _G.recomment_last_selection_custom_commentstring()
+  vim.cmd('norm! gv') -- reselect
+  vim.fn.feedkeys('gc') -- uncomment
+  vim.defer_fn(function()
+    vim.cmd('norm! gv') -- reselect
+    toggle_comment_custom_commentstring_sel() -- comment alternate
+  end, 10)
+end
+
 -- https://github.com/b3nj5m1n/kommentary/issues/11
 --[[ This is our custom function for toggling comments with a custom commentstring,
 it's based on the default toggle_comment, but before calling the function for

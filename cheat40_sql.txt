@@ -16,3 +16,6 @@ Format JSON              json_pretty()
 # can be cast to jsonb using ::jsonb
 Array to JSON            array_to_json()
 }}}
+Postgresql syntax {{{1
+Set array value          '{"e1", "e2"}'
+}}}

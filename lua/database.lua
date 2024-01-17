@@ -2,6 +2,18 @@ function _G.open_local_postgres_db(db_name)
   vim.g.dbs = {
     [db_name] = "postgresql://postgres@localhost/" .. db_name
   }
+  open_db_common(db_name)
+end
+
+function _G.open_json()
+  local db_name = vim.fn.expand('%')
+  vim.g.dbs = {
+    [db_name] = "jq:" .. db_name
+  }
+  open_db_common(db_name)
+end
+
+function _G.open_db_common(db_name)
   vim.cmd[[tabnew]]
   vim.fn['db_ui#reset_state']()
   vim.b.dbui_db_key_name = db_name .. "_g:dbs"
@@ -112,3 +124,4 @@ require 'key-menu'.set('n', '<Space>d', {desc='Database'})
 vim.keymap.set("n", "<leader>do", ":tabnew | :DBUIToggle<cr>", {desc="Database open"})
 vim.keymap.set("n", "<leader>dp", ":lua pick_local_pg_db()<cr>", {desc="open local Postgres Database"})
 vim.keymap.set("n", "<leader>ds", ":lua open_saved_query()<cr>", {desc="Database Saved query to clipboard"})
+vim.keymap.set("n", "<leader>dj", ":lua open_json()<cr>", {desc="Database open current JSON file"})

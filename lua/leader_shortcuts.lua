@@ -234,6 +234,7 @@ vim.keymap.set("n", "<leader>ou", "<cmd>lua require('telescope').extensions.undo
 vim.keymap.set("n", "<leader>os", "<cmd>AerialOpen<CR>", {desc = "Open symbols"})
 vim.keymap.set("n", "<leader>od", "<cmd>DevdocsOpen<CR>", {desc = "Open devdocs"})
 vim.keymap.set("n", "<leader>oi", "<cmd>ConformInfo<CR>", {desc = "Open indent infos"}) -- useful if formatting fails, can see info
+vim.keymap.set("n", "<leader>oP", "<cmd>lua require'telescope.builtin'.pickers{}<CR>", {desc = "(re)open recent telescope picker"})
 
 -- TOGGLE
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})

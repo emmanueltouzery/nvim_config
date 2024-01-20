@@ -93,6 +93,20 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
+    ['<PageDown>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item({count=20})
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<PageUp>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item({count=20})
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
   }),
   sources = {
     { name = "nvim_lua" },

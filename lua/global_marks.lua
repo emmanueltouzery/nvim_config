@@ -66,12 +66,16 @@ end
 
 function _G.remove_global_mark(fname, lnum)
   local marks = load_my_marks()
-  local filtered_marks = vim.tbl_filter(function(mark)
-    return mark[2] ~= fname or mark[3] ~= lnum
-  end, marks)
   local mark_str = ""
-  for _, mark in ipairs(filtered_marks) do
-    mark_str = mark_str .. my_mark_file_row(mark)
+  -- drop a single entry max. otherwise if i get duplicates, i end up
+  -- deleting all the duplicates, not just one
+  local dropped_one_already = false
+  for _, mark in ipairs(marks) do
+    if not dropped_one_already and (mark[2] == fname or mark[3] == lnum) then
+      dropped_one_already = true
+    else
+      mark_str = mark_str .. my_mark_file_row(mark)
+    end
   end
   local Path = require("plenary.path")
   local path = Path.new(my_marks_fname())

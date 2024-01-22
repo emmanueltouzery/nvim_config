@@ -18,6 +18,26 @@ function _G.load_my_marks()
         table.insert(marks, {fields[1], fields[2], tonumber(fields[3])})
       end
     end
+
+  table.sort(marks, function(a,b)
+    -- project
+    if a[1] < b[1] then
+      return true
+    end
+    if a[1] > b[1] then
+      return false
+    end
+    -- file
+    if a[2] < b[2] then
+      return true
+    end
+    if a[2] > b[2] then
+      return false
+    end
+    -- line
+    return a[3] < b[3]
+  end)
+
     return marks
   end
 end

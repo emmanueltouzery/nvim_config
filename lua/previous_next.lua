@@ -1,7 +1,7 @@
 function get_sorted_qf_locations()
   local locations = _G.get_qf_locations({})
 
-  table.sort(locations, function(a,b) 
+  table.sort(locations, function(a,b)
     local a_filename = a.filename or vim.api.nvim_buf_get_name(a.bufnr)
     local b_filename = b.filename or vim.api.nvim_buf_get_name(b.bufnr)
     if a_filename < b_filename then

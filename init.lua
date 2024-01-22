@@ -368,7 +368,9 @@ require('packer').startup(function(use)
   end} -- considered https://github.com/gbprod/yanky.nvim & https://github.com/AckslD/nvim-neoclip.lua too, previously used maxbrunsfeld/vim-yankstack
   use {'emmanueltouzery/vim-elixir', commit='735528cecc19ecffa002ffa20176e9984cced970'}
   use {'ellisonleao/glow.nvim', commit='238070a686c1da3bccccf1079700eb4b5e19aea4', config=function()
-    require('glow').setup()
+    require('glow').setup({
+      border = "rounded",
+    })
   end}
   use {'smjonas/live-command.nvim', commit='ce4b104ce702c7bb9fdff863059af6d47107ca61', config=function()
     require("live-command").setup {

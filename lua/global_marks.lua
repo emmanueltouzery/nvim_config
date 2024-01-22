@@ -71,7 +71,7 @@ function _G.remove_global_mark(fname, lnum)
   -- deleting all the duplicates, not just one
   local dropped_one_already = false
   for _, mark in ipairs(marks) do
-    if not dropped_one_already and (mark[2] == fname or mark[3] == lnum) then
+    if (not dropped_one_already) and mark[2] == fname and mark[3] == lnum then
       dropped_one_already = true
     else
       mark_str = mark_str .. my_mark_file_row(mark)

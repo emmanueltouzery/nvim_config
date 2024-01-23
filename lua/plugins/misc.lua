@@ -30,9 +30,9 @@ local function nvim_tree_on_attach(bufnr)
   vim.keymap.set('n', '<C-s>', api.tree.search_node, opts('Search'))
 
   -- override to open with no picker (same as `o`)
-  vim.keymap.set('n', '<CR>',       api.node.open.edit,                  opts('Open'))
+  vim.keymap.set('n', '<CR>',       api.node.open.no_window_picker,                  opts('Open: No Window Picker'))
   -- open with picker (same as `O`)
-  vim.keymap.set('n', '<M-CR>',       api.node.open.no_window_picker,      opts('Open: No Window Picker'))
+  vim.keymap.set('n', '<M-CR>',       api.node.open.edit,      opts('Open, window picker'))
 end
 
 require'nvim-tree'.setup {

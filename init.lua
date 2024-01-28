@@ -226,6 +226,7 @@ require('packer').startup(function(use)
   use {'emmanueltouzery/doom-one.nvim', commit='c37b78b', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
+      italic_comments = true,
       diagnostics_color_text = false,
       plugins_integrations = {
         telescope = true,

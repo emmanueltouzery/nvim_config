@@ -9,12 +9,17 @@ local get_status = require("telescope.state").get_status
 local Str = require'plenary.strings'
 local Path = require'plenary.path'
 
+-- https://stackoverflow.com/a/34953646/516188
+local function escape_pattern(text)
+  return text:gsub("([^%w])", "%%%1")
+end
+
 _G.telescope_global_marks = function(opts)
   local get_marks_table = function()
     local global_marks = load_my_marks()
     local marks_table = {}
     for _, mark in ipairs(global_marks) do
-      local project_root = string.gsub(mark[2], "/" .. mark[1], "")
+      local project_root = string.gsub(mark[2], "/" .. escape_pattern(mark[1]), "")
       local project = project_root:match("[^/]+$")
       local row = {
         project = project,

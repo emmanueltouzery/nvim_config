@@ -8,7 +8,7 @@ function _G.my_open_tele(cur_folder_only)
       local folder = vim.fn.expand('%:h')
       params.cwd = folder
     end
-    require("telescope").extensions.live_grep_raw.live_grep_raw(params)
+    require("telescope").extensions.live_grep_args.live_grep_args(params)
     vim.fn.feedkeys(w)
 end
 
@@ -19,7 +19,7 @@ function _G.my_open_tele_sel(cur_folder_only)
       local folder = vim.fn.expand('%:h')
       params.cwd = folder
     end
-    require("telescope").extensions.live_grep_raw.live_grep_raw(params)
+    require("telescope").extensions.live_grep_args.live_grep_args(params)
     vim.fn.feedkeys(w)
 end
 
@@ -1073,7 +1073,7 @@ end
 
 function _G.search_code_deps()
   if vim.fn.isdirectory("node_modules") then
-    require('telescope').extensions.live_grep_raw.live_grep_raw({cwd="node_modules"})
+    require('telescope').extensions.live_grep_args.live_grep_args({cwd="node_modules"})
   else
     vim.cmd[[echohl ErrorMsg | echo "Not handled for this project type" | echohl None]]
   end

@@ -155,7 +155,20 @@ require('packer').startup(function(use)
         },
         project = {
           hidden_files = true,
-        }
+        },
+        live_grep_args = {
+          vimgrep_arguments = {
+            -- add --hidden to the defaults
+            "rg",
+            "--color=never",
+            "--no-heading",
+            "--with-filename",
+            "--line-number",
+            "--column",
+            "--smart-case",
+            "--hidden"
+          },
+        },
       },
     }
     require("telescope").load_extension("undo")
@@ -351,7 +364,7 @@ require('packer').startup(function(use)
       require('diffview').init()
     end
   }
-  use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='8124094e11b54a1853c3306d78e6ca9a8d40d0cb'}
+  use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='731a046da7dd3adff9de871a42f9b7fb85f60f47'}
   use {'emmanueltouzery/agitator.nvim', commit='87774235ccd57bf42c0597b682d5c37bc2c6cb24'}
   -- use {'/home/emmanuel/home/elixir-extras.nvim'
   use {'emmanueltouzery/elixir-extras.nvim'

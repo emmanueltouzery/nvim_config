@@ -112,7 +112,7 @@ vim.keymap.set("n", "<leader>fmd", ":lua set_fm('disable')<cr>", {desc="Disable 
 require 'key-menu'.set('n', '<Space>s', {desc='Search'})
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>*", "<cmd>lua my_open_tele_sel()<cr>", {desc="Search selected text, raw"})
-vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw()<cr>", {desc="Search text raw"})
+vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<cr>", {desc="Search text raw"})
 function _G.buffer_fuzzy_find(word_under_cursor)
   local w = vim.fn.expand('<cword>')
   local opts = {}
@@ -130,7 +130,7 @@ end
 vim.keymap.set("n", "<leader>sbb", "<cmd>lua buffer_fuzzy_find(false)<cr>", {desc="search in Buffer"})
 vim.keymap.set("n", "<leader>sb*", "<cmd>lua buffer_fuzzy_find(true)<cr>", {desc="search in Buffer"})
 require 'key-menu'.set('n', '<Space>sd', {desc='Search in file Directory'})
-vim.keymap.set("n", "<leader>sdd", "<cmd>lua require('telescope').extensions.live_grep_raw.live_grep_raw({cwd=vim.fn.expand('%:h')})<cr>", {desc="Search text raw in Directory"})
+vim.keymap.set("n", "<leader>sdd", "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args({cwd=vim.fn.expand('%:h')})<cr>", {desc="Search text raw in Directory"})
 vim.keymap.set("n", "<leader>sd*", "<cmd>lua my_open_tele(true)<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>sd*", "<cmd>lua my_open_tele_sel(true)<cr>", {desc="Search selected text, raw"})
 require 'key-menu'.set('n', '<Space>ss', {desc='Search LSP symbols'})
@@ -195,7 +195,7 @@ vim.keymap.set("n", "<leader>pT", "<cmd>TSUpdate<cr>", { desc = "Tree-sitter upd
 -- also used by telescope_modified_git_projects
 function _G.tel_proj_attach_mappings(prompt_bufnr, map)
   map('i', '<C-s>', function(nr)
-    require('telescope').extensions.live_grep_raw.live_grep_raw{
+    require('telescope').extensions.live_grep_args.live_grep_args{
       cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     }
   end)

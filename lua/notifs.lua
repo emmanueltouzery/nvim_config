@@ -65,6 +65,9 @@ function _G.notif_format_msg(msg)
 end
 
 function _G.notif(msg, level, opts)
+  if #msg == 0 then
+    return
+  end
   if not vim.g.notifs_focused then
     local system_notif_msg = {unpack(msg)}
     local title = table.remove(system_notif_msg, 1)

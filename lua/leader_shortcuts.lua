@@ -283,7 +283,11 @@ function telescope_commits_mappings(prompt_bufnr, map)
     for _, entry in ipairs(picker:get_multi_selection()) do
       table.insert(commits, entry.value)
     end
-    if #commits ~= 2 then
+    if #commits == 0 then
+      commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+      actions.close(prompt_bufnr)
+      vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
+    elseif #commits ~= 2 then
       print("Must select two commits for diff")
     else
       actions.close(prompt_bufnr)

@@ -153,6 +153,9 @@ require('packer').startup(function(use)
             },
           },
         },
+        project = {
+          hidden_files = true,
+        }
       },
     }
     require("telescope").load_extension("undo")

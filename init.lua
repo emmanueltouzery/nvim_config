@@ -223,10 +223,10 @@ require('packer').startup(function(use)
   use {'saadparwaiz1/cmp_luasnip', commit = '18095520391186d634a0045dacaa346291096566'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
-  use {'emmanueltouzery/doom-one.nvim', commit='c37b78b', config = function()
+  use {'emmanueltouzery/doom-one.nvim', commit='4fb832d4aa8a0f2438599f2b575a797f8cf045ce', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
-      -- italic_comments = true,
+      italic_comments = true,
       diagnostics_color_text = false,
       plugins_integrations = {
         telescope = true,

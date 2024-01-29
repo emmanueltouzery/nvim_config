@@ -128,10 +128,6 @@ end)
 
 vim.cmd[[autocmd BufNewFile *.tsx exe "norm iimport React from 'react';"]]
 
--- more visible comments compared to the doom-nvim default
--- nice in general, almost required in diff mode.
-vim.cmd[[au Colorscheme * hi Comment guifg=#808080]]
-
 vim.g.glow_width = 120
 vim.g.glow_border = "rounded"
 

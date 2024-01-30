@@ -92,7 +92,7 @@ require('packer').startup(function(use)
           -- useful for the shortcut to open recent pickers, `:help builtin.pickers`
           num_pickers = 3,
         },
-        file_ignore_patterns = { "^%.git/", "^node_modules/", "^__pycache__/" },
+        file_ignore_patterns = { "/%.git/", "^%.git/", "/node_modules/", "^node_modules/", "^__pycache__/" },
         mappings = {
           i = {
             ["<C-n>"] = actions.cycle_history_next,

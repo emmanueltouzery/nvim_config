@@ -253,8 +253,8 @@ require('packer').startup(function(use)
     -- the theme MUST be loaded before we attempt to load bufferline
     require("plugins.bufferline")
   end}
-  use {'airblade/vim-rooter', commit='0415be8b5989e56f6c9e382a04906b7f719cfb38', config = function() 
-    vim.g.rooter_silent_chdir = 1 
+  use {'airblade/vim-rooter', commit='0415be8b5989e56f6c9e382a04906b7f719cfb38', config = function()
+    vim.g.rooter_silent_chdir = 1
     vim.g.rooter_cd_cmd = 'lcd'
     vim.g.rooter_change_directory_for_non_project_files = 'current'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}

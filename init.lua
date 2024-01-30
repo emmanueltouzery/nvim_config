@@ -159,7 +159,7 @@ require('packer').startup(function(use)
         live_grep_args = {
           auto_quoting = false,
           vimgrep_arguments = {
-            -- add --hidden to the defaults
+            -- add --ignore-file to the defaults
             "rg",
             "--color=never",
             "--no-heading",
@@ -167,7 +167,7 @@ require('packer').startup(function(use)
             "--line-number",
             "--column",
             "--smart-case",
-            "--hidden"
+            "--ignore-file=" .. vim.fn.stdpath("config") .. "/rg-ignore",
           },
         },
       },

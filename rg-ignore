@@ -1,0 +1,4 @@
+!.gitignore
+!.npmignore
+!.github
+!.gitlab-ci.yml

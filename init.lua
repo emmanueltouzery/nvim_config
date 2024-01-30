@@ -157,6 +157,7 @@ require('packer').startup(function(use)
           hidden_files = true,
         },
         live_grep_args = {
+          auto_quoting = false,
           vimgrep_arguments = {
             -- add --hidden to the defaults
             "rg",

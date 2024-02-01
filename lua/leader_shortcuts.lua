@@ -346,6 +346,31 @@ function telescope_branches_mappings(prompt_bufnr, map)
       })
     end
   end)
+  map('i', '<C-b>', function(nr) -- rebase on another branch
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local cmd_output = {}
+    actions.close(prompt_bufnr)
+    vim.fn.jobstart('git rebase ' .. branch, {
+      stdout_buffered = true,
+      on_stdout = vim.schedule_wrap(function(j, output)
+        for _, line in ipairs(output) do
+          if #line > 0 then
+            table.insert(cmd_output, line)
+          end
+        end
+      end),
+      on_stderr = vim.schedule_wrap(function(j, output)
+        for _, line in ipairs(output) do
+          if #line > 0 then
+            table.insert(cmd_output, line)
+          end
+        end
+      end),
+      on_exit = vim.schedule_wrap(function(j, output)
+        notif(cmd_output)
+      end),
+    })
+  end)
   map('i', '<C-Del>', function(nr) -- delete
     local current_picker = action_state.get_current_picker(prompt_bufnr)
     current_picker:delete_selection(function(selection)

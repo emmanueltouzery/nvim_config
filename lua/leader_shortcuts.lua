@@ -301,18 +301,28 @@ function telescope_branches_mappings(prompt_bufnr, map)
   local actions = require('telescope.actions')
   local action_state = require "telescope.actions.state"
   map('i', '<C-f>', function(nr)
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    actions.close(prompt_bufnr)
-    -- heuristics.. will see if it works out
-    if string.match(branch, "develop") or string.match(branch, "master") or string.match(branch, "main") then
-      -- i want to compare to develop. presumably i'm ahead, comparing behind
-      diffspec = branch .. "..."
-    else
-      -- i want to compare with another branch which isn't develop. i'm probably
-      -- on develop => presumably i'm behind, comparing ahead
-      diffspec = "..." .. branch
+    local branches = {}
+    local picker = action_state.get_current_picker(nr)
+    for _, entry in ipairs(picker:get_multi_selection()) do
+      table.insert(branches, entry.value)
     end
-    vim.cmd(":DiffviewOpen " .. diffspec)
+    if #branches == 0 then
+      branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+      actions.close(prompt_bufnr)
+      -- heuristics.. will see if it works out
+      if string.match(branch, "develop") or string.match(branch, "master") or string.match(branch, "main") then
+        -- i want to compare to develop. presumably i'm ahead, comparing behind
+        diffspec = branch .. "..."
+      else
+        -- i want to compare with another branch which isn't develop. i'm probably
+        -- on develop => presumably i'm behind, comparing ahead
+        diffspec = "..." .. branch
+      end
+      vim.cmd(":DiffviewOpen " .. diffspec)
+    else
+      actions.close(prompt_bufnr)
+      vim.cmd(":DiffviewOpen " .. branches[1] .. "..." .. branches[2])
+    end
   end)
   map('i', '<C-p>', function(nr) -- mnemonic Compare
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value

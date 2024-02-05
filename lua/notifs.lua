@@ -126,16 +126,19 @@ function _G.notif(msg, level, opts)
 
   function hide_closure()
     local notif = vim.g.active_notifs[popup_win_closure]
-    if vim.api.nvim_win_is_valid(notif.popup_win) then
-      vim.api.nvim_win_close(notif.popup_win, true)
-    end
-    if vim.api.nvim_buf_is_valid(notif.popup_buf) then
-      vim.api.nvim_buf_delete(notif.popup_buf, {force=true})
+    if notif ~= nil then
+      if vim.api.nvim_win_is_valid(notif.popup_win) then
+        vim.api.nvim_win_close(notif.popup_win, true)
+      end
+      if vim.api.nvim_buf_is_valid(notif.popup_buf) then
+        vim.api.nvim_buf_delete(notif.popup_buf, {force=true})
+      end
     end
     local active_notifs = vim.g.active_notifs
     active_notifs[popup_win_closure] = nil
     vim.g.active_notifs = active_notifs
   end
+
   if not (opts or {}).dont_hide then
     vim.defer_fn(hide_closure, 2000)
   else

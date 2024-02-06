@@ -324,11 +324,6 @@ function telescope_branches_mappings(prompt_bufnr, map)
       vim.cmd(":DiffviewOpen " .. branches[1] .. "..." .. branches[2])
     end
   end)
-  map('i', '<C-p>', function(nr) -- mnemonic Compare
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    actions.close(prompt_bufnr)
-    vim.cmd(":DiffviewOpen " .. branch)
-  end)
   map('i', '<C-enter>', function(nr) -- create a local branch to track an origin branch
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
@@ -361,6 +356,31 @@ function telescope_branches_mappings(prompt_bufnr, map)
     local cmd_output = {}
     actions.close(prompt_bufnr)
     vim.fn.jobstart('git rebase ' .. branch, {
+      stdout_buffered = true,
+      on_stdout = vim.schedule_wrap(function(j, output)
+        for _, line in ipairs(output) do
+          if #line > 0 then
+            table.insert(cmd_output, line)
+          end
+        end
+      end),
+      on_stderr = vim.schedule_wrap(function(j, output)
+        for _, line in ipairs(output) do
+          if #line > 0 then
+            table.insert(cmd_output, line)
+          end
+        end
+      end),
+      on_exit = vim.schedule_wrap(function(j, output)
+        notif(cmd_output)
+      end),
+    })
+  end)
+  map('i', '<C-m>', function(nr) -- merge another branch
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local cmd_output = {}
+    actions.close(prompt_bufnr)
+    vim.fn.jobstart('git merge ' .. branch, {
       stdout_buffered = true,
       on_stdout = vim.schedule_wrap(function(j, output)
         for _, line in ipairs(output) do

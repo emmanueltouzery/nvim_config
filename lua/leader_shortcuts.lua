@@ -376,7 +376,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
       end),
     })
   end)
-  map('i', '<C-m>', function(nr) -- merge another branch
+  map('i', '<C-g>', function(nr) -- merge another branch
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
     actions.close(prompt_bufnr)
@@ -446,7 +446,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     actions.close(prompt_bufnr)
     vim.cmd('DiffviewFileHistory ' .. cur_file_project_root() .. " --range=" .. branch)
   end)
-  map('i', '<C-g>', function(nr) -- copy branch name
+  map('i', '<C-y>', function(nr) -- copy branch name
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     copy_to_clipboard(branch)
   end)

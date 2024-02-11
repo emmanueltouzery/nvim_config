@@ -564,12 +564,24 @@ vim.keymap.set("n", "<leader>cqb", ":lua quickfix_goto_bottom()<cr>", {desc="qui
 vim.cmd[[set errorformat^=ERROR\ in\ %f:%l:%c]] -- needed for tsc, typescript
 vim.keymap.set("n", "<leader>cqc", ":cexpr @+<cr>", {desc="Quickfix from clipboard"})
 
+function _G.lsp_refs_extra_mappings(p, map)
+  map("i", "<c-g>", function(prompt_nr)
+    local action_state = require "telescope.actions.state"
+    local current_picker = action_state.get_current_picker(prompt_nr) -- picker state
+    local entry = action_state.get_selected_entry()
+    local full_path = entry.filename
+    local path_in_cwd = string.gsub(full_path, vim.loop.cwd() .. '/', "")
+    notif({path_in_cwd})
+  end)
+  return true
+end
+
 -- LSP
 require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
 vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
 vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
-vim.keymap.set("n", "<leader>clf", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}}<cr>", {desc="Display lsp references"})
+vim.keymap.set("n", "<leader>clf", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}, attach_mappings=lsp_refs_extra_mappings}<cr>", {desc="Display lsp references"})
 vim.keymap.set("n", "<leader>clc", "<cmd>lua require'telescope.builtin'.lsp_incoming_calls{path_display={'tail'}}<cr>", {desc="Display lsp incoming calls"})
 vim.keymap.set("n", "<leader>clh", "<cmd>lua telescope_display_call_hierarchy()<cr>", {desc="Display lsp call hierarchy"})
 

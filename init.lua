@@ -995,7 +995,7 @@ callbacks = {
         cmd_args = { "-s", "dark", "-w", "80" },
         picker_cmd = 'glow',
         picker_cmd_args = { "-s", "dark", "-w", "80", "-p" },
-        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust"},
+        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust", "dom"},
       })
     end}
     vim.g.any_jump_disable_default_keybindings = 1

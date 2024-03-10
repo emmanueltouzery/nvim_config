@@ -318,7 +318,7 @@ end
 
 -- TAB
 require 'key-menu'.set('n', '<Space>tt', {desc='Tab'})
-vim.keymap.set("n", "<leader>ttm", function() vim.cmd("norm! 1gt") end, {desc = "Switch to main tab"})
+vim.keymap.set("n", "<leader>ttm", function() vim.api.nvim_set_current_tabpage(1) end, {desc = "Switch to main tab"})
 vim.keymap.set("n", "<leader>ttt", "<cmd>lua create_or_switch_tab_terminal()<cr>", {desc = "Open or switch to terminal tab"})
 vim.keymap.set("n", "<leader>ttq", "<cmd>lua switch_to_sql_tab()<cr>", {desc = "Switch to SQL tab"})
 

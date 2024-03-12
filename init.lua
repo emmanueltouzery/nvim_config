@@ -192,7 +192,7 @@ require('packer').startup(function(use)
     vim.cmd[[highlight GitSignsUntracked guibg=#171717]]
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='44762abc90725e279f3b9cfbe4cafb41ea72f09b', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='b781fd058224f67df7469b8f376c42a8d85e11db', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
@@ -650,7 +650,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
-  use {'stevearc/aerial.nvim', commit="ef08437108247d8805ae388f2699537eac2fd810", config = function()
+  use {'stevearc/aerial.nvim', commit="c8a40b12668b0861c9c519f13a8a5f29a1f1ef28", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
@@ -666,6 +666,7 @@ callbacks = {
         elixir = { "treesitter" },
         typescript = { "treesitter" },
         typescriptreact = { "treesitter" },
+        groovy = { "treesitter" },
       },
       filter_kind = false,
       icons = {

@@ -240,7 +240,7 @@ vim.keymap.set("n", "<leader>oP", "<cmd>lua require'telescope.builtin'.pickers{}
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
 vim.keymap.set("n", "<leader>te", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
 vim.keymap.set("n", "<leader>ts", "<cmd>AerialToggle!<CR>", {desc = "Toggle symbols"})
-vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", {desc = "Toggle terminal"})
+vim.keymap.set("n", "<leader>tT", "<cmd>ToggleTerm direction=float<CR>", {desc = "Toggle terminal"})
 vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>", {desc = "Toggle highlight of global marks"})
 vim.keymap.set("n", "<leader>tw", ":set wrap! linebreak<cr>", {desc = "Toggle word-wrapping"})
 vim.keymap.set("n", "<leader>tS", ":set spell!<CR>", {desc = "Toggle Spellcheck"})

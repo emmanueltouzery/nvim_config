@@ -240,7 +240,6 @@ vim.keymap.set("n", "<leader>oP", "<cmd>lua require'telescope.builtin'.pickers{}
 require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
 vim.keymap.set("n", "<leader>te", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
 vim.keymap.set("n", "<leader>ts", "<cmd>AerialToggle!<CR>", {desc = "Toggle symbols"})
-vim.keymap.set("n", "<leader>tT", "<cmd>ToggleTerm direction=float<CR>", {desc = "Toggle terminal"})
 vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>", {desc = "Toggle highlight of global marks"})
 vim.keymap.set("n", "<leader>tw", ":set wrap! linebreak<cr>", {desc = "Toggle word-wrapping"})
 vim.keymap.set("n", "<leader>tS", ":set spell!<CR>", {desc = "Toggle Spellcheck"})
@@ -321,6 +320,7 @@ require 'key-menu'.set('n', '<Space>tt', {desc='Tab'})
 vim.keymap.set("n", "<leader>ttm", function() vim.api.nvim_set_current_tabpage(1) end, {desc = "Switch to main tab"})
 vim.keymap.set("n", "<leader>ttt", "<cmd>lua create_or_switch_tab_terminal()<cr>", {desc = "Open or switch to terminal tab"})
 vim.keymap.set("n", "<leader>ttq", "<cmd>lua switch_to_sql_tab()<cr>", {desc = "Switch to SQL tab"})
+vim.keymap.set("n", "<leader>ttp", "<cmd>ToggleTerm direction=float<CR>", {desc = "Toggle popup terminal"})
 
 -- GIT
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})

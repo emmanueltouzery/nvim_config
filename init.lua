@@ -859,7 +859,7 @@ callbacks = {
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
   -- language syntax-aware matchit. for instance, json {"test": "value}rest"}
   -- or JSX <TextField<string> ... />, or things in comments which are correctly ignored
-  use {'andymass/vim-matchup', commit='6dbe108230c7dbbf00555b7d4d9f6a891837ef07', config=function()
+  use {'andymass/vim-matchup', commit='2d660e4aa7c566014c667af2cda0458043527902', config=function()
     -- https://github.com/andymass/vim-matchup#customizing-the-highlighting-colors
     vim.cmd [[
       augroup matchup_matchparen_highlight

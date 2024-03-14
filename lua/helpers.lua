@@ -170,7 +170,13 @@ end
 
 function _G.ShowCommitAtLine()
     local commit_sha = require"agitator".git_blame_commit_for_line()
-    show_commit(commit_sha)
+    if commit_sha:sub(1, 1) == '^' then
+      -- https://stackoverflow.com/questions/13105858/
+      -- https://stackoverflow.com/a/40884093/516188
+      vim.cmd("DiffviewOpen 4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. commit_sha:gsub("^%^", "") .. "  --selected-file=" .. vim.fn.expand("%:p"))
+    else
+      show_commit(commit_sha)
+    end
 end
 
 function _G.show_commit(commit_sha)

@@ -530,6 +530,7 @@ vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy l
 vim.keymap.set("n", "<leader>gR", '<cmd>lua require"gitsigns".reset_buffer()<CR>', {desc="reset buffer"})
 vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame line"})
 vim.keymap.set("n", "<leader>gr", '<cmd>lua git_branches{attach_mappings=telescope_branches_mappings, pattern="--sort=-committerdate"}<CR>', {desc="git bRanches"})
+vim.keymap.set("n", "<leader>ga", "<cmd>lua require'agitator'.search_in_added()<CR>", {desc="git search in added files & lines"})
 -- using neogit to push
 vim.keymap.set("n", "<leader>gp", '<cmd>lua run_command("git", {"pull", "--rebase", "--autostash"}, reload_all)<CR>', {desc="git pull"})
 vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin"})<CR>', {desc="git fetch origin"})

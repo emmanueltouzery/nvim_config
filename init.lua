@@ -268,11 +268,6 @@ require('packer').startup(function(use)
     config = function()
       local actions = require("diffview.config").actions
       require('diffview').setup {
-        -- view = {
-        --   merge_tool = {
-        --     layout = "diff4_mixed",
-        --   },
-        -- },
         keymaps = {
           view = {
             ["šx"] = function()
@@ -364,7 +359,29 @@ require('packer').startup(function(use)
         }
       }
       require('diffview').init()
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "DiffviewFiles",
+        callback=function(ev)
+          local branch
+          vim.fn.jobstart("git branch --show", {
+            on_stdout = vim.schedule_wrap(function(j, output)
+              if #output[1] > 0 then
+                branch = output[1]
+              end
+            end),
+            on_exit = vim.schedule_wrap(function(j, output)
+              for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+                if vim.api.nvim_win_get_buf(win) == ev.buf then
+                  vim.wo[win].winbar = "%#Title#%= " .. branch
+                end
+              end
+            end)
+          })
+        end,
+      })
     end
+
   }
   use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='731a046da7dd3adff9de871a42f9b7fb85f60f47'}
   use {'emmanueltouzery/agitator.nvim', commit='d325ab9966c24d27f2f181078de78c5ce85a3c57'}

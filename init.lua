@@ -470,6 +470,7 @@ require('packer').startup(function(use)
     vim.g.markify_warning_text = ""
     vim.g.markify_info_text = ""
     vim.g.markify_info_texthl = "Todo"
+    vim.g.markify_echo_current_message = 0
   end}
   -- use {'jose-elias-alvarez/null-ls.nvim', commit='c0c19f32b614b3921e17886c541c13a72748d450', config = function()
 

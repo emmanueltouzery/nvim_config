@@ -19,3 +19,5 @@ npm i -g prettier
 Set up https://github.com/emmanueltouzery/invim in your path and executable to get nicer $EDITOR from within the neovim terminal.
 
 `xmllint` for XML indentation
+
+for java, install `checkstyle` using mason (spc-pl)

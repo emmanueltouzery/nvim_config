@@ -1304,6 +1304,13 @@ vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
 vim.cmd('autocmd BufNewFile,BufRead *.service set syntax=systemd')
 
+-- https://vi.stackexchange.com/a/15053/38754
+vim.api.nvim_create_autocmd("FileType", {
+  callback=function(ev)
+    vim.cmd("setlocal spellfile=" .. vim.fn.stdpath("config")  .. "/spell/en.utf-8.add")
+    vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. ev.match .. ".utf-8.add")
+  end})
+
 -- syntax highlight for fennel files
 vim.cmd('autocmd BufNewFile,BufRead *.fnl set ft=lisp')
 
@@ -1315,7 +1322,6 @@ vim.api.nvim_create_autocmd("DirChanged", {
     end,
     desc = "Update neovim window title",
 })
-
 
 require'nvim-web-devicons'.set_icon {
   javascriptreact = {

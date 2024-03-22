@@ -4,9 +4,23 @@
 function telescope_stash_mappings(prompt_bufnr, map)
   local actions = require('telescope.actions')
   map('i', '<C-f>', function(nr)
+    local utils = require "telescope.utils"
     stash_key = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
-    vim.cmd(":DiffviewOpen " .. stash_key .. "^.." .. stash_key)
+    -- are there untracked files?
+    local stdout, ret, stderr = utils.get_os_command_output { "git", "ls-tree", "-r", stash_key.. "^3", "--name-only" }
+    if #stdout > 0 then
+      vim.ui.select({"Tracked files", "Untracked files"}, {prompt="Show..."}, function(choice)
+        if choice == "Tracked files" then
+          vim.cmd(":DiffviewOpen " .. stash_key .. "^.." .. stash_key)
+        else
+          -- https://stackoverflow.com/questions/40883798
+          vim.cmd(":DiffviewOpen 4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. stash_key .. "^3" )
+        end
+      end)
+    else
+      vim.cmd(":DiffviewOpen " .. stash_key .. "^.." .. stash_key)
+    end
   end)
   map('i', '<C-Del>', function(nr)
     stash_key = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value

@@ -1304,11 +1304,23 @@ vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
 vim.cmd('autocmd BufNewFile,BufRead *.service set syntax=systemd')
 
+function set_extra_spellfiles()
+  vim.cmd("setlocal spellfile=" .. vim.fn.stdpath("config")  .. "/spell/en.utf-8.add")
+  vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. vim.bo.filetype .. ".utf-8.add")
+  local project_name = vim.fn.getcwd(vim.fn.winnr()):match("[^/]+$")
+  vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. project_name .. ".utf-8.add")
+end
+
 -- https://vi.stackexchange.com/a/15053/38754
 vim.api.nvim_create_autocmd("FileType", {
   callback=function(ev)
-    vim.cmd("setlocal spellfile=" .. vim.fn.stdpath("config")  .. "/spell/en.utf-8.add")
-    vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. ev.match .. ".utf-8.add")
+    set_extra_spellfiles()
+  end})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "RooterChDir",
+  callback=function()
+    set_extra_spellfiles()
   end})
 
 -- syntax highlight for fennel files

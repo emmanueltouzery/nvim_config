@@ -18,5 +18,7 @@
     <module name="PackageDeclaration"/>
     <module name="RedundantImport"/>
     <module name="HiddenField"/>
+    <module name="UnnecessaryParentheses"/>
+    <module name="FallThrough"/>
   </module>
 </module>

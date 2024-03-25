@@ -1196,3 +1196,37 @@ end
 function _G.window_highlight_clear()
   vim.fn.matchdelete(vim.w.my_highlight)
 end
+
+-- compared to upstream, i commented three of the previewers
+-- as the third one seems the best to me
+function _G.telescope_commits(opts)
+  local make_entry = require "telescope.make_entry"
+  local pickers = require "telescope.pickers"
+  local finders = require "telescope.finders"
+  local previewers = require("telescope.previewers")
+  local conf = require("telescope.config").values
+  local actions = require("telescope.actions")
+  opts.entry_maker = vim.F.if_nil(opts.entry_maker, make_entry.gen_from_git_commits(opts))
+  local git_command = vim.F.if_nil(opts.git_command, { "git", "log", "--pretty=oneline", "--abbrev-commit", "--", "." })
+
+  pickers
+    .new(opts, {
+      prompt_title = "Git Commits",
+      finder = finders.new_oneshot_job(git_command, opts),
+      previewer = {
+        -- previewers.git_commit_diff_to_parent.new(opts),
+        -- previewers.git_commit_diff_to_head.new(opts),
+        previewers.git_commit_diff_as_was.new(opts),
+        -- previewers.git_commit_message.new(opts),
+      },
+      sorter = conf.file_sorter(opts),
+      attach_mappings = function(_, map)
+        actions.select_default:replace(actions.git_checkout)
+        map({ "i", "n" }, "<c-r>m", actions.git_reset_mixed)
+        map({ "i", "n" }, "<c-r>s", actions.git_reset_soft)
+        map({ "i", "n" }, "<c-r>h", actions.git_reset_hard)
+        return true
+      end,
+    })
+    :find()
+end

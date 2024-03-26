@@ -590,6 +590,7 @@ vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & ya
 require 'key-menu'.set('n', '<Space>cg', {desc='gnu global (LSP-less navigation)'})
 vim.keymap.set('n', '<leader>cgd', ":lua global_find_definition()<cr>", {desc="LSP-less jump to definition (requires gnu global)", silent=true})
 vim.keymap.set('n', '<leader>cgf', ":lua global_find_references()<cr>", {desc="LSP-less find references (requires gnu global)", silent=true})
+vim.keymap.set('n', '<leader>cgr', ":lua global_refresh_tags()<cr>", {desc="LSP-less find references: refresh tags (requires gnu global)", silent=true})
 
 require 'key-menu'.set('n', '<Space>cC', {desc='Code Conflicts'})
 vim.keymap.set('n', '<leader>cCb', ":lua diffview_conflict_view_commit('base')<cr>", {desc="conflict show BASE commit", silent=true})

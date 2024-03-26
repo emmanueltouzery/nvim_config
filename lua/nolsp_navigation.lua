@@ -9,6 +9,50 @@ local function find_buf_for_fname(fname)
   return nil
 end
 
+-- tags can get outdated. so when we get them back,
+-- we double-check them. if the lines numbers don't match,
+-- we know the tags are outdated
+local function matches_ok(matches)
+  local Path = require("plenary.path")
+  for _, match in ipairs(matches) do
+    local path = Path.new(match.path)
+    local actual_line = path:readlines()[match.lnum]
+    if match.line ~= actual_line:gsub("^%s*", "") then
+      print(match.line .. " ~= " .. actual_line:gsub("^%s*", ""))
+      return false
+    end
+  end
+  return true
+end
+
+local function refresh_tags_and_rerun(title)
+  -- first get the folder for the tags...
+  local cwd = vim.fn.expand('%:h')
+  local path = nil
+  vim.fn.jobstart("global -p", {
+    cwd = cwd,
+    on_stdout = vim.schedule_wrap(function(j, output)
+      for _, line in ipairs(output) do
+        if #line > 0 then
+          path = line
+        end
+      end
+    end),
+    on_exit = vim.schedule_wrap(function(j, output)
+      vim.fn.jobstart("gtags", {
+        cwd = path,
+        on_exit = vim.schedule_wrap(function(j, output)
+          if title == "Definitions" then
+            global_find_definition()
+          elseif title == "References" then
+            global_find_references()
+          end
+        end)
+      })
+    end)
+  })
+end
+
 function _G.global_picker(flags, title)
   local word = vim.fn.expand('<cword>')
   local cwd = vim.fn.expand('%:h')
@@ -24,6 +68,10 @@ function _G.global_picker(flags, title)
         end
     end),
     on_exit = vim.schedule_wrap(function(j, output)
+      if not matches_ok(matches) then
+        refresh_tags_and_rerun(title)
+        return
+      end
       if #matches == 0 then
         matches = find_local_declarations()
       end
@@ -90,4 +138,9 @@ end
 
 function _G.global_generate_tags(folder)
   vim.fn.jobstart("gtags", {cwd=folder})
+end
+
+function _G.global_refresh_tags()
+  refresh_tags_and_rerun(nil)
+  vim.notify("Tags refreshed", {title="Global navigation"})
 end

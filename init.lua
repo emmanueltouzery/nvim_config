@@ -1211,6 +1211,7 @@ require("notifs")
 require("ts_unused_imports")
 require("elixir")
 require("database")
+require("nolsp_navigation")
 
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 

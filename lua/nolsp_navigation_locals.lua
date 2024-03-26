@@ -51,12 +51,21 @@ function _G.find_local_declarations()
   end
   local filtered_matches = {}
   local cur_line = vim.fn.line('.')
-    print(cur_line)
+  -- keep only matches up to the current row (cannot use variables
+  -- defined later on), and keep only the last one such (the same
+  -- variable name can be used multiple times in the current file, we
+  -- want the latest declaration before the current line)
+  local latest_match = nil
   for _, match in ipairs(matches) do
-    print(match.lnum)
     if match.lnum <= cur_line then
-      table.insert(filtered_matches, match)
+      latest_match = match
+    else
+      break
     end
   end
-  return filtered_matches
+  if latest_match ~= nil then
+    return { latest_match }
+  else
+    return {}
+  end
 end

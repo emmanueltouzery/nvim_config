@@ -1,3 +1,5 @@
+require("nolsp_navigation_locals")
+
 local function find_buf_for_fname(fname)
   for i, bufnr in pairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_get_name(bufnr) == fname then
@@ -17,11 +19,14 @@ function _G.global_picker(flags, title)
         for _, line in ipairs(output) do
           if #line > 0 then
             local _, lnum_str, fname, line = line:gmatch("([%S]+)%s+([%S]+)%s+([%S]+)%s+(.*)")()
-            table.insert(matches, {lnum = tonumber(lnum_str), path = cwd .. '/' .. fname, fname = fname, line = line})
+            table.insert(matches, {lnum = tonumber(lnum_str), col=-1, path = cwd .. '/' .. fname, fname = fname, line = line})
           end
         end
     end),
     on_exit = vim.schedule_wrap(function(j, output)
+      if #matches == 0 then
+        matches = find_local_declarations()
+      end
       if #matches == 0 then
         vim.notify("No matches found", vim.log.levels.ERROR)
       elseif #matches == 1 then
@@ -31,7 +36,7 @@ function _G.global_picker(flags, title)
         else
           vim.cmd(":e " .. matches[1].path)
         end
-        vim.cmd(":" .. matches[1].lnum)
+        vim.fn.setpos('.', {0, matches[1].lnum, matches[1].col+1, 0})
         vim.cmd[[ norm! zz]]
       else
         local pickers = require "telescope.pickers"

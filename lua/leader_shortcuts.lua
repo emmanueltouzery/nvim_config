@@ -587,10 +587,11 @@ vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="se
 vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path", silent=true})
 
-require 'key-menu'.set('n', '<Space>cg', {desc='gnu global (LSP-less navigation)'})
+require 'key-menu'.set('n', '<Space>cg', {desc='gnu global (LSP-less operation)'})
 vim.keymap.set('n', '<leader>cgd', ":lua global_find_definition()<cr>", {desc="LSP-less jump to definition (requires gnu global)", silent=true})
 vim.keymap.set('n', '<leader>cgf', ":lua global_find_references()<cr>", {desc="LSP-less find references (requires gnu global)", silent=true})
 vim.keymap.set('n', '<leader>cgr', ":lua global_refresh_tags()<cr>", {desc="LSP-less find references: refresh tags (requires gnu global)", silent=true})
+vim.keymap.set('n', '<leader>cgl', ":lua quickfix_at_curpos()<cr>", {desc="Quickfix error on current line", silent=true})
 
 require 'key-menu'.set('n', '<Space>cC', {desc='Code Conflicts'})
 vim.keymap.set('n', '<leader>cCb', ":lua diffview_conflict_view_commit('base')<cr>", {desc="conflict show BASE commit", silent=true})

@@ -1230,3 +1230,62 @@ function _G.telescope_commits(opts)
     })
     :find()
 end
+
+function _G.quickfix_at_curpos()
+  if vim.b.popup_win ~= nil and vim.api.nvim_win_is_valid(vim.b.popup_win) then
+    -- focus the existing popup
+    vim.b.popup_dont_kill = vim.b.popup_win
+    vim.api.nvim_set_current_win(vim.b.popup_win)
+  else
+    -- open a new popup
+    local qf = vim.fn.getqflist()
+    local cur_bufnr = vim.api.nvim_win_get_buf(0)
+    local errors = {}
+    local msg_width = 0
+    for _, cur_qf in ipairs(qf) do
+      if cur_qf.bufnr == cur_bufnr and cur_qf.lnum == vim.fn.line('.') then
+        table.insert(errors, cur_qf.text)
+        if #cur_qf.text > msg_width then
+          msg_width = #cur_qf.text
+        end
+      end
+    end
+    if #errors > 0 then
+      local popup_buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
+      vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")
+      vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
+      vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
+
+      local win_opts = {
+        style = "minimal",
+        border = "rounded",
+        relative = "cursor",
+        width = msg_width,
+        height = #errors,
+        anchor = "SE",
+        row = 0,
+        col = vim.fn.col('.'),
+      }
+
+      vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, errors)
+      vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
+      vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
+
+      local cur_buf = vim.api.nvim_win_get_buf(0)
+      popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
+      vim.b.popup_win = popup_win
+
+      vim.api.nvim_create_autocmd({ "WinEnter", "TabClosed", "CursorMoved" }, {
+        callback = function()
+          if vim.api.nvim_buf_get_var(cur_buf, 'popup_dont_kill') == nil
+              or not vim.api.nvim_win_is_valid(vim.api.nvim_buf_get_var(cur_buf, 'popup_dont_kill'))  then
+            pcall(vim.api.nvim_win_close, popup_win, true)
+            vim.b.popup_win = nil
+          end
+        end,
+        once = true,
+      })
+    end
+  end
+end

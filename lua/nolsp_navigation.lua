@@ -63,7 +63,7 @@ function _G.global_picker(flags, title)
         for _, line in ipairs(output) do
           if #line > 0 then
             local _, lnum_str, fname, line = line:gmatch("([%S]+)%s+([%S]+)%s+([%S]+)%s+(.*)")()
-            table.insert(matches, {lnum = tonumber(lnum_str), col=-1, path = cwd .. '/' .. fname, fname = fname, line = line})
+            table.insert(matches, {lnum = tonumber(lnum_str), col=0, path = cwd .. '/' .. fname, fname = fname, line = line})
           end
         end
     end),

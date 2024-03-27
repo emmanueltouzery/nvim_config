@@ -55,7 +55,7 @@ end
 
 function _G.global_picker(flags, title)
   local word = vim.fn.expand('<cword>')
-  local cwd = vim.fn.expand('%:h')
+  local cwd = vim.fn.getcwd() .. '/' .. vim.fn.expand('%:h')
   local matches = {}
   vim.fn.jobstart("global " .. flags .. " " .. word, {
     cwd = cwd,

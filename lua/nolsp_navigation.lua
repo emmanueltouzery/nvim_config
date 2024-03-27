@@ -78,9 +78,9 @@ function _G.global_picker(flags, title)
       if #matches == 0 then
         vim.notify("No matches found", vim.log.levels.ERROR)
       elseif #matches == 1 then
-        local fbuf = find_buf_for_fname(matches[1].path)
+        local fbuf = matches[1].bufnr or find_buf_for_fname(matches[1].path)
         if fbuf ~= nil then
-          vim.cmd(":b" .. fbuf)
+          vim.api.nvim_win_set_buf(0, fbuf)
         else
           vim.cmd(":e " .. matches[1].path)
         end

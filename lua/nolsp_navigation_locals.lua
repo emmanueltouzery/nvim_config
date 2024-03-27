@@ -38,6 +38,7 @@ local function find_local_declarations_java()
       col = col1,
       path = vim.fn.expand('%'),
       fname = vim.fn.expand('%:p'),
+      bufnr = bufnr,
       line = vim.api.nvim_buf_get_lines(bufnr, row1, row1+1, false)[1]
     })
   end

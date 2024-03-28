@@ -196,7 +196,7 @@ require('packer').startup(function(use)
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
-      ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "vimdoc",
+      ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vimdoc",
         "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql" },
       highlight = {
         enable = true ,
@@ -241,7 +241,7 @@ require('packer').startup(function(use)
   use {'saadparwaiz1/cmp_luasnip', commit = '18095520391186d634a0045dacaa346291096566'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
-  use {'emmanueltouzery/doom-one.nvim', commit='4fb832d4aa8a0f2438599f2b575a797f8cf045ce', config = function()
+  use {'emmanueltouzery/doom-one.nvim', commit='2ad2b1273bc7cc8047d4ccbecb93d41a8160407e', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
       italic_comments = true,

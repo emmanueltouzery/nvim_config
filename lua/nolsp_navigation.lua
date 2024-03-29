@@ -71,25 +71,24 @@ function _G.global_picker(queries_left, title, matches)
     cwd = cwd,
     on_stdout = vim.schedule_wrap(function(j, output)
       for _, line in ipairs(output) do
-        print(line_in_result)
-        print(line)
         if #line > 0 then
           if line_in_result == 1 then
             -- help[query], skip
             line_in_result = line_in_result + 1
           elseif line_in_result == 2 then
             fname, lnum_str, col_str = line:gmatch("%.([^:]+):([^:]+):([^:]+)")()
-            print(fname)
             line_in_result = line_in_result + 1
           elseif line_in_result == 3 then
             -- blank, skip
             line_in_result = line_in_result + 1
           elseif line_in_result == 4 then
-            -- line contents
-            line_contents = line:sub(12)
-            print(line_contents)
-            line_in_result = line_in_result + 1
-            table.insert(matches, {lnum = tonumber(lnum_str), col = tonumber(col_str), path = cwd .. '/' .. fname, fname = fname, line = line_contents})
+            -- line contents? bunch of ^^^ under the proper line
+            if line:match("%^%^%^") then
+              line_in_result = line_in_result + 1
+              table.insert(matches, {lnum = tonumber(lnum_str), col = tonumber(col_str), path = cwd .. '/' .. fname, fname = fname, line = line_contents})
+            else
+              line_contents = line:sub(12)
+            end
           elseif line:match("help%[") then
             line_in_result = 2
           end
@@ -98,7 +97,6 @@ function _G.global_picker(queries_left, title, matches)
     end),
     on_exit = vim.schedule_wrap(function(j, output)
       if #queries_left == 0 then
-        print(vim.inspect(matches))
         picker_finish(matches)
       else
         global_picker(queries_left, title, matches)

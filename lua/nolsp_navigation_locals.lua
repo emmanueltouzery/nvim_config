@@ -1,3 +1,28 @@
+local function add_captures(bufnr, iter, matches)
+  for _capture, node, _metadata in iter do
+    local row1, col1, row2, col2 = node:range()
+    table.insert(matches, {
+      lnum = row1+1,
+      col = col1,
+      path = vim.fn.expand('%'),
+      fname = vim.fn.expand('%:p'),
+      bufnr = bufnr,
+      line = vim.api.nvim_buf_get_lines(bufnr, row1, row1+1, false)[1]
+    })
+  end
+end
+
+local function attempt_import_declaration_java(syntax_tree, bufnr, matches, word)
+  local q = vim.treesitter.query.parse("java", [[
+(import_declaration
+  (scoped_identifier
+    (identifier) @identifier (#eq? @identifier "]] .. word .. [[")))
+  ]])
+  local iter = q:iter_captures(syntax_tree:root(), bufnr, 0, -1)
+  add_captures(bufnr, iter, matches)
+  return matches
+end
+
 local function find_local_declarations_java()
   local word = vim.fn.expand('<cword>')
   local bufnr = 0
@@ -31,18 +56,12 @@ local function find_local_declarations_java()
   local iter = q:iter_captures(syntax_tree:root(), bufnr, 0, -1)
   local module_fnames = {vim.fn.expand('%:p')} -- immediately add the current file
   local matches = {}
-  for _capture, node, _metadata in iter do
-    local row1, col1, row2, col2 = node:range()
-    table.insert(matches, {
-      lnum = row1+1,
-      col = col1,
-      path = vim.fn.expand('%'),
-      fname = vim.fn.expand('%:p'),
-      bufnr = bufnr,
-      line = vim.api.nvim_buf_get_lines(bufnr, row1, row1+1, false)[1]
-    })
+  add_captures(bufnr, iter, matches)
+  if #matches == 0 then
+    return attempt_import_declaration_java(syntax_tree, bufnr, matches, word)
+  else
+    return matches
   end
-  return matches
 end
 
 function _G.find_local_declarations()

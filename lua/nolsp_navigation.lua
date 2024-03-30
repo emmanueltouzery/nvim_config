@@ -9,9 +9,37 @@ local function find_buf_for_fname(fname)
   return nil
 end
 
+local function find_field_access()
+  local word = vim.fn.expand('<cword>')
+  local references_pattern = [[
+id: query
+language: Java
+rule:
+  any:
+    - pattern: #word#
+
+      inside:
+        kind: variable_declarator
+  ]]
+  -- pre-filter the files to process with rg for speed
+  global_picker([[ast-grep scan --inline-rules ']] .. references_pattern:gsub('#word#', word)
+    ..  [[' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]], "Definitions", {})
+end
+
 local function picker_finish(matches)
   if #matches == 0 then
+    -- couldn't find global declarations, could be a local variable
+    -- or a field of the current class
     matches = find_local_declarations()
+  end
+  if #matches == 0 then
+    -- still couldn't find anything. it could be accessing a field on
+    -- another class (for instance a public final field)
+    -- i don't like to check that too early, because i could grab
+    -- a field on a completely unrelated class.. but if nothing else
+    -- worked, let's try this now
+    find_field_access()
+    return
   end
   if #matches == 0 then
     vim.notify("No matches found", vim.log.levels.ERROR)
@@ -70,6 +98,7 @@ function _G.global_picker(query, title, matches)
   vim.fn.jobstart(query, {
     cwd = cwd,
     on_stdout = vim.schedule_wrap(function(j, output)
+      -- TODO probably switch to JSON parsing
       for _, line in ipairs(output) do
         if #line > 0 then
           if line_in_result == 1 then
@@ -85,7 +114,13 @@ function _G.global_picker(query, title, matches)
             -- line contents? bunch of ^^^ under the proper line
             if line:match("%^%^%^") then
               line_in_result = line_in_result + 1
-              table.insert(matches, {lnum = tonumber(lnum_str), col = tonumber(col_str), path = cwd .. '/' .. fname, fname = fname, line = line_contents})
+              table.insert(matches, {
+                lnum = tonumber(lnum_str),
+                col = tonumber(col_str),
+                path = cwd .. '/' .. fname,
+                fname = fname,
+                line = line_contents
+              })
             else
               line_contents = line:sub(12)
             end
@@ -133,37 +168,68 @@ function _G.global_find_definition()
     global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']]
       .. find_method_reference_def_pattern:gsub('#methodName#', methodName):gsub('#className#', className)
       .. [[' $(rg -l ]] .. methodName .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
-  else
-    local word = vim.fn.expand('<cword>')
-    local find_def_pattern = [[
-    id: query
-    language: Java
-    rule:
-      any:
-        - pattern: #word#
+    elseif parent1:type() == "field_access" then
+      -- it could be a static field access, Class.FIELD, or a non-static instance.FIELD.
+      -- treesitter doesn't know. Let's optimistically try Class.FIELD. If it is in fact
+      -- instance.field, then we'll catch that with find_field_access() as a final fallback.
+      local fieldName = vim.fn.expand('<cword>')
+      local row1, col1, row2, col2 = ts_node:prev_sibling():prev_sibling():range()
+      local bufnr = vim.api.nvim_win_get_buf(0)
+      local fieldOwner = vim.api.nvim_buf_get_text(bufnr, row1, col1, row2, col2, {})[1]
 
-          inside:
-            kind: method_declaration
-        - pattern: #word#
+      local find_method_reference_def_pattern = [[
+        id: query
+        language: Java
 
-          inside:
-            kind: class_declaration
-        - pattern: #word#
+        utils:
+          is-field-identifier:
+            inside:
+              kind: variable_declarator
 
+        rule:
+          pattern: #fieldName#
+          matches: is-field-identifier
           inside:
-            kind: interface_declaration
-        - pattern: #word#
+            stopBy:
+              kind: class_declaration
+            has:
+              pattern: #className#
+      ]]
+      -- pre-filter the files to process with rg for speed
+      global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']]
+        .. find_method_reference_def_pattern:gsub('#fieldName#', fieldName):gsub('#className#', fieldOwner)
+        .. [[' $(rg -l ]] .. fieldName .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
+    else
+      local word = vim.fn.expand('<cword>')
+      local find_def_pattern = [[
+      id: query
+      language: Java
+      rule:
+        any:
+          - pattern: #word#
 
-          inside:
-            kind: annotation_type_declaration
-        - pattern: #word#
+            inside:
+              kind: method_declaration
+          - pattern: #word#
 
-          inside:
-            kind: enum_declaration
-    ]]
-    -- pre-filter the files to process with rg for speed
-    global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']] .. find_def_pattern:gsub('#word#', word)
-      .. [[' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
+            inside:
+              kind: class_declaration
+          - pattern: #word#
+
+            inside:
+              kind: interface_declaration
+          - pattern: #word#
+
+            inside:
+              kind: annotation_type_declaration
+          - pattern: #word#
+
+            inside:
+              kind: enum_declaration
+      ]]
+      -- pre-filter the files to process with rg for speed
+      global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']] .. find_def_pattern:gsub('#word#', word)
+        .. [[' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
   end
 end
 

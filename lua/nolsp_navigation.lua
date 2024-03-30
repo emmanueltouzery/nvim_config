@@ -123,6 +123,10 @@ rule:
     - pattern: ]] .. word .. [[
 
       inside:
+        kind: annotation_type_declaration
+    - pattern: ]] .. word .. [[
+
+      inside:
         kind: enum_declaration']], "Definitions", {})
 end
 

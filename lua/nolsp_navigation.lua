@@ -103,46 +103,61 @@ end
 
 function _G.global_find_definition()
   local word = vim.fn.expand('<cword>')
-  global_picker({'sh', '-c', [[ast-grep scan --inline-rules '
+  local find_def_pattern = [[
 id: query
 language: Java
 rule:
   any:
-    - pattern: ]] .. word .. [[
+    - pattern: #word#
 
       inside:
         kind: method_declaration
-    - pattern: ]] .. word .. [[
+    - pattern: #word#
 
       inside:
         kind: class_declaration
-    - pattern: ]] .. word .. [[
+    - pattern: #word#
 
       inside:
         kind: interface_declaration
-    - pattern: ]] .. word .. [[
+    - pattern: #word#
 
       inside:
         kind: annotation_type_declaration
-    - pattern: ]] .. word .. [[
+    - pattern: #word#
 
       inside:
-        kind: enum_declaration' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]]}, "Definitions", {}) -- pre-filter the files to process with rg for speed
+        kind: enum_declaration
+  ]]
+  -- pre-filter the files to process with rg for speed
+  global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']] .. find_def_pattern:gsub('#word#', word)
+    .. [[' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
 end
 
 function _G.global_find_references()
   local word = vim.fn.expand('<cword>')
-  global_picker([[ast-grep scan --inline-rules '
+  local references_pattern = [[
 id: query
 language: Java
 rule:
   any:
-    - pattern: ]] .. word .. [[
+    - pattern: #word#
 
       inside:
         kind: method_invocation
-    - pattern: ]] .. word .. [[
+    - pattern: #word#
 
       inside:
-        kind: method_reference' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]], "Definitions", {}) -- pre-filter the files to process with rg for speed
+        kind: method_reference
+
+    - pattern:
+        context: new #word#($$PARAMS)
+        selector: type_identifier
+
+      inside:
+        kind: object_creation_expression
+  ]]
+  -- pre-filter the files to process with rg for speed
+  global_picker([[ast-grep scan --inline-rules ']] .. references_pattern:gsub('#word#', word)
+    ..  [[' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]], "Definitions", {})
 end

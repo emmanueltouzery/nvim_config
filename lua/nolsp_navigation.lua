@@ -102,36 +102,69 @@ function _G.global_picker(query, title, matches)
 end
 
 function _G.global_find_definition()
-  local word = vim.fn.expand('<cword>')
-  local find_def_pattern = [[
-id: query
-language: Java
-rule:
-  any:
-    - pattern: #word#
+  local ts_utils = require("nvim-treesitter.ts_utils")
+  local ts_node = ts_utils.get_node_at_cursor()
+  local parent1 = ts_node:parent()
+  if parent1:type() == "method_reference" then
+    -- this is a method reference Class::method, and the cursor is on the method
+    local methodName = vim.fn.expand('<cword>')
+    local row1, col1, row2, col2 = ts_node:prev_sibling():prev_sibling():range()
+    local bufnr = vim.api.nvim_win_get_buf(0)
+    local className = vim.api.nvim_buf_get_text(bufnr, row1, col1, row2, col2, {})[1]
+    local find_method_reference_def_pattern = [[
+      id: query
+      language: Java
 
-      inside:
-        kind: method_declaration
-    - pattern: #word#
+      utils:
+        is-method-identifier:
+          inside:
+            kind: method_declaration
 
-      inside:
-        kind: class_declaration
-    - pattern: #word#
+      rule:
+        pattern: #methodName#
+        matches: is-method-identifier
+        inside:
+          stopBy:
+            kind: class_declaration
+          has:
+            pattern: #className#
+    ]]
+    -- pre-filter the files to process with rg for speed
+    global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']]
+      .. find_method_reference_def_pattern:gsub('#methodName#', methodName):gsub('#className#', className)
+      .. [[' $(rg -l ]] .. methodName .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
+  else
+    local word = vim.fn.expand('<cword>')
+    local find_def_pattern = [[
+    id: query
+    language: Java
+    rule:
+      any:
+        - pattern: #word#
 
-      inside:
-        kind: interface_declaration
-    - pattern: #word#
+          inside:
+            kind: method_declaration
+        - pattern: #word#
 
-      inside:
-        kind: annotation_type_declaration
-    - pattern: #word#
+          inside:
+            kind: class_declaration
+        - pattern: #word#
 
-      inside:
-        kind: enum_declaration
-  ]]
-  -- pre-filter the files to process with rg for speed
-  global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']] .. find_def_pattern:gsub('#word#', word)
-    .. [[' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
+          inside:
+            kind: interface_declaration
+        - pattern: #word#
+
+          inside:
+            kind: annotation_type_declaration
+        - pattern: #word#
+
+          inside:
+            kind: enum_declaration
+    ]]
+    -- pre-filter the files to process with rg for speed
+    global_picker({'sh', '-c', [[ast-grep scan --inline-rules ']] .. find_def_pattern:gsub('#word#', word)
+      .. [[' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]]}, "Definitions", {})
+  end
 end
 
 function _G.global_find_references()

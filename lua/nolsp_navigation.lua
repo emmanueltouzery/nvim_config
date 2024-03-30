@@ -103,7 +103,7 @@ end
 
 function _G.global_find_definition()
   local word = vim.fn.expand('<cword>')
-  global_picker([[ast-grep scan --inline-rules '
+  global_picker({'sh', '-c', [[ast-grep scan --inline-rules '
 id: query
 language: Java
 rule:
@@ -127,7 +127,7 @@ rule:
     - pattern: ]] .. word .. [[
 
       inside:
-        kind: enum_declaration']], "Definitions", {})
+        kind: enum_declaration' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]]}, "Definitions", {}) -- pre-filter the files to process with rg for speed
 end
 
 function _G.global_find_references()
@@ -144,5 +144,5 @@ rule:
     - pattern: ]] .. word .. [[
 
       inside:
-        kind: method_reference']], "Definitions", {})
+        kind: method_reference' $(rg -l ]] .. word .. [[ . | tr '\n' ' ')]], "Definitions", {}) -- pre-filter the files to process with rg for speed
 end

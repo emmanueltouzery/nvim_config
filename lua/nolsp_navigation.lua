@@ -63,11 +63,11 @@ local function picker_finish(matches)
   end
 end
 
-function _G.global_picker(queries_left, title, matches)
+function _G.global_picker(query, title, matches)
   local cwd = vim.fn.getcwd()
   local line_in_result = 1
   local fname, lnum_str, col_str
-  vim.fn.jobstart(table.remove(queries_left, 1), {
+  vim.fn.jobstart(query, {
     cwd = cwd,
     on_stdout = vim.schedule_wrap(function(j, output)
       for _, line in ipairs(output) do
@@ -96,37 +96,49 @@ function _G.global_picker(queries_left, title, matches)
       end
     end),
     on_exit = vim.schedule_wrap(function(j, output)
-      if #queries_left == 0 then
-        picker_finish(matches)
-      else
-        global_picker(queries_left, title, matches)
-      end
+      picker_finish(matches)
     end)
   })
 end
 
-local function get_rule_word_under(word, parent)
-  return [[ast-grep scan --inline-rules '
+function _G.global_find_definition()
+  local word = vim.fn.expand('<cword>')
+  global_picker([[ast-grep scan --inline-rules '
 id: query
 language: Java
 rule:
-  pattern: ]] .. word .. [[
+  any:
+    - pattern: ]] .. word .. [[
 
-  inside:
-    kind: ]] .. parent .. [[']]
-end
+      inside:
+        kind: method_declaration
+    - pattern: ]] .. word .. [[
 
-function _G.global_find_definition()
-  local word = vim.fn.expand('<cword>')
-  global_picker({
-    get_rule_word_under(word, 'method_declaration'),
-    get_rule_word_under(word, 'class_declaration'),
-    get_rule_word_under(word, 'enum_declaration'),
-    get_rule_word_under(word, 'variable_declarator'),
-  }, "Definitions", {})
+      inside:
+        kind: class_declaration
+    - pattern: ]] .. word .. [[
+
+      inside:
+        kind: interface_declaration
+    - pattern: ]] .. word .. [[
+
+      inside:
+        kind: enum_declaration']], "Definitions", {})
 end
 
 function _G.global_find_references()
   local word = vim.fn.expand('<cword>')
-  global_picker({get_rule_word_under(word, 'method_invocation')}, "References", {})
+  global_picker([[ast-grep scan --inline-rules '
+id: query
+language: Java
+rule:
+  any:
+    - pattern: ]] .. word .. [[
+
+      inside:
+        kind: method_invocation
+    - pattern: ]] .. word .. [[
+
+      inside:
+        kind: method_reference']], "Definitions", {})
 end

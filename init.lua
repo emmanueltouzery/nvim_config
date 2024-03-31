@@ -1099,6 +1099,7 @@ callbacks = {
         vim.api.nvim_win_set_height(0, 40)
       end})
   end}
+  use {"/home/emmanuel/home/code-compass.nvim"}
 end)
 
 --Set highlight on search
@@ -1211,7 +1212,6 @@ require("notifs")
 require("ts_unused_imports")
 require("elixir")
 require("database")
-require("nolsp_navigation")
 
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 

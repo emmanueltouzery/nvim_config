@@ -1099,7 +1099,7 @@ callbacks = {
         vim.api.nvim_win_set_height(0, 40)
       end})
   end}
-  use {"/home/emmanuel/home/code-compass.nvim"}
+  use {"emmanueltouzery/code-compass.nvim"}
 end)
 
 --Set highlight on search

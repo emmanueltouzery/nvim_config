@@ -363,7 +363,7 @@ require('packer').startup(function(use)
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "DiffviewFiles",
         callback=function(ev)
-          local branch
+          local branch = "unknown branch"
           vim.fn.jobstart("git branch --show", {
             on_stdout = vim.schedule_wrap(function(j, output)
               if #output[1] > 0 then

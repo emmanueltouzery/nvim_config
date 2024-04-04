@@ -1231,10 +1231,11 @@ function _G.telescope_commits(opts)
     :find()
 end
 
+vim.api.nvim_create_augroup("QuickfixAtCurpos", {})
 function _G.quickfix_at_curpos()
   if vim.b.popup_win ~= nil and vim.api.nvim_win_is_valid(vim.b.popup_win) then
     -- focus the existing popup
-    vim.b.popup_dont_kill = vim.b.popup_win
+    vim.api.nvim_clear_autocmds({group = "QuickfixAtCurpos"})
     vim.api.nvim_set_current_win(vim.b.popup_win)
   else
     -- open a new popup
@@ -1271,18 +1272,22 @@ function _G.quickfix_at_curpos()
       vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, errors)
       vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
       vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
+      vim.keymap.set('n', 'q', '<cmd>quit!<cr>', { silent = true, buffer = popup_buf })
 
       local cur_buf = vim.api.nvim_win_get_buf(0)
       popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
       vim.b.popup_win = popup_win
 
       vim.api.nvim_create_autocmd({ "WinEnter", "TabClosed", "CursorMoved" }, {
+        group = "QuickfixAtCurpos",
         callback = function()
-          local popup_dont_kill = pcall(vim.api.nvim_buf_get_var, cur_buf, 'popup_dont_kill')
-          if popup_dont_kill == false or popup_dont_kill == nil
-              or not vim.api.nvim_win_is_valid(popup_dont_kill)  then
-            pcall(vim.api.nvim_win_close, popup_win, true)
-            vim.b.popup_win = nil
+          local ok, popup_win = pcall(vim.api.nvim_buf_get_var, cur_buf, 'popup_win')
+          if ok then
+            local ok, isvalid = pcall(vim.api.nvim_win_is_valid, popup_win)
+            if ok and isvalid then
+              pcall(vim.api.nvim_win_close, popup_win, true)
+              vim.b.popup_win = nil
+            end
           end
         end,
         once = true,

@@ -1278,8 +1278,9 @@ function _G.quickfix_at_curpos()
 
       vim.api.nvim_create_autocmd({ "WinEnter", "TabClosed", "CursorMoved" }, {
         callback = function()
-          if vim.api.nvim_buf_get_var(cur_buf, 'popup_dont_kill') == nil
-              or not vim.api.nvim_win_is_valid(vim.api.nvim_buf_get_var(cur_buf, 'popup_dont_kill'))  then
+          local popup_dont_kill = pcall(vim.api.nvim_buf_get_var, cur_buf, 'popup_dont_kill')
+          if popup_dont_kill == false or popup_dont_kill == nil
+              or not vim.api.nvim_win_is_valid(popup_dont_kill)  then
             pcall(vim.api.nvim_win_close, popup_win, true)
             vim.b.popup_win = nil
           end

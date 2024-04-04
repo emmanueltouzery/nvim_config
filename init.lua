@@ -182,7 +182,7 @@ require('packer').startup(function(use)
     require("telescope").load_extension "file_browser"
   end}
   use { 'nvim-lualine/lualine.nvim', commit='05d78e9fd0cdfb4545974a5aa14b1be95a86e9c9'}
-  use { 'lewis6991/gitsigns.nvim', commit='2c2463dbd82eddd7dbab881c3a62cfbfbe3c67ae', config = function()
+  use { 'lewis6991/gitsigns.nvim', commit='fa052c20aa7cc62ce6a328c7f3bd556c93b5370e', config = function()
     require("gitsigns").setup {
       signs = {
         untracked = { text = '⡂' },

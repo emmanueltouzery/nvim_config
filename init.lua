@@ -472,25 +472,6 @@ require('packer').startup(function(use)
     vim.g.markify_info_texthl = "Todo"
     vim.g.markify_echo_current_message = 0
   end}
-  -- use {'jose-elias-alvarez/null-ls.nvim', commit='c0c19f32b614b3921e17886c541c13a72748d450', config = function()
-
-  --   require("null-ls").setup({
-  --     sources = {
-  --       -- require("null-ls").builtins.formatting.stylua,
-  --       require("null-ls").builtins.diagnostics.eslint.with({
-  --         -- eslint: display rule name
-  --         -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md#diagnostics-format
-  --         diagnostics_format = "#{m} [#{c}]",
-  --       }),
-  --       require("null-ls").builtins.code_actions.eslint, -- eslint code actions
-  --       require("null-ls").builtins.diagnostics.credo,
-  --       -- require("null-ls").builtins.completion.spell,
-  --       require("null-ls").builtins.formatting.prettier,
-  --       -- null_ls.builtins.formatting.mix,
-  --     },
-  --   })
-  -- end,
-  --   requires = {"nvim-lua/plenary.nvim", "neovim/nvim-lspconfig"} }
   use {'ruifm/gitlinker.nvim', commit='ff33d07', config = function()
     require"gitlinker".setup({
       opts = {
@@ -1305,12 +1286,16 @@ vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
 vim.cmd('autocmd BufNewFile,BufRead *.service set syntax=systemd')
 
 function set_extra_spellfiles()
-  vim.cmd("setlocal spellfile=" .. vim.fn.stdpath("config")  .. "/spell/en.utf-8.add")
-  vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. vim.bo.filetype .. ".utf-8.add")
-  local project_name = vim.fn.getcwd(vim.fn.winnr()):match("[^/]+$")
-  -- only if the "project name" doesn't contain spaces
-  if not project_name:match('%s') then
-    vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. project_name .. ".utf-8.add")
+  if vim.bo.filetype == "man" then
+    vim.cmd("setlocal nospell")
+  else
+    vim.cmd("setlocal spellfile=" .. vim.fn.stdpath("config")  .. "/spell/en.utf-8.add")
+    vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. vim.bo.filetype .. ".utf-8.add")
+    local project_name = vim.fn.getcwd(vim.fn.winnr()):match("[^/]+$")
+    -- only if the "project name" doesn't contain spaces
+    if not project_name:match('%s') then
+      vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. project_name .. ".utf-8.add")
+    end
   end
 end
 

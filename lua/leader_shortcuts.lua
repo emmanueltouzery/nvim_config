@@ -587,12 +587,6 @@ vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="se
 vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path", silent=true})
 
-require 'key-menu'.set('n', '<Space>cg', {desc='gnu global (LSP-less operation)'})
-vim.keymap.set('n', '<leader>cgd', ":lua require'code_compass'.find_definition()<cr>", {desc="code-compass jump to definition", silent=true})
-vim.keymap.set('n', '<leader>cgf', ":lua require'code_compass'.find_references()<cr>", {desc="code-compass find references", silent=true})
-vim.keymap.set('n', '<leader>cgr', ":lua global_refresh_tags()<cr>", {desc="LSP-less find references: refresh tags (requires gnu global)", silent=true})
-vim.keymap.set('n', '<leader>cgl', ":lua quickfix_at_curpos()<cr>", {desc="Quickfix error on current line", silent=true})
-
 require 'key-menu'.set('n', '<Space>cC', {desc='Code Conflicts'})
 vim.keymap.set('n', '<leader>cCb', ":lua diffview_conflict_view_commit('base')<cr>", {desc="conflict show BASE commit", silent=true})
 vim.keymap.set('n', '<leader>cCo', ":lua diffview_conflict_view_commit('ours')<cr>", {desc="conflict show OURS commit", silent=true})
@@ -658,6 +652,15 @@ vim.keymap.set("n", "<leader>clh", "<cmd>lua telescope_display_call_hierarchy()<
 -- vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
 vim.keymap.set("n", "<leader>clR", "<cmd>:lua lsp_restart_all()<CR>", {desc="Restart LSP clients for this buffer"})
 vim.keymap.set("n", "<leader>cli", "<cmd>lua remove_unused_imports()<CR>", {desc="Remove unused imports"})
+
+-- override LSP for java, not using LSP there
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "java",
+  callback=function(ev)
+    vim.keymap.set('n', 'gd', ":lua require'code_compass'.find_definition()<cr>", {desc="code-compass jump to definition", silent=true, buffer=0})
+    vim.keymap.set('n', '<leader>clf', ":lua require'code_compass'.find_references()<cr>", {desc="code-compass find references", silent=true, buffer=0})
+    vim.keymap.set('n', '<leader>cll', ":lua quickfix_at_curpos()<cr>", {desc="Quickfix error on current line", silent=true, buffer=0})
+  end})
 
 -- MARKS
 require 'key-menu'.set('n', '<Space>m', {desc='Marks'})

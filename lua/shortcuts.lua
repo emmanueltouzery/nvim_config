@@ -1,5 +1,6 @@
 -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {desc = "Jump to definition"})
 vim.keymap.set('n', 'gd', "<cmd>lua lsp_goto_def_center()<cr>", {desc = "Jump to definition"})
+vim.keymap.set("n", "gr", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}, attach_mappings=lsp_refs_extra_mappings}<cr>", {desc="Display lsp references"})
 
 require 'key-menu'.set('n', 'đ')
 require 'key-menu'.set('n', 'š')

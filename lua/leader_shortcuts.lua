@@ -659,7 +659,9 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "java",
   callback=function(ev)
     vim.keymap.set('n', 'gd', ":lua require'code_compass'.find_definition()<cr>", {desc="code-compass jump to definition", silent=true, buffer=0})
+    -- TODO drop clf
     vim.keymap.set('n', '<leader>clf', ":lua require'code_compass'.find_references()<cr>", {desc="code-compass find references", silent=true, buffer=0})
+    vim.keymap.set('n', 'gr', ":lua require'code_compass'.find_references()<cr>", {desc="code-compass find references", silent=true, buffer=0})
     vim.keymap.set('n', '<leader>cll', ":lua quickfix_at_curpos()<cr>", {desc="Quickfix error on current line", silent=true, buffer=0})
   end})
 

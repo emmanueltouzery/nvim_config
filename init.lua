@@ -639,7 +639,11 @@ callbacks = {
       float_opts = {
         width = 140,
         height = 45,
-      }
+      },
+      on_open=function(term)
+        -- q to close a terminal
+        vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+      end,
     }
     function _G.set_terminal_keymaps()
       local opts = {noremap = true}

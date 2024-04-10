@@ -103,6 +103,14 @@ require('packer').startup(function(use)
             ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
             ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
             ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
+            ["<C-r><C-w>"] = function(picker)
+                require("telescope.actions").close(picker)
+                local word = vim.fn.expand('<cword>')
+                vim.cmd[[Telescope resume]]
+                vim.defer_fn(function()
+                  vim.fn.feedkeys(word)
+                end, 10)
+              end,
           },
           n = {
             ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,

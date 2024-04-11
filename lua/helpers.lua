@@ -1295,3 +1295,20 @@ function _G.quickfix_at_curpos()
     end
   end
 end
+
+function _G.open_in_centered_popup()
+    local cur_bufnr = vim.api.nvim_win_get_buf(0)
+    local width = vim.api.nvim_get_option("columns")
+    local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
+
+    local opts = {
+        style = "minimal",
+        border = "rounded",
+        relative = "win",
+        row = (height - 50) / 2,
+        col = (width - 120) / 2,
+        width = 120,
+        height = 50,
+    }
+    local win = vim.api.nvim_open_win(cur_bufnr, true, opts)
+end

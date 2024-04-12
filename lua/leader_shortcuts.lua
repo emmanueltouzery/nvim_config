@@ -470,17 +470,34 @@ function telescope_branches_mappings(prompt_bufnr, map)
       local Job = require'plenary.job'
       if string.match(branch, "^origin/") then
         -- remote branch
-        local answer = vim.ui.select({"Yes", "No"}, {prompt="Are you sure to delete the remote branch '" .. string.gsub(branch, "^origin/", "") .. "'?"}, function(choice)
-          if choice == "Yes" then
-            Job:new({
-              command = 'git',
-              args = { 'push', 'origin', '--delete', string.gsub(branch, "^origin/", "") },
-              on_exit = function(j, return_val)
-                print(vim.inspect(j:result()))
-              end,
-            }):sync()
-          end
-        end)
+        local answer = vim.ui.select({"Yes", "No"}, {
+            prompt="Are you sure you want to delete the remote branch '" .. string.gsub(branch, "^origin/", "") .. "'?"
+          }, function(choice)
+            if choice == "Yes" then
+              local branch_without_origin = string.gsub(branch, "^origin/", "")
+              local cmd_output = {}
+              vim.fn.jobstart('git push origin --delete ' .. branch_without_origin, {
+                stdout_buffered = true,
+                on_stdout = vim.schedule_wrap(function(j, output)
+                  for _, line in ipairs(output) do
+                    if #line > 0 then
+                      table.insert(cmd_output, line)
+                    end
+                  end
+                end),
+                on_stderr = vim.schedule_wrap(function(j, output)
+                  for _, line in ipairs(output) do
+                    if #line > 0 then
+                      table.insert(cmd_output, line)
+                    end
+                  end
+                end),
+                on_exit = function(j, return_val)
+                  notif(cmd_output)
+                end,
+              })
+            end
+          end)
       else
         -- local branch
         Job:new({

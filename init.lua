@@ -650,7 +650,7 @@ callbacks = {
       },
       on_open=function(term)
         -- q to close a terminal
-        vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+        vim.api.nvim_buf_set_keymap(term.bufnr, "n", "<esc>", "<cmd>close<CR>", {noremap = true, silent = true})
       end,
     }
     function _G.set_terminal_keymaps()

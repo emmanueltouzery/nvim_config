@@ -648,6 +648,13 @@ callbacks = {
         width = 140,
         height = 45,
       },
+      size = function(term)
+        if term.direction == "horizontal" then
+          return 15
+        elseif term.direction == "vertical" then
+          return vim.o.columns * 0.5
+        end
+      end,
       on_open=function(term)
         -- q to close a terminal
         vim.api.nvim_buf_set_keymap(term.bufnr, "n", "<esc>", "<cmd>close<CR>", {noremap = true, silent = true})

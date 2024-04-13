@@ -322,6 +322,8 @@ vim.keymap.set("n", "<leader>ttm", function() vim.api.nvim_set_current_tabpage(1
 vim.keymap.set("n", "<leader>ttt", "<cmd>lua create_or_switch_tab_terminal()<cr>", {desc = "Open or switch to terminal tab"})
 vim.keymap.set("n", "<leader>ttq", "<cmd>lua switch_to_sql_tab()<cr>", {desc = "Switch to SQL tab"})
 vim.keymap.set("n", "<leader>ttp", "<cmd>ToggleTerm direction=float<CR>", {desc = "Toggle popup terminal"})
+vim.keymap.set("n", "<leader>ttv", "<cmd>ToggleTerm direction=vertical<CR>", {desc = "Open terminal in vertical split"})
+vim.keymap.set("n", "<leader>tth", "<cmd>ToggleTerm direction=horizontal<CR>", {desc = "Open terminal in horizontal window"})
 
 -- GIT
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})

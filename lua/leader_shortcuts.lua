@@ -387,7 +387,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
       actions.close(prompt_bufnr)
       vim.cmd(":DiffviewOpen " .. branches[1] .. "..." .. branches[2])
     end
-  end)
+  end, {desc = "Git diff"})
   map('i', '<C-enter>', function(nr) -- create a local branch to track an origin branch
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
@@ -414,7 +414,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
         end),
       })
     end
-  end)
+  end, {desc = "Create local branch"})
   map('i', '<C-b>', function(nr) -- rebase on another branch
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
@@ -439,7 +439,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
         notif(cmd_output)
       end),
     })
-  end)
+  end, {desc="reBase"})
   map('i', '<C-g>', function(nr) -- merge another branch
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
@@ -464,7 +464,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
         notif(cmd_output)
       end),
     })
-  end)
+  end, {desc= "merGe"})
   map('i', '<C-Del>', function(nr) -- delete
     local current_picker = action_state.get_current_picker(prompt_bufnr)
     current_picker:delete_selection(function(selection)
@@ -512,7 +512,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
         }):sync()
       end
     end)
-  end)
+  end, {desc="Delete"})
   map('i', '<C-c>', function(nr) -- commits
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
@@ -522,7 +522,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
         entry_maker=custom_make_entry_gen_from_git_commits(),
         git_command={"git", "log", branch, "--pretty=tformat:%<(10)%h%<(16,trunc)%an %ad%d %s", "--date=short", "--", "."}, layout_config={width=0.9, horizontal={preview_width=0.5}}
       })
-  end)
+  end, {desc="Commits"})
   map('i', '<C-h>', function(nr) -- history
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
@@ -531,7 +531,32 @@ function telescope_branches_mappings(prompt_bufnr, map)
   map('i', '<C-y>', function(nr) -- copy branch name
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     copy_to_clipboard(branch)
-  end)
+  end, {desc="Copy branch name"})
+  map('i', '<C-w>', function(nr) -- fast-forWard to origin
+    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    -- https://samuelgruetter.net/blog/2018/08/31/git-ffwd-without-checkout/
+    local cmd_output = {"FF branch:"}
+    vim.fn.jobstart('git fetch origin ' .. branch .. ":" .. branch, {
+      stdout_buffered = true,
+      on_stdout = vim.schedule_wrap(function(j, output)
+        for _, line in ipairs(output) do
+          if #line > 0 then
+            table.insert(cmd_output, line)
+          end
+        end
+      end),
+      on_stderr = vim.schedule_wrap(function(j, output)
+        for _, line in ipairs(output) do
+          if #line > 0 then
+            table.insert(cmd_output, line)
+          end
+        end
+      end),
+      on_exit = function(j, return_val)
+        notif(cmd_output)
+      end,
+    })
+  end, {desc="fast-forward to origin"})
   return true
 end
 -- vim.keymap.set("n", "<leader>gc", "<cmd>lua require'telescope.builtin'.git_commits{attach_mappings=telescope_commits_mappings}<CR>", {desc ="Browse git commits"})

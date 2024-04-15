@@ -1292,6 +1292,9 @@ function _G.quickfix_at_curpos()
         end,
         once = true,
       })
+    else
+      -- no quickfix, but maybe there are diagnostics to display
+      vim.diagnostic.open_float(0, {scope="line"})
     end
   end
 end

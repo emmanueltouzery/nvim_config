@@ -204,7 +204,7 @@ require('packer').startup(function(use)
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
-      ensure_installed = { "c", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vimdoc",
+      ensure_installed = { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vimdoc",
         "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql" },
       highlight = {
         enable = true ,

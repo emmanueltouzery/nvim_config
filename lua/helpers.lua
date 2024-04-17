@@ -402,6 +402,8 @@ end
 function _G.toggle_comment_custom_commentstring_curline()
   startline = vim.fn.line('.')
   endline = vim.fn.line('.')
+  require('kommentary.kommentary').comment_out_range_single(startline, endline,
+      require('kommentary.config').get_config(0)) -- uncomment if possible/needed
   _G.toggle_comment_custom_commentstring(startline, endline)
 end
 

@@ -718,6 +718,7 @@ vim.keymap.set("n", "<leader>ma", ":lua add_global_mark()<cr>", {desc="Add mark"
 require 'key-menu'.set('n', '<Space>v', {desc='Vim'})
 vim.keymap.set("n", "<leader>vc", ":let @+=@:<cr>", {desc="Yank last ex command text"})
 vim.keymap.set("n", "<leader>vm", [[:let @+=substitute(execute('messages'), '\n\+', '\n', 'g')<cr>]], {desc="Yank vim messages output"})
+vim.keymap.set("n", "<leader>vz", ":let g:neovide_scale_factor = ", {desc="neovide zoom"})
 
 -- JOBS
 require 'key-menu'.set('n', '<Space>j', {desc='Jobs'})

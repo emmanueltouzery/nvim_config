@@ -469,6 +469,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     local current_picker = action_state.get_current_picker(prompt_bufnr)
     current_picker:delete_selection(function(selection)
       branch = require("telescope.actions.state").get_selected_entry(selection.bufnr).value
+      actions.close(prompt_bufnr)
       local Job = require'plenary.job'
       if string.match(branch, "^origin/") then
         -- remote branch

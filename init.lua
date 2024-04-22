@@ -787,7 +787,7 @@ callbacks = {
   end}
   use {
     -- hopefully temporarily using my fork due to https://github.com/stevearc/stickybuf.nvim/issues/24
-    'emmanueltouzery/nvim-tree.lua', commit='ee0c792e1b9c158b46efda40060e0f097e649e48',
+    'emmanueltouzery/nvim-tree.lua', commit='37269cacd54df6d7d5d6d40f3418b34d8f842a90',
     requires = { 'nvim-tree/nvim-web-devicons', commit='9ab9b0b894b2388a9dbcdee5f00ce72e25d85bf9' },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end

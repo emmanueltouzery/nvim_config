@@ -94,6 +94,8 @@ require'nvim-tree'.setup {
   },
 }
 vim.cmd[[au Colorscheme * hi NvimTreeOpenedFile guifg=#ecbe7b]]
+vim.cmd[[hi NvimTreeCopiedHL gui=bold]] -- mark copied files as bold (default is badly spelled??)
+vim.cmd[[hi NvimTreeCutHL gui=strikethrough]] -- mark cut files as strikethrough (default is badly spelled??)
 
 local api = require("nvim-tree.api")
 local Event = api.events.Event

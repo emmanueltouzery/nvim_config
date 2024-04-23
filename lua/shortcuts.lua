@@ -39,6 +39,13 @@ vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", {desc="Resize window (decrease
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", {desc="Resize window (decrease height)"})
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", {desc="Resize window (increase height)"})
 
+-- zoom in and out
+if vim.g.neovide == true then
+  vim.api.nvim_set_keymap("n", "<C-+>", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * 1.1<CR>", { silent = true })
+  vim.api.nvim_set_keymap("n", "<C-->", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * 0.9<CR>", { silent = true })
+  vim.api.nvim_set_keymap("n", "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>", { silent = true })
+end
+
 -- https://vi.stackexchange.com/a/27803/38754
 -- the default 'gx' to open links doesn't work.
 -- there are plugins..  https://github.com/felipec/vim-sanegx

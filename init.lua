@@ -715,7 +715,7 @@ callbacks = {
           -- this combines with get_highlight for which we highlight
           -- private symbols differently
           item.scope = "private"
-          local value_node = (utils.get_at_path(ctx.match, "type") or {}).node
+          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
           local cur_parent = value_node and value_node:parent()
           while cur_parent do
             if cur_parent:type() == "export_statement" then

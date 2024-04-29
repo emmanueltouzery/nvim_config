@@ -574,45 +574,45 @@ callbacks = {
       local util = require 'vim.lsp.util'
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-      lspconfig.tsserver.setup {
-        on_attach = function(client)
-        -- use prettier for JS indentation (through conform.nvim)
-          client.server_capabilities.documentFormattingProvider = false
-          client.server_capabilities.documentRangeFormattingProvider = false
-        end,
+      -- lspconfig.tsserver.setup {
+      --   on_attach = function(client)
+      --   -- use prettier for JS indentation (through conform.nvim)
+      --     client.server_capabilities.documentFormattingProvider = false
+      --     client.server_capabilities.documentRangeFormattingProvider = false
+      --   end,
 
-        -- fix annoying quickfix opening because tsserver returns multiple matches
-        -- usually the first one is the right one
-        -- https://www.reddit.com/r/neovim/comments/nrfr5h/neovim_auto_opens_quickfix_list/
-        -- https://github.com/neovim/neovim/blob/1186f7dd96b054d6a653685089fc845a8f5d2f27/runtime/lua/vim/lsp/handlers.lua#L275-L295
-        -- https://github.com/neovim/neovim/blob/v0.7.2/runtime/lua/vim/lsp/handlers.lua#L322
-        handlers = {
-          ["textDocument/definition"] = function(_, result, ctx, _)
-            if result == nil or vim.tbl_isempty(result) then
-              local _ = log.info() and log.info(ctx.method, 'No location found')
-              return nil
-            end
-            local client = vim.lsp.get_client_by_id(ctx.client_id)
+      --   -- fix annoying quickfix opening because tsserver returns multiple matches
+      --   -- usually the first one is the right one
+      --   -- https://www.reddit.com/r/neovim/comments/nrfr5h/neovim_auto_opens_quickfix_list/
+      --   -- https://github.com/neovim/neovim/blob/1186f7dd96b054d6a653685089fc845a8f5d2f27/runtime/lua/vim/lsp/handlers.lua#L275-L295
+      --   -- https://github.com/neovim/neovim/blob/v0.7.2/runtime/lua/vim/lsp/handlers.lua#L322
+      --   handlers = {
+      --     ["textDocument/definition"] = function(_, result, ctx, _)
+      --       if result == nil or vim.tbl_isempty(result) then
+      --         local _ = log.info() and log.info(ctx.method, 'No location found')
+      --         return nil
+      --       end
+      --       local client = vim.lsp.get_client_by_id(ctx.client_id)
 
-            -- textDocument/definition can return Location or Location[]
-            -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
+      --       -- textDocument/definition can return Location or Location[]
+      --       -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
 
-            if vim.tbl_islist(result) then
-              util.jump_to_location(result[1], client.offset_encoding)
+      --       if vim.tbl_islist(result) then
+      --         util.jump_to_location(result[1], client.offset_encoding)
 
-              -- if #result > 1 then
-              --   vim.fn.setqflist({}, ' ', {
-              --     title = 'LSP locations',
-              --     items = util.locations_to_items(result, client.offset_encoding)
-              --   })
-              --   vim.api.nvim_command("botright copen")
-              -- end
-            else
-              util.jump_to_location(result, client.offset_encoding)
-            end
-          end
-        }
-      }
+      --         -- if #result > 1 then
+      --         --   vim.fn.setqflist({}, ' ', {
+      --         --     title = 'LSP locations',
+      --         --     items = util.locations_to_items(result, client.offset_encoding)
+      --         --   })
+      --         --   vim.api.nvim_command("botright copen")
+      --         -- end
+      --       else
+      --         util.jump_to_location(result, client.offset_encoding)
+      --       end
+      --     end
+      --   }
+      -- }
 
       lspconfig.rust_analyzer.setup {}
       lspconfig.elixirls.setup {
@@ -1100,6 +1100,47 @@ callbacks = {
       end})
   end}
   use {"emmanueltouzery/code-compass.nvim"}
+  use {"pmizio/typescript-tools.nvim", commit="c43d9580c3ff5999a1eabca849f807ab33787ea7", config=function()
+    require("typescript-tools").setup {
+      on_attach = function(client)
+        -- use prettier for JS indentation (through conform.nvim)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+      end,
+
+      -- fix annoying quickfix opening because tsserver returns multiple matches
+      -- usually the first one is the right one
+      -- https://www.reddit.com/r/neovim/comments/nrfr5h/neovim_auto_opens_quickfix_list/
+      -- https://github.com/neovim/neovim/blob/1186f7dd96b054d6a653685089fc845a8f5d2f27/runtime/lua/vim/lsp/handlers.lua#L275-L295
+      -- https://github.com/neovim/neovim/blob/v0.7.2/runtime/lua/vim/lsp/handlers.lua#L322
+      -- handlers = {
+      --   ["textDocument/definition"] = function(_, result, ctx, _)
+      --     if result == nil or vim.tbl_isempty(result) then
+      --       local _ = log.info() and log.info(ctx.method, 'No location found')
+      --       return nil
+      --     end
+      --     local client = vim.lsp.get_client_by_id(ctx.client_id)
+
+      --     -- textDocument/definition can return Location or Location[]
+      --     -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
+
+      --     if vim.tbl_islist(result) then
+      --       util.jump_to_location(result[1], client.offset_encoding)
+
+      --       -- if #result > 1 then
+      --       --   vim.fn.setqflist({}, ' ', {
+      --       --     title = 'LSP locations',
+      --       --     items = util.locations_to_items(result, client.offset_encoding)
+      --       --   })
+      --       --   vim.api.nvim_command("botright copen")
+      --       -- end
+      --     else
+      --       util.jump_to_location(result, client.offset_encoding)
+      --     end
+      --   end
+      -- }
+    }
+  end}
 end)
 
 --Set highlight on search

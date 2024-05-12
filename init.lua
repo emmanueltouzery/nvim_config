@@ -1430,4 +1430,9 @@ vim.cmd[[set diffopt=internal,filler,closeoff,linematch:60]]
 -- nmap <Home> ^
 -- ]]
 
+-- https://vi.stackexchange.com/questions/17816/solved-ish-neovim-dont-close-terminal-buffer-after-process-exit
+-- don't autoclose terminal buffers when the app exits. Useful when opening elixir apidocs in buffers using
+-- elixir-extras.nvim
+vim.cmd[[au TermClose * call feedkeys("\<C-\>\<C-n>")]]
+
 -- vim: ts=2 sts=2 sw=2 et

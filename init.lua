@@ -1435,4 +1435,25 @@ vim.cmd[[set diffopt=internal,filler,closeoff,linematch:60]]
 -- elixir-extras.nvim
 vim.cmd[[au TermClose * call feedkeys("\<C-\>\<C-n>")]]
 
+-- useful for android development
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "java",
+  callback=function(ev)
+    local matches = vim.fs.find("AndroidManifest.xml", {
+      upward = true,
+      type = "file",
+      path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
+    })
+    if #matches > 0 then
+      -- this is an android project, and this is a java file, for which i'm assuming
+      -- no LSP. Let's override K to something more useful than nothing.
+      vim.keymap.set('n', 'K', function()
+        -- assume we're on top of an import <package>; line
+        local url = "https://developer.android.com/reference/" .. vim.fn.expand('<cWORD>'):gsub(';', ''):gsub('%.', '/')
+        vim.fn.jobstart({"xdg-open", url})
+      end, { buffer = true })
+    end
+  end
+})
+
 -- vim: ts=2 sts=2 sw=2 et

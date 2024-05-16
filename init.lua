@@ -159,6 +159,9 @@ require('packer').startup(function(use)
               end,
               ["<cr>"] = require("telescope-undo.actions").restore,
             },
+            n = {
+              ["<cr>"] = require("telescope-undo.actions").restore,
+            },
           },
         },
         project = {

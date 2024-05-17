@@ -253,6 +253,10 @@ require('packer').startup(function(use)
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
   use {'emmanueltouzery/doom-one.nvim', commit='3f20360cfb2d292dd27515bcc1cd7d0aef50fac8', config = function()
+    if vim.fn.has("nvim-0.10") == 1 then
+      -- workaround for the new neovim theme in 0.10
+      vim.cmd [[colorscheme vim]]
+    end
     require('doom-one').setup({
       cursor_coloring = true,
       italic_comments = true,
@@ -773,8 +777,8 @@ callbacks = {
     })
     require('telescope').load_extension('aerial')
   end}
-  use {'NeogitOrg/neogit', commit='3c4db5d1040909879136ea49ca67d68896f5a3b1', config = function()
-    require('neogit') .setup {
+  use {'NeogitOrg/neogit', commit='bc0c609e3568a171e0549b449aa1b2b4b5b20e8c', config = function()
+    require('neogit').setup {
       -- disable_context_highlighting = true,
       signs = {
         -- { CLOSED, OPENED }
@@ -854,7 +858,7 @@ callbacks = {
     alpha.setup(dashboard.config)
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
-  use {'akinsho/bufferline.nvim', commit = 'a703bb919aeb436eaa83bcbefdac51fbb92b4c74'}
+  use {'akinsho/bufferline.nvim', commit = '73540cb95f8d95aa1af3ed57713c6720c78af915'} -- there's a setup in bufferline.lua
   use {'emmanueltouzery/vim-dispatch-neovim', commit='82b525360aca42b93208084b876e818b36d352d1'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
@@ -1306,6 +1310,9 @@ vim.cmd('autocmd BufNewFile,BufRead *.conf set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.conf.template set syntax=conf')
 vim.cmd('autocmd BufNewFile,BufRead *.yml.template set syntax=yaml')
 vim.cmd('autocmd BufNewFile,BufRead *.service set syntax=systemd')
+
+-- fix undercurls in neovim 0.10 (on 'private' keywords in java for instance)
+vim.cmd[[set spellcapcheck=]]
 
 function set_extra_spellfiles()
   if vim.bo.filetype == "man" then

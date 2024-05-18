@@ -389,6 +389,9 @@ require('packer').startup(function(use)
               for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
                 if vim.api.nvim_win_get_buf(win) == ev.buf then
                   vim.wo[win].winbar = "%#Title#%= " .. branch
+                  if vim.fn.exists('&winfixbuf') == 1 then
+                    vim.wo[win].winfixbuf = true
+                  end
                 end
               end
             end)
@@ -982,39 +985,41 @@ callbacks = {
   use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
     require("dapui").setup{}
   end}
-  use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e', config=function()
-    require("stickybuf").setup({
-      get_auto_pin = function(bufnr)
-        local buf_ft = vim.api.nvim_buf_get_option(bufnr, "ft")
-        if buf_ft == "DiffviewFiles" then
-          -- this is a diffview tab, disable creating new windows
-          -- (which would be the default behavior of handle_foreign_buffer)
-          return {
-            handle_foreign_buffer = function(bufnr) end
-          }
+use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e', config=function()
+    if vim.fn.exists('&winfixbuf') == 0 then
+      require("stickybuf").setup({
+        get_auto_pin = function(bufnr)
+          local buf_ft = vim.api.nvim_buf_get_option(bufnr, "ft")
+          if buf_ft == "DiffviewFiles" then
+            -- this is a diffview tab, disable creating new windows
+            -- (which would be the default behavior of handle_foreign_buffer)
+            return {
+              handle_foreign_buffer = function(bufnr) end
+            }
+          end
+
+          -- applying stickybuf on all the windows of the diffview tab was overoptimistic, i think
+          -- because diffview itself changes buffers inside windows, and stickybuf doesn't know whether
+          -- the user tried to do that, or diffview... So that causes issues.
+
+          --   -- pin if any of the windows of the current tab have a DiffviewFiles filetype
+          --   -- (that's the filetype of the diffview sidebar, no switching buffers in that tab)
+          --   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          --     local buf = vim.api.nvim_win_get_buf(win)
+          --     local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
+          --     if buf_ft == "DiffviewFiles" then
+          --       -- this is a diffview tab, pin all the windows, and also
+          --       -- disable creating new windows (which would be the default
+          --       -- behavior of handle_foreign_buffer)
+          --       return {
+          --         handle_foreign_buffer = function(bufnr) end
+          --       }
+          --     end
+          --   end
+          return require("stickybuf").should_auto_pin(bufnr)
         end
-
-        -- applying stickybuf on all the windows of the diffview tab was overoptimistic, i think
-        -- because diffview itself changes buffers inside windows, and stickybuf doesn't know whether
-        -- the user tried to do that, or diffview... So that causes issues.
-
-      --   -- pin if any of the windows of the current tab have a DiffviewFiles filetype
-      --   -- (that's the filetype of the diffview sidebar, no switching buffers in that tab)
-      --   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-      --     local buf = vim.api.nvim_win_get_buf(win)
-      --     local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
-      --     if buf_ft == "DiffviewFiles" then
-      --       -- this is a diffview tab, pin all the windows, and also
-      --       -- disable creating new windows (which would be the default
-      --       -- behavior of handle_foreign_buffer)
-      --       return {
-      --         handle_foreign_buffer = function(bufnr) end
-      --       }
-      --     end
-      --   end
-        return require("stickybuf").should_auto_pin(bufnr)
-      end
-    })
+      })
+    end
   end}
   -- using my fork until https://github.com/luckasRanarison/nvim-devdocs/pull/66 is merged
   use {"emmanueltouzery/nvim-devdocs",
@@ -1444,6 +1449,17 @@ vim.cmd[[set diffopt=internal,filler,closeoff,linematch:60]]
 -- don't autoclose terminal buffers when the app exits. Useful when opening elixir apidocs in buffers using
 -- elixir-extras.nvim
 vim.cmd[[au TermClose * call feedkeys("\<C-\>\<C-n>")]]
+
+-- winfixbuf
+if vim.fn.has("nvim-0.10") == 1 then
+  vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function()
+      if vim.list_contains({"NvimTree", "OverseerList", "aerial", "toggleterm"}, vim.bo.filetype) then
+        vim.wo.winfixbuf = true
+      end
+    end,
+  })
+end
 
 -- useful for android development
 vim.api.nvim_create_autocmd("FileType", {

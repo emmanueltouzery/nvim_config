@@ -279,9 +279,8 @@ require('packer').startup(function(use)
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
   end} 
-  use {'sindrets/diffview.nvim', commit='a111d19ccceac6530448d329c63f998f77b5626e',
+  use {'sindrets/diffview.nvim', commit='5532482a5aef52021347e16f13e1ee73b8c7b436',
     config = function()
-      local actions = require("diffview.config").actions
       require('diffview').setup {
         keymaps = {
           view = {
@@ -299,7 +298,7 @@ require('packer').startup(function(use)
           },
           file_panel = {
             ["-"] = false, -- i want this shortcut for choosewin
-            {"n", "s", actions.toggle_stage_entry,
+            {"n", "s", require("diffview.config").actions.toggle_stage_entry,
               {desc = "Stage / unstage the selected entry"},
             },
             {"n", "c",
@@ -311,8 +310,8 @@ require('packer').startup(function(use)
             end,
               {desc = "Invoke diffview"}
             },
-            {"n", "šx", actions.prev_conflict, {desc = "Go to previous conflict"}},
-            {"n", "đx", actions.next_conflict, {desc = "Go to next conflict"}},
+            {"n", "šx", require("diffview.config").actions.prev_conflict, {desc = "Go to previous conflict"}},
+            {"n", "đx", require("diffview.config").actions.next_conflict, {desc = "Go to next conflict"}},
             {"n", "gf", diffview_gf,
               {desc = "Goto File"},
             },

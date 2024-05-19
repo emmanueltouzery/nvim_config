@@ -1208,7 +1208,7 @@ function _G.telescope_commits(opts)
   local previewers = require("telescope.previewers")
   local conf = require("telescope.config").values
   local actions = require("telescope.actions")
-  opts.entry_maker = vim.F.if_nil(opts.entry_maker, make_entry.gen_from_git_commits(opts))
+  opts.entry_maker=custom_make_entry_gen_from_git_commits()
   local git_command = vim.F.if_nil(opts.git_command, { "git", "log", "--pretty=oneline", "--abbrev-commit", "--", "." })
 
   pickers

@@ -181,6 +181,16 @@ require('packer').startup(function(use)
             "--ignore-file=" .. vim.fn.stdpath("config") .. "/rg-ignore",
           },
         },
+        file_browser = {
+          mappings = {
+            i = {
+              ["<CR>"] = require("telescope.actions").select_default,
+            },
+            n = {
+              ["<CR>"] = require("telescope.actions").select_default,
+            },
+          },
+        },
       },
     }
     require("telescope").load_extension("undo")

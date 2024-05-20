@@ -570,6 +570,7 @@ callbacks = {
         end,
       },
     })
+    vim.cmd[[set winhighlight=NormalFloat:DressingInputText]]
   end}
   use {
     "williamboman/mason.nvim",

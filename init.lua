@@ -289,7 +289,7 @@ require('packer').startup(function(use)
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
   end} 
-  use {'sindrets/diffview.nvim', commit='5532482a5aef52021347e16f13e1ee73b8c7b436',
+  use {'sindrets/diffview.nvim', commit='a111d19ccceac6530448d329c63f998f77b5626e',
     config = function()
       require('diffview').setup {
         keymaps = {
@@ -382,7 +382,7 @@ require('packer').startup(function(use)
           }
         }
       }
-      require('diffview').init()
+      -- require('diffview').init()
 
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "DiffviewFiles",

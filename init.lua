@@ -262,11 +262,7 @@ require('packer').startup(function(use)
   use {'saadparwaiz1/cmp_luasnip', commit = '18095520391186d634a0045dacaa346291096566'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
-  use {'emmanueltouzery/doom-one.nvim', commit='3f20360cfb2d292dd27515bcc1cd7d0aef50fac8', config = function()
-    if vim.fn.has("nvim-0.10") == 1 then
-      -- workaround for the new neovim theme in 0.10
-      vim.cmd [[colorscheme vim]]
-    end
+  use {'emmanueltouzery/doom-one.nvim', commit='190cef84cac7f517880d2b27b3b5c22f95500967', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
       italic_comments = true,
@@ -275,7 +271,6 @@ require('packer').startup(function(use)
         telescope = true,
       }
     })
-
     -- the theme MUST be loaded before we attempt to load bufferline
     require("plugins.bufferline")
   end}

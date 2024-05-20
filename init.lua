@@ -653,7 +653,7 @@ callbacks = {
     end,
     after = "nvim-lspconfig",
   }
-  use {'emmanueltouzery/key-menu.nvim', commit='5ab7d2ded9bf4214ef66b053e3611775d9b486d1'} -- originally linty-org/key-menu.nvim but the git repo was deleted...
+  use {'emmanueltouzery/key-menu.nvim', commit='353a5c70eccbb12f8f32a152f4fba1ec1b2ccfaa'} -- originally linty-org/key-menu.nvim but the git repo was deleted...
   use {'lambdalisue/suda.vim', commit='6bffe36862faa601d2de7e54f6e85c1435e832d0'}
   use {'akinsho/toggleterm.nvim', commit='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', config = function()
     require("toggleterm").setup{

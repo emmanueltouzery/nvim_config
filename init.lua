@@ -203,7 +203,7 @@ require('packer').startup(function(use)
     require("telescope").load_extension "file_browser"
   end}
   use { 'nvim-lualine/lualine.nvim', commit='05d78e9fd0cdfb4545974a5aa14b1be95a86e9c9'}
-  use { 'lewis6991/gitsigns.nvim', commit='fa052c20aa7cc62ce6a328c7f3bd556c93b5370e', config = function()
+  use { 'lewis6991/gitsigns.nvim', commit='a28bb1db506df663b063cc63f44fbbda178255a7', config = function()
     require("gitsigns").setup {
       signs = {
         untracked = { text = '⡂' },
@@ -284,7 +284,7 @@ require('packer').startup(function(use)
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
   end} 
-  use {'sindrets/diffview.nvim', commit='a111d19ccceac6530448d329c63f998f77b5626e',
+  use {'sindrets/diffview.nvim', commit='72c6983f422689f310b379a04fd555799b0d7cfc',
     config = function()
       require('diffview').setup {
         keymaps = {
@@ -1026,9 +1026,10 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
       })
     end
   end}
-  -- using my fork until https://github.com/luckasRanarison/nvim-devdocs/pull/66 is merged
+  -- tracking my 'search' branch.
+  -- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs
   use {"emmanueltouzery/nvim-devdocs",
-    commit = '21067763a09b507b65c0194ff163cc8801698546',
+    commit = '0abc94890747ae5458da6ae17fd1cced63da83d6',
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",

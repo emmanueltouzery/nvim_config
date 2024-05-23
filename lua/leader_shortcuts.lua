@@ -638,6 +638,12 @@ vim.keymap.set('n', '<leader>cCb', ":lua diffview_conflict_view_commit('base')<c
 vim.keymap.set('n', '<leader>cCo', ":lua diffview_conflict_view_commit('ours')<cr>", {desc="conflict show OURS commit", silent=true})
 vim.keymap.set('n', '<leader>cCt', ":lua diffview_conflict_view_commit('theirs')<cr>", {desc="conflict show THEIRS commit", silent=true})
 
+require 'key-menu'.set('n', '<Space>cc', {desc='Code Csv'})
+vim.keymap.set('n', '<leader>cca', ":lua align_csv()<cr>", {desc="align CSV", silent=true})
+vim.keymap.set('n', 'šc', ":lua align_csv_prev_col()<cr>", {desc="align CSV prev col", silent=true})
+vim.keymap.set('n', 'đc', ":lua align_csv_next_col()<cr>", {desc="align CSV next col", silent=true})
+
+
 require 'key-menu'.set('n', '<Space>x', {desc='Elixir'})
 vim.keymap.set('n', '<leader>xiv', ":lua elixir_insert_inspect_value()<cr>", {desc="elixir add inspect value"})
 vim.keymap.set('n', '<leader>xip', ":lua elixir_insert_inspect_param()<cr>", {desc="elixir add inspect parameter"})

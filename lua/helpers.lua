@@ -1383,6 +1383,9 @@ end
 function _G.align_csv_prev_col()
   local ns = vim.api.nvim_create_namespace('__align_csv')
   local next_mark = vim.api.nvim_buf_get_extmarks(0, ns, {vim.fn.line('.')-1, vim.fn.col('.')-2}, 0, {limit = 1})
+  if vim.fn.col('.') == 1 then
+    next_mark = vim.api.nvim_buf_get_extmarks(0, ns, {vim.fn.line('.')-1, vim.fn.col('.')-1}, 0, {limit = 1})
+  end
   if #next_mark == 1 then
     if next_mark[1][2]+1 < vim.fn.line('.') and vim.fn.col('.') > 1 then
       -- the previous mark is on the previous line, but let's not forget

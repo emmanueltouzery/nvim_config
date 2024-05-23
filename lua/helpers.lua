@@ -1318,6 +1318,15 @@ function _G.open_in_centered_popup()
     local win = vim.api.nvim_open_win(cur_bufnr, true, opts)
 end
 
+function _G.align_csv_clear()
+  local ns = vim.api.nvim_create_namespace('__align_csv')
+  -- clear existing extmarks
+  for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, {})) do
+    vim.api.nvim_buf_del_extmark(0, ns, mark[1])
+  end
+
+end
+
 function _G.align_csv(opts)
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   if #lines == 0 then
@@ -1337,12 +1346,8 @@ function _G.align_csv(opts)
     end
   end
 
+  align_csv_clear()
   local ns = vim.api.nvim_create_namespace('__align_csv')
-  -- clear existing extmarks
-  for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, {})) do
-    vim.api.nvim_buf_del_extmark(0, ns, mark[1])
-  end
-
   local col_lengths = {}
   for _, line in ipairs(lines) do
     local cols = vim.split(line, vim.b.__align_csv_separator)

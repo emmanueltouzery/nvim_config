@@ -147,7 +147,7 @@ function _G.notif(msg, level, opts)
 end
 
 vim.notify = function(msg, level, opts)
-  if opts and opts.title == "Neogit" then
+  if opts and opts.title == "Neogit" and not msg:match("branch for Neogit") then
     notif({msg}, level)
   elseif level == vim.log.levels.ERROR then
     notif({msg}, level)

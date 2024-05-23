@@ -1318,17 +1318,34 @@ function _G.open_in_centered_popup()
     local win = vim.api.nvim_open_win(cur_bufnr, true, opts)
 end
 
-function _G.align_csv()
+function _G.align_csv(opts)
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  if #lines == 0 then
+    return
+  end
+
+  known_separators = {',', ';', '\t'}
+  if vim.b.__align_csv_separator == nil then
+    if opts.csv_separator ~= nil then
+      vim.b.__align_csv_separator = opts.csv_separator
+    else
+      for _, sep in ipairs(known_separators) do
+        if #vim.split(lines[1], sep) >= 2 then
+          vim.b.__align_csv_separator = sep
+        end
+      end
+    end
+  end
+
   local ns = vim.api.nvim_create_namespace('__align_csv')
   -- clear existing extmarks
   for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, {})) do
     vim.api.nvim_buf_del_extmark(0, ns, mark[1])
   end
 
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local col_lengths = {}
   for _, line in ipairs(lines) do
-    local cols = vim.split(line, ";")
+    local cols = vim.split(line, vim.b.__align_csv_separator)
     for col_idx, col in ipairs(cols) do
       if not col_lengths[col_idx] or vim.fn.strdisplaywidth(col) > col_lengths[col_idx] then
         col_lengths[col_idx] = vim.fn.strdisplaywidth(col)
@@ -1336,7 +1353,7 @@ function _G.align_csv()
     end
   end
   for line_idx, line in ipairs(lines) do
-    local cols = vim.split(line, ";")
+    local cols = vim.split(line, vim.b.__align_csv_separator)
     local col_from_start = 0
     for col_idx, col in ipairs(cols) do
       if vim.fn.strdisplaywidth(col) < col_lengths[col_idx] then

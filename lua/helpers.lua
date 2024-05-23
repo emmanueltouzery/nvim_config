@@ -1361,6 +1361,12 @@ function _G.align_csv(opts)
           virt_text = {{string.rep(" ", col_lengths[col_idx] - vim.fn.strdisplaywidth(col)), "CsvFillHl"}},
           virt_text_pos = "inline",
         })
+      else
+        -- no need for virtual text, the column is full. but add it anyway because of the previous/next column jumps
+        vim.api.nvim_buf_set_extmark(0, ns, line_idx-1, col_from_start + vim.fn.strdisplaywidth(col), {
+          virt_text = {{"", "CsvFillHl"}},
+          virt_text_pos = "inline",
+        })
       end
       col_from_start = col_from_start + vim.fn.strdisplaywidth(col) + 1 -- +1 due to ;
     end

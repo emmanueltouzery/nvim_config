@@ -1335,8 +1335,8 @@ function set_extra_spellfiles()
     vim.cmd("setlocal spellfile=" .. vim.fn.stdpath("config")  .. "/spell/en.utf-8.add")
     vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. vim.bo.filetype .. ".utf-8.add")
     local project_name = vim.fn.getcwd(vim.fn.winnr()):match("[^/]+$")
-    -- only if the "project name" doesn't contain spaces
-    if not project_name:match('%s') then
+    -- only if the "project name" doesn't contain spaces and other special characters
+    if not project_name:match('[%s()]') then
       vim.cmd("setlocal spellfile+=" .. vim.fn.stdpath("config")  .. "/spell/" .. project_name .. ".utf-8.add")
     end
   end

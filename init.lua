@@ -1118,7 +1118,9 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
       end})
   end}
   use {"emmanueltouzery/code-compass.nvim"}
-  use {"emmanueltouzery/decisive.nvim"}
+  use {"emmanueltouzery/decisive.nvim", config=function()
+    require('decisive').setup{}
+  end}
 end)
 
 --Set highlight on search

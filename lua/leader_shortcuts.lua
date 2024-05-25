@@ -639,7 +639,7 @@ vim.keymap.set('n', '<leader>cCo', ":lua diffview_conflict_view_commit('ours')<c
 vim.keymap.set('n', '<leader>cCt', ":lua diffview_conflict_view_commit('theirs')<cr>", {desc="conflict show THEIRS commit", silent=true})
 
 require 'key-menu'.set('n', '<Space>cc', {desc='Code Csv'})
-vim.keymap.set('n', '<leader>cca', ":lua require('decisive').align_csv({})<cr>", {desc="align CSV", silent=true})
+vim.keymap.set('n', '<leader>cca', ":lua require('decisive').align_csv({print_speed=true})<cr>", {desc="align CSV", silent=true})
 vim.keymap.set('n', '<leader>ccA', ":lua require('decisive').align_csv_clear({})<cr>", {desc="align CSV clear", silent=true})
 vim.keymap.set('n', 'šc', ":lua require('decisive').align_csv_prev_col()<cr>", {desc="align CSV prev col", silent=true})
 vim.keymap.set('n', 'đc', ":lua require('decisive').align_csv_next_col()<cr>", {desc="align CSV next col", silent=true})

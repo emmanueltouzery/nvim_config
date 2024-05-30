@@ -286,7 +286,7 @@ require('packer').startup(function(use)
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
   end} 
-  use {'sindrets/diffview.nvim', commit='72c6983f422689f310b379a04fd555799b0d7cfc',
+  use {'sindrets/diffview.nvim', commit='3afa6a053f680e9f1329c4a151db988a482306cd',
     config = function()
       require('diffview').setup {
         keymaps = {

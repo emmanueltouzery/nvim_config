@@ -245,6 +245,13 @@ vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>"
 vim.keymap.set("n", "<leader>tw", ":set wrap! linebreak<cr>", {desc = "Toggle word-wrapping"})
 vim.keymap.set("n", "<leader>tS", ":set spell!<CR>", {desc = "Toggle Spellcheck"})
 vim.keymap.set("n", "<leader>tf", ":lua toggle_diff()<cr>", {desc = "Toggle diff"})
+vim.keymap.set("n", "<leader>tc", function()
+  if vim.o.conceallevel == 2 then
+    vim.o.conceallevel = 0
+  else
+    vim.o.conceallevel = 2
+  end
+end, {desc = "Toggle conceal"})
 
 vim.api.nvim_exec([[
 function! ToggleQuickFix()

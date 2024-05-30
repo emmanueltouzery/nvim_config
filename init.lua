@@ -79,7 +79,9 @@ require('packer').startup(function(use)
         path_display = {'truncate'},
         prompt_prefix = "   ",
         selection_caret = " ",
+        sorting_strategy = "ascending",
         layout_config = {
+          prompt_position = "top",
           width = 0.75,
           preview_cutoff = 120,
           horizontal = {

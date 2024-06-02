@@ -66,6 +66,7 @@ require 'key-menu'.set('n', '<Space>fd', {desc='file Directory'})
 vim.keymap.set("n", "<leader>fdd", ":lua open_file_cur_dir(false)<cr>", {desc="open a file from the current Directory"})
 vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="open a file from the current directory and Children dirs"})
 vim.keymap.set('n', '<leader>f!', ":lua reload_all()<cr>", {desc = "Reload all files from disk"})
+vim.keymap.set('n', '<leader>fi', function() require('conform').format() end, {desc = "Indent current file (including unsaved)"})
 
 function _G.quick_set_ft()
   local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html", "config", "sql", "strace", "other"}

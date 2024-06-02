@@ -101,7 +101,7 @@ function _G.notif(msg, level, opts)
   vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
   vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
 
-  popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
+  local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 
   if level == nil or level == vim.log.levels.INFO then
     vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifInfo,FloatBorder:NotifInfo")

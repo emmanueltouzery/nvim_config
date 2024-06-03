@@ -145,7 +145,28 @@ function _G.telescope_center_mappings(prompt_bufnr, map)
   return true
 end
 vim.keymap.set("n", "<leader>ssp", "<cmd>lua require('aerial').prev_up()<cr>", { desc = "Goto parent symbol"})
-vim.keymap.set("n", "<leader>ssf", "<cmd>lua require('telescope').extensions.aerial.aerial({get_entry_text=aerial_elixir_get_entry_text,displayer=aerial_displayer,attach_mappings=telescope_center_mappings})<cr>", { desc = "Goto file LSP symbol"})
+vim.keymap.set("n", "<leader>ssf", function()
+  local conf = require("telescope.config").values
+
+  -- i want to filter out TSX tags for telescope, but still keep them
+  -- for the symbols sidebar and for my leader-cp
+  local sorter = conf.generic_sorter({discard = true})
+  sorter._delimiter = ':'
+  sorter.filter_function = function(_, prompt, entry)
+    if entry.filename:match("%.tsx$") and entry.value.kind == 'Struct' then
+      return -1, prompt
+    else
+      return 0, prompt
+    end
+  end
+
+  require('telescope').extensions.aerial.aerial({
+    get_entry_text = aerial_elixir_get_entry_text,
+    displayer = aerial_displayer,
+    attach_mappings = telescope_center_mappings,
+    sorter = sorter,
+  })
+end, { desc = "Goto file LSP symbol"})
 vim.keymap.set( "n", "<leader>ssw", "<cmd>Telescope lsp_workspace_symbols<CR>", {desc="Goto workspace LSP symbol"})
 function filter_lsp_workspace_symbols()
   vim.ui.input({prompt="Enter LSP symbol filter please: ", kind="center_win"}, function(word)

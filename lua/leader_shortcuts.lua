@@ -66,7 +66,6 @@ require 'key-menu'.set('n', '<Space>fd', {desc='file Directory'})
 vim.keymap.set("n", "<leader>fdd", ":lua open_file_cur_dir(false)<cr>", {desc="open a file from the current Directory"})
 vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="open a file from the current directory and Children dirs"})
 vim.keymap.set('n', '<leader>f!', ":lua reload_all()<cr>", {desc = "Reload all files from disk"})
-vim.keymap.set('n', '<leader>fi', function() require('conform').format() end, {desc = "Indent current file (including unsaved)"})
 
 function _G.quick_set_ft()
   local filetypes = {"typescript", "json", "elixir", "rust", "lua", "diff", "sh", "markdown", "html", "config", "sql", "strace", "other"}
@@ -608,29 +607,21 @@ vim.keymap.set("n", "<leader>hh", '<cmd>lua require"gitsigns".preview_hunk()<CR>
 require 'key-menu'.set('n', '<Space>c', {desc='Code'})
 
 function format_buf()
-  if #vim.lsp.buf_get_clients() > 0 then
-    vim.lsp.buf.format()
-    -- now fallbacks if no LSP
-  elseif vim.bo.filetype == 'json' then
-    vim.cmd(':%!prettier --parser json')
-  elseif vim.bo.filetype == 'typescript' then
-    vim.cmd(':%!prettier --parser typescript')
-  elseif vim.bo.filetype == 'html' then
+  if vim.bo.filetype == 'html' then
     vim.cmd(':%!prettier --parser html')
   elseif vim.bo.filetype == 'xml' then
     vim.cmd(':%!xmllint --format -')
-  elseif vim.bo.filetype == 'elixir' then
-    vim.cmd(':%!mix format -')
   elseif vim.bo.filetype == 'sql' then
     -- npx will install the app on first use... in theory i could use mason to set it up, but it's lacking
     -- an "ensure_installed" option: https://github.com/williamboman/mason.nvim/issues/103
     -- https://github.com/williamboman/mason.nvim/issues/130 https://github.com/williamboman/mason.nvim/issues/1338
     vim.cmd(':%!npx sql-formatter --language postgresql')
   else
-    print("No LSP and unhandled filetype " .. vim.bo.filetype)
+    -- default
+    require('conform').format()
   end
 end
-vim.keymap.set("n", "<leader>cf", ":lua format_buf()<cr>", {desc="Code format"})
+vim.keymap.set("n", "<leader>cf", ":lua format_buf()<cr>", {desc="Code format/indent"})
 vim.keymap.set("n", "<leader>cm", ":Glow<cr>", {desc="Markdown preview"})
 require 'key-menu'.set('n', '<Space>cn', {desc='Code Nodes'})
 vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="select custom block"})

@@ -1101,7 +1101,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
 
     nvim_lint_create_autocmds()
   end}
-  use {"stevearc/conform.nvim", commit="161d95bfbb1ad1a2b89ba2ea75ca1b5e012a111e", config=function()
+  use {"stevearc/conform.nvim", commit="88b699b595703f1ae9d9061c050e52b1fe7c33f1", config=function()
     require("conform").setup({
       formatters_by_ft = {
         javascript = { "prettier" },

@@ -162,6 +162,22 @@ require('packer').startup(function(use)
               ["<cr>"] = require("telescope-undo.actions").restore,
             },
             n = {
+              ["<C-r>a"] = function(prompt_bufnr)
+                local base = require("telescope-undo.actions").yank_additions(prompt_bufnr)
+                local function with_notif()
+                    res = base()
+                    notif({"Copied " .. #res .. " lines to the clipboard"})
+                end
+                return with_notif
+              end,
+              ["<C-r>d"] = function(prompt_bufnr)
+                local base = require("telescope-undo.actions").yank_deletions(prompt_bufnr)
+                local function with_notif()
+                    res = base()
+                    notif({"Copied " .. #res .. " lines to the clipboard"})
+                end
+                return with_notif
+              end,
               ["<cr>"] = require("telescope-undo.actions").restore,
             },
           },

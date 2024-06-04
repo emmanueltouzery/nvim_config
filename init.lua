@@ -812,6 +812,14 @@ callbacks = {
           if child_text ~= "pub" then
             item.scope = "private"
           end
+        elseif ctx.backend_name == "treesitter" and ctx.lang == "java" then
+          local utils = require"nvim-treesitter.utils"
+          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
+          local child_text = vim.treesitter.get_node_text(value_node:child(0), bufnr) or "<parse error>"
+          local is_private = child_text:match("private")
+          if is_private then
+            item.scope = "private"
+          end
         end
         return true
       end,

@@ -964,8 +964,9 @@ callbacks = {
       augroup END
     ]]
   end}
-  use {'stevearc/overseer.nvim', commit='facb48fbd768c47d75d8be9f44ec948bbe4a6064', config=function()
+  use {'stevearc/overseer.nvim', commit='76561a435aaad1dc105a0e6ae06cc122a0d97cdb', config=function()
     require('overseer').setup{
+      dap = false,
       task_list = {
         direction = 'right',
         default_detail = 2,
@@ -987,7 +988,7 @@ callbacks = {
       }
     }
   end}
-  use {'mfussenegger/nvim-dap', commit='3d0d7312bb2a8491eb2927504e5cfa6e81b66de4', config=function()
+  use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
 -- require'dap'.adapters.codelldb = {
 --   type = 'server',
 --   port = "20392",

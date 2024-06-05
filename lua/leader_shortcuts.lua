@@ -361,12 +361,7 @@ function telescope_commits_mappings(prompt_bufnr, map)
   map('i', '<C-r>i', function(nr)
     commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     vim.cmd(":term! git rebase -i " .. commit .. "~")
-  end)
-  map('i', '<C-v>', function(nr)
-    commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    actions.close(prompt_bufnr)
-    vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
-  end)
+  end, {desc = "Interactive rebase"})
   map('i', '<C-f>', function(nr)
     local action_state = require "telescope.actions.state"
     local picker = action_state.get_current_picker(nr)
@@ -385,7 +380,11 @@ function telescope_commits_mappings(prompt_bufnr, map)
       actions.close(prompt_bufnr)
       vim.cmd(":DiffviewOpen " .. commits[1] .. "^.." .. commits[2])
     end
-  end)
+  end, {desc = "Diff in diffview"})
+  map('i', '<C-k>', function(nr)
+    commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    vim.cmd(":term! git cherry-pick " .. commit)
+  end, {desc = "Cherry-pick commit"})
   return true
 end
 

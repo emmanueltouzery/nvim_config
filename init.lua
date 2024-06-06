@@ -305,8 +305,7 @@ require('packer').startup(function(use)
   use {'sindrets/diffview.nvim', commit='3afa6a053f680e9f1329c4a151db988a482306cd',
     config = function()
       local function open_difftastic(file_path, left_commit, right_commit)
-        local cmd = "GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. left_commit .. ":" .. file_path .. " " ..
-        right_commit .. ":" ..  file_path
+        local cmd = "PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. left_commit .. ":" .. file_path .. " " .. right_commit .. ":" ..  file_path
 
         local popup_buf = vim.api.nvim_create_buf(false, true)
         local width = vim.o.columns-6

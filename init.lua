@@ -406,7 +406,9 @@ require('packer').startup(function(use)
             end, {desc = "Toggle expansion of file panel to fit"}
             },
             {"n", "<leader>cF", function()
-              local file_path = require'diffview.lib'.get_current_view().panel.cur_file.absolute_path
+              local absolute_file_path = require'diffview.lib'.get_current_view().panel.cur_file.absolute_path
+              local git_path = vim.fs.root(absolute_file_path, '.git')
+              local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
               local conflicts = require'diffview.lib'.get_current_view().panel.cur_file.stats.conflicts
               if conflicts ~= nil and conflicts > 0 then
                 open_difftastic_cmd("difft " .. file_path)

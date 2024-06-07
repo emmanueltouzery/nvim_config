@@ -415,13 +415,34 @@ end
 
 -- we previously commented "normally" but should have used the alternate
 -- commenting => reselect the previous, uncomment, reselect and comment with alternate
+--
+-- if the commenting was done through visual mode, this could be done through 'gv'
+-- (reselect), uncomment, change comment string, comment, restore comment string.
+--
+-- if the commenting was done through normal mode (gcap), this could be done through
+-- undo, change comment string, dot-repeat, restore comment string.
+--
+-- but i don't know which one it was. so i undo, collect the list of modified lines
+-- change comment string, comment the same lines, restore comment string.
 function _G.recomment_last_selection_custom_commentstring()
-  vim.cmd('norm! gv') -- reselect
-  vim.fn.feedkeys('gc') -- uncomment
-  vim.defer_fn(function()
-    vim.cmd('norm! gv') -- reselect
-    toggle_comment_custom_commentstring_sel() -- comment alternate
-  end, 10)
+  local buffer_after_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false) or {}
+
+  vim.cmd("silent undo")
+  local buffer_before_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false) or {}
+
+  local touched_lines_start = nil
+  local touched_lines_end = nil
+  for i, line_after in ipairs(buffer_after_lines) do
+    if line_after ~= buffer_before_lines[i] then
+      if touched_lines_start == nil then
+        touched_lines_start = i
+      end
+      touched_lines_end = i
+    end
+  end
+  if touched_lines_start ~= nil and touched_lines_end ~= nil then
+    _G.toggle_comment_custom_commentstring(touched_lines_start, touched_lines_end)
+  end
 end
 
 -- https://github.com/b3nj5m1n/kommentary/issues/11

@@ -1540,7 +1540,7 @@ vim.cmd[[au TermClose * call feedkeys("\<C-\>\<C-n>")]]
 if vim.fn.has("nvim-0.10") == 1 then
   vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
-      if vim.list_contains({"NvimTree", "OverseerList", "aerial", "toggleterm"}, vim.bo.filetype) then
+      if vim.list_contains({"NvimTree", "OverseerList", "aerial", "toggleterm", "dbui", "dbout"}, vim.bo.filetype) then
         vim.wo.winfixbuf = true
       end
     end,

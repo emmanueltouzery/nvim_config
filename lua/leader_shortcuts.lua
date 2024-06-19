@@ -143,7 +143,27 @@ function _G.telescope_center_mappings(prompt_bufnr, map)
   map('i', '<Cr>',  actions.select_default + actions.center)
   return true
 end
-vim.keymap.set("n", "<leader>ssp", "<cmd>lua require('aerial').prev_up()<cr>", { desc = "Goto parent symbol"})
+
+local function aerial_up()
+  local aerial = require('aerial')
+  -- in the case of typescriptreact, we want to skip "Struct" items, they're JSX nodes
+  if vim.bo.filetype == 'typescriptreact' then
+    while true do
+      local loc = aerial.get_location()
+      if loc and #loc > 0 then
+        if loc[#loc].kind ~= 'Struct' then
+          break
+        end
+      else
+        break
+      end
+      aerial.prev_up()
+    end
+  else
+    aerial.prev_up()
+  end
+end
+vim.keymap.set("n", "<leader>ssp", aerial_up, { desc = "Goto parent symbol"})
 vim.keymap.set("n", "<leader>ssf", function()
   local conf = require("telescope.config").values
 

@@ -35,8 +35,6 @@ vim.keymap.set('n', 'ša', function()
       end
       vim.cmd('AerialPrev')
     end
-  else
-    vim.cmd('AerialPrev')
   end
 end, {desc="Previous aerial symbol"})
 vim.keymap.set('n', 'đa', function()
@@ -54,8 +52,6 @@ vim.keymap.set('n', 'đa', function()
       end
       vim.cmd('AerialNext')
     end
-  else
-    vim.cmd('AerialNext')
   end
 end, {desc="Next aerial symbol"})
 

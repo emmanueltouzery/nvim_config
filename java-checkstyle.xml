@@ -17,7 +17,9 @@
     </module>
     <module name="PackageDeclaration"/>
     <module name="RedundantImport"/>
-    <module name="HiddenField"/>
+    <module name="HiddenField">
+      <property name="severity" value="warning"/>
+    </module>
     <module name="UnnecessaryParentheses"/>
     <module name="FallThrough"/>
   </module>

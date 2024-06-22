@@ -26,7 +26,7 @@ hi def NotifError guifg=#c44323
 ]]
 vim.g.active_notifs = {}
 
-max_length = 60
+max_length = 70
 
 function _G.notif_max_offset()
   max = -1

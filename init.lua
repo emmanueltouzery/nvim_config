@@ -69,10 +69,10 @@ end
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = {
+  use { 'emmanueltouzery/telescope.nvim', requires = {
     'nvim-lua/plenary.nvim',
     { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
-  }, commit="d00d9df48c00d8682c14c2b5da78bda7ef06b939", config = function()
+  }, commit="fd80d8c89396560984a96ef9ffb94e5fc3e59fc1", config = function()
     local actions = require("telescope.actions")
     require('telescope').setup {
       defaults = {
@@ -584,7 +584,7 @@ callbacks = {
     })
   end}
   use {'emmanueltouzery/lualine-lsp-progress', commit='323c172eb74dd2007682bc8f7aaf52dc0517d6cf'}
-  use {'stevearc/dressing.nvim', commit='3c38ac861e1b8d4077ff46a779cde17330b29f3a', config=function()
+  use {'emmanueltouzery/dressing.nvim', commit='ed59504b70f2ced477eb39f1fe6e1acc668dcfbf', config=function()
     require('dressing').setup({
       input = {
         -- ESC won't close the modal, ability to use vim keys

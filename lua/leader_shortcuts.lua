@@ -18,6 +18,15 @@ require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})
 -- and also https://github.com/mhinz/vim-sayonara
 vim.keymap.set("n", "<leader>bd",  ":BD<cr>", {desc="Delete buffer"})
 vim.keymap.set("n", "<leader>bD",  ":BD!<cr>", {desc="Force delete buffer"})
+vim.keymap.set("n", "<leader>bF",  function()
+    if vim.b.disable_autoformat == true then
+      vim.b.disable_autoformat = false
+      notif({"Autoformat enabled for buffer"})
+    else
+      vim.b.disable_autoformat = true
+      notif({"Autoformat disabled for buffer"})
+    end
+  end, {desc="Toggle autoformat for buffer"})
 
 function open_buf_in_window(jump_to_target)
   local line = vim.fn.line('.')

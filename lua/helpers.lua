@@ -520,8 +520,10 @@ function _G.handleFileChanged()
   vim.api.nvim_buf_add_highlight(popup_buf, -1, "Identifier", 0, 0, -1);
   vim.api.nvim_buf_add_highlight(popup_buf, -1, "PreProc", 1, 0, -1);
   vim.defer_fn(function()
-    vim.api.nvim_win_close(popup_win, true)
-  end, 5000)  
+    if vim.api.nvim_win_is_valid(popup_win) then
+      vim.api.nvim_win_close(popup_win, true)
+    end
+  end, 5000)
 end
 
 function _G.get_qf_locations(opts)

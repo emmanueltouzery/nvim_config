@@ -355,6 +355,22 @@ require('packer').startup(function(use)
               function()
               -- cc should commit from diffview same as from neogit
               vim.cmd('DiffviewClose')
+              -- check whether we already have a neogit tab
+              local tps = vim.api.nvim_list_tabpages()
+              for _, tp in ipairs(tps) do
+                  local wins = vim.api.nvim_tabpage_list_wins(tp)
+                  if #wins == 1 then
+                    local buf = vim.api.nvim_win_get_buf(wins[1])
+                    local ft = vim.api.nvim_buf_get_option(buf, 'ft')
+                    if ft == 'NeogitStatus' then
+                      -- switch to that tabpage
+                      vim.api.nvim_set_current_tabpage(tp)
+                      require'neogit'.open({ "commit" })
+                      return
+                    end
+                  end
+              end
+              -- neogit is not open, open it
               vim.cmd('Neogit')
               require'neogit'.open({ "commit" })
             end,

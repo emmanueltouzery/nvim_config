@@ -558,7 +558,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
   map('i', '<C-h>', function(nr) -- history
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
-    vim.cmd('DiffviewFileHistory ' .. cur_file_project_root() .. " --range=" .. branch)
+    vim.cmd('DiffviewFileHistory ' ..  vim.fs.root(0, '.git') .. " --range=" .. branch)
   end)
   map('i', '<C-y>', function(nr) -- copy branch name
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
@@ -604,7 +604,7 @@ vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine({
 vim.keymap.set("n", "<leader>gB", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})
 vim.keymap.set("n", "<leader>gs", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
-vim.keymap.set("n", "<leader>gL", "<cmd>lua vim.cmd('DiffviewFileHistory ' .. cur_file_project_root())<cr>", {desc="project_history"})
+vim.keymap.set("n", "<leader>gL", function() vim.cmd('DiffviewFileHistory ' .. vim.fs.root(0, '.git')) end, {desc="project_history"})
 vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
 vim.keymap.set("n", "<leader>gg", "<cmd>lua neogit_open_or_switch_to()<cr>", {desc="neogit"})
 vim.keymap.set("n", "<leader>gG", "<cmd>DiffviewOpen<cr>", {desc="Git two-way diff"})

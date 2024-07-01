@@ -552,7 +552,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     telescope_commits({
         attach_mappings=telescope_commits_mappings,
         entry_maker=custom_make_entry_gen_from_git_commits(),
-        git_command={"git", "log", branch, "--pretty=tformat:%<(10)%h %<(16,trunc)%an %ad%d %s", "--date=short", "--",  vim.fs.root(0, ".git")}, layout_config={width=0.9, horizontal={preview_width=0.5}}
+        git_command={"git", "log", branch, "--pretty=tformat:%<(10)%h %<(16,trunc)%an %ad%d %s", "--date=short", "--",  vim.fs.root(vim.fn.getcwd(), ".git")}, layout_config={width=0.9, horizontal={preview_width=0.5}}
       })
   end, {desc="Commits"})
   map('i', '<C-h>', function(nr) -- history
@@ -604,7 +604,7 @@ vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine({
 vim.keymap.set("n", "<leader>gB", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})
 vim.keymap.set("n", "<leader>gs", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
-vim.keymap.set("n", "<leader>gL", function() vim.cmd('DiffviewFileHistory ' .. vim.fs.root(0, '.git')) end, {desc="project_history"})
+vim.keymap.set("n", "<leader>gL", function() vim.cmd('DiffviewFileHistory ' .. vim.fs.root(vim.fn.getcwd(), '.git')) end, {desc="project_history"})
 vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
 vim.keymap.set("n", "<leader>gg", "<cmd>lua neogit_open_or_switch_to()<cr>", {desc="neogit"})
 vim.keymap.set("n", "<leader>gG", "<cmd>DiffviewOpen<cr>", {desc="Git two-way diff"})

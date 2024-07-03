@@ -296,7 +296,7 @@ require('packer').startup(function(use)
   use {'saadparwaiz1/cmp_luasnip', commit = '18095520391186d634a0045dacaa346291096566'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
-  use {'emmanueltouzery/doom-one.nvim', commit='b25801f68b3582f9ce5a8861d986da3fb6225bdc', config = function()
+  use {'emmanueltouzery/doom-one.nvim', commit='2d4c0845ae357c7fa58c7d81f519001dd5ec5ce7', config = function()
     require('doom-one').setup({
       cursor_coloring = true,
       italic_comments = true,
@@ -921,10 +921,6 @@ callbacks = {
       prefer_single_line_comments = true,
     })
   end}
-  use {"folke/todo-comments.nvim", commit='98b1ebf198836bdc226c0562b9f906584e6c400e'
-    -- https://github.com/folke/todo-comments.nvim/issues/93 https://github.com/folke/todo-comments.nvim/issues/99
-    -- can't put the config inline, causes weird issues
-  }
   use {"windwp/nvim-autopairs", commit='b9cc0a26f3b5610ce772004e1efd452b10b36bc9', config=function()
     require("nvim-autopairs").setup({
       check_ts = true,
@@ -1581,6 +1577,14 @@ if vim.fn.has("nvim-0.10") == 1 then
     end,
   })
 end
+
+-- https://stackoverflow.com/a/11710333/516188
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  -- i don't want this to match on the telescope prompt for instance
+  pattern = {"java", "elixir", "javascript", "typescript", "typescriptreact",
+    "sh", "python", "c", "cpp", "lua", "rust", "ruby", "css", "scss", "json", "jsonc"},
+  command = "call matchadd('Todo', 'TODO', -1)",
+})
 
 -- useful for android development
 vim.api.nvim_create_autocmd("FileType", {

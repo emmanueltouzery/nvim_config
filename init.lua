@@ -74,6 +74,20 @@ require('packer').startup(function(use)
     { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
   }, commit="fd80d8c89396560984a96ef9ffb94e5fc3e59fc1", config = function()
     local actions = require("telescope.actions")
+    -- https://github.com/nvim-telescope/telescope.nvim/issues/2778#issuecomment-2202572413
+    local focus_preview = function(prompt_bufnr)
+      local action_state = require("telescope.actions.state")
+      local picker = action_state.get_current_picker(prompt_bufnr)
+      local prompt_win = picker.prompt_win
+      local previewer = picker.previewer
+      local winid = previewer.state.winid
+      local bufnr = previewer.state.bufnr
+      vim.keymap.set("n", "<Tab>", function()
+        vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", prompt_win))
+      end, { buffer = bufnr })
+      vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", winid))
+      -- api.nvim_set_current_win(winid)
+    end
     require('telescope').setup {
       defaults = {
         path_display = {'truncate'},
@@ -113,12 +127,14 @@ require('packer').startup(function(use)
                   vim.fn.feedkeys(word)
                 end, 10)
               end,
+            ["<Tab>"] = focus_preview,
           },
           n = {
             ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
             ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
             ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
             ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
+            ["<Tab>"] = focus_preview,
           }
         },
       },

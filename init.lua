@@ -906,7 +906,14 @@ callbacks = {
         diffview = true,
       },
     }
-    vim.cmd[[autocmd User NeogitCommitComplete NvimTreeRefresh]]
+
+    vim.api.nvim_create_autocmd({ "User" }, {
+      pattern = 'NeogitCommitComplete',
+      callback = function()
+        require('lualine').refresh()
+        vim.cmd[[NvimTreeRefresh]]
+      end,
+    })
   end}
   use {
     -- hopefully temporarily using my fork due to https://github.com/stevearc/stickybuf.nvim/issues/24

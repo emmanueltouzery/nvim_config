@@ -1318,8 +1318,8 @@ function _G.open_in_centered_popup()
         border = "rounded",
         relative = "win",
         row = (height - 50) / 2,
-        col = (width - 120) / 2,
-        width = 120,
+        col = (width - 100) / 2,
+        width = 100,
         height = 50,
     }
     local win = vim.api.nvim_open_win(cur_bufnr, true, opts)

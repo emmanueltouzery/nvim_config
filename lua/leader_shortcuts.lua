@@ -314,7 +314,15 @@ endfunction
  ]], false)
 vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
-vim.keymap.set("n", "<leader>td", ":tabc<cr>", {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
+
+local function tab_delete_custom()
+  vim.cmd[[:tabc]]
+  local tab = vim.api.nvim_get_current_tabpage()
+  if tabpage_is_sql(tab) or tabpage_is_terminal(tab) then
+    vim.api.nvim_set_current_tabpage(1)
+  end
+end
+vim.keymap.set("n", "<leader>td", tab_delete_custom, {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 vim.keymap.set("n", "<leader>to", ":tabo<cr>", {desc="Delete other tabs"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 vim.keymap.set("n", "<leader>tl", "<cmd>lua toggle_linting()<cr>", {desc = "Toggle linting for the whole neovim"})
 
@@ -336,37 +344,51 @@ function _G.neogit_open_or_switch_to()
   vim.cmd("Neogit")
 end
 
+function _G.tabpage_is_terminal(tab)
+  local wins = vim.api.nvim_tabpage_list_wins(tab)
+  if #wins == 1 then
+    win = wins[1]
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_buf_get_option(buf, "buftype") == 'terminal' then
+      return true
+    end
+  end
+  return false
+end
+
 function _G.create_or_switch_tab_terminal()
   local tabs = vim.api.nvim_list_tabpages()
   for _, tab in ipairs(tabs) do
-    local wins = vim.api.nvim_tabpage_list_wins(tab)
-    if #wins == 1 then
-      win = wins[1]
-      local buf = vim.api.nvim_win_get_buf(win)
-      if vim.api.nvim_buf_get_option(buf, "buftype") == 'terminal' then
-        -- found the terminal tab, switch to it
-        vim.api.nvim_set_current_tabpage(tab)
-        return
-      end
+    if tabpage_is_terminal(tab) then
+      -- found the terminal tab, switch to it
+      vim.api.nvim_set_current_tabpage(tab)
+      return
     end
   end
   -- didn't find the terminal tab, create it
   vim.cmd("ToggleTerm direction=tab")
 end
 
+function _G.tabpage_is_sql(tab)
+  local wins = vim.api.nvim_tabpage_list_wins(tab)
+  if #wins ~= 1 then
+    for _, win in ipairs(wins) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if vim.api.nvim_buf_get_option(buf, "ft") == 'dbui' then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 function _G.switch_to_sql_tab()
   local tabs = vim.api.nvim_list_tabpages()
   for _, tab in ipairs(tabs) do
-    local wins = vim.api.nvim_tabpage_list_wins(tab)
-    if #wins ~= 1 then
-      for _, win in ipairs(wins) do
-        local buf = vim.api.nvim_win_get_buf(win)
-        if vim.api.nvim_buf_get_option(buf, "ft") == 'dbui' then
-          -- found the terminal tab, switch to it
-          vim.api.nvim_set_current_tabpage(tab)
-          return
-        end
-      end
+    if tabpage_is_sql(tab) then
+      -- found the sql tab, switch to it
+      vim.api.nvim_set_current_tabpage(tab)
+      return
     end
   end
   vim.cmd[[echohl ErrorMsg | echo "No SQL tab open" | echohl None]]

@@ -793,6 +793,10 @@ function _G.diffview_gf()
   local file = require("diffview.lib").get_current_view():infer_cur_file()
   if file then
     vim.cmd[[:tabc]]
+    local tab = vim.api.nvim_get_current_tabpage()
+    if tabpage_is_sql(tab) or tabpage_is_terminal(tab) then
+      vim.api.nvim_set_current_tabpage(1)
+    end
     if vim.fn.winnr('$') > 1 then
       vim.cmd[[ChooseWin]]
     end

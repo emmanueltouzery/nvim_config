@@ -158,6 +158,7 @@ local function aerial_up()
   -- in the case of typescriptreact, we want to skip "Struct" items, they're JSX nodes
   if vim.bo.filetype == 'typescriptreact' then
     while true do
+      aerial.prev_up()
       local loc = aerial.get_location()
       if loc and #loc > 0 then
         if loc[#loc].kind ~= 'Struct' then
@@ -166,7 +167,6 @@ local function aerial_up()
       else
         break
       end
-      aerial.prev_up()
     end
   else
     aerial.prev_up()

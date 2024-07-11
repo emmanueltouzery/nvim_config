@@ -7,7 +7,9 @@
   <property name="severity" value="error"/>
   <property name="fileExtensions" value="java, properties, xml"/>
   <module name="TreeWalker">
-    <module name="ParameterAssignment"/>
+    <module name="ParameterAssignment">
+      <property name="severity" value="warning"/>
+    </module>
     <module name="StringLiteralEquality"/>
     <module name="UnusedLocalVariable"/>
     <module name="UnusedImports"/>

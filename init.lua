@@ -1443,6 +1443,14 @@ vim.cmd('autocmd BufNewFile,BufRead *.service set syntax=systemd')
 -- fix undercurls in neovim 0.10 (on 'private' keywords in java for instance)
 vim.cmd[[set spellcapcheck=]]
 
+-- https://stackoverflow.com/a/76388188/516188
+-- when splitting windows, i don't like the horizontal scroll to be
+-- moved. rather keep the scroll position and move the cursor if needed.
+-- example, double split, put the cursor at the end of a long line, vert split
+-- again, then delete the new split: the rightmost split has had a
+-- scroll to the right. not anymore with splitkeep=screen.
+vim.cmd[[set splitkeep=screen]]
+
 function set_extra_spellfiles()
   if vim.bo.filetype == "man" then
     vim.cmd("setlocal nospell")

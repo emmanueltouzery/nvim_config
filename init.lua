@@ -82,7 +82,7 @@ require('packer').startup(function(use)
       local previewer = picker.previewer
       local winid = previewer.state.winid
       local bufnr = previewer.state.bufnr
-      vim.keymap.set("n", "<Tab>", function()
+      vim.keymap.set("n", "<S-Tab>", function()
         vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", prompt_win))
       end, { buffer = bufnr })
       vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", winid))
@@ -127,14 +127,14 @@ require('packer').startup(function(use)
                   vim.fn.feedkeys(word)
                 end, 10)
               end,
-            ["<Tab>"] = focus_preview,
+            ["<S-Tab>"] = focus_preview,
           },
           n = {
             ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
             ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
             ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
             ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
-            ["<Tab>"] = focus_preview,
+            ["<S-Tab>"] = focus_preview,
           }
         },
       },

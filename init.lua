@@ -318,7 +318,7 @@ require('packer').startup(function(use)
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
   end} 
-  use {'sindrets/diffview.nvim', commit='3afa6a053f680e9f1329c4a151db988a482306cd',
+  use {'emmanueltouzery/diffview.nvim', commit='c817fb653d2015b353889447dba09846774299ef',
     config = function()
       local function open_difftastic_cmd(cmd)
         local popup_buf = vim.api.nvim_create_buf(false, true)
@@ -473,7 +473,8 @@ require('packer').startup(function(use)
               single_file = {
                 follow = true,       -- Follow renames (only for single file)
               }
-            }
+            },
+            relative_date_cutoff_seconds = 3 * 24 * 60 * 60,
           }
         }
       }

@@ -1203,7 +1203,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
       },
     })
     vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", },
+      pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", "*.rs" },
       callback = function(args)
         if vim.g.disable_autoformat or vim.b[args.buf].disable_autoformat then
           return

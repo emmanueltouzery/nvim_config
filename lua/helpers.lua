@@ -788,6 +788,14 @@ function _G.overseer_dispose_completed_jobs()
   end
 end
 
+function _G.overseer_rerun_last_job()
+  local overseer = require('overseer')
+  local tasks = overseer.list_tasks({ recent_first = true })
+  if #tasks > 0 then
+    overseer.run_action(tasks[1], 'restart')
+  end
+end
+
 function _G.diffview_gf()
   -- https://github.com/sindrets/diffview.nvim/issues/230
   local file = require("diffview.lib").get_current_view():infer_cur_file()

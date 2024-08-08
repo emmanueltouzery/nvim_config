@@ -789,5 +789,6 @@ vim.keymap.set("n", "<leader>jlo", ":OverseerOpen<cr>", {desc="Jobs List Open"})
 vim.keymap.set("n", "<leader>jr", "<cmd>OverseerRun<CR>", {desc="Run job"})
 vim.keymap.set("n", "<leader>jC", "<cmd>OverseerClearCache<CR>", {desc="Clear tasks cache"})
 vim.keymap.set("n", "<leader>jd", ":lua overseer_dispose_completed_jobs()<cr>", {desc="Dispose completed jobs"})
+vim.keymap.set("n", "<leader>ja", ":lua overseer_rerun_last_job()<cr>", {desc="run last job Again"})
 
 -- vim: ts=2 sts=2 sw=2 et

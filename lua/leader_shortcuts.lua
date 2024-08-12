@@ -579,7 +579,8 @@ function telescope_branches_mappings(prompt_bufnr, map)
     telescope_commits({
         attach_mappings=telescope_commits_mappings,
         entry_maker=custom_make_entry_gen_from_git_commits(),
-        git_command={"git", "log", branch, "--pretty=tformat:%<(10)%h %<(16,trunc)%an %ad%d %s", "--date=short", "--",  vim.fs.root(vim.fn.getcwd(), ".git")}, layout_config={width=0.9, horizontal={preview_width=0.5}}
+        git_command={"git", "log", branch, "--pretty=tformat:%<(10)%h %<(16,trunc)%an %ad%d %s", "--date=short", "--",  vim.fs.root(vim.fn.getcwd(), ".git")}, layout_config={width=0.9, horizontal={preview_width=0.5}},
+        branch=branch
       })
   end, {desc="Commits"})
   map('i', '<C-h>', function(nr) -- history

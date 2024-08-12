@@ -1230,9 +1230,13 @@ function _G.telescope_commits(opts)
   opts.entry_maker=custom_make_entry_gen_from_git_commits()
   local git_command = vim.F.if_nil(opts.git_command, { "git", "log", "--pretty=oneline", "--abbrev-commit", "--", "." })
 
+  local prompt_title = "Git Commits"
+  if opts.branch then
+    prompt_title = "Git Commits (" .. opts.branch .. ")"
+  end
   pickers
     .new(opts, {
-      prompt_title = "Git Commits",
+      prompt_title = prompt_title,
       finder = finders.new_oneshot_job(git_command, opts),
       previewer = {
         -- previewers.git_commit_diff_to_parent.new(opts),

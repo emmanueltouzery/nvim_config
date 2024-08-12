@@ -1014,7 +1014,7 @@ callbacks = {
       augroup END
     ]]
   end}
-  use {'stevearc/overseer.nvim', commit='76561a435aaad1dc105a0e6ae06cc122a0d97cdb', config=function()
+  use {'emmanueltouzery/overseer.nvim', commit='eeab394', config=function()
     require('overseer').setup{
       dap = false,
       task_list = {

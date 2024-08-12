@@ -436,6 +436,11 @@ function telescope_commits_mappings(prompt_bufnr, map)
     commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     vim.cmd(":term! git cherry-pick " .. commit)
   end, {desc = "Cherry-pick commit"})
+  map('i', '<C-y>', function(nr)
+    commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    copy_to_clipboard(commit)
+    notif({"Copied the commit GUID '" .. commit .. "' to the clipboard"})
+  end, {desc = "Copy commit GUID"})
   return true
 end
 

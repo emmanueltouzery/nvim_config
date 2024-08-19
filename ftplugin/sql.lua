@@ -9,4 +9,4 @@ local function jump_to_dbout()
     end
   end
 end
-vim.keymap.set("n", "<leader>q", jump_to_dbout, {desc="Jump to the sql output window"})
+vim.keymap.set("n", "<leader>q", jump_to_dbout, {buffer = true, desc="Jump to the sql output window"})

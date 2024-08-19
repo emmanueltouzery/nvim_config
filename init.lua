@@ -1552,6 +1552,10 @@ vnoremap < <gv
 vnoremap > >gv
 ]]
 
+-- no extra spaces when joining lines
+-- https://vi.stackexchange.com/a/440/38754
+vim.cmd[[nnoremap J gJ]]
+
 -- https://vim.fandom.com/wiki/Search_only_in_unfolded_text
 -- by default don't open folds when searching.
 -- "a search shows one hit per fold that contains the search target. The fold is not opened, 

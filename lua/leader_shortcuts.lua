@@ -1,7 +1,7 @@
 --Remap space as leader key
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.maplocalleader = ','
 
 vim.keymap.set( "n", "<leader>.", "<cmd>Telescope file_browser hidden=true<CR>", {desc="Telescope files"})
 vim.keymap.set( "n", "<leader>,", "<cmd>Telescope buffers show_all_buffers=true<CR>", {desc="Telescope buffers"})
@@ -57,6 +57,7 @@ end
 vim.keymap.set("n", "<leader>bO", "<cmd>lua force_kill_other_bufs()<cr>", {desc="Force close all buffers but the current one"}) -- https://stackoverflow.com/a/42071865/516188
 
 require 'key-menu'.set('n', '<Space>')
+require 'key-menu'.set('n', ',')
 
 -- FILES
 require 'key-menu'.set('n', '<Space>f', {desc='File'})

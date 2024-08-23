@@ -1340,3 +1340,14 @@ function _G.open_in_centered_popup()
     }
     local win = vim.api.nvim_open_win(cur_bufnr, true, opts)
 end
+
+function _G.unix_timestamp_under_cursor_to_date()
+  local under_cursor = vim.fn.expand('<cword>')
+  if #under_cursor == 13 then
+    -- the timestamp includes milliseconds
+    under_cursor = under_cursor:sub(1, 10) .. "." .. under_cursor:sub(11, 13)
+  end
+  vim.system({'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}, {text=true}, vim.schedule_wrap(function(obj)
+    vim.cmd("norm ciw" .. obj.stdout)
+  end))
+end

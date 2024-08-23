@@ -1,4 +1,4 @@
-vim.keymap.set('n', '<localleader>g', ':normal vip<CR><PLUG>(DBUI_ExecuteQuery)', { buffer = true, desc = "run query under cursor" })
+vim.keymap.set('n', '<localleader>g', ':normal vip<CR><PLUG>(DBUI_ExecuteQuery)', { buffer = true, desc = "run query under cursor (mnemonic: Go)" })
 
 local function jump_to_dbout()
   for _, w in pairs(vim.api.nvim_list_wins()) do

@@ -1167,7 +1167,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
     end}
     vim.g.any_jump_disable_default_keybindings = 1
     vim.g.any_jump_center_screen_after_jump = true
-  use {"mfussenegger/nvim-lint", commit="7746f952827dabfb70194518c99c93d5651b8f19", config=function()
+  use {"mfussenegger/nvim-lint", commit="debabca63c0905b59ce596a55a8e33eafdf66342", config=function()
     local lint = require("lint")
     lint.linters_by_ft = {
       javascript = { "eslint" },

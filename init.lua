@@ -340,7 +340,7 @@ require('packer').startup(function(use)
         }
         local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
 
-        vim.fn.termopen(cmd)
+        vim.fn.termopen(cmd, { cwd = vim.fs.root(0, '.git') })
       end
 
       local function open_difftastic(file_path, left_commit, right_commit)

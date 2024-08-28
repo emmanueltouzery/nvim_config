@@ -1188,7 +1188,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
 
     nvim_lint_create_autocmds()
   end}
-  use {"stevearc/conform.nvim", commit="88b699b595703f1ae9d9061c050e52b1fe7c33f1", config=function()
+  use {"stevearc/conform.nvim", commit="62eba813b7501b39612146cbf29cd07f1d4ac29c", config=function()
     require("conform").setup({
       formatters_by_ft = {
         javascript = { "prettier" },
@@ -1203,16 +1203,17 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
         graphql = { "prettier" },
         elixir = { "mix" },
       },
+      format_after_save = {},
     })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", "*.rs" },
-      callback = function(args)
-        if vim.g.disable_autoformat or vim.b[args.buf].disable_autoformat then
-          return
-        end
-        require("conform").format({ bufnr = args.buf })
-      end,
-    })
+    -- vim.api.nvim_create_autocmd("BufWritePre", {
+    --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", "*.rs" },
+    --   callback = function(args)
+    --     if vim.g.disable_autoformat or vim.b[args.buf].disable_autoformat then
+    --       return
+    --     end
+    --     require("conform").format({ bufnr = args.buf })
+    --   end,
+    -- })
   end}
   use {"emmanueltouzery/vim-dadbod", commit="6bc5008df26f7bca8b06a3b11ac08b6e56959ac7"} -- my fork until https://github.com/tpope/vim-dadbod/pull/151 is merged
   use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()

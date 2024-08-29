@@ -1557,7 +1557,10 @@ vnoremap > >gv
 
 -- no extra spaces when joining lines
 -- https://vi.stackexchange.com/a/440/38754
-vim.cmd[[nnoremap J gJ]]
+-- revert for now, it doesn't remove any leading spaces:
+-- https://www.reddit.com/r/vim/comments/st9not/when_is_gj_join_without_space_useful_on_indented/
+-- https://vi.stackexchange.com/a/440/38754
+-- vim.cmd[[nnoremap J gJ]]
 
 -- https://vim.fandom.com/wiki/Search_only_in_unfolded_text
 -- by default don't open folds when searching.

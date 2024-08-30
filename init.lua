@@ -315,7 +315,7 @@ require('packer').startup(function(use)
     vim.g.rooter_cd_cmd = 'lcd'
     vim.g.rooter_change_directory_for_non_project_files = 'current'
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
-  use {'CodingdAwn/vim-choosewin', commit='554edfec23c9b7fe523f957a90821b4e0da7aa36',
+  use {'emmanueltouzery/vim-choosewin', commit='251440acb6f8291e1c48d248d41c4a25c046d8f2',
     -- fork which adds the "close window" feature
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers

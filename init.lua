@@ -753,7 +753,11 @@ callbacks = {
       lspconfig.cssls.setup {
         capabilities = capabilities
       }
-      lspconfig.graphql.setup {}
+      lspconfig.graphql.setup {
+        -- disabling for typescript & typescriptreact as i don't know what it gives me
+        -- and i suspect it slows things down
+        filetypes = {'graphql'}
+      }
     end,
     after = "nvim-lspconfig",
   }

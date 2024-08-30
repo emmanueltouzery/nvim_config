@@ -38,7 +38,8 @@ end
 require'nvim-tree'.setup {
   on_attach = nvim_tree_on_attach,
   diagnostics = {
-    enable = true,
+    -- disable for perf, plus i don't care for it
+    enable = false,
   },
   update_focused_file = {
     enable = true,

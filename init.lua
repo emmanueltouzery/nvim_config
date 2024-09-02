@@ -288,7 +288,7 @@ require('packer').startup(function(use)
     -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3295
     vim.treesitter.language.register("html", "xml")
   end}
-  use {'neovim/nvim-lspconfig', commit='2dd9e060f21eecd403736bef07ec83b73341d955'} -- Collection of configurations for built-in LSP client
+  use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='04e0ca376d6abdbfc8b52180f8ea236cbfddf782'} -- Autocompletion plugin
   use {'hrsh7th/cmp-nvim-lsp', commit='5af77f54de1b16c34b23cba810150689a3a90312'}
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }

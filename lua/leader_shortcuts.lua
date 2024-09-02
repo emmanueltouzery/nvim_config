@@ -70,7 +70,7 @@ vim.keymap.set("n", "<leader>fR", "<cmd>SudaRead<cr>", { desc = "Re-open file wi
 vim.keymap.set("n", "<leader>fw", "<cmd>SudaWrite<cr>", { desc = "Write file with sudo permissions"})
 vim.keymap.set("n", "<leader>fp", ':lua copy_to_clipboard(cur_file_path_in_project())<cr>', {desc="Copy file path"}) -- ':let @+ = expand("%")<cr>',
 vim.keymap.set("n", "<leader>fP", ':let @+ = expand("%:p")<cr>', {desc="Copy file full path"})
-vim.keymap.set("n", "<leader>fW", ":noautocmd w<cr>", {desc="save_noindent"})
+vim.keymap.set("n", "<leader>fW", ":noautocmd w<cr>", {desc="save without indenting/formatting the file"})
 vim.keymap.set("n", "<leader>fD", ":lua convert_dos()<cr>", {desc="reload file as DOS"}) -- https://vim.fandom.com/wiki/File_format many typescript library files have windows line endings except for the copyright header
 require 'key-menu'.set('n', '<Space>fd', {desc='file Directory'})
 vim.keymap.set("n", "<leader>fdd", ":lua open_file_cur_dir(false)<cr>", {desc="open a file from the current Directory"})

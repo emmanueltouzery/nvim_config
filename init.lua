@@ -259,7 +259,7 @@ require('packer').startup(function(use)
         enable = true ,
         -- syntax highlight for XML looks significantly worse with tree-sitter than regex,
         -- and we use HTML support for XML
-        disable = {"html"},
+        -- disable = {"html"},
       },
       autopairs = {
         enable = true,
@@ -286,7 +286,7 @@ require('packer').startup(function(use)
     })
     -- currently not tree-sitter support for XML, use the HTML support instead
     -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3295
-    vim.treesitter.language.register("html", "xml")
+    -- vim.treesitter.language.register("html", "xml")
   end}
   use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='04e0ca376d6abdbfc8b52180f8ea236cbfddf782'} -- Autocompletion plugin
@@ -790,7 +790,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
-  use {'stevearc/aerial.nvim', commit="bd5f141a547c082e9c1644026f38590407dad659", config = function()
+  use {'emmanueltouzery/aerial.nvim', commit="75250021989fee094a7113049c9933a8d745a8f5", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"

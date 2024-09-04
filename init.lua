@@ -1508,6 +1508,29 @@ require'nvim-web-devicons'.set_icon {
   };
 }
 
+-- https://github.com/nvim-tree/nvim-web-devicons/issues/36#issuecomment-1267259762
+-- different icon color for elixir tests START
+local devicons = require "nvim-web-devicons"
+
+local get_icon = devicons.get_icon
+devicons.get_icon = function(name, ext, opts)
+  if name:find "^.+_test.exs$" then
+    return "", "DevIconDockerfile"
+  else
+    return get_icon(name, ext, opts)
+  end
+end
+
+local get_icon_colors = devicons.get_icon_colors
+devicons.get_icon_colors = function(name, ext, opts)
+  if name:find "^.+_test.exs$" then
+    return "", "#458ee6", 68
+  else
+    return get_icon_colors(name, ext, opts)
+  end
+end
+-- different icon color for elixir tests END
+
 -- check if file changed outside of vim on focus
 -- https://www.reddit.com/r/neovim/comments/f0qx2y/automatically_reload_file_if_contents_changed/
 vim.cmd([[autocmd FocusGained * if mode() != 'c' | checktime | endif]])

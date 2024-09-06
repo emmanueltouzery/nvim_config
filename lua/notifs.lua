@@ -151,6 +151,9 @@ vim.notify = function(msg, level, opts)
     -- don't care about this, black hole it
   elseif opts and opts.title == "Neogit" then
     notif({msg}, level)
+  elseif msg == "Formatter failed. See :ConformInfo for details" then
+    -- from conform, but i'd rather it displays my shortcut
+    notif({"Formatter failed. See spc-oi for details"}, level)
   elseif level == vim.log.levels.ERROR then
     notif({msg}, level)
     print(msg) -- notif truncates/can't recall it

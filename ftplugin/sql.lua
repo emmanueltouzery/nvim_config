@@ -22,3 +22,5 @@ local function jump_to_dbout()
   vim.cmd(dbout_win .. ' wincmd w')
 end
 vim.keymap.set("n", "<leader>q", jump_to_dbout, {buffer = true, desc="Jump to the sql output window"})
+
+vim.keymap.set("n", '<localleader>s', [[<cmd>%s/\(;\)\@<!\n\n/;\r\r<cr>]], {buffer = true, desc="Insert sql statement Separators (;)"})

@@ -30,3 +30,5 @@ vim.keymap.set("n", "<leader>q", jump_to_dbout, {buffer = true, desc="Jump to th
 -- this is then replaced by ;\2 -- ; and the second capture group
 -- so we append ; to the end of each query if it wasn't there
 vim.keymap.set("n", '<localleader>s', [[<cmd>%s/\(;\|\n\)\@<!\(\n\n\+\)/;\2<cr>]], {buffer = true, desc="Insert sql statement Separators (;)"})
+
+vim.keymap.set("n", '<localleader>j', [[:normal ysaw(wijsonb_pretty<cr>]], {buffer = true, desc="Wrap in jsonb_pretty"})

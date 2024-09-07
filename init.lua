@@ -1391,6 +1391,7 @@ vim.cmd("set sw=2")
 vim.cmd("set spell")
 vim.cmd("set spelloptions=camel")
 vim.cmd[[au FileType qf setlocal spelloptions=camel]] -- unsure why i need special treatment for QF, but it helps
+vim.cmd[[au FileType dbout setlocal spelloptions=camel]] -- unsure why i need special treatment for dbout, but it helps
 
 -- tune spellcheck in terminals
 -- vim.cmd[[au TermOpen * setlocal spelloptions=camel,noplainbuffer]]

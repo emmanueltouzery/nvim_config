@@ -26,7 +26,7 @@ vim.keymap.set("n", "<leader>q", jump_to_dbout, {buffer = true, desc="Jump to th
 -- yeah, that regex... https://stackoverflow.com/questions/21148467/ is a negative lookbehind.
 -- so \(;\|\n\)\@<! means that the rest must NOT be preceded by a newline or ;
 -- and that also declares a first capture group (;|\n)
--- then we have... \(\n\+\) a series of at least two newlines -- and the second capture group
+-- then we have... \(\n\n\+\) a series of at least two newlines -- and the second capture group
 -- this is then replaced by ;\2 -- ; and the second capture group
 -- so we append ; to the end of each query if it wasn't there
-vim.keymap.set("n", '<localleader>s', [[<cmd>%s/\(;\|\n\)\@<!\(\n\+\)/;\2<cr>]], {buffer = true, desc="Insert sql statement Separators (;)"})
+vim.keymap.set("n", '<localleader>s', [[<cmd>%s/\(;\|\n\)\@<!\(\n\n\+\)/;\2<cr>]], {buffer = true, desc="Insert sql statement Separators (;)"})

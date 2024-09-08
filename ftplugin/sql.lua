@@ -9,13 +9,30 @@ local function get_dbout_win_buf()
   end
 end
 
+-- temporary, just for this query
 local function toggle_expanded_results_display()
   local dbout_win, dbout_buf = get_dbout_win_buf()
   vim.api.nvim_buf_call(dbout_buf, function()
     vim.fn['db_ui#dbout#toggle_layout']()
   end)
 end
-vim.keymap.set('n', '<localleader>x', toggle_expanded_results_display, { buffer = true, desc = "Toggle expanded results display" })
+vim.keymap.set('n', '<localleader>X', toggle_expanded_results_display, { buffer = true, desc = "Toggle expanded results display" })
+
+-- write in the SQL, will stay
+function toggle_expanded_results_marker()
+  local curline = vim.fn.line('.')
+  local buffer_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  -- find paragraph start (which may be the buffer start)
+  while curline > 0 and buffer_lines[curline] ~= '' do
+    curline = curline - 1
+  end
+  if buffer_lines[curline+1] == '\\x' then
+    vim.api.nvim_buf_set_lines(0, curline, curline+1, false, {})
+  else
+    vim.api.nvim_buf_set_lines(0, curline, curline, false, {"\\x"})
+  end
+end
+vim.keymap.set('n', '<localleader>x', toggle_expanded_results_marker, { buffer = true, desc = "Toggle expanded results marker" })
 
 local function jump_to_dbout()
   local dbout_win, dbout_buf = get_dbout_win_buf()

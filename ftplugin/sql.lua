@@ -31,6 +31,11 @@ function toggle_expanded_results_marker()
   else
     vim.api.nvim_buf_set_lines(0, curline, curline, false, {"\\x"})
   end
+  -- re-run the query
+  vim.cmd[[:normal vip]]
+  -- https://www.reddit.com/r/neovim/comments/17x8tso/comment/k9moruv/
+  local t = function(keycode) return vim.api.nvim_replace_termcodes(keycode, true, false, true) end
+  vim.api.nvim_feedkeys(t "<Plug>(DBUI_ExecuteQuery)", 'n', true)
 end
 vim.keymap.set('n', '<localleader>x', toggle_expanded_results_marker, { buffer = true, desc = "Toggle expanded results marker" })
 

@@ -319,6 +319,7 @@ require('packer').startup(function(use)
     -- fork which adds the "close window" feature
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
+    vim.keymap.set("n", "¸¸", function() vim.fn.feedkeys('--') end)
   end} 
   use {'emmanueltouzery/diffview.nvim', commit='c817fb653d2015b353889447dba09846774299ef',
     config = function()

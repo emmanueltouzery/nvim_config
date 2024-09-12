@@ -26,7 +26,7 @@ function _G.open_db_common(db_name)
   vim.cmd('norm kko')
 end
 
-function _G.pick_local_pg_db()
+local function pick_local_pg_db_and(prompt, cb)
   local db_names = {}
   vim.fn.jobstart({"sh", "-c", "psql -l | grep $(whoami) | awk '{print $1}'"}, {
     on_stdout = vim.schedule_wrap(function (j, output)
@@ -35,14 +35,28 @@ function _G.pick_local_pg_db()
       end
     end),
     on_exit = vim.schedule_wrap(function(j, output)
-      vim.ui.select(db_names, {prompt="Pick the database to open", kind="center_win"}, function(choice)
+      vim.ui.select(db_names, {prompt=prompt, kind="center_win"}, function(choice)
         if choice ~= nil then
-          open_local_postgres_db(choice)
+          cb(choice)
         end
       end)
     end)
   })
 end
+
+function _G.pick_local_pg_db()
+  pick_local_pg_db_and("Pick the database to open", open_local_postgres_db)
+end
+
+function _G.drop_local_pg_db()
+  pick_local_pg_db_and("Pick the database to DROP", function(db)
+    print("psql -U postgres -c 'drop database " .. db .. "'")
+    vim.system({"psql", "-U", "postgres", "-c", "drop database " .. db}, {text = true}, vim.schedule_wrap(function(r)
+      notif({r.stdout})
+    end))
+  end)
+end
+
 
 function _G.open_saved_query()
   local folder = string.gsub(vim.g.db_ui_save_location, '~', vim.loop.os_homedir())
@@ -123,5 +137,6 @@ end
 require 'key-menu'.set('n', '<Space>d', {desc='Database'})
 vim.keymap.set("n", "<leader>do", ":tabnew | :DBUIToggle<cr>", {desc="Database open"})
 vim.keymap.set("n", "<leader>dp", ":lua pick_local_pg_db()<cr>", {desc="open local Postgres Database"})
+vim.keymap.set("n", "<leader>dD", ":lua drop_local_pg_db()<cr>", {desc="drop local Postgres Database"})
 vim.keymap.set("n", "<leader>ds", ":lua open_saved_query()<cr>", {desc="Database Saved query to clipboard"})
 vim.keymap.set("n", "<leader>dj", ":lua open_json()<cr>", {desc="Database open current JSON file"})

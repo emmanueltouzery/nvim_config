@@ -21,3 +21,5 @@ Set up https://github.com/emmanueltouzery/invim in your path and executable to g
 `xmllint` for XML indentation
 
 for java, install `checkstyle` using mason (spc-pl)
+
+`difftastic`, there is a fedora package.

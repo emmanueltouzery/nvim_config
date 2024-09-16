@@ -1208,7 +1208,12 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
         graphql = { "prettier" },
         elixir = { "mix" },
       },
-      format_after_save = {},
+      format_after_save = function(bufnr)
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+        return {}
+      end,
     })
     -- vim.api.nvim_create_autocmd("BufWritePre", {
     --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", "*.rs" },

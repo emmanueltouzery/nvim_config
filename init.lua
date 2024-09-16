@@ -1184,11 +1184,11 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
     }
 
     -- customize credo, remove the --strict flag
-    local credo = require('lint').linters.credo
+    local credo = lint.linters.credo
     credo.args = vim.tbl_filter(function(p) return p ~= "--strict" end, credo.args)
 
     -- install checkstyle using mason (spc-pl)
-    local checkstyle = require('lint').linters.checkstyle
+    local checkstyle = lint.linters.checkstyle
     checkstyle.config_file = vim.fn.stdpath("config") .. "/java-checkstyle.xml"
 
     nvim_lint_create_autocmds()

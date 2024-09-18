@@ -29,6 +29,18 @@ function _G.aerial_elixir_get_entry_text(item)
   return item.name
 end
 
+  -- show hide .po files
+function prompt_toggle_rg_po_files(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local current_picker = action_state.get_current_picker(prompt_bufnr)
+  local prompt = current_picker:_get_prompt()
+  if prompt:match("Tpo") then
+    current_picker:set_prompt(prompt:gsub(" .Tpo", ""), true)
+  else
+    current_picker:set_prompt(" -Tpo", false)
+  end
+end
+
 function _G.nvim_lint_create_autocmds()
     local lint = require'lint'
     local aug = vim.api.nvim_create_augroup("Lint", { clear = true })
@@ -215,6 +227,11 @@ require('packer').startup(function(use)
             "--column",
             "--smart-case",
             "--ignore-file=" .. vim.fn.stdpath("config") .. "/rg-ignore",
+          },
+          mappings = {
+              i = {
+                ["<C-t>"] = prompt_toggle_rg_po_files,
+              },
           },
         },
         file_browser = {

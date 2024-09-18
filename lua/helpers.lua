@@ -793,6 +793,8 @@ function _G.overseer_rerun_last_job()
   local tasks = overseer.list_tasks({ recent_first = true })
   if #tasks > 0 then
     overseer.run_action(tasks[1], 'restart')
+  else
+    notif({"No job to re-run"}, vim.log.levels.ERROR)
   end
 end
 

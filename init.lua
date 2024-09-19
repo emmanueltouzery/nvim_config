@@ -37,6 +37,10 @@ function prompt_toggle_rg_po_files(prompt_bufnr)
   if prompt:match("Tpo") then
     current_picker:set_prompt(prompt:gsub(" .Tpo", ""), true)
   else
+    if #prompt:gsub('[^"]', '') == 1 then
+      -- opened but not closed ", which i do often, close it
+      current_picker:set_prompt('"', false)
+    end
     current_picker:set_prompt(" -Tpo", false)
   end
 end

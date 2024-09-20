@@ -1353,3 +1353,13 @@ function _G.unix_timestamp_under_cursor_to_date()
     vim.cmd("norm ciw" .. obj.stdout)
   end))
 end
+
+function _G.get_dbout_win_buf()
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.api.nvim_buf_get_option(buf, "ft") == "dbout" then
+      return vim.api.nvim_win_get_number(w), buf
+    end
+  end
+end
+

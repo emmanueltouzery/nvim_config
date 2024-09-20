@@ -1249,6 +1249,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
   use {"emmanueltouzery/vim-dadbod", commit="6bc5008df26f7bca8b06a3b11ac08b6e56959ac7"} -- my fork until https://github.com/tpope/vim-dadbod/pull/151 is merged
   use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
     vim.g.db_ui_use_nerd_fonts = 1
+    vim.g.db_ui_auto_execute_table_helpers = 1
     -- vim.g.db_ui_use_nvim_notify = 1
 
     -- can use my own notifications, but i actually prefer theirs
@@ -1258,6 +1259,15 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
     --       level = vim.log.levels.INFO
     --     end
 
+    vim.api.nvim_create_autocmd({ "User" }, {
+      pattern = {'DBQueryPost', "*DBExecutePost"},
+      callback = function()
+        local _w, bufnr = get_dbout_win_buf()
+        vim.api.nvim_buf_call(bufnr, function()
+          require("zebrazone").start()
+        end)
+      end,
+    })
   end}
   use {"kristijanhusak/vim-dadbod-completion", commit="c920cb0ba3dff4b1b0ed373e1c0b3007dec696c2", config=function()
     vim.cmd[[autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })]]
@@ -1270,6 +1280,11 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
   use {"emmanueltouzery/code-compass.nvim"}
   use {"emmanueltouzery/decisive.nvim", config=function()
     require('decisive').setup{}
+  end}
+  -- https://github.com/neovim/neovim/issues/20092
+  use {"notomo/zebrazone.nvim", config=function()
+    -- tone down the zebra effect with my theme
+    vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
   end}
 end)
 

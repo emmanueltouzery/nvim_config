@@ -44,4 +44,10 @@ vim.keymap.set("n", "<leader>q", jump_to_dbout, {buffer = true, desc="Jump to th
 -- so we append ; to the end of each query if it wasn't there
 vim.keymap.set("n", '<localleader>s', [[<cmd>%s/\(;\|\n\)\@<!\(\n\n\+\)/;\2<cr>]], {buffer = true, desc="Insert sql statement Separators (;)"})
 
-vim.keymap.set("n", '<localleader>j', [[:normal ysaw(wijsonb_pretty<cr>]], {buffer = true, desc="Wrap in jsonb_pretty"})
+-- ge Backward to end of previous word
+-- w next word
+-- (gew makes sure we're at the start of the word whether we were in or just before the word)
+-- You Surround A Word with (
+--b backward
+-- insert
+vim.keymap.set("n", '<localleader>j', [[:normal gewysaw(bijsonb_pretty<cr>]], {buffer = true, desc="Wrap in jsonb_pretty"})

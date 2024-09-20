@@ -270,7 +270,7 @@ require('packer').startup(function(use)
     vim.cmd[[highlight GitSignsUntracked guibg=#171717]]
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='1eabe69bfa8f78e14fcf5d42a2b3881babaca30a', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='3c6af36794b26e1bcac3f126b43e0f646154725d', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files

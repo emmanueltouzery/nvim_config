@@ -1285,7 +1285,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
     vim.cmd[[hi CsvFillHlOdd  guibg=#2f3542]]
   end}
   -- https://github.com/neovim/neovim/issues/20092
-  use {"notomo/zebrazone.nvim", config=function()
+  use {"notomo/zebrazone.nvim", commit="c4704c0bdbb7ad5de3779e32b76d6852cfb458e3", config=function()
     -- tone down the zebra effect with my theme
     vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
   end}

@@ -812,7 +812,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
-  use {'stevearc/aerial.nvim', commit="fa75fd0286788c6c5a65ec46aafbfaf7b7826b74", config = function()
+  use {'emmanueltouzery/aerial.nvim', commit="f8d64e2718f38b813760416049eabc547f53ea47", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
@@ -917,6 +917,8 @@ callbacks = {
       get_highlight = function(symbol, is_icon)
         if symbol.scope == "private" then
           return "AerialPrivate"
+        else
+          return "variable"
         end
       end,
     })

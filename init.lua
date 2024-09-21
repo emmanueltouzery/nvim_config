@@ -1280,6 +1280,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
   use {"emmanueltouzery/code-compass.nvim"}
   use {"emmanueltouzery/decisive.nvim", config=function()
     require('decisive').setup{}
+    vim.cmd[[hi CsvFillHlOdd  guibg=#2f3542]]
   end}
   -- https://github.com/neovim/neovim/issues/20092
   use {"notomo/zebrazone.nvim", config=function()

@@ -810,5 +810,6 @@ vim.keymap.set("n", "<leader>jr", "<cmd>OverseerRun<CR>", {desc="Run job"})
 vim.keymap.set("n", "<leader>jC", "<cmd>OverseerClearCache<CR>", {desc="Clear tasks cache"})
 vim.keymap.set("n", "<leader>jd", ":lua overseer_dispose_completed_jobs()<cr>", {desc="Dispose completed jobs"})
 vim.keymap.set("n", "<leader>ja", ":lua overseer_rerun_last_job()<cr>", {desc="run last job Again"})
+vim.keymap.set("n", "<leader>jf", ":lua overseer_open_float_last_job()<cr>", {desc="open last job in Float"})
 
 -- vim: ts=2 sts=2 sw=2 et

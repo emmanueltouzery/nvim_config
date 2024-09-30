@@ -1249,7 +1249,7 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
     --   end,
     -- })
   end}
-  use {"emmanueltouzery/vim-dadbod", commit="6bc5008df26f7bca8b06a3b11ac08b6e56959ac7"} -- my fork until https://github.com/tpope/vim-dadbod/pull/151 is merged
+  use {"emmanueltouzery/vim-dadbod", commit="6ea3e92d125975c92fa458eabba8fc003777279b"} -- my fork until https://github.com/tpope/vim-dadbod/pull/151 is merged
   use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_auto_execute_table_helpers = 1
@@ -1266,9 +1266,12 @@ use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e
       pattern = {'DBQueryPost', "*DBExecutePost"},
       callback = function()
         local _w, bufnr = get_dbout_win_buf()
-        vim.api.nvim_buf_call(bufnr, function()
-          require("zebrazone").start()
-        end)
+        if bufnr ~= nil then
+          -- it will be null for jq queries
+          vim.api.nvim_buf_call(bufnr, function()
+            require("zebrazone").start()
+          end)
+        end
       end,
     })
   end}

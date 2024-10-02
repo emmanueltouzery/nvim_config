@@ -26,7 +26,7 @@ function _G.inspect_point_candidate(winid)
     for idx = cur_col, #cur_line_str do
       local char = string.sub(cur_line_str, idx, idx)
       if char == next_char then
-        table.insert(targets, { pos = { cur_line, idx }, offset = -1 }) -- before
+        table.insert(targets, { pos = { cur_line, idx-1 } }) -- before
       end
     end
   end

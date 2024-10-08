@@ -948,8 +948,7 @@ callbacks = {
     })
   end}
   use {
-    -- hopefully temporarily using my fork due to https://github.com/stevearc/stickybuf.nvim/issues/24
-    'emmanueltouzery/nvim-tree.lua', commit='37269cacd54df6d7d5d6d40f3418b34d8f842a90',
+    'nvim-tree/nvim-tree.lua', commit='50e919426a4a2053f78b2f8ab001c8ad8eb47ef6',
     requires = { 'nvim-tree/nvim-web-devicons', commit='9ab9b0b894b2388a9dbcdee5f00ce72e25d85bf9' },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
@@ -1133,42 +1132,6 @@ callbacks = {
 --   end}
   use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
     require("dapui").setup{}
-  end}
-use {'stevearc/stickybuf.nvim', commit='f3398f8639e903991acdf66e2d63de7a78fe708e', config=function()
-    if vim.fn.exists('&winfixbuf') == 0 then
-      require("stickybuf").setup({
-        get_auto_pin = function(bufnr)
-          local buf_ft = vim.api.nvim_buf_get_option(bufnr, "ft")
-          if buf_ft == "DiffviewFiles" then
-            -- this is a diffview tab, disable creating new windows
-            -- (which would be the default behavior of handle_foreign_buffer)
-            return {
-              handle_foreign_buffer = function(bufnr) end
-            }
-          end
-
-          -- applying stickybuf on all the windows of the diffview tab was overoptimistic, i think
-          -- because diffview itself changes buffers inside windows, and stickybuf doesn't know whether
-          -- the user tried to do that, or diffview... So that causes issues.
-
-          --   -- pin if any of the windows of the current tab have a DiffviewFiles filetype
-          --   -- (that's the filetype of the diffview sidebar, no switching buffers in that tab)
-          --   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-          --     local buf = vim.api.nvim_win_get_buf(win)
-          --     local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
-          --     if buf_ft == "DiffviewFiles" then
-          --       -- this is a diffview tab, pin all the windows, and also
-          --       -- disable creating new windows (which would be the default
-          --       -- behavior of handle_foreign_buffer)
-          --       return {
-          --         handle_foreign_buffer = function(bufnr) end
-          --       }
-          --     end
-          --   end
-          return require("stickybuf").should_auto_pin(bufnr)
-        end
-      })
-    end
   end}
   -- tracking my 'search' branch.
   -- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs

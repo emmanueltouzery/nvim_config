@@ -784,7 +784,7 @@ callbacks = {
     end,
     after = "nvim-lspconfig",
   }
-  use {'emmanueltouzery/key-menu.nvim', commit='353a5c70eccbb12f8f32a152f4fba1ec1b2ccfaa'} -- originally linty-org/key-menu.nvim but the git repo was deleted...
+  use {'emmanueltouzery/key-menu.nvim', commit='171ad5c40fe978ebba86026beac1ac3ed8eda42d'} -- originally linty-org/key-menu.nvim but the git repo was deleted...
   use {'lambdalisue/suda.vim', commit='6bffe36862faa601d2de7e54f6e85c1435e832d0'}
   use {'akinsho/toggleterm.nvim', commit='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', config = function()
     require("toggleterm").setup{
@@ -1010,7 +1010,7 @@ callbacks = {
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
   use {'akinsho/bufferline.nvim', commit = '73540cb95f8d95aa1af3ed57713c6720c78af915'} -- there's a setup in bufferline.lua
-  use {'emmanueltouzery/vim-dispatch-neovim', commit='1db9dd4fe26d9f7cde6cfea583448eacc9f91284'}
+  use {'emmanueltouzery/vim-dispatch-neovim', commit='3476e8c0e4c686ae59759c0bf919150591c34ced'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
     if pcall(require, 'nvim_config_private') then

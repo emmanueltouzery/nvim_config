@@ -261,7 +261,7 @@ require('packer').startup(function(use)
     require("telescope").load_extension "file_browser"
   end}
   use { 'nvim-lualine/lualine.nvim', commit='05d78e9fd0cdfb4545974a5aa14b1be95a86e9c9'}
-  use { 'lewis6991/gitsigns.nvim', commit='651d5ed082605f3ed96b0f037a768ca06ecf8fc3', config = function()
+  use { 'lewis6991/gitsigns.nvim', commit='863903631e676b33e8be2acb17512fdc1b80b4fb', config = function()
     require("gitsigns").setup {
       signs = {
         untracked = { text = '⡂' },
@@ -1045,7 +1045,7 @@ callbacks = {
       augroup END
     ]]
   end}
-  use {'stevearc/overseer.nvim', commit='236e60cdac6410dd95ea5cecafdb801a304d6a41', config=function()
+  use {'stevearc/overseer.nvim', commit='965f8159408cee5970421ad36c4523333b798502', config=function()
     require('overseer').setup{
       dap = false,
       task_list = {
@@ -1656,7 +1656,7 @@ vim.cmd[[autocmd! FileType man :wincmd L]]
 
 -- compared to the default, activate the 'linematch' extra option
 -- for nicer diff lines matching
-vim.cmd[[set diffopt=internal,filler,closeoff,linematch:60]]
+vim.o.diffopt = "internal,filler,closeoff,linematch:60"
 
 -- move the cursor to the beginning of non-whitespace characters in a line
 -- EDIT: undo. want to be able to move back to the 0th column in case of right scroll

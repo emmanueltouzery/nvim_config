@@ -315,6 +315,15 @@ endfunction
  ]], false)
 vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
+vim.keymap.set("n", "<leader>tW", function()
+  if vim.o.diffopt:match("iwhiteall") then
+    vim.cmd[[set diffopt-=iwhiteall]]
+    notif({"Disabling diff whitespaces"})
+  else
+    vim.cmd[[set diffopt+=iwhiteall]]
+    notif({"Enabling diff whitespaces"})
+  end
+end, {desc="Toggle white spaces in diff"})
 
 local function tab_delete_custom()
   vim.cmd[[:tabc]]

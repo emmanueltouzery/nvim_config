@@ -13,6 +13,20 @@ function _G.open_json()
   open_db_common(db_name)
 end
 
+function _G.open_sqlite(db_name)
+  vim.g.dbs = {
+    [db_name] = "sqlite:" .. db_name
+  }
+  open_db_common(db_name)
+end
+
+function _G.open_adb_sqlite(db_name)
+  vim.g.dbs = {
+    [db_name] = "adbsqlite:" .. db_name
+  }
+  open_db_common(db_name)
+end
+
 function _G.open_db_common(db_name)
   vim.cmd[[tabnew]]
   vim.fn['db_ui#reset_state']()

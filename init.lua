@@ -1212,7 +1212,7 @@ callbacks = {
     --   end,
     -- })
   end}
-  use {"emmanueltouzery/vim-dadbod", commit="6ea3e92d125975c92fa458eabba8fc003777279b"} -- my fork until https://github.com/tpope/vim-dadbod/pull/151 is merged
+  use {"emmanueltouzery/vim-dadbod", commit="de9f3719400deb388041069d58c4c2dda05ad27d"} -- no OOM on large queries, adbsqlite adapter
   use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_auto_execute_table_helpers = 1

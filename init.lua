@@ -1159,7 +1159,7 @@ callbacks = {
     end}
     vim.g.any_jump_disable_default_keybindings = 1
     vim.g.any_jump_center_screen_after_jump = true
-  use {"mfussenegger/nvim-lint", commit="debabca63c0905b59ce596a55a8e33eafdf66342", config=function()
+  use {"mfussenegger/nvim-lint", commit="f707b3ae50417067fa63fdfe179b0bff6b380da1", config=function()
     local lint = require("lint")
     lint.linters_by_ft = {
       javascript = { "eslint" },

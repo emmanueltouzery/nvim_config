@@ -20,9 +20,13 @@ function _G.open_sqlite(db_name)
   open_db_common(db_name)
 end
 
-function _G.open_adb_sqlite(db_name)
+function _G.open_adb_sqlite(db_name, flag)
+  local url = "adbsqlite:" .. db_name
+  if flag ~= nil then
+    url = url .. "?adb_flag=" .. flag
+  end
   vim.g.dbs = {
-    [db_name] = "adbsqlite:" .. db_name
+    [db_name] = url
   }
   open_db_common(db_name)
 end

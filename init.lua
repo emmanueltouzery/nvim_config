@@ -343,7 +343,7 @@ require('packer').startup(function(use)
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
     vim.keymap.set("n", "¸¸", function() vim.fn.feedkeys('--') end)
   end} 
-  use {'emmanueltouzery/diffview.nvim', commit='c817fb653d2015b353889447dba09846774299ef',
+  use {'emmanueltouzery/diffview.nvim', commit='adc48a3ad330fa77f4c8484eafdf12b15a8eb259',
     config = function()
       local function open_difftastic_cmd(cmd)
         local popup_buf = vim.api.nvim_create_buf(false, true)

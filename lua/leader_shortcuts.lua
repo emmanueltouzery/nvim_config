@@ -191,7 +191,6 @@ vim.keymap.set("n", "<leader>ssf", function()
 
   require('telescope').extensions.aerial.aerial({
     get_entry_text = aerial_elixir_get_entry_text,
-    displayer = aerial_displayer,
     attach_mappings = telescope_center_mappings,
     sorter = sorter,
   })

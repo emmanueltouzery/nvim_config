@@ -12,16 +12,6 @@ vim.g.doom_one_terminal_colors = true
 vim.g.BufKillCreateMappings = 0 -- vim-bufkill plugin
 vim.g.lightspeed_no_default_keymaps = true
 
-local entry_display = require("telescope.pickers.entry_display")
-_G.aerial_displayer = entry_display.create({
-    separator = " ",
-    items = {
-      { width = 2 },
-      { width = 32 },
-      { remaining = true },
-    },
-  })
-
 function _G.aerial_elixir_get_entry_text(item)
   if item.parent and #item.parent.name < 20 then
     return string.format("%s.%s", string.gsub(item.parent.name, "^.*%.", ""), item.name)
@@ -249,6 +239,10 @@ require('packer').startup(function(use)
             },
           },
         },
+        aerial = {
+          col1_width = 2,
+          col2_width = 32,
+        }
       },
     }
     require("telescope").load_extension("undo")
@@ -813,7 +807,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
-  use {'emmanueltouzery/aerial.nvim', commit="f8d64e2718f38b813760416049eabc547f53ea47", config = function()
+  use {'emmanueltouzery/aerial.nvim', commit="3b5d02a2cddddbd3993dd7f847c64a855784988a", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"

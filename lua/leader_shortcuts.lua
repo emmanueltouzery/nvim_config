@@ -271,7 +271,7 @@ vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (
 vim.keymap.set("n", "<leader>ob", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>", {desc="Open file browser"})
 vim.keymap.set("n", "<leader>of", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true, path=vim.fn.expand(\"%:p:h\"), select_buffer=true})<CR>", {desc="Open browser in current folder"})
 vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
-vim.keymap.set("n", "<leader>om", require("telescope.builtin").man_pages, {desc="Open man page"})
+vim.keymap.set("n", "<leader>om", function() require("telescope.builtin").man_pages{sections={'ALL'}} end, {desc="Open man page"})
 vim.keymap.set("n", "<leader>oh", require("telescope.builtin").help_tags, {desc="Open vim help"})
 vim.keymap.set("n", "<leader>ok", "<cmd>lua require'telescope.builtin'.keymaps{}<CR>", {desc="Open keyboard shortcuts"})
 vim.keymap.set("n", "<leader>oH", "<cmd>lua require'telescope.builtin'.highlights{}<CR>", {desc="Open highlights"})

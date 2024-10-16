@@ -1206,7 +1206,7 @@ callbacks = {
     --   end,
     -- })
   end}
-  use {"emmanueltouzery/vim-dadbod", commit="e3532a82213f096f8681aaf1fb33ea86a113caa0"} -- no OOM on large queries, adbsqlite adapter
+  use {"emmanueltouzery/vim-dadbod", commit="3fc723bcb332a4358450ea43d80537ddd60c7ceb"} -- no OOM on large queries, adbsqlite adapter
   use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_auto_execute_table_helpers = 1

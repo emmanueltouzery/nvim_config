@@ -807,7 +807,7 @@ callbacks = {
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
   use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
-  use {'emmanueltouzery/aerial.nvim', commit="3b5d02a2cddddbd3993dd7f847c64a855784988a", config = function()
+  use {'stevearc/aerial.nvim', commit="9c29a1a66eb31384888e413e510ba72496e06770", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
@@ -943,7 +943,7 @@ callbacks = {
   end}
   use {
     'nvim-tree/nvim-tree.lua', commit='50e919426a4a2053f78b2f8ab001c8ad8eb47ef6',
-    requires = { 'nvim-tree/nvim-web-devicons', commit='9ab9b0b894b2388a9dbcdee5f00ce72e25d85bf9' },
+    requires = { 'nvim-tree/nvim-web-devicons', commit='19d257cf889f79f4022163c3fbb5e08639077bd8' },
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
   }

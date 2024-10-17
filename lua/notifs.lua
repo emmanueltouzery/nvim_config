@@ -157,6 +157,9 @@ vim.notify = function(msg, level, opts)
   elseif level == vim.log.levels.ERROR then
     notif({msg}, level)
     print(msg) -- notif truncates/can't recall it
+  elseif opts and opts.title == "telescope.nvim" then
+    -- for instance telescope.actions.git_checkout when changing branches (success & failure)
+    notif({msg}, level)
   else
     print(msg)
   end

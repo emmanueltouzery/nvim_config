@@ -40,8 +40,13 @@ function _G.open_db_common(db_name)
   vim.cmd('DBUI')
   -- open the tables list and get back where i was
   vim.cmd('norm jjojjjjokkkkkk')
-  -- go twice up and select "new buffer". didn't find a nicer way
-  vim.cmd('norm kko')
+  if vim.endswith(db_name, ".sqlite") then
+    -- go three times down and select "new buffer". didn't find a nicer way
+    vim.cmd('norm 3jo')
+  else
+    -- go twice up and select "new buffer". didn't find a nicer way
+    vim.cmd('norm kko')
+  end
 end
 
 local function pick_local_pg_db_and(prompt, cb)

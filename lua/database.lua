@@ -13,11 +13,11 @@ function _G.open_json()
   open_db_common(db_name)
 end
 
-function _G.open_sqlite(db_name)
+function _G.open_sqlite(db_name, initial_query)
   vim.g.dbs = {
     [db_name] = "sqlite:" .. db_name
   }
-  open_db_common(db_name)
+  open_db_common(db_name, initial_query)
 end
 
 function _G.open_adb_sqlite(db_name, flag)
@@ -31,7 +31,7 @@ function _G.open_adb_sqlite(db_name, flag)
   open_db_common(db_name)
 end
 
-function _G.open_db_common(db_name)
+function _G.open_db_common(db_name, initial_query)
   vim.cmd[[tabnew]]
   vim.fn['db_ui#reset_state']()
   vim.b.dbui_db_key_name = db_name .. "_g:dbs"
@@ -46,6 +46,14 @@ function _G.open_db_common(db_name)
   else
     -- go twice up and select "new buffer". didn't find a nicer way
     vim.cmd('norm kko')
+  end
+  if initial_query ~= nil then
+    vim.cmd('norm i' .. initial_query)
+
+    vim.cmd[[:normal vip]]
+    -- https://www.reddit.com/r/neovim/comments/17x8tso/comment/k9moruv/
+    local t = function(keycode) return vim.api.nvim_replace_termcodes(keycode, true, false, true) end
+    vim.api.nvim_feedkeys(t "<Plug>(DBUI_ExecuteQuery)", 'n', true)
   end
 end
 

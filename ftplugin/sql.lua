@@ -11,16 +11,21 @@ vim.keymap.set('n', '<localleader>X', toggle_expanded_results_display, { buffer 
 
 -- write in the SQL, will stay
 function toggle_expanded_results_marker()
+  local marker = '\\x'
+  if vim.b.dbui_db_key_name:match("sqlite") then
+    marker = '.mode line'
+  end
+
   local curline = vim.fn.line('.')
   local buffer_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   -- find paragraph start (which may be the buffer start)
   while curline > 0 and buffer_lines[curline] ~= '' do
     curline = curline - 1
   end
-  if buffer_lines[curline+1] == '\\x' then
+  if buffer_lines[curline+1] == marker then
     vim.api.nvim_buf_set_lines(0, curline, curline+1, false, {})
   else
-    vim.api.nvim_buf_set_lines(0, curline, curline, false, {"\\x"})
+    vim.api.nvim_buf_set_lines(0, curline, curline, false, {marker})
   end
   -- re-run the query
   vim.cmd[[:normal vip]]

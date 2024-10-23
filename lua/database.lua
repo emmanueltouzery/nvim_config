@@ -13,6 +13,15 @@ function _G.open_json()
   open_db_common(db_name)
 end
 
+function _G.db_open_csv()
+  local csv_name = vim.fn.expand('%')
+  local sqlite_name = csv_name:gsub("%.csv$", ".sqlite")
+  local table_name = csv_name:gsub("%.csv$", ""):gsub(" ", "_")
+  vim.uv.fs_unlink(sqlite_name)
+  vim.system({"sqlite3", "-separator", ",", sqlite_name, '.import "' .. csv_name .. '" ' .. table_name}):wait()
+  open_sqlite(sqlite_name, "select * from " .. table_name)
+end
+
 function _G.open_sqlite(db_name, initial_query)
   vim.g.dbs = {
     [db_name] = "sqlite:" .. db_name
@@ -171,3 +180,4 @@ vim.keymap.set("n", "<leader>dp", ":lua pick_local_pg_db()<cr>", {desc="open loc
 vim.keymap.set("n", "<leader>dD", ":lua drop_local_pg_db()<cr>", {desc="drop local Postgres Database"})
 vim.keymap.set("n", "<leader>ds", ":lua open_saved_query()<cr>", {desc="Database Saved query to clipboard"})
 vim.keymap.set("n", "<leader>dj", ":lua open_json()<cr>", {desc="Database open current JSON file"})
+vim.keymap.set("n", "<leader>dc", ":lua db_open_csv()<cr>", {desc="Database open current CSV file"})

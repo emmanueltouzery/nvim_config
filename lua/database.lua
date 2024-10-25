@@ -13,13 +13,13 @@ function _G.open_json()
   open_db_common(db_name)
 end
 
-function _G.db_open_csv()
-  local csv_name = vim.fn.expand('%')
+function _G.db_open_csv(csv, custom_query)
+  local csv_name = csv or vim.fn.expand('%')
   local sqlite_name = csv_name:gsub("%.csv$", ".sqlite")
   local table_name = csv_name:gsub("%.csv$", ""):gsub(" ", "_")
   vim.uv.fs_unlink(sqlite_name)
   vim.system({"sqlite3", "-separator", ",", sqlite_name, '.import "' .. csv_name .. '" ' .. table_name}):wait()
-  open_sqlite(sqlite_name, "select * from " .. table_name)
+  open_sqlite(sqlite_name, custom_query and custom_query(table_name) or ({"select * from " .. table_name}))
 end
 
 function _G.open_sqlite(db_name, initial_query)
@@ -57,7 +57,8 @@ function _G.open_db_common(db_name, initial_query)
     vim.cmd('norm kko')
   end
   if initial_query ~= nil then
-    vim.cmd('norm i' .. initial_query)
+    vim.api.nvim_buf_set_lines(0, 0, 0, false, initial_query)
+    vim.cmd[[norm! 1G]]
 
     vim.cmd[[:normal vip]]
     -- https://www.reddit.com/r/neovim/comments/17x8tso/comment/k9moruv/

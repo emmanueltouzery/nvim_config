@@ -939,12 +939,25 @@ function _G.convert_dos()
 end
 
 function _G.print_lsp_path(retry)
+  local backends = require("aerial.backends")
+  local data = require("aerial.data")
+  local backend = backends.get()
+  if backend and not data.has_symbols(0) then
+    -- this is needed for the json output of dadbod queries,
+    -- elsewhere not needed. not sure why.
+    backend.fetch_symbols_sync(0, {})
+  end
+
   local path_components = require'aerial'.get_location()
   if #path_components == 0 and retry == nil then
     vim.defer_fn(function()
       print_lsp_path(true)
     end, 50)
     return
+  end
+  if #path_components == 0 then
+    -- it doesn't work for json without the false. not sure why.
+    path_components = require'aerial'.get_location(false)
   end
   local path = ""
   for _, p in ipairs(path_components) do

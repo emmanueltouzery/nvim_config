@@ -955,10 +955,10 @@ function _G.print_lsp_path(retry)
     end, 50)
     return
   end
-  if #path_components == 0 then
-    -- it doesn't work for json without the false. not sure why.
-    path_components = require'aerial'.get_location(false)
-  end
+  -- if #path_components == 0 then
+  --   -- it doesn't work for json without the false. not sure why.
+  --   path_components = require'aerial'.get_location(false)
+  -- end
   local path = ""
   for _, p in ipairs(path_components) do
     path = path .. "/" .. p.name

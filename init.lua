@@ -1223,12 +1223,15 @@ callbacks = {
     vim.api.nvim_create_autocmd({ "User" }, {
       pattern = {'DBQueryPost', "*DBExecutePost"},
       callback = function()
-        local _w, bufnr = get_dbout_win_buf()
-        if bufnr ~= nil then
-          -- it will be null for jq queries
-          vim.api.nvim_buf_call(bufnr, function()
-            require("zebrazone").start()
-          end)
+        local out_filetype = get_dbout_filetype()
+        if out_filetype == 'dbout' then
+          local _w, bufnr = get_dbout_win_buf()
+          if bufnr ~= nil then
+            -- it will be null for jq queries
+            vim.api.nvim_buf_call(bufnr, function()
+              require("zebrazone").start()
+            end)
+          end
         end
       end,
     })

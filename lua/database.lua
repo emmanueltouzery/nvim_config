@@ -1,3 +1,24 @@
+function _G.get_dbout_filetype()
+  local dbs_key = vim.b.dbui_db_key_name:gsub("_g:dbs$", "")
+  local db_url = vim.g.dbs[dbs_key]
+  if db_url:match("^jq:") then
+    return "json"
+  end
+  return "dbout"
+end
+
+function _G.get_dbout_win_buf()
+  local out_filetype = get_dbout_filetype()
+
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.api.nvim_buf_get_option(buf, "ft") == out_filetype then
+      return vim.api.nvim_win_get_number(w), buf
+    end
+  end
+end
+
+
 function _G.open_local_postgres_db(db_name)
   vim.g.dbs = {
     [db_name] = "postgresql://postgres@localhost/" .. db_name
@@ -12,6 +33,7 @@ function _G.open_json()
   }
   open_db_common(db_name, {'.'})
   vim.cmd[[resize 20]] -- reduce vertical height, i need height for the output json
+  vim.bo.filetype = 'jq'
 end
 
 function _G.db_open_csv(csv, custom_query, extra_statements)

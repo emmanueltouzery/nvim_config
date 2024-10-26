@@ -17,8 +17,17 @@ function _G.db_open_csv(csv, custom_query)
   local csv_name = csv or vim.fn.expand('%')
   local sqlite_name = csv_name:gsub("%.csv$", ".sqlite")
   local table_name = csv_name:gsub("%.csv$", ""):gsub(" ", "_")
-  vim.uv.fs_unlink(sqlite_name)
-  vim.system({"sqlite3", "-separator", ",", sqlite_name, '.import "' .. csv_name .. '" ' .. table_name}):wait()
+
+  local csv_mtime = vim.uv.fs_stat(csv_name).mtime.sec
+  local sqlite_mtime = 0
+  local sqlite_stat = vim.uv.fs_stat(sqlite_name)
+  if sqlite_stat ~= nil then
+    sqlite_mtime = sqlite_stat.mtime.sec
+  end
+  if sqlite_mtime ~= nil and csv_mtime > sqlite_mtime then
+    vim.uv.fs_unlink(sqlite_name)
+    vim.system({"sqlite3", "-separator", ",", sqlite_name, '.import "' .. csv_name .. '" ' .. table_name}):wait()
+  end
   open_sqlite(sqlite_name, custom_query and custom_query(table_name) or ({"select * from " .. table_name}))
 end
 

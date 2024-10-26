@@ -21,10 +21,7 @@ function _G.db_open_csv(csv, custom_query, extra_statements)
   local csv_mtime = vim.uv.fs_stat(csv_name).mtime.sec
   local sqlite_mtime = 0
   local sqlite_stat = vim.uv.fs_stat(sqlite_name)
-  if sqlite_stat ~= nil then
-    sqlite_mtime = sqlite_stat.mtime.sec
-  end
-  if sqlite_mtime ~= nil and csv_mtime > sqlite_mtime then
+  if sqlite_stat ~= nil and csv_mtime >  sqlite_stat.mtime.sec then
     vim.uv.fs_unlink(sqlite_name)
     vim.system({"sqlite3", "-separator", ",", sqlite_name,
     '.import "' .. csv_name .. '" ' .. table_name,

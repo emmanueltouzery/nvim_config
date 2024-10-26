@@ -13,7 +13,7 @@ function _G.open_json()
   open_db_common(db_name)
 end
 
-function _G.db_open_csv(csv, custom_query)
+function _G.db_open_csv(csv, custom_query, extra_statements)
   local csv_name = csv or vim.fn.expand('%')
   local sqlite_name = csv_name:gsub("%.csv$", ".sqlite")
   local table_name = csv_name:gsub("%.csv$", ""):gsub(" ", "_")
@@ -26,7 +26,9 @@ function _G.db_open_csv(csv, custom_query)
   end
   if sqlite_mtime ~= nil and csv_mtime > sqlite_mtime then
     vim.uv.fs_unlink(sqlite_name)
-    vim.system({"sqlite3", "-separator", ",", sqlite_name, '.import "' .. csv_name .. '" ' .. table_name}):wait()
+    vim.system({"sqlite3", "-separator", ",", sqlite_name,
+    '.import "' .. csv_name .. '" ' .. table_name,
+    extra_statements and extra_statements(csv_name) or ""}):wait()
   end
   open_sqlite(sqlite_name, custom_query and custom_query(table_name) or ({"select * from " .. table_name}))
 end
@@ -60,7 +62,7 @@ function _G.open_db_common(db_name, initial_query)
   vim.cmd('norm jjojjjjokkkkkk')
   if vim.endswith(db_name, ".sqlite") then
     -- go three times down and select "new buffer". didn't find a nicer way
-    vim.cmd('norm 3jo')
+    vim.cmd('norm 1G3jo')
   else
     -- go twice up and select "new buffer". didn't find a nicer way
     vim.cmd('norm kko')

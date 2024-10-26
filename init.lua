@@ -236,6 +236,7 @@ require('packer').startup(function(use)
             },
             n = {
               ["<CR>"] = require("telescope.actions").select_default,
+              ["<C-S-N>"] = require'telescope'.extensions.file_browser.actions.sort_by_date,
             },
           },
         },

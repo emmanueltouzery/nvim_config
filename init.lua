@@ -819,7 +819,8 @@ callbacks = {
       -- i don't notice the startup delay, but the first use
       -- delay is reeeeally noticeable
       lazy_load = false,
-      backends = { 
+      disable_max_lines = 20000, -- useful for json output in dadbod-jq
+      backends = {
         ['_'] = { "treesitter", "lsp", "markdown", "man" },
         elixir = { "treesitter" },
         typescript = { "treesitter" },

@@ -34,6 +34,7 @@ function _G.open_json()
   open_db_common(db_name, {'.'})
   vim.cmd[[resize 20]] -- reduce vertical height, i need height for the output json
   vim.bo.filetype = 'jq'
+  vim.g.db_query_rows_limit = 20000
 end
 
 function _G.db_open_csv(csv, custom_query, extra_statements)
@@ -72,6 +73,7 @@ function _G.open_adb_sqlite(db_name, flag)
 end
 
 function _G.open_db_common(db_name, initial_query)
+  vim.g.db_query_rows_limit = 10000 -- restore the default, a jq query may have overridden it
   vim.cmd[[tabnew]]
   vim.fn['db_ui#reset_state']()
   vim.b.dbui_db_key_name = db_name .. "_g:dbs"

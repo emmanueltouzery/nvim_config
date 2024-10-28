@@ -1237,7 +1237,7 @@ callbacks = {
       end,
     })
   end}
-  use {"kristijanhusak/vim-dadbod-completion", commit="c920cb0ba3dff4b1b0ed373e1c0b3007dec696c2", config=function()
+  use {"kristijanhusak/vim-dadbod-completion", commit="880f7e9f2959e567c718d52550f9fae1aa07aa81", config=function()
     vim.cmd[[autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })]]
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "dbout",

@@ -32,7 +32,9 @@ function _G.open_json()
     [db_name] = "jq:" .. db_name
   }
   open_db_common(db_name, {'.'})
-  vim.cmd[[resize 20]] -- reduce vertical height, i need height for the output json
+  vim.defer_fn(function()
+      vim.cmd[[resize 20]] -- reduce vertical height, i need height for the output json
+  end, 100)
   vim.bo.filetype = 'jq'
   vim.g.db_query_rows_limit = 20000
 end
@@ -95,11 +97,11 @@ function _G.open_db_common(db_name, initial_query)
 
     -- for some reason for json, for the '.' nop filter saving works but selecting+running with
     -- DBUI_ExecuteQuery doesn't.
-    vim.cmd[[w]]
+    -- vim.cmd[[w]]
     -- vim.cmd[[:normal vip]]
     -- -- https://www.reddit.com/r/neovim/comments/17x8tso/comment/k9moruv/
-    -- local t = function(keycode) return vim.api.nvim_replace_termcodes(keycode, true, false, true) end
-    -- vim.api.nvim_feedkeys(t "<Plug>(DBUI_ExecuteQuery)", 'n', true)
+    local t = function(keycode) return vim.api.nvim_replace_termcodes(keycode, true, false, true) end
+    vim.api.nvim_feedkeys(t "<Plug>(DBUI_ExecuteQuery)", 'n', true)
   end
 end
 

@@ -1212,6 +1212,10 @@ callbacks = {
   use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_auto_execute_table_helpers = 1
+    -- executing on save is annoying when i run :wa in another tab: the query in
+    -- the background tab is run and the output displayed in the foreground tab.
+    -- also my ,g mapping is good enough
+    vim.g.db_ui_execute_on_save = 0
     -- vim.g.db_ui_use_nvim_notify = 1
 
     -- can use my own notifications, but i actually prefer theirs

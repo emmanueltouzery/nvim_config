@@ -908,6 +908,17 @@ callbacks = {
           if is_private then
             item.scope = "private"
           end
+        elseif ctx.backend_name == "treesitter" and ctx.lang == "python" then
+          -- don't want to display in-function items
+          local utils = require"nvim-treesitter.utils"
+          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
+          local cur_parent = value_node and value_node:parent()
+          while cur_parent do
+            if cur_parent:type() == "function_definition" then
+              return false
+            end
+            cur_parent = cur_parent:parent()
+          end
         end
         return true
       end,

@@ -39,15 +39,15 @@ function _G.open_json()
   vim.g.db_query_rows_limit = 20000
 end
 
-function _G.db_open_csv(csv, custom_query, extra_statements)
+function _G.db_open_csv(csv, custom_query, extra_statements, csv_folder)
   local csv_name = csv or vim.fn.expand('%')
-  local sqlite_name = csv_name:gsub("%.csv$", ".sqlite")
+  local sqlite_name = (csv_folder or "") .. csv_name:gsub("%.csv$", ".sqlite")
   local table_name = csv_name:gsub("%.csv$", ""):gsub(" ", "_")
 
   local csv_mtime = vim.uv.fs_stat(csv_name).mtime.sec
   local sqlite_mtime = 0
   local sqlite_stat = vim.uv.fs_stat(sqlite_name)
-  if sqlite_stat ~= nil and csv_mtime >  sqlite_stat.mtime.sec then
+  if sqlite_stat == nil or csv_mtime > sqlite_stat.mtime.sec then
     vim.uv.fs_unlink(sqlite_name)
     vim.system({"sqlite3", "-separator", ",", sqlite_name,
     '.import "' .. csv_name .. '" ' .. table_name,

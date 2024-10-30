@@ -420,6 +420,17 @@ function telescope_commits_mappings(prompt_bufnr, map)
   local actions = require('telescope.actions')
   map('i', '<C-r>i', function(nr)
     commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    -- in case i have multiple tabs open (for instance dadbod in the second tab),
+    -- and i do a rebase, due to invim integration, i do the rebase stuff in a new
+    -- tab, and then i'm returned in the last tab. But the rebase outcome is displayed
+    -- in the first tab. This switches back to the first tab after the rebase is done.
+    vim.api.nvim_create_autocmd("BufDelete", {
+      pattern={"COMMIT_EDITMSG"},
+      callback=function(ev)
+        vim.api.nvim_set_current_tabpage(1)
+      end,
+      once = true
+    })
     vim.cmd(":term! git rebase -i " .. commit .. "~")
   end, {desc = "Interactive rebase"})
   map('i', '<C-f>', function(nr)

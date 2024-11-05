@@ -951,6 +951,7 @@ callbacks = {
       pattern = 'NeogitCommitComplete',
       callback = function()
         require('lualine').refresh()
+        vim.cmd[[let &stl=&stl]] -- https://www.reddit.com/r/neovim/comments/sxmn3k/comment/hxtb4gm/ make the statusline refresh (untested)
         vim.cmd[[NvimTreeRefresh]]
       end,
     })

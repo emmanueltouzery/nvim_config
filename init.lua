@@ -391,6 +391,7 @@ require('packer').startup(function(use)
               function()
               -- cc should commit from diffview same as from neogit
               vim.cmd('DiffviewClose')
+              vim.api.nvim_set_current_tabpage(1) -- in case i had a dadbod in the second tab, where i could have jumped after closing the diffview tab
               -- check whether we already have a neogit tab
               local tps = vim.api.nvim_list_tabpages()
               for _, tp in ipairs(tps) do

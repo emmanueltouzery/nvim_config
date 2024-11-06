@@ -416,6 +416,24 @@ vim.keymap.set("n", "<leader>tth", "<cmd>ToggleTerm direction=horizontal<CR>", {
 -- GIT
 require 'key-menu'.set('n', '<Space>g', {desc='Git'})
 
+-- when we detect the rebase finished, switch the first tab
+function check_interactive_rebase_done()
+  if vim.fn.filereadable(".git/rebase-merge/interactive") == 1 then
+    -- the rebase is still ongoing. maybe we closed the first window and a new one (for instance to edit a commit message) will open now
+    -- => re-create the autocommand
+    vim.api.nvim_create_autocmd("BufDelete", {
+      callback=function(ev)
+        -- defer_fn to give git the time to process the change
+        vim.defer_fn(check_interactive_rebase_done, 100)
+      end,
+      once = true
+    })
+  else
+    -- the rebase finished
+    vim.api.nvim_set_current_tabpage(1)
+  end
+end
+
 function telescope_commits_mappings(prompt_bufnr, map)
   local actions = require('telescope.actions')
   map('i', '<C-r>i', function(nr)
@@ -425,9 +443,9 @@ function telescope_commits_mappings(prompt_bufnr, map)
     -- tab, and then i'm returned in the last tab. But the rebase outcome is displayed
     -- in the first tab. This switches back to the first tab after the rebase is done.
     vim.api.nvim_create_autocmd("BufDelete", {
-      pattern={"COMMIT_EDITMSG"},
       callback=function(ev)
-        vim.api.nvim_set_current_tabpage(1)
+        -- defer_fn to give git the time to process the change
+        vim.defer_fn(check_interactive_rebase_done, 100)
       end,
       once = true
     })

@@ -12,7 +12,7 @@ vim.keymap.set('n', '<localleader>X', toggle_expanded_results_display, { buffer 
 -- write in the SQL, will stay
 function toggle_expanded_results_marker()
   local marker = '\\x'
-  if vim.b.dbui_db_key_name:match("sqlite") then
+  if vim.b.db:match("sqlite") then
     marker = '.mode line'
   end
 

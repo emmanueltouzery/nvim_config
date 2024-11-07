@@ -21,3 +21,7 @@ List enum values         enum_range()
 Postgresql syntax {{{1
 Set array value          '{"e1", "e2"}'
 }}}
+SQLite tips {{{1
+Android get DB version   user_version
+# pragma user_version
+}}}

@@ -84,13 +84,8 @@ function _G.open_db_common(db_name, initial_query)
   vim.cmd('DBUI')
   -- open the tables list and get back where i was
   vim.cmd('norm jjojjjjokkkkkk')
-  if vim.endswith(db_name, ".sqlite") then
-    -- go three times down and select "new buffer". didn't find a nicer way
-    vim.cmd('norm 1G3jo')
-  else
-    -- go twice up and select "new buffer". didn't find a nicer way
-    vim.cmd('norm kko')
-  end
+  -- go three times down and select "new buffer". didn't find a nicer way
+  vim.cmd('norm 1G3jo')
   if initial_query ~= nil then
     vim.api.nvim_buf_set_lines(0, 0, 0, false, initial_query)
     vim.cmd[[norm! 1G]]

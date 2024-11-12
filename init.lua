@@ -340,31 +340,10 @@ require('packer').startup(function(use)
   end} 
   use {'emmanueltouzery/diffview.nvim', commit='adc48a3ad330fa77f4c8484eafdf12b15a8eb259',
     config = function()
-      local function open_difftastic_cmd(cmd)
-        local popup_buf = vim.api.nvim_create_buf(false, true)
-        local width = vim.o.columns-6
-        local height = vim.o.lines-6
-        local win_opts = {
-          focusable = false,
-          style = "minimal",
-          border = "rounded",
-          relative = "editor",
-          width = width,
-          height = height,
-          anchor = "NW",
-          row = 3,
-          col = 3,
-          noautocmd = true,
-        }
-        local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
-
-        vim.fn.termopen(cmd, { cwd = vim.fs.root(0, '.git') })
-      end
-
       local function open_difftastic(file_path, left_commit, right_commit)
         local cmd = "PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. left_commit .. ":" .. file_path .. " " .. right_commit .. ":" ..  file_path
 
-        open_difftastic_cmd(cmd)
+        open_command_in_popup(cmd)
       end
 
       require('diffview').setup {
@@ -432,7 +411,7 @@ require('packer').startup(function(use)
               local fname = "/tmp/emm-diff.md"
               local f = path:new(fname)
               f:write(table.concat(lines, "\n"), "w")
-              require'glow'.glow(fname)
+              open_command_in_popup("glow -s tokyo-night -w 115 " .. fname, 120, (vim.o.columns-120)/2)
               vim.defer_fn(function()
                 f:rm()
               end, 1000)
@@ -464,14 +443,14 @@ require('packer').startup(function(use)
               local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
               local conflicts = require'diffview.lib'.get_current_view().panel.cur_file.stats.conflicts
               if conflicts ~= nil and conflicts > 0 then
-                open_difftastic_cmd("difft " .. file_path)
+                open_command_in_popup("difft " .. file_path)
               else
                 local left_commit = require'diffview.lib'.get_current_view().left.commit
                 local right_commit = require'diffview.lib'.get_current_view().right.commit
                 if left_commit ~= nil and right_commit ~= nil then
                   open_difftastic(file_path, left_commit, right_commit)
                 else
-                  open_difftastic_cmd("PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. file_path)
+                  open_command_in_popup("PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. file_path)
                 end
               end
             end, {desc= "Diff with difftastic"}}
@@ -547,11 +526,6 @@ require('packer').startup(function(use)
     vim.cmd[[nmap P <plug>(YoinkPaste_P)]]
   end} -- considered https://github.com/gbprod/yanky.nvim & https://github.com/AckslD/nvim-neoclip.lua too, previously used maxbrunsfeld/vim-yankstack
   use {'emmanueltouzery/vim-elixir', commit='735528cecc19ecffa002ffa20176e9984cced970'}
-  use {'ellisonleao/glow.nvim', commit='238070a686c1da3bccccf1079700eb4b5e19aea4', config=function()
-    require('glow').setup({
-      border = "rounded",
-    })
-  end}
   use {'smjonas/live-command.nvim', commit='ce4b104ce702c7bb9fdff863059af6d47107ca61', config=function()
     require("live-command").setup {
       commands = {
@@ -1160,9 +1134,9 @@ callbacks = {
           border = "rounded",
         },
         previewer_cmd = 'glow',
-        cmd_args = { "-s", "dark", "-w", "80" },
+        cmd_args = { "-s", "tokyo-night", "-w", "80" },
         picker_cmd = 'glow',
-        picker_cmd_args = { "-s", "dark", "-w", "80", "-p" },
+        picker_cmd_args = { "-s", "tokyo-night", "-w", "80", "-p" },
         ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust", "dom"},
       })
     end}

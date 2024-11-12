@@ -131,7 +131,4 @@ end)
 
 vim.cmd[[autocmd BufNewFile *.tsx exe "norm iimport React from 'react';"]]
 
-vim.g.glow_width = 120
-vim.g.glow_border = "rounded"
-
 -- vim: ts=2 sts=2 sw=2 et

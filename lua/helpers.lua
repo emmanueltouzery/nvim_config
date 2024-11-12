@@ -1377,3 +1377,24 @@ function _G.unix_timestamp_under_cursor_to_date()
     vim.cmd("norm ciw" .. obj.stdout)
   end))
 end
+
+function _G.open_command_in_popup(cmd, req_width, req_col, req_height, req_row)
+  local popup_buf = vim.api.nvim_create_buf(false, true)
+  local width = req_width or vim.o.columns-6
+  local height = req_height or vim.o.lines-6
+  local win_opts = {
+    focusable = false,
+    style = "minimal",
+    border = "rounded",
+    relative = "editor",
+    width = width,
+    height = height,
+    anchor = "NW",
+    row = req_row or 3,
+    col = req_col or 3,
+    noautocmd = true,
+  }
+  local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
+
+  vim.fn.termopen(cmd, { cwd = vim.fs.root(0, '.git') })
+end

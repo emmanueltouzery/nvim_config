@@ -805,7 +805,29 @@ end
 -- LSP
 require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
 vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
-vim.keymap.set("n", "<leader>cll", '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>', {desc="Show line diagnostics"})
+vim.keymap.set("n", "<leader>cll", function()
+  if vim.bo.filetype == "typescriptreact" or vim.bo.filetype == 'typescript' then
+    local diag = vim.diagnostic.get(0, {lnum = vim.fn.line('.')-1})
+    if #diag == 1 then
+      local msg = diag[1].message
+      local msg_md = msg:gsub(" '", "\n```typescript\n"):gsub("' ", "\n```\n")
+      local buf = string_to_buffer(msg_md)
+      vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+      vim.api.nvim_buf_set_option(buf, "readonly", true)
+      vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})
+      vim.api.nvim_set_option_value("modified", false, {buf = buf})
+      vim.api.nvim_set_option_value("bufhidden", 'wipe', {buf = buf})
+      local win = open_in_centered_popup(buf, 20)
+      vim.api.nvim_set_option_value("conceallevel", 2, {win = win})
+      vim.api.nvim_set_option_value("wrap", true, {win = win})
+      vim.api.nvim_set_option_value("linebreak", true, {win = win})
+    else
+      vim.diagnostic.open_float(0, {scope="line"})
+    end
+  else
+    vim.diagnostic.open_float(0, {scope="line"})
+  end
+end, {desc="Show line diagnostics"})
 vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="Rename the reference under cursor"})
 -- TODO drop <leader>clf for gr
 vim.keymap.set("n", "<leader>clf", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}, attach_mappings=lsp_refs_extra_mappings}<cr>", {desc="Display lsp references"})

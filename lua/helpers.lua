@@ -1230,6 +1230,7 @@ function _G.string_to_buffer(str)
   end
   local fbuf = vim.api.nvim_create_buf(true, false)
   vim.api.nvim_buf_set_lines(fbuf, -1, -1, false, lines)
+  return fbuf
 end
 
 vim.cmd[[ highlight MyHighlightGroup ctermbg=blue guibg=blue ]]
@@ -1350,21 +1351,22 @@ function _G.quickfix_at_curpos()
   end
 end
 
-function _G.open_in_centered_popup()
-    local cur_bufnr = vim.api.nvim_win_get_buf(0)
+function _G.open_in_centered_popup(buf, pref_height)
+    local cur_bufnr = buf or vim.api.nvim_win_get_buf(0)
     local width = vim.api.nvim_get_option("columns")
     local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
+    local win_height = pref_height or 50
 
     local opts = {
         style = "minimal",
         border = "rounded",
         relative = "win",
-        row = (height - 50) / 2,
+        row = (height - win_height) / 2,
         col = (width - 100) / 2,
         width = 100,
-        height = 50,
+        height = win_height,
     }
-    local win = vim.api.nvim_open_win(cur_bufnr, true, opts)
+    return vim.api.nvim_open_win(cur_bufnr, true, opts)
 end
 
 function _G.unix_timestamp_under_cursor_to_date()

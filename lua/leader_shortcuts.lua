@@ -802,6 +802,63 @@ function _G.lsp_refs_extra_mappings(p, map)
   return true
 end
 
+local function indent_ts_type(str)
+  local nested_levels = 0
+  local is_after_cr = false
+  local in_backticks = false
+  local result = ""
+  for i = 1, #str do
+    local c = str:sub(i,i)
+    if c == "`" then
+      result = result .. c
+      in_backticks = not in_backticks
+      goto skip_to_next
+    end
+    if not in_backticks then
+      if c == "{" then
+        nested_levels = nested_levels + 1
+      elseif c == "}" then
+        nested_levels = nested_levels - 1
+      end
+    end
+    if c == " " and is_after_cr then
+      -- do nothing, wait for the next character
+      goto skip_to_next
+    elseif is_after_cr then
+      result = result .. string.rep("  ", nested_levels)
+      is_after_cr = false
+    end
+
+    if c == ";" then
+      result = result .. ";\n"
+      is_after_cr = true
+    elseif c == "{" and not in_backticks then
+      result = result .. "{\n"
+      is_after_cr = true
+    else
+      result = result .. c
+    end
+    ::skip_to_next::
+  end
+  return result
+end
+
+local function indent_ts_types(str)
+  local result = ""
+  local next_is_type = false
+  for line in vim.gsplit(str, "\n") do
+    if line == "```typescript" then
+      next_is_type = true
+      result = result .. line .. "\n"
+    elseif next_is_type then
+      result = result .. indent_ts_type(line) .. "\n"
+    else
+      result = result .. line .. "\n"
+    end
+  end
+  return result
+end
+
 -- LSP
 require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
 vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
@@ -816,7 +873,7 @@ vim.keymap.set("n", "<leader>cll", function()
         :gsub(" '(%w+)'[%s%.]", " `%1` ")
         :gsub(" '", "\n```typescript\n")
         :gsub("'[%s%.]", "\n```\n")
-      local buf = string_to_buffer(msg_md)
+      local buf = string_to_buffer(indent_ts_types(msg_md))
       vim.api.nvim_buf_set_option(buf, 'modifiable', false)
       vim.api.nvim_buf_set_option(buf, "readonly", true)
       vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})

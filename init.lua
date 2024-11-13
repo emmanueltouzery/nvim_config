@@ -1133,15 +1133,13 @@ callbacks = {
           width = 90,
           border = "rounded",
         },
-        previewer_cmd = 'glow',
-        cmd_args = { "-s", "tokyo-night", "-w", "80" },
-        picker_cmd = 'glow',
-        picker_cmd_args = { "-s", "tokyo-night", "-w", "80", "-p" },
+        -- previewer_cmd = 'glow',
+        -- cmd_args = { "-s", "tokyo-night", "-w", "80" },
+        -- picker_cmd = 'glow',
+        -- picker_cmd_args = { "-s", "tokyo-night", "-w", "80", "-p" },
         ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust", "dom"},
       })
     end}
-    vim.g.any_jump_disable_default_keybindings = 1
-    vim.g.any_jump_center_screen_after_jump = true
   use {"mfussenegger/nvim-lint", commit="f707b3ae50417067fa63fdfe179b0bff6b380da1", config=function()
     local lint = require("lint")
     lint.linters_by_ft = {

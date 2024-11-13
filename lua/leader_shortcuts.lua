@@ -808,7 +808,8 @@ vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {de
 vim.keymap.set("n", "<leader>cll", function()
   if vim.bo.filetype == "typescriptreact" or vim.bo.filetype == 'typescript' then
     local diag = vim.diagnostic.get(0, {lnum = vim.fn.line('.')-1})
-    if #diag == 1 then
+    -- don't activate on simple messages like 'expected property shorthand'
+    if #diag == 1 and diag[1].message:match("'") then
       local msg = diag[1].message
       local msg_md = msg
         :gsub("\n%s+", string.rep("─", 80) .. "\n")

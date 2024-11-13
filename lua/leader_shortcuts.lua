@@ -810,7 +810,11 @@ vim.keymap.set("n", "<leader>cll", function()
     local diag = vim.diagnostic.get(0, {lnum = vim.fn.line('.')-1})
     if #diag == 1 then
       local msg = diag[1].message
-      local msg_md = msg:gsub(" '(%w+)'[%s%.]", " `%1` "):gsub(" '", "\n```typescript\n"):gsub("'[%s%.]", "\n```\n")
+      local msg_md = msg
+        :gsub("\n%s+", string.rep("─", 80) .. "\n")
+        :gsub(" '(%w+)'[%s%.]", " `%1` ")
+        :gsub(" '", "\n```typescript\n")
+        :gsub("'[%s%.]", "\n```\n")
       local buf = string_to_buffer(msg_md)
       vim.api.nvim_buf_set_option(buf, 'modifiable', false)
       vim.api.nvim_buf_set_option(buf, "readonly", true)

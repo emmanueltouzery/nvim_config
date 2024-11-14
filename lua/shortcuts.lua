@@ -18,7 +18,6 @@ vim.keymap.set("n", "gr", function()
         for _i = 0,lnum,1 do
           line = it()
         end
-        print(line)
         return not line:match("^%s*import ")
       end, list)
     end

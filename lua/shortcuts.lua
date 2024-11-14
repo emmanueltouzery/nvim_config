@@ -1,6 +1,30 @@
 -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {desc = "Jump to definition"})
 vim.keymap.set('n', 'gd', "<cmd>lua lsp_goto_def_center()<cr>", {desc = "Jump to definition"})
-vim.keymap.set("n", "gr", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}, attach_mappings=lsp_refs_extra_mappings}<cr>", {desc="Display lsp references"})
+vim.keymap.set("n", "gr", function()
+  local params = {
+    attach_mappings = lsp_refs_extra_mappings,
+  }
+  if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
+    -- for typescript, filter out import statements
+    local Path = require("plenary.path")
+    params.post_process_results = function(list)
+      return vim.tbl_filter(function(match)
+        local file = match.uri:gsub("file://", "")
+        local lnum = match.range.start.line
+        local path = Path.new(file)
+        local contents = path:read()
+        local it = contents:gmatch("([^\n]*)\n?")
+        local line = ""
+        for _i = 0,lnum,1 do
+          line = it()
+        end
+        print(line)
+        return not line:match("^%s*import ")
+      end, list)
+    end
+  end
+  require'telescope.builtin'.lsp_references(params)
+end, {desc="Display lsp references"})
 
 require 'key-menu'.set('n', 'đ')
 require 'key-menu'.set('n', 'š')

@@ -1356,6 +1356,9 @@ function _G.open_in_centered_popup(buf, pref_height)
     local width = vim.api.nvim_get_option("columns")
     local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
     local win_height = pref_height or 50
+    if win_height > height then
+      win_height = height
+    end
 
     local opts = {
         style = "minimal",

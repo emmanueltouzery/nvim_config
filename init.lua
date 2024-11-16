@@ -528,6 +528,9 @@ require('packer').startup(function(use)
   use {'emmanueltouzery/vim-elixir', commit='735528cecc19ecffa002ffa20176e9984cced970'}
   use {'smjonas/live-command.nvim', commit='ce4b104ce702c7bb9fdff863059af6d47107ca61', config=function()
     require("live-command").setup {
+      defaults = {
+        inline_highlighting = false, -- https://github.com/smjonas/live-command.nvim/issues/23
+      },
       commands = {
         Norm = { cmd = "norm" },
         S = { cmd = "Subvert"}, -- must be defined before we import vim-abolish

@@ -1401,5 +1401,17 @@ function _G.open_command_in_popup(cmd, req_width, req_col, req_height, req_row)
   }
   local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
 
-  vim.fn.termopen(cmd, { cwd = vim.fs.root(0, '.git') })
+  vim.fn.termopen(cmd)
+end
+
+function _G.glow_for_buffer(bufnr)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local path = require("plenary.path")
+  local fname = "/tmp/emm-diff.md"
+  local f = path:new(fname)
+  f:write(table.concat(lines, "\n"), "w")
+  open_command_in_popup("glow -s tokyo-night -w 115 " .. fname, 120, (vim.o.columns-120)/2)
+  vim.defer_fn(function()
+    f:rm()
+  end, 1000)
 end

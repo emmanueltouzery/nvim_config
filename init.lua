@@ -406,15 +406,7 @@ require('packer').startup(function(use)
             },
             {"n", "<leader>cm", function()
               local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
-              local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-              local path = require("plenary.path")
-              local fname = "/tmp/emm-diff.md"
-              local f = path:new(fname)
-              f:write(table.concat(lines, "\n"), "w")
-              open_command_in_popup("glow -s tokyo-night -w 115 " .. fname, 120, (vim.o.columns-120)/2)
-              vim.defer_fn(function()
-                f:rm()
-              end, 1000)
+              glow_for_buffer(bufnr)
             end,
               {desc = "Display markdown"},
             },

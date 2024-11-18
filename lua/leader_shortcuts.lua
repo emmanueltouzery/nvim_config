@@ -723,9 +723,7 @@ function format_buf()
   end
 end
 vim.keymap.set("n", "<leader>cf", ":lua format_buf()<cr>", {desc="Code format/indent"})
-vim.keymap.set("n", "<leader>cm", function()
-  open_command_in_popup("glow -s tokyo-night -w 115 " .. vim.fn.expand('%'), 120, (vim.o.columns-120)/2)
-end, {desc="Markdown preview"})
+vim.keymap.set("n", "<leader>cm", function() glow_for_buffer(0) end, {desc="Markdown preview"})
 require 'key-menu'.set('n', '<Space>cn', {desc='Code Nodes'})
 vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="select custom block"})
 vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})

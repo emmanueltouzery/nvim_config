@@ -1156,7 +1156,7 @@ callbacks = {
 
     nvim_lint_create_autocmds()
   end}
-  use {"stevearc/conform.nvim", commit="62eba813b7501b39612146cbf29cd07f1d4ac29c", config=function()
+  use {"stevearc/conform.nvim", commit="023f795dbcf32d4351b6a9ed2e613d471b5bb812", config=function()
     require("conform").setup({
       formatters_by_ft = {
         javascript = { "prettier" },
@@ -1238,6 +1238,26 @@ callbacks = {
   use {"notomo/zebrazone.nvim", commit="c4704c0bdbb7ad5de3779e32b76d6852cfb458e3", config=function()
     -- tone down the zebra effect with my theme
     vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
+  end}
+  use {"stevearc/quicker.nvim", commit="049d66534d3de5920663ee1b8dd0096d70f55a67", config=function()
+    require("quicker").setup({
+      keys = {
+        {
+          ">",
+          function()
+            require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
+          end,
+          desc = "Expand quickfix context",
+        },
+        {
+          "<",
+          function()
+            require("quicker").collapse()
+          end,
+          desc = "Collapse quickfix context",
+        },
+      },
+    })
   end}
 end)
 
@@ -1346,7 +1366,6 @@ require("telescope_git_stash")
 require("telescope_lsp_hierarchy")
 require("telescope_qf_locations")
 require("telescope_modified_git_projects")
-require("qftf")
 require("notifs")
 require("ts_unused_imports")
 require("elixir")

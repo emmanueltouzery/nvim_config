@@ -256,14 +256,22 @@ require('packer').startup(function(use)
     require("telescope").load_extension "file_browser"
   end}
   use { 'nvim-lualine/lualine.nvim', commit='05d78e9fd0cdfb4545974a5aa14b1be95a86e9c9'}
-  use { 'emmanueltouzery/gitsigns.nvim', commit='bc9c4f989748c4672796c1da3010abc80e98c1d4', config = function()
-    require("gitsigns").setup {
-      signs = {
-        untracked = { text = '⡂' },
-      },
-      attach_to_untracked = true,
-    }
-    vim.cmd[[highlight GitSignsUntracked guibg=#171717]]
+  -- use { 'emmanueltouzery/gitsigns.nvim', commit='bc9c4f989748c4672796c1da3010abc80e98c1d4', config = function()
+  --   -- require("gitsigns").setup {
+  --     -- signs = {
+  --     --   untracked = { text = '⡂' },
+  --     -- },
+  --     -- attach_to_untracked = true,
+  --   -- }
+  --   -- vim.cmd[[highlight GitSignsUntracked guibg=#171717]]
+  -- end}
+  use {'echasnovski/mini.diff', commit = '65c59f9967fec965d8759a88c1baa43147699035', config=function()
+    require('mini.diff').setup({
+      view = {
+        style = 'sign',
+        signs = { add = '┃', change = '┃', delete = '_' },
+      }
+    })
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use {'nvim-treesitter/nvim-treesitter', commit='3c6af36794b26e1bcac3f126b43e0f646154725d', config=function()
@@ -1370,6 +1378,7 @@ require("notifs")
 require("ts_unused_imports")
 require("elixir")
 require("database")
+require("mini_diff_extras")
 
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 

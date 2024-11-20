@@ -678,8 +678,8 @@ vim.keymap.set("n", "<leader>gC", ":lua display_git_commit()<cr>", {desc="Git di
 vim.keymap.set("n", "<leader>gv", ":lua ShowCommitAtLine()<cr>", {desc="View commit for line"})
 vim.keymap.set("n", "<leader>gY", ":lua copy_file_line()<cr>", {desc="Copy line and line number"})
 vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy line and line number (sel)"})
-vim.keymap.set("n", "<leader>gR", '<cmd>lua require"gitsigns".reset_buffer()<CR>', {desc="reset buffer"})
-vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame line"})
+-- vim.keymap.set("n", "<leader>gR", '<cmd>lua require"gitsigns".reset_buffer()<CR>', {desc="reset buffer"})
+-- vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame line"})
 vim.keymap.set("n", "<leader>gr", '<cmd>lua git_branches{attach_mappings=telescope_branches_mappings, pattern="--sort=-committerdate"}<CR>', {desc="git bRanches"})
 vim.keymap.set("n", "<leader>ga", "<cmd>lua require'agitator'.search_in_added()<CR>", {desc="git search in added files & lines"})
 -- using neogit to push
@@ -699,10 +699,10 @@ end
 vim.keymap.set("n", "<leader>ghh", '<cmd>lua git_do_stash()<CR>', {desc="git stash"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
-vim.keymap.set({"n", "v"}, "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', {desc= "stage hunk"})
-vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
-vim.keymap.set({"n", "v"}, "<leader>hr", '<cmd>lua require"gitsigns".reset_hunk()<CR>', {desc="reset hunk"})
-vim.keymap.set("n", "<leader>hh", '<cmd>lua require"gitsigns".preview_hunk()<CR>', {desc="preview hunk"})
+vim.keymap.set({"n", "v"}, "<leader>hS", function() vim.cmd[[norm gh0$]] end, {desc= "stage hunk"})
+-- vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
+vim.keymap.set({"n", "v"}, "<leader>hr", function() vim.cmd[[norm gH0$]] end, {desc="reset hunk"})
+vim.keymap.set("n", "<leader>hh", function() hunk_popup() end, {desc="preview hunk"})
 
 -- CODE
 require 'key-menu'.set('n', '<Space>c', {desc='Code'})

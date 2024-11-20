@@ -1156,7 +1156,7 @@ callbacks = {
 
     nvim_lint_create_autocmds()
   end}
-  use {"stevearc/conform.nvim", commit="023f795dbcf32d4351b6a9ed2e613d471b5bb812", config=function()
+  use {"stevearc/conform.nvim", commit="62d5accad8b29d6ba9b58d3dff90c43a55621c60", config=function()
     require("conform").setup({
       formatters_by_ft = {
         javascript = { "prettier" },

@@ -872,17 +872,22 @@ vim.keymap.set("n", "<leader>cll", function()
         :gsub(" '", "\n```typescript\n")
         :gsub("'[%s%.]", "\n```\n")
       local indented_msg = indent_ts_types(msg_md)
-      local buf = string_to_buffer(indented_msg)
-      vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-      vim.api.nvim_buf_set_option(buf, "readonly", true)
-      vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})
-      vim.api.nvim_set_option_value("modified", false, {buf = buf})
-      vim.api.nvim_set_option_value("bufhidden", 'wipe', {buf = buf})
-      -- https://stackoverflow.com/a/24691027/516188
-      local win = open_in_centered_popup(buf, select(2, indented_msg:gsub('\n', '\n'))+1)
-      vim.api.nvim_set_option_value("conceallevel", 2, {win = win})
-      vim.api.nvim_set_option_value("wrap", true, {win = win})
-      vim.api.nvim_set_option_value("linebreak", true, {win = win})
+      if #indented_msg == 1 then
+        -- the special display is overkill if it's only one line after formatting
+        vim.diagnostic.open_float(0, {scope="line"})
+      else
+        local buf = string_to_buffer(indented_msg)
+        vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+        vim.api.nvim_buf_set_option(buf, "readonly", true)
+        vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})
+        vim.api.nvim_set_option_value("modified", false, {buf = buf})
+        vim.api.nvim_set_option_value("bufhidden", 'wipe', {buf = buf})
+        -- https://stackoverflow.com/a/24691027/516188
+        local win = open_in_centered_popup(buf, select(2, indented_msg:gsub('\n', '\n'))+1)
+        vim.api.nvim_set_option_value("conceallevel", 2, {win = win})
+        vim.api.nvim_set_option_value("wrap", true, {win = win})
+        vim.api.nvim_set_option_value("linebreak", true, {win = win})
+      end
     else
       vim.diagnostic.open_float(0, {scope="line"})
     end

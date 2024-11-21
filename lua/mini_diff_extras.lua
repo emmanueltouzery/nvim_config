@@ -18,10 +18,7 @@ local function hunk_popup_show(lines, width)
   local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
 end
 
-local function hunk_popup_show_change(minidiff_data, hunk)
-  local lines = {}
-  local width = 0
-
+local function hunk_popup_add_change(minidiff_data, hunk, lines, width)
   -- first the deleted lines
   local cur_line = 1
   for line in vim.gsplit(minidiff_data.ref_text, "\n") do
@@ -46,13 +43,10 @@ local function hunk_popup_show_change(minidiff_data, hunk)
     end
   end
 
-  hunk_popup_show(lines, width)
+  return width
 end
 
-local function hunk_popup_show_add(minidiff_data, hunk)
-  local lines = {}
-  local width = 0
-
+local function hunk_popup_add_add(minidiff_data, hunk, lines, width)
   for _, line in ipairs(vim.api.nvim_buf_get_lines(0, hunk.buf_start-1, hunk.buf_start-1+hunk.buf_count, false)) do
     table.insert(lines, "+" .. line)
     if #line+1 > width then
@@ -60,13 +54,10 @@ local function hunk_popup_show_add(minidiff_data, hunk)
     end
   end
 
-  hunk_popup_show(lines, width)
+  return width
 end
 
-local function hunk_popup_show_delete(minidiff_data, hunk)
-  local lines = {}
-  local width = 0
-
+local function hunk_popup_add_delete(minidiff_data, hunk, lines, width)
   local cur_line = 1
   for line in vim.gsplit(minidiff_data.ref_text, "\n") do
     if cur_line >= hunk.ref_start then
@@ -82,19 +73,24 @@ local function hunk_popup_show_delete(minidiff_data, hunk)
   end
 
   ::change_ref_done::
-  hunk_popup_show(lines, width)
+  return width
 end
 
 function _G.hunk_popup()
   local cur_line = vim.fn.line('.')
   local minidiff_data = MiniDiff.get_buf_data(0)
+
+  local lines = {}
+  local width = 0
+
   for _, hunk in ipairs(minidiff_data.hunks) do
     if hunk.type == "change" and hunk.buf_start <= cur_line and hunk.buf_start + hunk.buf_count > cur_line then
-      hunk_popup_show_change(minidiff_data, hunk)
+      width = hunk_popup_add_change(minidiff_data, hunk, lines, width)
     elseif hunk.type == "add" and hunk.buf_start <= cur_line and hunk.buf_start + hunk.buf_count >= cur_line then
-      hunk_popup_show_add(minidiff_data, hunk)
+      width = hunk_popup_add_add(minidiff_data, hunk, lines, width)
     elseif hunk.type == "delete" and hunk.buf_start == cur_line then
-        hunk_popup_show_delete(minidiff_data, hunk)
+      width = hunk_popup_add_delete(minidiff_data, hunk, lines, width)
     end
   end
+  hunk_popup_show(lines, width)
 end

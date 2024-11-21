@@ -270,6 +270,10 @@ require('packer').startup(function(use)
       view = {
         style = 'sign',
         signs = { add = '┃', change = '┃', delete = '_' },
+        -- put a priority lower than the default 10 for diagnostic errors, so that
+        -- the signs for a hunk are together on the left, instead of individual
+        -- diagnostics moving the sign for a line to not line up
+        priority = 9,
       }
     })
   end}

@@ -100,10 +100,22 @@ local function qf_errors()
   return ''
 end
 
+local function minidiff_diff_source()
+  local minidiff = MiniDiff.get_buf_data(0)
+  if minidiff == nil then
+    return nil
+  end
+  return {
+    added = minidiff.summary.add,
+    modified = minidiff.summary.change,
+    removed = minidiff.summary.delete,
+  }
+end
+
 local lualine = require('lualine')
 if lualine then
   lualine.setup {
-    options = { 
+    options = {
       disabled_filetypes = {
         'NeogitStatus', -- perf issues over sshfs
         'dashboard',
@@ -129,7 +141,7 @@ if lualine then
         { 'mode', fmt = function(str) return str:sub(1,3) end , separator = {left=nil, right=''} },
       },
       -- lualine_a = {'mode'},
-      lualine_b = {'branch', {'diff', symbols = {added = ' ', modified = ' ', removed = ' '}, }, 'diagnostics', {qf_errors, color={fg='#eabd7a'}}},
+      lualine_b = {'branch', {'diff', symbols = {added = ' ', modified = ' ', removed = ' '}, source = minidiff_diff_source }, 'diagnostics', {qf_errors, color={fg='#eabd7a'}}},
       lualine_c = {lualine_project, {conflict_status, color={fg='#ff6c6b', gui='bold'}}, {'filename', path=1}}, -- path=1 => relative filename
       -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
       -- don't color the filetype icon, else it's not always visible with the 'nord' theme.
@@ -151,7 +163,7 @@ if lualine then
       lualine_b = {
         {winnr, separator = { left = ''}, color = {bg='#4c566a'}},
         {'branch', color = {bg='#4c566a'}},
-        {'diff', color = {bg='#4c566a'}, symbols = {added = ' ', modified = ' ', removed = ' '}, },
+        {'diff', color = {bg='#4c566a'}, symbols = {added = ' ', modified = ' ', removed = ' '}, source = minidiff_diff_source },
         {'diagnostics', color = {bg='#4c566a'} },
         {function(str) return "" end, color = {fg='#4c566a'}, padding=0 }
       },

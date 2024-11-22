@@ -3,6 +3,17 @@ local entry_display = require("telescope.pickers.entry_display")
 local finders = require "telescope.finders"
 local conf = require("telescope.config").values
 
+local function tbl_reverse(tbl)
+  local len = #tbl
+  for i = 1, math.floor(len / 2) do
+    local j = len - i + 1
+    local swp = tbl[i]
+    tbl[i] = tbl[j]
+    tbl[j] = swp
+  end
+  return tbl
+end
+
 -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_prepareCallHierarchy
 function _G.telescope_display_call_hierarchy()
 
@@ -40,6 +51,13 @@ function _G.telescope_display_call_hierarchy()
         print_hierarchy(caller_info, 0, data)
       end
 
+      local conf = require("telescope.config").values
+      -- Reverse the callers so they have the same top-to-bottom order as in the file
+      local sorting_strategy = conf.sorting_strategy
+      if sorting_strategy == "ascending" then
+        tbl_reverse(data)
+      end
+
       pickers.new({}, {
         prompt_title = "Incoming calls: " .. call_hierarchy_item.name,
         finder = finders.new_table {
@@ -58,7 +76,7 @@ function _G.telescope_display_call_hierarchy()
             return entry
           end,
         },
-        previewer = conf.grep_previewer(opts),
+        previewer = conf.grep_previewer({}),
       }):find()
     end
   end
@@ -68,7 +86,7 @@ function _G.get_call_hierarchy_for_item(call_hierarchy_item)
   local call_tree = {}
   -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#callHierarchy_incomingCalls
   local by_lsp = vim.lsp.buf_request_sync(0, 'callHierarchy/incomingCalls', { item = call_hierarchy_item })
-  if #by_lsp >= 1 then
+  if by_lsp and #by_lsp >= 1 then
     local result = by_lsp[vim.tbl_keys(by_lsp)[1]].result
     if #result >= 1 then
       for _, item in ipairs(result) do

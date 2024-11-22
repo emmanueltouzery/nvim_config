@@ -857,6 +857,11 @@ local function indent_ts_types(str)
   return result
 end
 
+-- https://stackoverflow.com/a/24691027/516188
+function count_lines(string)
+  return select(2, string:gsub('\n', '\n'))
+end
+
 -- LSP
 require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
 vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
@@ -868,11 +873,13 @@ vim.keymap.set("n", "<leader>cll", function()
       local msg = diag[1].message
       local msg_md = msg
         :gsub("\n%s+", string.rep("─", 80) .. "\n")
-        :gsub(" '(%w+)'([%s%.%?])", " `%1`%2")
+        :gsub(" '(%w+)'([%s%.%?,])", " `%1`%2")
+        :gsub("^'(%w+)'([%s%.%?,])", " `%1`%2")
         :gsub(" '", "\n```typescript\n")
-        :gsub("'[%s%.]", "\n```\n")
+        :gsub("'[%s%.,]", "\n```\n")
+        :gsub("\nOverload ", "\n\n## Overload ")
       local indented_msg = indent_ts_types(msg_md)
-      if #indented_msg == 1 then
+      if count_lines(indented_msg) == 1 then
         -- the special display is overkill if it's only one line after formatting
         vim.diagnostic.open_float(0, {scope="line"})
       else
@@ -882,8 +889,7 @@ vim.keymap.set("n", "<leader>cll", function()
         vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})
         vim.api.nvim_set_option_value("modified", false, {buf = buf})
         vim.api.nvim_set_option_value("bufhidden", 'wipe', {buf = buf})
-        -- https://stackoverflow.com/a/24691027/516188
-        local win = open_in_centered_popup(buf, select(2, indented_msg:gsub('\n', '\n'))+1)
+        local win = open_in_centered_popup(buf, count_lines(indented_msg)+1)
         vim.api.nvim_set_option_value("conceallevel", 2, {win = win})
         vim.api.nvim_set_option_value("wrap", true, {win = win})
         vim.api.nvim_set_option_value("linebreak", true, {win = win})

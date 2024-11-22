@@ -108,6 +108,45 @@ end
 
 -- END of lifted from git-signs
 
+local function do_inline_diff(popup_buf, lines)
+  local remove = {}
+  local add = {}
+  for _, line in ipairs(lines) do
+    if line:match("^-") then
+      if #add > 0 then
+        return
+      end
+      table.insert(remove, line)
+    else
+      table.insert(add, line)
+    end
+  end
+  if #add ~= #remove then
+    return
+  end
+
+  removed_regions, added_regions = run_word_diff(remove, add)
+
+  local ns = vim.api.nvim_create_namespace('my_highlights')
+  for _, region in ipairs(removed_regions) do
+    local line = region[1]-1
+    vim.api.nvim_buf_set_extmark(popup_buf, ns, line, region[3]-1, {
+      end_line = line,
+      end_col = region[4]-1,
+      hl_group = 'GitSignsDeleteInline',
+    })
+  end
+
+  for _, region in ipairs(added_regions) do
+    local line = region[1]-1
+    vim.api.nvim_buf_set_extmark(popup_buf, ns, #add + line, region[3]-1, {
+      end_line = #add + line,
+      end_col = region[4]-1,
+      hl_group = 'GitSignsAddInline',
+    })
+  end
+end
+
 local function hunk_popup_show(lines, width)
   if #lines == 0 or width == 0 then
     return
@@ -130,45 +169,7 @@ local function hunk_popup_show(lines, width)
   vim.api.nvim_set_option_value("filetype", "diff", {buf = popup_buf})
   vim.b.popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 
-  if #lines == 2 then
-    print(lines[1])
-    print(lines[2])
-    removed_regions, added_regions = run_word_diff({lines[1]}, {lines[2]})
-    print(vim.inspect(removed_regions))
-    print(vim.inspect(added_regions))
-
-    local ns = vim.api.nvim_create_namespace('my_highlights')
-    for _, region in ipairs(removed_regions) do
-      print("remove region: " .. vim.inspect(region))
-      local i = region[1]-1
-      -- table.insert(hls[i][1][2], {
-        --   hl_group = 'GitSignsDeleteInline',
-        --   start_col = region[3],
-        --   end_col = region[4],
-        -- })
-        vim.api.nvim_buf_set_extmark(popup_buf, ns, 0, region[3]-1, {
-          end_line = 0,
-          end_col = region[4]-1,
-          hl_group = 'GitSignsDeleteInline',
-        })
-    end
-
-    for _, region in ipairs(added_regions) do
-      print("remove region: " .. vim.inspect(region))
-      local i = region[1]-1
-      -- local i = hunk.removed.count + region[1]
-      -- table.insert(hls[i][1][2], {
-      --   hl_group = 'GitSignsAddInline',
-      --   start_col = region[3],
-      --   end_col = region[4],
-      -- })
-      vim.api.nvim_buf_set_extmark(popup_buf, ns, 1, region[3]-1, {
-        end_line = 1,
-        end_col = region[4]-1,
-        hl_group = 'GitSignsAddInline',
-      })
-    end
-  end
+  do_inline_diff(popup_buf, lines)
 
   vim.api.nvim_create_autocmd({ "WinEnter", "TabClosed", "CursorMoved" }, {
     group = "hunkAtCurpos",

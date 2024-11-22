@@ -11,6 +11,11 @@ vim.keymap.set("n", "gr", function()
       return vim.tbl_filter(function(match)
         local file = match.uri:gsub("file://", "")
         local lnum = match.range.start.line
+        if lnum+1 == vim.fn.line('.') and file == vim.fn.expand('%:p') then
+          -- drop the declaration i'm asking the references from...
+          -- not sure why typescript is listing the declaration in the references...
+          return false
+        end
         local path = Path.new(file)
         local contents = path:read()
         local it = contents:gmatch("([^\n]*)\n?")

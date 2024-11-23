@@ -97,7 +97,7 @@ function global_marks_entry_maker()
       valid = true,
 
       value = entry.filename,
-      ordinal = entry.filename,
+      ordinal = entry.project .. " " .. entry.filename .. " " .. entry.desc, -- used for filtering
       display = make_display,
 
       project = entry.project,

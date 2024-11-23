@@ -19,7 +19,7 @@ function _G.load_my_marks()
         if #fields >= 4 then
           desc = fields[4]
           i = 5
-          while i < #fields do
+          while i <= #fields do
             desc = desc .. ":" .. fields[i]
             i = i + 1
           end

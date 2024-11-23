@@ -27,6 +27,7 @@ _G.telescope_global_marks = function(opts)
         lnum = mark[3],
         col = 1,
         filename = mark[2],
+        desc = mark[4],
       }
       table.insert(marks_table, row)
     end
@@ -50,6 +51,11 @@ _G.telescope_global_marks = function(opts)
 
   pickers.new(opts, {
     prompt_title = "Global Marks",
+    layout_strategy = "vertical",
+    layout_config = {
+      preview_height = 0.8,
+      preview_cutoff = 0,
+    },
     finder = gen_new_finder(),
     previewer = conf.grep_previewer(opts),
     sorter = conf.generic_sorter(opts),
@@ -64,12 +70,11 @@ _G.telescope_global_marks = function(opts)
 end
 
 function global_marks_entry_maker()
-  local width2 = 18
-  local total_width = width2 + 2 -- two separator spaces
   local displayer = entry_display.create {
     separator = " ",
     items = {
-      { width = width2 },
+      { width = 18 },
+      { width = 30 },
       { remaining = true },
     },
   }
@@ -78,12 +83,12 @@ function global_marks_entry_maker()
     -- code stolen from telescope's utils.calc_result_length()
     local status = get_status(vim.api.nvim_get_current_buf())
     local len = vim.api.nvim_win_get_width(status.results_win) - status.picker.selection_caret:len() - 2
-    local true_len = len - total_width
-    local relative_fname = utils.transform_path({__length = true_len}, entry.relative_fname)
+    local relative_fname = utils.transform_path({__length = 30}, entry.relative_fname)
     return displayer {
       -- {entry.mark, "TelescopeResultsNumber"},
       {entry.project, "TelescopeResultsTitle"},
       relative_fname,
+      entry.desc
     }
   end
 
@@ -101,6 +106,7 @@ function global_marks_entry_maker()
       filename = entry.filename,
       lnum = entry.lnum,
       col = entry.col,
+      desc = entry.desc,
     }
   end
 end

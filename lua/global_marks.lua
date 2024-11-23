@@ -15,7 +15,16 @@ function _G.load_my_marks()
     for line in contents:gmatch("([^\n]*)\n?") do
       if #line > 0 then
         local fields = vim.split(line, ":")
-        table.insert(marks, {fields[1], fields[2], tonumber(fields[3])})
+        local desc = ""
+        if #fields >= 4 then
+          desc = fields[4]
+          i = 5
+          while i < #fields do
+            desc = desc .. ":" .. fields[i]
+            i = i + 1
+          end
+        end
+        table.insert(marks, {fields[1], fields[2], tonumber(fields[3]), desc})
       end
     end
 
@@ -43,7 +52,7 @@ function _G.load_my_marks()
 end
 
 function _G.my_mark_file_row(mark)
-  return mark[1] .. ":" .. mark[2] .. ":" .. mark[3] .. "\n"
+  return mark[1] .. ":" .. mark[2] .. ":" .. mark[3] .. ":" .. mark[4] .. "\n"
 end
 
 function _G.add_my_mark(mark)
@@ -58,10 +67,15 @@ function _G.add_my_mark(mark)
 end
 
 function _G.add_global_mark()
-  local rel_fname = vim.fn.expand('%')
-  local fname = vim.fn.expand('%:p')
-  local lnum = vim.fn.line('.')
-  add_my_mark({rel_fname, fname, lnum})
+  vim.ui.input({prompt="Enter mark description", kind="center_win"}, function(desc)
+    if desc == nil then
+      return
+    end
+    local rel_fname = vim.fn.expand('%')
+    local fname = vim.fn.expand('%:p')
+    local lnum = vim.fn.line('.')
+    add_my_mark({rel_fname, fname, lnum, desc})
+  end)
 end
 
 function _G.remove_global_mark(fname, lnum)

@@ -205,7 +205,7 @@ local function hunk_popup_add_change(minidiff_data, hunk, lines, width)
 
   ::change_ref_done::
   -- now the added lines
-  for _, line in ipairs(vim.api.nvim_buf_get_lines(0, hunk.buf_start-1, hunk.buf_start-1+hunk.ref_count, false)) do
+  for _, line in ipairs(vim.api.nvim_buf_get_lines(0, hunk.buf_start-1, hunk.buf_start-1+hunk.buf_count, false)) do
     table.insert(lines, "+" .. line)
     if #line+1 > width then
       width = #line+1
@@ -256,10 +256,44 @@ function _G.hunk_popup()
     local cur_line = vim.fn.line('.')
     local minidiff_data = MiniDiff.get_buf_data(0)
 
+    -- merge small contiguous hunks
+    -- this is messy and mostly guesswork
+    local merged_hunks = {}
+    local cur_hunk = nil
+    local previous_hunk = nil
+    for _, hunk in ipairs(minidiff_data.hunks) do
+      local previous_pos = cur_hunk and previous_hunk.buf_start + previous_hunk.buf_count
+      if previous_hunk and previous_hunk.type == "delete" then
+        previous_pos = previous_pos + 1
+      end
+      if previous_pos and previous_pos >= hunk.buf_start then
+        -- merge hunks
+        if hunk.type ~= cur_hunk.type then
+          cur_hunk.type = "change"
+        end
+        if hunk.type == "delete" and hunk.buf_count == 0 then
+          cur_hunk.buf_count = cur_hunk.buf_count + 1
+        else
+          cur_hunk.buf_count = cur_hunk.buf_count + hunk.buf_count
+        end
+        if cur_hunk.ref_count == 0 then
+          cur_hunk.ref_start = hunk.ref_start
+        end
+        cur_hunk.ref_count = cur_hunk.ref_count + hunk.ref_count
+      else
+        if cur_hunk then
+          table.insert(merged_hunks, cur_hunk)
+        end
+        cur_hunk = hunk
+      end
+      previous_hunk = hunk
+    end
+    table.insert(merged_hunks, cur_hunk)
+
     local lines = {}
     local width = 0
 
-    for _, hunk in ipairs(minidiff_data.hunks) do
+    for _, hunk in ipairs(merged_hunks) do
       if hunk.type == "change" and hunk.buf_start <= cur_line and hunk.buf_start + hunk.buf_count > cur_line then
         width = hunk_popup_add_change(minidiff_data, hunk, lines, width)
       elseif hunk.type == "add" and hunk.buf_start <= cur_line and hunk.buf_start + hunk.buf_count >= cur_line then

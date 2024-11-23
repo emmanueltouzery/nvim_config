@@ -34,8 +34,10 @@ require 'key-menu'.set('n', 'đ')
 require 'key-menu'.set('n', 'š')
 vim.keymap.set('n', 'šQ', '<Cmd>:cn<CR>', {desc="Previous quickfix"})
 vim.keymap.set('n', 'đQ', '<Cmd>:cp<CR>', {desc="Next quickfix"})
-vim.keymap.set('n', 'šh', function() MiniDiff.goto_hunk("prev") end, {desc="Previous git hunk"})
-vim.keymap.set('n', 'đh', function() MiniDiff.goto_hunk("next") end, {desc="Next git hunk"})
+-- pcall for MiniDiff.goto_hunk because sometimes i hit the shortcuts in a non-minidiff managed window,
+-- like a popup, and in that case it blows up.
+vim.keymap.set('n', 'šh', function() pcall(MiniDiff.goto_hunk, "prev") end, {desc="Previous git hunk"})
+vim.keymap.set('n', 'đh', function() pcall(MiniDiff.goto_hunk, "next") end, {desc="Next git hunk"})
 vim.keymap.set('n', 'šd', '[c', {desc="Previous diff hunk"}) -- :h jumpto-diffs diffs+diffview.nvim
 vim.keymap.set('n', 'đd', ']c', {desc="Next diff hunk"})
 vim.keymap.set('n', 'šg', '<Cmd>lua vim.diagnostic.goto_prev()<CR>', {desc="Previous diagnostic"})

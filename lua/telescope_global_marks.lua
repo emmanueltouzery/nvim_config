@@ -48,12 +48,22 @@ _G.telescope_global_marks = function(opts)
     remove_global_mark(entry.filename, entry.lnum)
     current_picker:refresh(gen_new_finder(), { reset_prompt = true })
   end
+  actions.edit_mark_desc = function(prompt_bufnr)
+    vim.ui.input({prompt="Enter mark description", kind="center_win"}, function(desc)
+      if desc then
+        local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
+        local entry = action_state.get_selected_entry()
+        edit_global_mark_desc(entry.filename, entry.lnum, desc)
+        current_picker:refresh(gen_new_finder(), { reset_prompt = true })
+      end
+    end)
+  end
 
   pickers.new(opts, {
     prompt_title = "Global Marks",
     layout_strategy = "vertical",
     layout_config = {
-      preview_height = 0.8,
+      preview_height = 0.7,
       preview_cutoff = 0,
     },
     finder = gen_new_finder(),
@@ -64,6 +74,7 @@ _G.telescope_global_marks = function(opts)
     attach_mappings = function(_, map)
       map("i", "<c-Del>", actions.delete_mark)
       map("n", "<c-Del>", actions.delete_mark)
+      map("i", "<c-e>", actions.edit_mark_desc)
       return true
     end,
   }):find()

@@ -95,3 +95,19 @@ function _G.remove_global_mark(fname, lnum)
   local path = Path.new(my_marks_fname())
   path:write(mark_str, 'w')
 end
+
+function _G.edit_global_mark_desc(fname, lnum, desc)
+  local marks = load_my_marks()
+  local mark_str = ""
+  for _, mark in ipairs(marks) do
+    if mark[2] == fname and mark[3] == lnum then
+      mark[4] = desc
+      mark_str = mark_str .. my_mark_file_row(mark)
+    else
+      mark_str = mark_str .. my_mark_file_row(mark)
+    end
+  end
+  local Path = require("plenary.path")
+  local path = Path.new(my_marks_fname())
+  path:write(mark_str, 'w')
+end

@@ -49,7 +49,9 @@ _G.telescope_global_marks = function(opts)
     current_picker:refresh(gen_new_finder(), { reset_prompt = true })
   end
   actions.edit_mark_desc = function(prompt_bufnr)
-    vim.ui.input({prompt="Enter mark description", kind="center_win"}, function(desc)
+    local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
+    local entry = action_state.get_selected_entry()
+    vim.ui.input({prompt="Enter mark description", kind="center_win", default=entry.desc}, function(desc)
       if desc then
         local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
         local entry = action_state.get_selected_entry()

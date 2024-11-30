@@ -1415,3 +1415,9 @@ function _G.glow_for_buffer(bufnr)
     f:rm()
   end, 1000)
 end
+
+function _G.lualine_refresh_all()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    vim.api.nvim_win_call(win, function() require('lualine').refresh() end)
+  end
+end

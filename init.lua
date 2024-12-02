@@ -511,7 +511,7 @@ require('packer').startup(function(use)
 
   }
   use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='731a046da7dd3adff9de871a42f9b7fb85f60f47'}
-  use {'emmanueltouzery/agitator.nvim', commit='b948e16bba75dc4a114d3416c8e836a8e5e4d006'}
+  use {'emmanueltouzery/agitator.nvim', commit='dc2843869b8bb9e5096edf53583b1dee1e62aa6b'}
   -- use {'/home/emmanuel/home/elixir-extras.nvim'
   use {'emmanueltouzery/elixir-extras.nvim'
   , config=function()

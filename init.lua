@@ -301,6 +301,9 @@ require('packer').startup(function(use)
         enable = true,
         disable_virtual_text = true,
       },
+      incremental_selection = {
+        enable = false, -- not using, always afraid of treesitter in terms of perf
+      },
       autotag = {
         enable = true,
         filetypes = {

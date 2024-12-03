@@ -35,9 +35,17 @@ local function extract_type()
         row_node = p
       end
       ::done::
+
+      local declaration = "type T = Parameters<typeof " .. require'aerial'.get_location()[1].name .. ">[" .. param_index .. "]"
+
+      -- is this by any chance an object pattern matching?
+      -- function({field1, field2})
+      if parent:type() == 'object_pattern' then
+        declaration = declaration .. "['" .. vim.fn.expand('<cword>') .. "']"
+      end
+
       local row = row_node:start()
-      vim.api.nvim_buf_set_lines(0, row, row, false, {
-        "type T = Parameters<typeof " .. require'aerial'.get_location()[1].name .. ">[" .. param_index .. "];"})
+      vim.api.nvim_buf_set_lines(0, row, row, false, {declaration .. ";"})
       vim.api.nvim_win_set_cursor(0, {row+1, 5}) -- 5="type >T<"
     else
       -- normal variable

@@ -103,7 +103,7 @@ function _G.filter_lsp_symbols(query)
   if #vim.lsp.buf_get_clients() == 0 then
     -- no LSP clients. I'm probably in a floating window.
     -- close it so we focus on the parent window that has a LSP
-    if vim.api.nvim_win_get_config(0).zindex > 0 then
+    if vim.api.nvim_win_get_config(0).zindex ~= nil and vim.api.nvim_win_get_config(0).zindex > 0 then
       vim.api.nvim_win_close(0, false)
     end
   end

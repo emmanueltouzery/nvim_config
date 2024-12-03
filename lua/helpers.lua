@@ -1330,7 +1330,7 @@ function _G.quickfix_at_curpos()
       popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
       vim.b.popup_win = popup_win
 
-      vim.api.nvim_create_autocmd({ "WinEnter", "TabClosed", "CursorMoved" }, {
+      vim.api.nvim_create_autocmd({ "WinEnter", "WinLeave", "TabClosed", "CursorMoved" }, {
         group = "QuickfixAtCurpos",
         callback = function()
           local ok, popup_win = pcall(vim.api.nvim_buf_get_var, cur_buf, 'popup_win')

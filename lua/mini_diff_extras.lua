@@ -171,7 +171,7 @@ local function hunk_popup_show(lines, width)
 
   do_inline_diff(popup_buf, lines)
 
-  vim.api.nvim_create_autocmd({ "WinEnter", "TabClosed", "CursorMoved" }, {
+  vim.api.nvim_create_autocmd({ "WinEnter", "WinLeave", "TabClosed", "CursorMoved" }, {
     group = "hunkAtCurpos",
     callback = function()
       local ok, popup_win = pcall(vim.api.nvim_buf_get_var, 0, 'popup_win')

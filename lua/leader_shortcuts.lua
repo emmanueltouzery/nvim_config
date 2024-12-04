@@ -872,8 +872,8 @@ vim.keymap.set("n", "<leader>cll", function()
     if #diag == 1 and diag[1].message:match("'") then
       local msg = diag[1].message
       local msg_md = msg
-        :gsub("\n%s+", string.rep("─", 80) .. "\n")
         :gsub(" '(%w+)'([%s%.%?,:])", " `%1`%2")
+        :gsub("\n%s+", string.rep("─", 80) .. "\n")
         :gsub("^'(%w+)'([%s%.%?,:])", " `%1`%2")
         :gsub(" '", "\n```typescript\n")
         :gsub("'[%s%.,:]", "\n```\n")

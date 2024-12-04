@@ -727,6 +727,10 @@ vim.keymap.set("n", "<leader>cm", function() glow_for_buffer(0) end, {desc="Mark
 require 'key-menu'.set('n', '<Space>cn', {desc='Code Nodes'})
 vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="select custom block"})
 vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})
+vim.keymap.set('n', '<leader>cnf', function()
+  require('tsht').nodes()
+  vim.cmd[[norm! zf]]
+end, {desc="fold custom block"})
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path", silent=true})
 
 require 'key-menu'.set('n', '<Space>cC', {desc='Code Conflicts'})

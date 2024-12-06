@@ -540,26 +540,35 @@ function telescope_branches_mappings(prompt_bufnr, map)
     branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
     actions.close(prompt_bufnr)
-    vim.fn.jobstart('git merge ' .. branch, {
-      stdout_buffered = true,
-      on_stdout = vim.schedule_wrap(function(j, output)
-        for _, line in ipairs(output) do
-          if #line > 0 then
-            table.insert(cmd_output, line)
-          end
+    local require_ff_msg = "Fail if a merge commit would be created"
+    vim.ui.select({require_ff_msg, "Allow merge commits"}, {prompt="Merge: select merge commit mode", kind="center_win"}, function(choice)
+      if choice ~= nil then
+        local extra_flags = ""
+        if choice == require_ff_msg then
+          extra_flags = " --ff-only"
         end
-      end),
-      on_stderr = vim.schedule_wrap(function(j, output)
-        for _, line in ipairs(output) do
-          if #line > 0 then
-            table.insert(cmd_output, line)
-          end
-        end
-      end),
-      on_exit = vim.schedule_wrap(function(j, output)
-        notif(cmd_output)
-      end),
-    })
+        vim.fn.jobstart('git merge ' .. branch .. extra_flags, {
+          stdout_buffered = true,
+          on_stdout = vim.schedule_wrap(function(j, output)
+            for _, line in ipairs(output) do
+              if #line > 0 then
+                table.insert(cmd_output, line)
+              end
+            end
+          end),
+          on_stderr = vim.schedule_wrap(function(j, output)
+            for _, line in ipairs(output) do
+              if #line > 0 then
+                table.insert(cmd_output, line)
+              end
+            end
+          end),
+          on_exit = vim.schedule_wrap(function(j, output)
+            notif(cmd_output)
+          end),
+        })
+      end
+    end)
   end, {desc= "merGe"})
   map('i', '<C-Del>', function(nr) -- delete
     local current_picker = action_state.get_current_picker(prompt_bufnr)

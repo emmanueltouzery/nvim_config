@@ -322,7 +322,7 @@ require('packer').startup(function(use)
   end}
   use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='04e0ca376d6abdbfc8b52180f8ea236cbfddf782'} -- Autocompletion plugin
-  use {'emmanueltouzery/cmp-nvim-lsp', commit='c35ed2271a528425fdfb2212118e1f339d3783c2'} -- my hack so the rust LSP doesn't overwrite my text
+  use {'emmanueltouzery/cmp-nvim-lsp', commit='85a1f3ab3324c3bd8be40baf12669dbb53972878'} -- my hack so the rust LSP doesn't overwrite my text
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
   use { "hrsh7th/cmp-path", commit = "91ff86cd9c29299a64f968ebb45846c485725f23" }
   use { "hrsh7th/cmp-emoji", commit = "0acd702358230abeb6576769f7116e766bca28a0" }

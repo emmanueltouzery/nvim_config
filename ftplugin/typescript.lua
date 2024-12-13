@@ -21,7 +21,12 @@ local function extract_type()
       while param do
         param = param:prev_named_sibling()
         if param then
-          param_index = param_index + 1
+          local param_name = vim.treesitter.get_node_text(param:named_child('pattern'), 0)
+          if param_name ~= 'this' then
+            -- don't count the special fake parameter type annotation 'this'
+            -- https://www.typescriptlang.org/docs/handbook/2/classes.html#this-parameters
+            param_index = param_index + 1
+          end
         end
       end
 

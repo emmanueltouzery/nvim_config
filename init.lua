@@ -12,6 +12,9 @@ vim.g.doom_one_terminal_colors = true
 vim.g.BufKillCreateMappings = 0 -- vim-bufkill plugin
 vim.g.lightspeed_no_default_keymaps = true
 
+-- https://superuser.com/a/1842153
+vim.g.gitcommit_summary_length = 72
+
 function _G.aerial_elixir_get_entry_text(item)
   if item.parent and #item.parent.name < 20 then
     return string.format("%s.%s", string.gsub(item.parent.name, "^.*%.", ""), item.name)

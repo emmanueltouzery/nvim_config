@@ -60,12 +60,22 @@ local function xml_indent_offset_for_lnum(parser, lnum, mode, nodes_on_line_prev
     if node:type() ~= "content" then
       -- print(node:type() .. "=>" .. vim.treesitter.get_node_text(node, 0))
       if mode == "previous_line" then
-        if node:type() == "STag" then
-          indent_level_change = indent_level_change + vim.bo.shiftwidth
-        end
-        if node:type() == "ETag" and indent_level_change > 0 then
-          -- compensate the previous STag since it got closed
-          indent_level_change = indent_level_change - vim.bo.shiftwidth
+        local _, _, cur_end_row, _ = node:range()
+        -- the if check is to make sure that the previous line node doesn't
+        -- span over the current line. For instance:
+        -- <tag
+        --    attribute=..
+        -- tag would be on the previous line, attribute on the current line.
+        -- we don't want to count the indentation due to "tag" then, because
+        -- it's already taken into account by the attribute indentation.
+        if cur_end_row <= lnum then
+          if node:type() == "STag" then
+            indent_level_change = indent_level_change + vim.bo.shiftwidth
+          end
+          if node:type() == "ETag" and indent_level_change > 0 then
+            -- compensate the previous STag since it got closed
+            indent_level_change = indent_level_change - vim.bo.shiftwidth
+          end
         end
       elseif mode == "cur_line" then
         if node:type() == "STag" then

@@ -1421,3 +1421,24 @@ function _G.lualine_refresh_all()
     vim.api.nvim_win_call(win, function() require('lualine').refresh() end)
   end
 end
+
+function _G.load_into_qf_from_contents()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local list = {}
+  for _, line in ipairs(lines) do
+    if line:match(":") then
+      local m = vim.split(line, ':')
+      table.insert(list, {
+        filename = m[1],
+        lnum = tonumber(m[2]),
+      })
+    else
+      table.insert(list, {
+        filename = line,
+        lnum = 1,
+      })
+    end
+  end
+  print(vim.inspect(list))
+  vim.fn.setqflist(list, 'r')
+end

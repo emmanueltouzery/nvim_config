@@ -281,7 +281,7 @@ require('packer').startup(function(use)
     })
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='3c6af36794b26e1bcac3f126b43e0f646154725d', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='b4897f5a8453e7efeafb21ff5b2bbdc2e3faf1bd', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
@@ -1256,7 +1256,7 @@ callbacks = {
     -- tone down the zebra effect with my theme
     vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
   end}
-  use {"stevearc/quicker.nvim", commit="049d66534d3de5920663ee1b8dd0096d70f55a67", config=function()
+  use {"stevearc/quicker.nvim", commit="cde090601b24cd6f4982e702dd31a810c19ee975", config=function()
     require("quicker").setup({
       keys = {
         {

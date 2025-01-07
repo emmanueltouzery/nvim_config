@@ -112,6 +112,62 @@ local function minidiff_diff_source()
   }
 end
 
+local buffer_repo_cache = {}
+local repo_branch_cache = {}
+
+local function git_branch_from_path(git_path)
+  -- print("get git branch")
+  local head_path = git_path .. "/.git/HEAD"
+  local f_head = io.open(head_path)
+  local head = f_head:read()
+  local branch = head:match('ref: refs/heads/(.+)$')
+  if not branch then
+    branch = head:sub(1, 6)
+  end
+  f_head:close()
+  return branch
+end
+
+local function git_branch_changed(git_path)
+  local prev_watcher = repo_branch_cache[git_path] and repo_branch_cache[git_path][2]
+  if prev_watcher then
+    -- print("close previous watcher")
+    prev_watcher:close()
+  end
+
+  local branch = git_branch_from_path(git_path)
+  local watcher = vim.loop.new_fs_event()
+  repo_branch_cache[git_path] = { branch, watcher }
+
+  watcher:start(git_path .. "/.git/HEAD", {}, vim.schedule_wrap(function(err, fname, evts)
+    if evts.change then
+      git_branch_changed(git_path)
+    end
+  end))
+
+  return branch
+end
+
+-- made my own git_branch lualine component as the official one didn't properly
+-- update for non-focused buffers on branch change for me.
+local function git_branch()
+  local cur_bufnr = vim.api.nvim_get_current_buf()
+  local cached_repo = buffer_repo_cache[cur_bufnr]
+  if cached_repo then
+    return repo_branch_cache[cached_repo][1]
+  end
+  local path = vim.fn.expand('%:p')
+  -- print("get git path")
+  local git_path = vim.fs.root(path, '.git')
+  buffer_repo_cache[cur_bufnr] = git_path
+
+  if repo_branch_cache[git_path] then
+    return repo_branch_cache[git_path][1]
+  end
+
+  return git_branch_changed(git_path)
+end
+
 local lualine = require('lualine')
 if lualine then
   lualine.setup {
@@ -141,7 +197,7 @@ if lualine then
         { 'mode', fmt = function(str) return str:sub(1,3) end , separator = {left=nil, right=''} },
       },
       -- lualine_a = {'mode'},
-      lualine_b = {'branch', {'diff', symbols = {added = ' ', modified = ' ', removed = ' '}, source = minidiff_diff_source }, 'diagnostics', {qf_errors, color={fg='#eabd7a'}}},
+      lualine_b = {git_branch, {'diff', symbols = {added = ' ', modified = ' ', removed = ' '}, source = minidiff_diff_source }, 'diagnostics', {qf_errors, color={fg='#eabd7a'}}},
       lualine_c = {lualine_project, {conflict_status, color={fg='#ff6c6b', gui='bold'}}, {'filename', path=1}}, -- path=1 => relative filename
       -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
       -- don't color the filetype icon, else it's not always visible with the 'nord' theme.
@@ -162,7 +218,7 @@ if lualine then
     inactive_sections = {
       lualine_b = {
         {winnr, separator = { left = ''}, color = {bg='#4c566a'}},
-        {'branch', color = {bg='#4c566a'}},
+        {git_branch, color = {bg='#4c566a'}},
         {'diff', color = {bg='#4c566a'}, symbols = {added = ' ', modified = ' ', removed = ' '}, source = minidiff_diff_source },
         {'diagnostics', color = {bg='#4c566a'} },
         {function(str) return "" end, color = {fg='#4c566a'}, padding=0 }

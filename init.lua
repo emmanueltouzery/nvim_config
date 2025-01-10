@@ -1063,7 +1063,7 @@ callbacks = {
       }
     }
   end}
-  use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
+  -- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
 -- require'dap'.adapters.codelldb = {
 --   type = 'server',
 --   port = "20392",
@@ -1076,7 +1076,7 @@ callbacks = {
 --     -- detached = false,
 --   }
 -- }
-  end}
+  -- end}
 --   use {'/simrat39/rust-tools.nvim', commit='86a2b4e31f504c00715d0dd082a6b8b5d4afbf03', config=function()
 --     local rt = require("rust-tools")
 
@@ -1125,9 +1125,9 @@ callbacks = {
 --     --   -- },
 --     -- })
 --   end}
-  use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
-    require("dapui").setup{}
-  end}
+  -- use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
+  --   require("dapui").setup{}
+  -- end}
   -- tracking my 'search' branch.
   -- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs
   use {"emmanueltouzery/nvim-devdocs",

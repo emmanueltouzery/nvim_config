@@ -1520,6 +1520,8 @@ vim.api.nvim_create_autocmd("User", {
 
 -- syntax highlight for fennel files
 vim.cmd('autocmd BufNewFile,BufRead *.fnl set ft=lisp')
+-- bpftrace
+vim.cmd('autocmd BufNewFile,BufRead *.bt set ft=c')
 
 vim.cmd("set title")
 vim.api.nvim_create_autocmd("DirChanged", {

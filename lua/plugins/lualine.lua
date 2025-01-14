@@ -190,7 +190,8 @@ if lualine then
       theme = 'nord',
       component_separators = '|',
       section_separators = { left = '', right = '' },
-    }, 
+      always_show_tabline = false,
+    },
     sections = {
       lualine_a = {
         { winnr, padding = 0, separator = { left = '' }},
@@ -228,6 +229,18 @@ if lualine then
       lualine_y = {'progress', scroll_indicator},
       lualine_z = {
         { 'location', separator = { left = '', right = '' }, left_padding = 2, color = {bg='#4c566a', fg='white'} },
+      },
+    },
+    tabline = {
+      lualine_a = {
+        {qf_errors, color={bg='#4c566a', fg='#eabd7a'}},
+      },
+      lualine_b = {
+        {'tabs',
+        tabs_color = { active = 'lualine_a_normal', inactive = 'lualine_c_normal' },
+        fmt = function(label) return ' ' .. label end,
+        section_separators = { left = "", right = "" },
+        max_length=99, mode=2},
       },
     },
   }

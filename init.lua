@@ -258,7 +258,7 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope-file-browser.nvim', commit='ea7905ed9b13bcf50e0ba4f3bff13330028d298c', config=function()
     require("telescope").load_extension "file_browser"
   end}
-  use { 'nvim-lualine/lualine.nvim', commit='05d78e9fd0cdfb4545974a5aa14b1be95a86e9c9'}
+  use { 'nvim-lualine/lualine.nvim', commit='2a5bae925481f999263d6f5ed8361baef8df4f83'}
   -- use { 'emmanueltouzery/gitsigns.nvim', commit='bc9c4f989748c4672796c1da3010abc80e98c1d4', config = function()
   --   -- require("gitsigns").setup {
   --     -- signs = {
@@ -342,8 +342,6 @@ require('packer').startup(function(use)
         telescope = true,
       }
     })
-    -- the theme MUST be loaded before we attempt to load bufferline
-    require("plugins.bufferline")
   end}
   use {'airblade/vim-rooter', commit='0415be8b5989e56f6c9e382a04906b7f719cfb38', config = function()
     vim.g.rooter_silent_chdir = 1
@@ -1003,7 +1001,6 @@ callbacks = {
     alpha.setup(dashboard.config)
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
-  use {'akinsho/bufferline.nvim', commit = '73540cb95f8d95aa1af3ed57713c6720c78af915'} -- there's a setup in bufferline.lua
   use {'emmanueltouzery/vim-dispatch-neovim', commit='412fa79d6cf59dcc21b6e9f562202537fa8f456d'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()

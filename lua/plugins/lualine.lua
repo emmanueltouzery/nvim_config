@@ -242,6 +242,9 @@ if lualine then
         section_separators = { left = "", right = "" },
         max_length=99, mode=2},
       },
+      lualine_x = {
+        { "overseer", },
+      },
     },
   }
 end

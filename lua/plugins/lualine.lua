@@ -240,7 +240,7 @@ if lualine then
         tabs_color = { active = 'lualine_a_normal', inactive = 'lualine_c_normal' },
         fmt = function(label) return ' ' .. label end,
         section_separators = { left = "", right = "" },
-        max_length=99, mode=2},
+        mode=2},
       },
       lualine_x = {
         { "overseer", },

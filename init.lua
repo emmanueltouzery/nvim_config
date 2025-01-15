@@ -258,16 +258,9 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope-file-browser.nvim', commit='ea7905ed9b13bcf50e0ba4f3bff13330028d298c', config=function()
     require("telescope").load_extension "file_browser"
   end}
-  use { 'nvim-lualine/lualine.nvim', commit='2a5bae925481f999263d6f5ed8361baef8df4f83'}
-  -- use { 'emmanueltouzery/gitsigns.nvim', commit='bc9c4f989748c4672796c1da3010abc80e98c1d4', config = function()
-  --   -- require("gitsigns").setup {
-  --     -- signs = {
-  --     --   untracked = { text = '⡂' },
-  --     -- },
-  --     -- attach_to_untracked = true,
-  --   -- }
-  --   -- vim.cmd[[highlight GitSignsUntracked guibg=#171717]]
-  -- end}
+  use { 'nvim-lualine/lualine.nvim', commit='2a5bae925481f999263d6f5ed8361baef8df4f83', config=function()
+    setup_lualine()
+  end}
   use {'echasnovski/mini.diff', commit = '65c59f9967fec965d8759a88c1baa43147699035', config=function()
     require('mini.diff').setup({
       view = {

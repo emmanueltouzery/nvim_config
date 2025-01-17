@@ -172,6 +172,10 @@ local function git_branch()
   return git_branch_changed(git_path)
 end
 
+local function adb_status()
+  return vim.g.adb_status or ""
+end
+
 function setup_lualine()
   local lualine = require('lualine')
   if lualine then
@@ -179,6 +183,9 @@ function setup_lualine()
     local lualine_tabline_end = vim.g.lualine_extra_entries and vim.g.lualine_extra_entries() or {}
     table.insert(lualine_tabline_end,
     {
+      adb_status,
+    })
+    table.insert(lualine_tabline_end, {
       "overseer",
       name = vim.g.lualine_extra_entries_names or "",
       name_not = true,

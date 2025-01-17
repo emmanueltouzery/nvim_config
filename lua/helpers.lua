@@ -1442,3 +1442,44 @@ function _G.load_into_qf_from_contents()
   print(vim.inspect(list))
   vim.fn.setqflist(list, 'r')
 end
+
+function _G.start_adb_monitor()
+  vim.g.stop_adb_monitor = false
+  local adb_timer = vim.uv.new_timer()
+  adb_timer:start(0, 60000, function ()
+    vim.system({"lsof", "-ti", ":5037"}, {text=true}, function(out)
+      -- print(vim.inspect(out))
+      local pid = tonumber(out.stdout)
+      if pid then
+        -- print("found pid " .. pid)
+        adb_timer:stop()
+        adb_timer:close()
+        local watcher = vim.loop.new_fs_event()
+        watcher:start("/proc/" .. pid .. "/fd/1", {}, vim.schedule_wrap(function(err, fname, evts)
+          -- print(vim.inspect(evts))
+          if evts.change then
+            vim.system({"adb", "devices"}, {text=true}, function(out)
+              vim.g.adb_status = " " .. vim.split(out.stdout, "\n")[2]:gsub("\t", " ")
+            end)
+            -- print("adb state changed!")
+            if watcher then
+              watcher:close()
+            end
+            watcher = nil
+            start_adb_monitor()
+          end
+        end))
+        -- print("started watcher")
+      end
+      if vim.g.stop_adb_monitor then
+        adb_timer:stop()
+        adb_timer:close()
+      end
+    end)
+  end)
+end
+
+function _G.stop_adb_monitor()
+  vim.g.stop_adb_monitor = true
+  vim.g.adb_status = ""
+end

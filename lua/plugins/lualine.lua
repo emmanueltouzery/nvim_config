@@ -119,6 +119,10 @@ local function git_branch_from_path(git_path)
   -- print("get git branch")
   local head_path = git_path .. "/.git/HEAD"
   local f_head = io.open(head_path)
+  if f_head == nil then
+    -- had this happen to me when switching branches
+    return ""
+  end
   local head = f_head:read()
   local branch = head:match('ref: refs/heads/(.+)$')
   if not branch then

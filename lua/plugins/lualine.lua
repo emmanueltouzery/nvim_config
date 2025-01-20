@@ -177,7 +177,10 @@ local function adb_status()
 end
 
 local function lsp_pending()
-  local pending_count = vim.tbl_count(vim.lsp.get_clients()[1].requests)
+  local pending_count = 0
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    pending_count = pending_count + vim.tbl_count(client.requests)
+  end
   if pending_count > 0 then
     return "󰘦 Pending LSP requests: " .. pending_count
   else

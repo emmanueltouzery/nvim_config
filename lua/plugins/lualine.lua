@@ -176,6 +176,15 @@ local function adb_status()
   return vim.g.adb_status or ""
 end
 
+local function lsp_pending()
+  local pending_count = vim.tbl_count(vim.lsp.get_clients()[1].requests)
+  if pending_count > 0 then
+    return "󰘦 Pending LSP requests: " .. pending_count
+  else
+    return ""
+  end
+end
+
 function setup_lualine()
   local lualine = require('lualine')
   if lualine then
@@ -262,6 +271,9 @@ function setup_lualine()
           fmt = function(label) return ' ' .. label end,
           section_separators = { left = "", right = "" },
           mode=2},
+        },
+        lualine_c = {
+          {lsp_pending}
         },
         lualine_x = lualine_tabline_end,
       },

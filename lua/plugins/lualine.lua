@@ -281,7 +281,7 @@ function setup_lualine()
           mode=2},
         },
         lualine_c = {
-          {lsp_pending}
+          {lsp_pending, color = 'Comment'}
         },
         lualine_x = lualine_tabline_end,
       },

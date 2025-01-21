@@ -271,7 +271,12 @@ function setup_lualine()
         lualine_b = {
           {'tabs',
           tabs_color = { active = 'lualine_a_normal', inactive = 'lualine_c_normal' },
-          fmt = function(label) return ' ' .. label end,
+          fmt = function(label)
+            if label == "[No Name]" then
+              label = vim.api.nvim_buf_get_option(0, 'ft')
+            end
+            return ' ' .. label
+          end,
           section_separators = { left = "", right = "" },
           mode=2},
         },

@@ -1593,6 +1593,11 @@ vim.opt.mousemodel = 'extend'
 -- return to the line we were the last time we opened this file
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]])
 
+-- show tabline when reading files
+-- i don't want the tabline when just editing text without saving it.
+-- but the moment i'm working on a file on disk i think it makes sense
+vim.cmd([[au BufReadPost * set showtabline=2 ]])
+
 -- https://github.com/groves/invim
 vim.cmd[[let $EDITOR='invim --tabedit --remote-wait']]
 vim.cmd[[autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete]]

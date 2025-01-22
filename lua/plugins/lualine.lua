@@ -1,3 +1,5 @@
+local Str = require'plenary.strings'
+
 local function winnr()
   local nr = vim.fn.winnr()
   if nr == 1 then return '󰎦'
@@ -274,6 +276,10 @@ function setup_lualine()
           fmt = function(label)
             if label == "[No Name]" then
               label = vim.api.nvim_buf_get_option(0, 'ft')
+            end
+            if Str.strdisplaywidth(label) > 25 then
+              -- tab_max_length is supposed to allow that but it didn't seem to work
+              label = Str.truncate(label, 25)
             end
             return ' ' .. label
           end,

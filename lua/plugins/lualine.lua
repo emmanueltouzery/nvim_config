@@ -179,19 +179,33 @@ local function adb_status()
 end
 
 local function lsp_pending()
-  local pending_count = 0
-  for _, client in ipairs(vim.lsp.get_clients()) do
-    pending_count = pending_count + vim.tbl_count(client.requests)
-  end
-  if pending_count > 0 then
-    return "󰘦 Pending LSP requests: " .. pending_count
-  else
-    return ""
-  end
+  return vim.g.lualine_lsp_pending or ""
 end
 
 function setup_lualine()
   local lualine = require('lualine')
+
+  vim.g.lualine_lsp_pending_count = 0
+  vim.api.nvim_create_autocmd('LspRequest', {
+    callback = function(args)
+      local request = args.data.request
+      if request.type == 'pending' then
+        vim.g.lualine_lsp_pending_count = vim.g.lualine_lsp_pending_count + 1
+      elseif request.type == 'cancel' then
+        vim.g.lualine_lsp_pending_count = vim.g.lualine_lsp_pending_count - 1
+      elseif request.type == 'complete' then
+        vim.g.lualine_lsp_pending_count = vim.g.lualine_lsp_pending_count - 1
+      else
+        print("Unknown LSP request type: " .. request.type)
+        notif({"Unknown LSP request type: " .. request.type})
+      end
+      if vim.g.lualine_lsp_pending_count > 0 then
+        vim.g.lualine_lsp_pending = "󰘦 Pending LSP requests: " .. vim.g.lualine_lsp_pending_count 
+      else
+        vim.g.lualine_lsp_pending = ""
+      end
+    end
+  })
   if lualine then
     -- these extra entries are defined in my private configuration
     local lualine_tabline_end = vim.g.lualine_extra_entries and vim.g.lualine_extra_entries() or {}

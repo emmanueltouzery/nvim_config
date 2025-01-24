@@ -1410,7 +1410,7 @@ function _G.glow_for_buffer(bufnr)
   local fname = "/tmp/emm-diff.md"
   local f = path:new(fname)
   f:write(table.concat(lines, "\n"), "w")
-  open_command_in_popup("glow -s tokyo-night -w 115 " .. fname, 120, (vim.o.columns-120)/2)
+  open_command_in_popup("glow -s " .. vim.fn.stdpath("config") .. "/glow-tokyo-night-plus.json -w 115 " .. fname, 120, (vim.o.columns-120)/2)
   vim.defer_fn(function()
     f:rm()
   end, 1000)

@@ -211,6 +211,7 @@ end
 vim.keymap.set( "n", "<leader>s*", "<cmd>lua ws_symbol_under_cursor()<CR>", {desc="Goto workspace symbol under cursor"})
 require 'key-menu'.set('n', '<Space>sc', {desc='Search code'})
 vim.keymap.set( "n", "<leader>scd", "<cmd>lua search_code_deps()<CR>", {desc="Search code deps"})
+vim.keymap.set( "n", "<leader>sct", "<cmd>Telescope ast_grep<CR>", {desc="ast-grep code search"})
 
 -- WINDOW
 require 'key-menu'.set('n', '<Space>w', {desc='Window'})
@@ -302,6 +303,13 @@ vim.keymap.set("n", "<leader>tc", function()
     vim.o.conceallevel = 2
   end
 end, {desc = "Toggle conceal"})
+vim.keymap.set("n", "<leader>ta", function()
+  if vim.g.stop_adb_monitor == false then
+    start_adb_monitor()
+  else
+    stop_adb_monitor()
+  end
+end, {desc = "Toggle adb device monitoring"})
 
 vim.api.nvim_exec([[
 function! ToggleQuickFix()

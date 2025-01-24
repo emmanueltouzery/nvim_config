@@ -1274,7 +1274,7 @@ callbacks = {
       },
     })
   end}
-  use {"Marskey/telescope-sg"}
+  use {"Marskey/telescope-sg", commit="caceaa670f26a581fb20ce99576ed8155c3ae96d"}
 end)
 
 --Set highlight on search

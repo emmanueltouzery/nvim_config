@@ -246,6 +246,14 @@ require('packer').startup(function(use)
         aerial = {
           col1_width = 2,
           col2_width = 32,
+        },
+        ast_grep = {
+          command = {
+            "sg",
+            "--json=stream",
+          }, -- must have --json=stream
+          grep_open_files = false, -- search in opened files
+          lang = nil, -- string value, specify language for ast-grep `nil` for default
         }
       },
     }
@@ -1266,6 +1274,7 @@ callbacks = {
       },
     })
   end}
+  use {"Marskey/telescope-sg"}
 end)
 
 --Set highlight on search

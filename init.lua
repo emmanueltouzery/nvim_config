@@ -138,6 +138,7 @@ require('packer').startup(function(use)
                 end, 10)
               end,
             ["<S-Tab>"] = focus_preview,
+            ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
           },
           n = {
             ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
@@ -146,6 +147,7 @@ require('packer').startup(function(use)
             ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
             ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
             ["<S-Tab>"] = focus_preview,
+            ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
           }
         },
       },

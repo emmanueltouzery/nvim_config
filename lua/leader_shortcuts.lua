@@ -122,7 +122,15 @@ vim.keymap.set("n", "<leader>fmd", ":lua set_fm('disable')<cr>", {desc="Disable 
 require 'key-menu'.set('n', '<Space>s', {desc='Search'})
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>*", "<cmd>lua my_open_tele_sel()<cr>", {desc="Search selected text, raw"})
-vim.keymap.set("n", "<leader>sr", "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<cr>", {desc="Search text raw"})
+vim.keymap.set("n", "<leader>sr", function() require('telescope').extensions.live_grep_args.live_grep_args(
+  {entry_maker=my_gen_from_vimgrep({
+    path_display=function(opts, transformed_path)
+      -- compared to the basic strategy, also display icons
+      p = require'telescope.utils'.path_tail(transformed_path)
+      return require'telescope.utils'.transform_devicons(transformed_path ,p)
+    end
+  })})
+end, {desc="Search text raw"})
 function _G.buffer_fuzzy_find(word_under_cursor)
   local w = vim.fn.expand('<cword>')
   local opts = {}

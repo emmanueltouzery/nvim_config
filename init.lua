@@ -97,6 +97,17 @@ require('packer').startup(function(use)
       vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", winid))
       -- api.nvim_set_current_win(winid)
     end
+
+    local telescope_pick_win_and_open = function(prompt_bufnr)
+      local entry = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
+      filename = entry.cwd .. "/" .. entry.value
+      actions.close(prompt_bufnr)
+      if vim.fn.winnr('$') > 1 then
+        vim.cmd[[ChooseWin]]
+      end
+      vim.cmd(":e " .. filename)
+    end
+
     require('telescope').setup {
       defaults = {
         path_display = {'truncate'},
@@ -139,6 +150,7 @@ require('packer').startup(function(use)
               end,
             ["<S-Tab>"] = focus_preview,
             ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+            ["<M-CR>"] = function(prompt_bufnr) telescope_pick_win_and_open(prompt_bufnr) end,
           },
           n = {
             ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
@@ -148,6 +160,7 @@ require('packer').startup(function(use)
             ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
             ["<S-Tab>"] = focus_preview,
             ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+            ["<M-CR>"] = function(prompt_bufnr) telescope_pick_win_and_open(prompt_bufnr) end,
           }
         },
       },

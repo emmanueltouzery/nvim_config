@@ -605,79 +605,6 @@ function _G.clip_history()
   end)
 end
 
-function gen_from_quickfix_with_highlight(opts)
-  local utils = require "telescope.utils"
-  local quicker_hl = require'quicker.highlight'
-  local make_entry = require "telescope.make_entry"
-
-  opts = opts or {}
-  local show_line = vim.F.if_nil(opts.show_line, true)
-
-  local hidden = utils.is_path_hidden(opts)
-
-  local get_filename_fn = function()
-    local bufnr_name_cache = {}
-    return function(bufnr)
-      bufnr = vim.F.if_nil(bufnr, 0)
-      local c = bufnr_name_cache[bufnr]
-      if c then
-        return c
-      end
-
-      local n = vim.api.nvim_buf_get_name(bufnr)
-      bufnr_name_cache[bufnr] = n
-      return n
-    end
-  end
-
-  local make_display = function(entry)
-    local display_filename = utils.transform_path(opts, entry.filename)
-    local display_string = string.format("%s:%d:%d", display_filename, entry.lnum, entry.col)
-    if hidden then
-      display_string = string.format("%4d:%2d", entry.lnum, entry.col)
-    end
-
-    if show_line then
-      local text = entry.text
-      if opts.trim_text then
-        text = vim.trim(text)
-      end
-      text = text:gsub(".* | ", "")
-      if entry.bufnr and vim.api.nvim_buf_is_loaded(entry.bufnr) and entry.lnum ~= nil then
-        local hl = quicker_hl.buf_get_ts_highlights(entry.bufnr, entry.lnum)
-        local offset = #display_string + 1
-        local hl2 = {}
-        for _, seh in ipairs(hl) do
-          table.insert(hl2, {{seh[1]+offset, seh[2]+offset}, seh[3]})
-        end
-        return display_string .. ":" .. text, hl2
-      else
-        return display_string .. ":" .. text
-      end
-    end
-    return display_string
-  end
-
-  local get_filename = get_filename_fn()
-  return function(entry)
-    local filename = vim.F.if_nil(entry.filename, get_filename(entry.bufnr))
-
-    return make_entry.set_default_entry_mt({
-      value = entry,
-      ordinal = (not hidden and filename or "") .. " " .. entry.text,
-      display = make_display,
-
-      bufnr = entry.bufnr,
-      filename = filename,
-      lnum = entry.lnum,
-      col = entry.col,
-      text = entry.text,
-      start = entry.start,
-      finish = entry.finish,
-    }, opts)
-  end
-end
-
 -- based on https://github.com/nvim-telescope/telescope.nvim/blob/b5833a682c511885887373aad76272ad70f7b3c2/lua/telescope/builtin/__internal.lua#L1332
 -- this version fixes a line number bug and adds the current location
 function _G.telescope_jumplist()
@@ -717,7 +644,7 @@ function _G.telescope_jumplist()
 
         -- the highlight version is slower to show the first time...
         -- if it'll be too slow revert to the version without highlights
-        entry_maker = gen_from_quickfix_with_highlight({
+        entry_maker = my_gen_from_quickfix({
         -- entry_maker = make_entry.gen_from_quickfix({
 
           -- path_display={'tail'}

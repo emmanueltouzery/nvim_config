@@ -4,7 +4,7 @@ local finders = require "telescope.finders"
 local entry_display = require "telescope.pickers.entry_display"
 local conf = require("telescope.config").values
 
-function gen_from_quickfix(opts)
+_G.my_gen_from_quickfix = function(opts)
   local quicker_hl = require'quicker.highlight'
   opts = opts or {}
 
@@ -33,17 +33,17 @@ function gen_from_quickfix(opts)
       entry.text:gsub(".* | ", ""),
     }
 
+    local hl2 = {}
+    -- filename column
+    table.insert(hl2, {{6,32}, "TelescopeResultsConstant"})
     if entry.bufnr and vim.api.nvim_buf_is_loaded(entry.bufnr) and entry.lnum ~= nil then
       local hl = quicker_hl.buf_get_ts_highlights(entry.bufnr, entry.lnum)
-      local offset = 5+22+6 -- col1+col2+?
-      local hl2 = {}
+      local offset = 5+22+8 -- col1+col2+?
       for _, seh in ipairs(hl) do
         table.insert(hl2, {{seh[1]+offset, seh[2]+offset}, seh[3]})
       end
-      return d, hl2
-    else
-      return d
     end
+    return d, hl2
   end
 
   return function(entry)
@@ -79,7 +79,13 @@ _G.telescope_quickfix_locations = function(opts)
     prompt_title = "Quickfix",
     finder = finders.new_table {
       results = locations,
-      entry_maker = opts.entry_maker or gen_from_quickfix(opts),
+      entry_maker = opts.entry_maker or my_gen_from_quickfix({
+          path_display=function(opts, transformed_path)
+            -- compared to the basic strategy, also display icons
+            p = require'telescope.utils'.path_tail(transformed_path)
+            return require'telescope.utils'.transform_devicons(transformed_path ,p)
+          end
+      }),
     },
     previewer = conf.qflist_previewer(opts),
     sorter = conf.generic_sorter(opts),

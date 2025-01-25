@@ -643,15 +643,13 @@ function gen_from_quickfix_with_highlight(opts)
         text = vim.trim(text)
       end
       text = text:gsub(".* | ", "")
-      if entry.bufnr and entry.lnum ~= nil then
+      if entry.bufnr and vim.api.nvim_buf_is_loaded(entry.bufnr) and entry.lnum ~= nil then
         local hl = quicker_hl.buf_get_ts_highlights(entry.bufnr, entry.lnum)
-        print(vim.inspect(hl))
         local offset = #display_string + 1
         local hl2 = {}
         for _, seh in ipairs(hl) do
           table.insert(hl2, {{seh[1]+offset, seh[2]+offset}, seh[3]})
         end
-        print(vim.inspect(hl2))
         return display_string .. ":" .. text, hl2
       else
         return display_string .. ":" .. text

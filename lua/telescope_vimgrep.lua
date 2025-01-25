@@ -87,7 +87,7 @@ _G.my_gen_from_vimgrep = function(opts)
   }
 
   local make_display = function(entry)
-    local filename = utils.transform_path(opts, entry.filename)
+    local filename, path_hl = utils.transform_path(opts, entry.filename)
 
     local line_info = { entry.lnum, "TelescopeResultsLineNr" }
 
@@ -97,15 +97,17 @@ _G.my_gen_from_vimgrep = function(opts)
 
     -- truncate myself so i can calculate offsets to move highlights
     local display_fname = Str.truncate(filename:match("[^/]+$"), 25)
-    local d = displayer {
+    local res, hl = displayer {
       line_info,
       display_fname,
       entry.text:gsub(".* | ", ""),
     }
+    local filetype_icon = display_fname:match("^[^%s]+")
+    local icon_strwidth = vim.api.nvim_strwidth(filetype_icon)
+    table.insert(hl, {{5+3, 5+3+icon_strwidth}, path_hl})
+    table.insert(hl, {{5+3+icon_strwidth+1,10+25}, "TelescopeResultsConstant"})
 
-    local hl2 = {}
-    -- filename column
-    table.insert(hl2, {{6,10+25}, "TelescopeResultsConstant"})
+    return res, hl
 
     -- highlighting the matches would require matching a filename to a buffer, or opening the file to a buffer...
     -- https://github.com/fdschmidt93/telescope-egrepify.nvim/blob/43a38fdc69c181fede29981f4b3a8441cb4be25e/lua/telescope/_extensions/egrepify/entry_maker.lua#L107
@@ -118,7 +120,7 @@ _G.my_gen_from_vimgrep = function(opts)
     --     table.insert(hl2, {{seh[1]+offset, seh[2]+offset}, seh[3]})
     --   end
     -- end
-    return d, hl2
+    -- return d, hl2
   end
 
   local mt_vimgrep_entry

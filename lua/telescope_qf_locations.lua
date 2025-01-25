@@ -13,13 +13,13 @@ _G.my_gen_from_quickfix = function(opts)
     separator = "▏",
     items = {
       { width = 5 },
-      { width = 22 },
+      { width = 25 },
       { remaining = true },
     },
   }
 
   local make_display = function(entry)
-    local filename = utils.transform_path(opts, entry.filename)
+    local filename, path_hl = utils.transform_path(opts, entry.filename)
 
     local line_info = { entry.lnum, "TelescopeResultsLineNr" }
 
@@ -28,7 +28,7 @@ _G.my_gen_from_quickfix = function(opts)
     end
 
     -- truncate myself so i can calculate offsets to move highlights
-    local display_fname = Str.truncate(filename:match("[^/]+$"), 22)
+    local display_fname = Str.truncate(filename:match("[^/]+$"), 25)
     local d = displayer {
       line_info,
       display_fname,
@@ -36,11 +36,14 @@ _G.my_gen_from_quickfix = function(opts)
     }
 
     local hl2 = {}
-    -- filename column
-    table.insert(hl2, {{6,32}, "TelescopeResultsConstant"})
+
+    local filetype_icon = display_fname:match("^[^%s]+")
+    local icon_strwidth = vim.api.nvim_strwidth(filetype_icon)
+    table.insert(hl2, {{5+3, 5+3+icon_strwidth}, path_hl})
+    table.insert(hl2, {{5+3+icon_strwidth+1,10+25}, "TelescopeResultsConstant"})
     if entry.bufnr and (vim.g.telescope_force_load_hl or vim.api.nvim_buf_is_loaded(entry.bufnr)) and entry.lnum ~= nil then
       local hl = quicker_hl.buf_get_ts_highlights(entry.bufnr, entry.lnum)
-      local offset = 5 + 22 + display_fname:len() - vim.api.nvim_strwidth(display_fname) + 6
+      local offset = 5 + 25 + display_fname:len() - vim.api.nvim_strwidth(display_fname) + 6
       for _, seh in ipairs(hl) do
         table.insert(hl2, {{seh[1]+offset, seh[2]+offset}, seh[3]})
       end

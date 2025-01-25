@@ -3,6 +3,7 @@ local utils = require "telescope.utils"
 local finders = require "telescope.finders"
 local entry_display = require "telescope.pickers.entry_display"
 local conf = require("telescope.config").values
+local Str = require'plenary.strings'
 
 _G.my_gen_from_quickfix = function(opts)
   local quicker_hl = require'quicker.highlight'
@@ -26,19 +27,20 @@ _G.my_gen_from_quickfix = function(opts)
       entry.text = entry.text:gsub("^%s*(.-)%s*$", "%1")
     end
 
+    -- truncate myself so i can calculate offsets to move highlights
+    local display_fname = Str.truncate(filename:match("[^/]+$"), 22)
     local d = displayer {
       line_info,
-      -- filename,
-      filename:match("[^/]+$"),
+      display_fname,
       entry.text:gsub(".* | ", ""),
     }
 
     local hl2 = {}
     -- filename column
     table.insert(hl2, {{6,32}, "TelescopeResultsConstant"})
-    if entry.bufnr and vim.api.nvim_buf_is_loaded(entry.bufnr) and entry.lnum ~= nil then
+    if entry.bufnr and (vim.g.telescope_force_load_hl or vim.api.nvim_buf_is_loaded(entry.bufnr)) and entry.lnum ~= nil then
       local hl = quicker_hl.buf_get_ts_highlights(entry.bufnr, entry.lnum)
-      local offset = 5+22+8 -- col1+col2+?
+      local offset = 5 + 22 + display_fname:len() - vim.api.nvim_strwidth(display_fname) + 6
       for _, seh in ipairs(hl) do
         table.insert(hl2, {{seh[1]+offset, seh[2]+offset}, seh[3]})
       end

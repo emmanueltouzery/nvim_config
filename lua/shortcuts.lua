@@ -3,6 +3,13 @@ vim.keymap.set('n', 'gd', "<cmd>lua lsp_goto_def_center()<cr>", {desc = "Jump to
 vim.keymap.set("n", "gr", function()
   local params = {
     attach_mappings = lsp_refs_extra_mappings,
+    entry_maker = my_gen_from_quickfix({
+        path_display=function(opts, transformed_path)
+          -- compared to the basic strategy, also display icons
+          p = require'telescope.utils'.path_tail(transformed_path)
+          return require'telescope.utils'.transform_devicons(transformed_path ,p)
+        end
+      }),
   }
   if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
     -- for typescript, filter out import statements

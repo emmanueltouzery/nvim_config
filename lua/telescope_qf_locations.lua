@@ -6,6 +6,10 @@ local conf = require("telescope.config").values
 local Str = require'plenary.strings'
 
 _G.my_gen_from_quickfix = function(opts)
+  if vim.g.telescope_entry_fullpath_display then
+    local make_entry = require "telescope.make_entry"
+    return make_entry.gen_from_quickfix({})
+  end
   local quicker_hl = require'quicker.highlight'
   opts = opts or {}
 

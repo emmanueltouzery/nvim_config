@@ -75,6 +75,10 @@ local lookup_keys = {
 }
 
 _G.my_gen_from_vimgrep = function(opts)
+  if vim.g.telescope_entry_fullpath_display then
+    local make_entry = require "telescope.make_entry"
+    return make_entry.gen_from_vimgrep({})
+  end
   opts = opts or {}
 
   local displayer = entry_display.create {

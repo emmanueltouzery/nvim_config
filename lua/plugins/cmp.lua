@@ -157,4 +157,28 @@ cmp.setup {
     }
 }
 
+function _G.dadbod_setup_cmp()
+  require('cmp').setup.buffer({ sources = { { name = 'vim-dadbod-completion'}, { name = 'buffer',
+  option = {
+    -- for dadbod, offer dadbod completions, plus buffer completion for strings
+    -- from the dbout buffer, so i can easily filter by string values printed in dbout.
+    get_bufnrs = function()
+      local bufs = {}
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local ft = vim.api.nvim_buf_get_option(buf, 'ft')
+        if ft == 'dbout' then
+          bufs[buf] = true
+        end
+      end
+      return vim.tbl_keys(bufs)
+    end,
+    -- i think it's needed for non-ascii https://github.com/hrsh7th/cmp-buffer/issues/11
+    keyword_pattern = [[\k\+]],
+  }
+}, } })
+end
+
+vim.cmd[[autocmd FileType sql,mysql,plsql lua dadbod_setup_cmp()]]
+
 -- vim: ts=2 sts=2 sw=2 et

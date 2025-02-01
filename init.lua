@@ -1288,7 +1288,7 @@ callbacks = {
       },
     })
   end}
-  use {"Marskey/telescope-sg", commit="caceaa670f26a581fb20ce99576ed8155c3ae96d"}
+  use {"emmanueltouzery/telescope-sg", commit="c0466b6a66be691914ec74897184fe39620b3886"}
 end)
 
 --Set highlight on search

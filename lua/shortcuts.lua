@@ -33,6 +33,19 @@ vim.keymap.set("n", "gr", function()
         return not line:match("^%s*import ")
       end, list)
     end
+  elseif vim.bo.filetype == "rust" then
+    params.post_process_results = function(list)
+      return vim.tbl_filter(function(match)
+        local file = match.uri:gsub("file://", "")
+        local lnum = match.range.start.line
+        if lnum+1 == vim.fn.line('.') and file == vim.fn.expand('%:p') then
+          -- drop the declaration i'm asking the references from...
+          -- not sure why the LSP is listing the declaration in the references...
+          return false
+        end
+        return true
+      end, list)
+    end
   end
   require'telescope.builtin'.lsp_references(params)
 end, {desc="Display lsp references"})

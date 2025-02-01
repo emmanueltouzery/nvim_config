@@ -81,7 +81,7 @@ require('packer').startup(function(use)
   use { 'emmanueltouzery/telescope.nvim', requires = {
     'nvim-lua/plenary.nvim',
     { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
-  }, commit="aba67a462bb59e4f73a73b582da79bd938aa4bda", config = function()
+  }, commit="2016724ba0589ee1154fdf6b4e479147b4974526", config = function()
     local actions = require("telescope.actions")
     -- https://github.com/nvim-telescope/telescope.nvim/issues/2778#issuecomment-2202572413
     local focus_preview = function(prompt_bufnr)
@@ -1288,7 +1288,7 @@ callbacks = {
       },
     })
   end}
-  use {"emmanueltouzery/telescope-sg", commit="c0466b6a66be691914ec74897184fe39620b3886"}
+  use {"emmanueltouzery/telescope-sg", commit="4c9e7946772a85c70108b8fc0bf2aa03b78132df"}
 end)
 
 --Set highlight on search

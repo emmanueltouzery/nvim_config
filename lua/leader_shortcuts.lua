@@ -185,12 +185,14 @@ vim.keymap.set("n", "<leader>ssp", aerial_up, { desc = "Goto parent symbol"})
 vim.keymap.set("n", "<leader>ssf", function()
   local conf = require("telescope.config").values
 
-  -- i want to filter out TSX tags for telescope, but still keep them
+  -- i want to filter out TSX tags/GQL fields for telescope, but still keep them
   -- for the symbols sidebar and for my leader-cp
   local sorter = conf.generic_sorter({discard = true})
   sorter._delimiter = ':'
   sorter.filter_function = function(_, prompt, entry)
-    if entry.filename:match("%.tsx$") and entry.value.kind == 'Struct' then
+    local filter_out_tsx = entry.filename:match("%.tsx$") and entry.value.kind == 'Struct'
+    local filter_out_gql = entry.filename:match("%.graphql$") and entry.value.kind == 'Field'
+    if filter_out_tsx or filter_out_gql then
       return -1, prompt
     else
       return 0, prompt

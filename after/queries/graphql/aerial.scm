@@ -8,3 +8,7 @@
   (#set! "kind" "Module")
   ) @type
 
+(field
+  (name) @name
+  (#set! "kind" "Field")
+  ) @type

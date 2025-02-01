@@ -87,7 +87,7 @@ function global_marks_entry_maker()
     separator = " ",
     items = {
       { width = 18 },
-      { width = 30 },
+      { width = 70 },
       { remaining = true },
     },
   }
@@ -96,7 +96,7 @@ function global_marks_entry_maker()
     -- code stolen from telescope's utils.calc_result_length()
     local status = get_status(vim.api.nvim_get_current_buf())
     local len = vim.api.nvim_win_get_width(status.results_win) - status.picker.selection_caret:len() - 2
-    local relative_fname = utils.transform_path({__length = 30}, entry.relative_fname)
+    local relative_fname = utils.transform_path({__length = 70}, entry.relative_fname)
     return displayer {
       -- {entry.mark, "TelescopeResultsNumber"},
       {entry.project, "TelescopeResultsTitle"},

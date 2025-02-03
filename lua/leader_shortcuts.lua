@@ -314,7 +314,7 @@ vim.keymap.set("n", "<leader>tc", function()
   end
 end, {desc = "Toggle conceal"})
 vim.keymap.set("n", "<leader>ta", function()
-  if vim.g.stop_adb_monitor == false then
+  if vim.g.stop_adb_monitor == nil or vim.g.stop_adb_monitor == false then
     start_adb_monitor()
   else
     stop_adb_monitor()

@@ -1456,7 +1456,7 @@ function _G.start_adb_monitor()
       -- print(vim.inspect(out))
       local pid = tonumber(out.stdout)
       if pid then
-        -- print("found pid " .. pid)
+        -- print("found adb pid " .. pid)
         adb_timer:stop()
         adb_timer:close()
         local watcher = vim.loop.new_fs_event()
@@ -1475,6 +1475,9 @@ function _G.start_adb_monitor()
           end
         end))
         -- print("started watcher")
+      else
+        print("didn't find adb, starting it..")
+        vim.system({"adb", "devices"})
       end
       if vim.g.stop_adb_monitor then
         adb_timer:stop()

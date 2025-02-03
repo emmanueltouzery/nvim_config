@@ -104,7 +104,10 @@ _G.my_gen_from_vimgrep = function(opts)
     local res, hl = displayer {
       line_info,
       display_fname,
-      entry.text:gsub(".* | ", ""),
+      -- this gsub causes considerable performance issues with
+      -- text search, for which we can type very fast and results come in fast
+      -- => comment it out
+      entry.text -- :gsub(".* | ", ""),
     }
     local filetype_icon = display_fname:match("^[^%s]+")
     local icon_strwidth = vim.api.nvim_strwidth(filetype_icon)

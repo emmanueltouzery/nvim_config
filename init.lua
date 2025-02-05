@@ -1326,7 +1326,9 @@ vim.opt.preserveindent = true
 -- display eg the git status in more cases, for instance git status+TODO marker
 -- it's auto:2-3 in doom-nvim. reduced it to 1-2 then switched to yes to stop the
 -- sign column expanding and reducing when the LSP gets reloaded.
-vim.wo.signcolumn = 'yes:1' 
+-- at first had yes:1, but then i was sometimes missing git diff markers in case
+-- of lint warnings
+vim.wo.signcolumn = 'yes:2'
 
 -- no folds by defaults
 vim.opt.foldenable = false

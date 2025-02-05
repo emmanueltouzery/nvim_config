@@ -834,6 +834,9 @@ callbacks = {
         Field       = "󰙅 ",
         Type        = "󰊄 ",
       },
+      keymaps = {
+        ["<Tab>"] = "actions.tree_toggle",
+      },
       treesitter = {
         experimental_selection_range = true,
       },

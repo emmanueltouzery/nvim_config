@@ -126,7 +126,7 @@ require('packer').startup(function(use)
           -- keep 3 recent pickers in cache. see `:help telescope.defaults.cache_picker`
           -- https://github.com/nvim-telescope/telescope.nvim/issues/1483
           -- useful for the shortcut to open recent pickers, `:help builtin.pickers`
-          num_pickers = 3,
+          num_pickers = 5,
         },
         file_ignore_patterns = { "/%.git/", "^%.git/", "/node_modules/", "^node_modules/", "^__pycache__/" },
         mappings = {

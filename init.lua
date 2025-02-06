@@ -740,7 +740,7 @@ callbacks = {
             -- textDocument/definition can return Location or Location[]
             -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
 
-            if vim.tbl_islist(result) then
+            if vim.islist(result) then
               util.jump_to_location(result[1], client.offset_encoding)
 
               -- if #result > 1 then

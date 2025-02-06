@@ -6,6 +6,7 @@ local conf = require("telescope.config").values
 local Str = require'plenary.strings'
 
 _G.my_gen_from_quickfix = function(opts)
+  local firstcol_width = 30
   if vim.g.telescope_entry_fullpath_display then
     local make_entry = require "telescope.make_entry"
     return make_entry.gen_from_quickfix({})
@@ -17,7 +18,7 @@ _G.my_gen_from_quickfix = function(opts)
     separator = "▏",
     items = {
       { width = 5 },
-      { width = 25 },
+      { width = firstcol_width },
       { remaining = true },
     },
   }
@@ -32,7 +33,7 @@ _G.my_gen_from_quickfix = function(opts)
     end
 
     -- truncate myself so i can calculate offsets to move highlights
-    local display_fname = Str.truncate(filename:match("[^/]+$"), 25)
+    local display_fname = Str.truncate(filename:match("[^/]+$"), firstcol_width)
     local d = displayer {
       line_info,
       display_fname,
@@ -44,10 +45,10 @@ _G.my_gen_from_quickfix = function(opts)
     local filetype_icon = display_fname:match("^[^%s]+")
     local icon_strwidth = vim.api.nvim_strwidth(filetype_icon)
     table.insert(hl2, {{5+3, 5+3+icon_strwidth}, path_hl})
-    table.insert(hl2, {{5+3+icon_strwidth+1,10+25}, "TelescopeResultsConstant"})
+    table.insert(hl2, {{5+3+icon_strwidth+1,10+firstcol_width}, "TelescopeResultsConstant"})
     if entry.bufnr and (vim.g.telescope_force_load_hl or vim.api.nvim_buf_is_loaded(entry.bufnr)) and entry.lnum ~= nil then
       local hl = quicker_hl.buf_get_ts_highlights(entry.bufnr, entry.lnum)
-      local offset = 5 + 25 + display_fname:len() - vim.api.nvim_strwidth(display_fname) + 6
+      local offset = 5 + firstcol_width + display_fname:len() - vim.api.nvim_strwidth(display_fname) + 6
       for _, seh in ipairs(hl) do
         table.insert(hl2, {{seh[1]+offset, seh[2]+offset}, seh[3]})
       end

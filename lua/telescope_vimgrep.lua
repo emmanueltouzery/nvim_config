@@ -75,6 +75,7 @@ local lookup_keys = {
 }
 
 _G.my_gen_from_vimgrep = function(opts)
+  local firstcol_width = 30
   if vim.g.telescope_entry_fullpath_display then
     local make_entry = require "telescope.make_entry"
     return make_entry.gen_from_vimgrep({})
@@ -85,7 +86,7 @@ _G.my_gen_from_vimgrep = function(opts)
     separator = "▏",
     items = {
       { width = 5 },
-      { width = 25 },
+      { width = firstcol_width },
       { remaining = true },
     },
   }
@@ -100,7 +101,7 @@ _G.my_gen_from_vimgrep = function(opts)
     end
 
     -- truncate myself so i can calculate offsets to move highlights
-    local display_fname = Str.truncate(filename:match("[^/]+$"), 25)
+    local display_fname = Str.truncate(filename:match("[^/]+$"), firstcol_width)
     local res, hl = displayer {
       line_info,
       display_fname,
@@ -112,7 +113,7 @@ _G.my_gen_from_vimgrep = function(opts)
     local filetype_icon = display_fname:match("^[^%s]+")
     local icon_strwidth = vim.api.nvim_strwidth(filetype_icon)
     table.insert(hl, {{5+3, 5+3+icon_strwidth}, path_hl})
-    table.insert(hl, {{5+3+icon_strwidth+1,10+25}, "TelescopeResultsConstant"})
+    table.insert(hl, {{5+3+icon_strwidth+1,10+firstcol_width}, "TelescopeResultsConstant"})
 
     return res, hl
 

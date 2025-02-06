@@ -302,7 +302,7 @@ require('packer').startup(function(use)
     })
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='b4897f5a8453e7efeafb21ff5b2bbdc2e3faf1bd', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='824bf8455fd670186986fb3eb46fcaa4c5460949', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
@@ -345,7 +345,7 @@ require('packer').startup(function(use)
     -- vim.treesitter.language.register("html", "xml")
   end}
   use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client
-  use {'hrsh7th/nvim-cmp', commit='04e0ca376d6abdbfc8b52180f8ea236cbfddf782'} -- Autocompletion plugin
+  use {'hrsh7th/nvim-cmp', commit='12509903a5723a876abd65953109f926f4634c30'} -- Autocompletion plugin
   use {'emmanueltouzery/cmp-nvim-lsp', commit='85a1f3ab3324c3bd8be40baf12669dbb53972878'} -- my hack so the rust LSP doesn't overwrite my text
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
   use { "hrsh7th/cmp-path", commit = "91ff86cd9c29299a64f968ebb45846c485725f23" }
@@ -1050,7 +1050,7 @@ callbacks = {
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
   -- language syntax-aware matchit. for instance, json {"test": "value}rest"}
   -- or JSX <TextField<string> ... />, or things in comments which are correctly ignored
-  use {'andymass/vim-matchup', commit='2d660e4aa7c566014c667af2cda0458043527902', config=function()
+  use {'andymass/vim-matchup', commit='aca23ce53ebfe34e02c4fe07e29e9133a2026481', config=function()
     -- https://github.com/andymass/vim-matchup#customizing-the-highlighting-colors
     vim.cmd [[
       augroup matchup_matchparen_highlight

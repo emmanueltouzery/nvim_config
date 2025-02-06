@@ -330,10 +330,16 @@ vim.keymap.set("n", "<leader>tW", function()
     notif({"Enabling diff whitespaces"})
   end
 end, {desc="Toggle white spaces in diff"})
-vim.keymap.set("n", "<leader>tp", function()
+
+require 'key-menu'.set('n', '<Space>tp', {desc='Toggle picker'})
+vim.keymap.set("n", "<leader>tpp", function()
   vim.g.telescope_entry_fullpath_display = not vim.g.telescope_entry_fullpath_display
   notif({"Picker full path display is now " .. vim.inspect(vim.g.telescope_entry_fullpath_display)})
 end, {desc="Toggle picker full path display"})
+vim.keymap.set("n", "<leader>tpv", function()
+  vim.g.telescope_vertical = not vim.g.telescope_vertical
+  notif({"Picker vertical display is now " .. vim.inspect(vim.g.telescope_vertical)})
+end, {desc="Toggle picker vertical display"})
 
 local function tab_delete_custom()
   vim.cmd[[:tabc]]

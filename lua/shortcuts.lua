@@ -1,3 +1,13 @@
+function _G.telescope_add_extra_params(params)
+  if vim.g.telescope_vertical then
+    params.layout_strategy = 'vertical'
+    params.layout_config = {
+      preview_height = 0.7,
+      preview_cutoff = 0,
+    }
+  end
+end
+
 -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {desc = "Jump to definition"})
 vim.keymap.set('n', 'gd', "<cmd>lua lsp_goto_def_center()<cr>", {desc = "Jump to definition"})
 vim.keymap.set("n", "gr", function()
@@ -11,6 +21,7 @@ vim.keymap.set("n", "gr", function()
         end
       }),
   }
+  telescope_add_extra_params(params)
   if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
     -- for typescript, filter out import statements
     local Path = require("plenary.path")

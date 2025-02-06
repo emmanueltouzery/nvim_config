@@ -285,14 +285,19 @@ require('packer').startup(function(use)
     setup_lualine()
   end}
   use {'echasnovski/mini.diff', commit = '65c59f9967fec965d8759a88c1baa43147699035', config=function()
+    -- put a priority higher than the default 10 for diagnostic errors, so that
+    -- the signs for a hunk are together on the left, and prioritized instead of individual
+    -- diagnostics moving the sign for a line to not line up
+    local priority = 11
+    if vim.version().major == 0 and vim.version().minor < 11 then
+      -- only neovim < 0.11, i want the the diff signs on the left => need a lower value
+      priority = 9
+    end
     require('mini.diff').setup({
       view = {
         style = 'sign',
         signs = { add = '┃', change = '┃', delete = '_' },
-        -- put a priority lower than the default 10 for diagnostic errors, so that
-        -- the signs for a hunk are together on the left, instead of individual
-        -- diagnostics moving the sign for a line to not line up
-        priority = 9,
+        priority = priority,
       }
     })
   end}

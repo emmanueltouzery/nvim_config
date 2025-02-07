@@ -911,6 +911,8 @@ vim.keymap.set("n", "<leader>cll", function()
         vim.api.nvim_set_option_value("conceallevel", 2, {win = win})
         vim.api.nvim_set_option_value("wrap", true, {win = win})
         vim.api.nvim_set_option_value("linebreak", true, {win = win})
+        -- q closes the window
+        vim.cmd("nmap <buffer> q <C-W>c")
       end
     else
       vim.diagnostic.open_float(0, {scope="line"})

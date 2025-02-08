@@ -107,7 +107,13 @@ function _G.filter_lsp_symbols(query)
       vim.api.nvim_win_close(0, false)
     end
   end
-  require'telescope.builtin'.lsp_workspace_symbols {query=query}
+  require'telescope.builtin'.lsp_workspace_symbols {query=query,
+      fname_width = 45,
+      path_display = function(_, path)
+        local Str = require'plenary.strings'
+        return Str.truncate(path, 45, nil, -1)
+      end,
+}
 end
 
 function _G.goto_fileline()

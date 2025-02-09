@@ -1,7 +1,7 @@
 Case conversion {{{1
-Convert to camelCase     crc
-Convert to MixedCase     crm
-Convert to snake_case    crs
-Convert to UPPER_CASE    cru
-Convert to dash-case     cr-
+Convert to camelCase     crc          VN
+Convert to MixedCase     crm          VN
+Convert to snake_case    crs          VN
+Convert to UPPER_CASE    cru          VN
+Convert to dash-case     cr-          VN
 }}}

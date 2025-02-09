@@ -1324,7 +1324,9 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 
 --Decrease update time
-vim.o.updatetime = 250
+-- this is related to my code to add position to the jump list on cursorhold,
+-- and various other actions that would run on cursorhold
+vim.o.updatetime = 2000
 
 -- Buffer options
 vim.opt.smartindent = true
@@ -1727,5 +1729,11 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.g.telescope_entry_fullpath_display = true
+
+-- add cursor position to jumplist when the cursor stays a little longer there
+-- "a little longer": vim.o.updatetime
+-- we won't add multiple times the same position because we add only after the next
+-- move: https://www.reddit.com/r/neovim/comments/1ilcdqa/comment/mbtx5ds/
+vim.cmd[[autocmd CursorHold * normal! m']]
 
 -- vim: ts=2 sts=2 sw=2 et

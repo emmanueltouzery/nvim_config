@@ -1736,4 +1736,7 @@ vim.g.telescope_entry_fullpath_display = true
 -- move: https://www.reddit.com/r/neovim/comments/1ilcdqa/comment/mbtx5ds/
 vim.cmd[[autocmd CursorHold * normal! m']]
 
+-- alias numpad (keypad) enter to normal enter
+vim.cmd[[map <kEnter> <Enter>]]
+
 -- vim: ts=2 sts=2 sw=2 et

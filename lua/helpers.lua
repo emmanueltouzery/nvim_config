@@ -651,6 +651,11 @@ function _G.telescope_jumplist()
         -- the highlight version is slower to show the first time...
         -- if it'll be too slow revert to the version without highlights
         entry_maker = my_gen_from_quickfix({
+
+          -- i think it makes sense. for recent i don't need the full path, i should know,
+          -- and the highlighted code previous is useful.
+          telescope_entry_fullpath_display = false,
+
         -- entry_maker = make_entry.gen_from_quickfix({
 
           -- path_display={'tail'}

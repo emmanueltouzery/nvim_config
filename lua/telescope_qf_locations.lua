@@ -7,7 +7,7 @@ local Str = require'plenary.strings'
 
 _G.my_gen_from_quickfix = function(opts)
   local firstcol_width = 30
-  if vim.g.telescope_entry_fullpath_display then
+  if opts.telescope_entry_fullpath_display == nil and vim.g.telescope_entry_fullpath_display then
     local make_entry = require "telescope.make_entry"
     return make_entry.gen_from_quickfix({})
   end

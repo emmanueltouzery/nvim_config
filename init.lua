@@ -1737,6 +1737,10 @@ vim.g.telescope_entry_fullpath_display = true
 vim.cmd[[autocmd CursorHold * normal! m']]
 
 -- alias numpad (keypad) enter to normal enter
-vim.cmd[[map <kEnter> <Enter>]]
+-- https://github.com/neovide/neovide/issues/2230
+-- https://github.com/neovim/neovim/issues/24577
+vim.api.nvim_set_keymap("", "<kEnter>", "<Enter>", {})
+vim.api.nvim_set_keymap("i", "<kEnter>", "<Enter>", {})
+vim.api.nvim_set_keymap("c", "<kEnter>", "<Enter>", {})
 
 -- vim: ts=2 sts=2 sw=2 et

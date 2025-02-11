@@ -56,3 +56,6 @@ vim.keymap.set("n", '<localleader>s', [[<cmd>%s/\(;\|\n\)\@<!\(\n\n\+\)/;\2<cr>]
 --b backward
 -- insert
 vim.keymap.set("n", '<localleader>j', [[:normal gewysaw(bijsonb_pretty<cr>]], {buffer = true, desc="Wrap in jsonb_pretty"})
+
+-- start similar to -j. wrap in two levels of brackets, use % to switch to the other bracket, esc to exit insert mode
+vim.keymap.set("n", '<localleader>a', [[:normal gewysaw(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%hi::jsonb<esc>]], {buffer = true, desc="Pretty display for array"})

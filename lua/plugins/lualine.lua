@@ -88,18 +88,29 @@ local function conflict_status()
   return ''
 end
 
+-- when there are lots of QF entry i've seen perf issues
+-- throttle to compute only every few seconds
+-- relevant: https://github.com/vim/vim/pull/16216
+vim.g.my_lualine_qf_errors_count = ''
+vim.g.my_lualine_qf_error_last_computed = 0
 local function qf_errors()
-  local qflist = vim.fn.getqflist()
-  local err_count = 0
-  for i, qfentry in ipairs(qflist) do
-    if qfentry.type == 'E' then
-      err_count = err_count + 1
+  local elapsed_ms = (vim.loop.hrtime() - vim.g.my_lualine_qf_error_last_computed) / 1e6
+  if elapsed_ms > 3000 then
+    local qflist = vim.fn.getqflist()
+    local err_count = 0
+    for i, qfentry in ipairs(qflist) do
+      if qfentry.type == 'E' then
+        err_count = err_count + 1
+      end
     end
+    if err_count > 0 then
+      vim.g.my_lualine_qf_errors_count = "󰐾 " .. err_count
+    else
+      vim.g.my_lualine_qf_errors_count = ''
+    end
+    vim.g.my_lualine_qf_error_last_computed = vim.loop.hrtime()
   end
-  if err_count > 0 then
-    return "󰐾 " .. err_count
-  end
-  return ''
+  return vim.g.my_lualine_qf_errors_count
 end
 
 local function minidiff_diff_source()
@@ -240,6 +251,12 @@ function setup_lualine()
         component_separators = '|',
         section_separators = { left = '', right = '' },
         always_show_tabline = false,
+        refresh = {
+          -- the default refresh rate is every 100ms which I think is a little excessive
+          statusline = 250,
+          tabline = 250,
+          winbar = 250,
+        }
       },
       sections = {
         lualine_a = {

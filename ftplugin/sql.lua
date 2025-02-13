@@ -1,5 +1,11 @@
 vim.keymap.set('n', '<localleader>g', ':normal vip<CR><PLUG>(DBUI_ExecuteQuery)', { buffer = true, desc = "run query under cursor (mnemonic: Go)" })
 
+local function trigger_query_selected()
+  -- https://www.reddit.com/r/neovim/comments/17x8tso/comment/k9moruv/
+  local t = function(keycode) return vim.api.nvim_replace_termcodes(keycode, true, false, true) end
+  vim.api.nvim_feedkeys(t "<Plug>(DBUI_ExecuteQuery)", 'n', true)
+end
+
 -- temporary, just for this query
 local function toggle_expanded_results_display()
   local dbout_win, dbout_buf = get_dbout_win_buf()
@@ -29,11 +35,11 @@ function toggle_expanded_results_marker()
   end
   -- re-run the query
   vim.cmd[[:normal vip]]
-  -- https://www.reddit.com/r/neovim/comments/17x8tso/comment/k9moruv/
-  local t = function(keycode) return vim.api.nvim_replace_termcodes(keycode, true, false, true) end
-  vim.api.nvim_feedkeys(t "<Plug>(DBUI_ExecuteQuery)", 'n', true)
+  trigger_query_selected()
 end
 vim.keymap.set('n', '<localleader>x', toggle_expanded_results_marker, { buffer = true, desc = "Toggle expanded results marker" })
+
+vim.keymap.set('v', '<localleader>g', trigger_query_selected, { buffer = true, desc = "Trigger query for selected text" })
 
 local function jump_to_dbout()
   local dbout_win, dbout_buf = get_dbout_win_buf()

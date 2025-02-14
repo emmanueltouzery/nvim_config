@@ -1470,6 +1470,12 @@ function _G.load_into_qf_from_contents()
   vim.fn.setqflist(list, 'r')
 end
 
+local function update_adb_status()
+  vim.system({"adb", "devices"}, {text=true}, function(out)
+    vim.g.adb_status = " " .. vim.split(out.stdout, "\n")[2]:gsub("\t", " ")
+  end)
+end
+
 function _G.start_adb_monitor()
   vim.g.stop_adb_monitor = false
   local adb_timer = vim.uv.new_timer()
@@ -1485,9 +1491,7 @@ function _G.start_adb_monitor()
         watcher:start("/proc/" .. pid .. "/fd/1", {}, vim.schedule_wrap(function(err, fname, evts)
           -- print(vim.inspect(evts))
           if evts.change then
-            vim.system({"adb", "devices"}, {text=true}, function(out)
-              vim.g.adb_status = " " .. vim.split(out.stdout, "\n")[2]:gsub("\t", " ")
-            end)
+            update_adb_status()
             -- print("adb state changed!")
             if watcher then
               watcher:close()
@@ -1496,6 +1500,7 @@ function _G.start_adb_monitor()
             start_adb_monitor()
           end
         end))
+        update_adb_status()
         -- print("started watcher")
       else
         print("didn't find adb, starting it..")

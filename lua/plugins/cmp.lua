@@ -137,12 +137,12 @@ cmp.setup {
     format = function(entry, item)
       item.kind = string.format("%s %s", get_kind_icon(item.kind), item.kind)
       item.menu = ({
-        nvim_lsp = "[LSP]",
-        luasnip = "[Snp]",
-        buffer = "[Buf]",
-        nvim_lua = "[Lua]",
-        path = "[Path]",
-        ['vim-dadbod-completion'] = "[DB]",
+        nvim_lsp = "󰘦 ",
+        luasnip = "",
+        buffer = "󰈙",
+        nvim_lua = "󰢱",
+        path = "",
+        ['vim-dadbod-completion'] = "󰆼",
       })[entry.source.name]
       item.dup = ({
         buffer = 1,

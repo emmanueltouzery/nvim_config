@@ -181,4 +181,21 @@ end
 
 vim.cmd[[autocmd FileType sql,mysql,plsql lua dadbod_setup_cmp()]]
 
+-- https://github.com/hrsh7th/nvim-cmp/wiki/Menu-Appearance#how-to-add-visual-studio-code-dark-theme-colors-to-the-menu
+vim.api.nvim_set_hl(0, 'CmpItemKindInterface', { link='@lsp.type.class' })
+vim.api.nvim_set_hl(0, 'CmpItemKindClass', { link='CmpItemKindInterface' })
+
+vim.api.nvim_set_hl(0, 'CmpItemKindVariable', { link='@variable' })
+
+vim.api.nvim_set_hl(0, 'CmpItemKindText', { link='@label' })
+
+vim.api.nvim_set_hl(0, 'CmpItemKindFunction', { link='@lsp.type.function' })
+vim.api.nvim_set_hl(0, 'CmpItemKindMethod', { link='CmpItemKindFunction' })
+
+vim.api.nvim_set_hl(0, 'CmpItemKindKeyword', { link='@keyword' })
+
+vim.api.nvim_set_hl(0, 'CmpItemKindProperty', { link='@symbol' })
+vim.api.nvim_set_hl(0, 'CmpItemKindUnit', { link='CmpItemKindProperty' })
+vim.api.nvim_set_hl(0, 'CmpItemKindField', { link='CmpItemKindProperty' })
+
 -- vim: ts=2 sts=2 sw=2 et

@@ -1,6 +1,11 @@
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 
+-- ain't nobody got time to deal with deprecations
+if vim.version().major == 0 and vim.version().minor >= 11 then
+  vim.tbl_islist = vim.islist
+end
+
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
 end

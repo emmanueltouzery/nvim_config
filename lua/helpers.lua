@@ -159,28 +159,33 @@ function _G.goto_fileline()
 end
 
 function _G.ShowCommitAtLine()
-    local commit_sha = require"agitator".git_blame_commit_for_line()
-    if commit_sha == nil and vim.fn.expand("%"):match("^diffview:") and vim.wo.winbar ~= nil then
-      -- special case for diffview conflicts
-      local winbar_parts = vim.split(vim.wo.winbar, " ")
-      if #winbar_parts == 6 then
-        -- in case of conflicts winbar_parts may contain the commit guid for the displayed code
-        -- it would be nicer to fetch that info from diffview.lib, but.. this works.
-        local fname = require'diffview.lib'.get_current_view().cur_entry.path
-        commit_sha = require"agitator".git_blame_commit_for_line({fname = fname, as_of_commit = winbar_parts[5]})
-      end
+  local commit_sha = nil
+  if vim.fn.expand("%"):match("^diffview:") then
+    local merge_ctx = require'diffview.lib'.get_current_view().cur_entry.merge_ctx
+    local fname = require'diffview.lib'.get_current_view().cur_entry.path
+    if vim.wo.winbar:match("OURS") then
+      commit_sha = require"agitator".git_blame_commit_for_line({fname = fname, as_of_commit = merge_ctx.ours.hash})
+    elseif vim.wo.winbar:match("THEIRS") then
+      commit_sha = require"agitator".git_blame_commit_for_line({fname = fname, as_of_commit = merge_ctx.theirs.hash})
     end
-    if commit_sha:sub(1, 1) == '^' then
-      -- https://stackoverflow.com/questions/13105858/
-      -- https://stackoverflow.com/a/40884093/516188
-      vim.cmd("DiffviewOpen 4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. commit_sha:gsub("^%^", "") .. "  --selected-file=" .. vim.fn.expand("%:p"))
-    else
-      show_commit(commit_sha)
-    end
+  else
+    commit_sha = require"agitator".git_blame_commit_for_line()
+  end
+  if commit_sha:sub(1, 1) == '^' then
+    -- https://stackoverflow.com/questions/13105858/
+    -- https://stackoverflow.com/a/40884093/516188
+    vim.cmd("DiffviewOpen 4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. commit_sha:gsub("^%^", "") .. "  --selected-file=" .. vim.fn.expand("%:p"))
+  else
+    show_commit(commit_sha)
+  end
 end
 
 function _G.show_commit(commit_sha)
+  if vim.fn.expand("%"):match("^diffview:")  then
+    vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. require'diffview.lib'.get_current_view().cur_entry.path)
+  else
     vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. vim.fn.expand("%:p"))
+  end
 end
 
 -- TELESCOPE-PROJECT START

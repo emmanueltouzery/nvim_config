@@ -303,7 +303,24 @@ require('packer').startup(function(use)
         style = 'sign',
         signs = { add = '┃', change = '┃', delete = '_' },
         priority = priority,
-      }
+      },
+      -- source = {
+      --   name = "branch_diff",
+      --   attach = function(buf_id)
+      --     local absolute_file_path = vim.api.nvim_buf_get_name(buf_id)
+      --     local git_path = vim.fs.root(absolute_file_path, '.git')
+      --     if git_path ~= nil then
+      --       local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
+      --       local contents_branch = vim.system({"git", "show", "develop:" .. file_path}, {text = true}, function(res)
+      --         if res.code == 0 then
+      --           vim.schedule(function()
+      --             require('mini.diff').set_ref_text(buf_id, res.stdout)
+      --           end)
+      --         end
+      --       end)
+      --     end
+      --   end,
+      -- },
     })
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library

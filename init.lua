@@ -311,7 +311,7 @@ require('packer').startup(function(use)
       --     local git_path = vim.fs.root(absolute_file_path, '.git')
       --     if git_path ~= nil then
       --       local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
-      --       local contents_branch = vim.system({"git", "show", "develop:" .. file_path}, {text = true}, function(res)
+      --       local contents_branch = vim.system({"git", "show", (vim.g.diff_source_branch or 'develop') .. ":" .. file_path}, {text = true}, function(res)
       --         if res.code == 0 then
       --           vim.schedule(function()
       --             require('mini.diff').set_ref_text(buf_id, res.stdout)

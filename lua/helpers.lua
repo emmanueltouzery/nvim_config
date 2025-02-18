@@ -1485,7 +1485,7 @@ function _G.start_adb_monitor()
   vim.g.stop_adb_monitor = false
   local adb_timer = vim.uv.new_timer()
   adb_timer:start(0, 60000, function ()
-    vim.system({"lsof", "-ti", ":5037"}, {text=true}, function(out)
+    vim.system({"lsof", "-tiTCP:5037", "-sTCP:LISTEN"}, {text=true}, function(out)
       -- print(vim.inspect(out))
       local pid = tonumber(out.stdout)
       if pid then

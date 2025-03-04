@@ -11,7 +11,47 @@ local function winnr()
   elseif nr == 7 then return '󰎸'
   elseif nr == 8 then return '󰎻'
   elseif nr == 9 then return '󰎾'
+
+  -- unicode alternative
+  -- if nr == 1 then return '①'
+  -- elseif nr == 2 then return '②'
+  -- elseif nr == 3 then return '③'
+  -- elseif nr == 4 then return '④'
+  -- elseif nr == 5 then return '⑤'
+  -- elseif nr == 6 then return '⑥'
+  -- elseif nr == 7 then return '⑦'
+  -- elseif nr == 8 then return '⑧'
+  -- elseif nr == 9 then return '⑨'
   else return ''
+  end
+end
+
+local function tabnr_display(nr)
+  -- worse rendering with nerdfonts...
+  -- if nr == 1 then return '󰯭 '
+  -- elseif nr == 2 then return '󰯰  '
+  
+  -- square unicode also less good
+  -- if nr == 1 then return '🄰 '
+  -- elseif nr == 2 then return '🄱 '
+  -- elseif nr == 3 then return '🄲 '
+  -- elseif nr == 4 then return '🄳 '
+  -- elseif nr == 5 then return '🄴 '
+  -- elseif nr == 6 then return '🄵 '
+  -- elseif nr == 7 then return '🄶 '
+  -- elseif nr == 8 then return '🄷 '
+  -- elseif nr == 9 then return '🄸 '
+
+  if nr == 1 then return 'Ⓐ '
+  elseif nr == 2 then return 'Ⓑ '
+  elseif nr == 3 then return 'Ⓒ '
+  elseif nr == 4 then return 'Ⓓ '
+  elseif nr == 5 then return 'Ⓔ '
+  elseif nr == 6 then return 'Ⓕ '
+  elseif nr == 7 then return 'Ⓖ '
+  elseif nr == 8 then return 'Ⓗ '
+  elseif nr == 9 then return 'Ⓘ '
+  else return nr
   end
 end
 
@@ -304,7 +344,7 @@ function setup_lualine()
         lualine_b = {
           {'tabs',
           tabs_color = { active = 'lualine_a_normal', inactive = 'lualine_c_normal' },
-          fmt = function(label)
+          fmt = function(label, tab)
             if label == "[No Name]" then
               label = vim.api.nvim_buf_get_option(0, 'ft')
             end
@@ -312,10 +352,10 @@ function setup_lualine()
               -- tab_max_length is supposed to allow that but it didn't seem to work
               label = Str.truncate(label, 25)
             end
-            return ' ' .. label
+            return tabnr_display(tab.tabnr) .. ' ' .. label
           end,
           section_separators = { left = "", right = "" },
-          mode=2},
+          mode=1},
         },
         lualine_c = {
           {lsp_pending, color = 'Comment'}

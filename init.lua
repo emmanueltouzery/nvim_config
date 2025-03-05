@@ -86,7 +86,7 @@ require('packer').startup(function(use)
   use { 'emmanueltouzery/telescope.nvim', requires = {
     'nvim-lua/plenary.nvim',
     { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
-  }, commit="2016724ba0589ee1154fdf6b4e479147b4974526", config = function()
+  }, commit="eec8f90308d6122f47bc35d4143fdb4c42e52eea", config = function()
     local actions = require("telescope.actions")
     -- https://github.com/nvim-telescope/telescope.nvim/issues/2778#issuecomment-2202572413
     local focus_preview = function(prompt_bufnr)

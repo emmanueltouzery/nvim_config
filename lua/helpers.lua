@@ -1477,7 +1477,14 @@ end
 
 local function update_adb_status()
   vim.system({"adb", "devices"}, {text=true}, function(out)
-    vim.g.adb_status = " " .. vim.split(out.stdout, "\n")[2]:gsub("\t", " ")
+    if out.stdout ~= nil then
+      local out_lines = vim.split(out.stdout, "\n")
+      if #out_lines >= 2 then
+        vim.g.adb_status = " " .. out_lines[2]:gsub("\t", " ")
+        return
+      end
+    end
+    vim.g.adb_status = " - no devices"
   end)
 end
 
@@ -1510,6 +1517,9 @@ function _G.start_adb_monitor()
       else
         print("didn't find adb, starting it..")
         vim.system({"adb", "devices"})
+        adb_timer:stop()
+        adb_timer:close()
+        vim.defer_fn(start_adb_monitor, 50)
       end
       if vim.g.stop_adb_monitor then
         adb_timer:stop()

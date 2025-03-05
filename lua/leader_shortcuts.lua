@@ -305,9 +305,11 @@ vim.keymap.set("n", "<leader>tc", function()
   end
 end, {desc = "Toggle conceal"})
 vim.keymap.set("n", "<leader>ta", function()
-  if vim.g.stop_adb_monitor == nil or vim.g.stop_adb_monitor == false then
+  if vim.g.stop_adb_monitor == nil or vim.g.stop_adb_monitor == true then
+    notif({"Starting the ADB monitor"})
     start_adb_monitor()
   else
+    notif({"Stopping the ADB monitor"})
     stop_adb_monitor()
   end
 end, {desc = "Toggle adb device monitoring"})

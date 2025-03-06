@@ -495,6 +495,10 @@ function telescope_commits_mappings(prompt_bufnr, map)
     commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     vim.cmd(":term! git cherry-pick " .. commit)
   end, {desc = "Cherry-pick commit"})
+  map('i', '<C-r>r', function(nr)
+    commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    vim.cmd(":term! git revert " .. commit)
+  end, {desc = "Revert commit"})
   map('i', '<C-y>', function(nr)
     commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     copy_to_clipboard(commit)

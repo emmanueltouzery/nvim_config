@@ -1480,6 +1480,16 @@ local function update_adb_status()
     if out.stdout ~= nil then
       local out_lines = vim.split(out.stdout, "\n")
       if #out_lines >= 2 then
+        if string.match(out_lines[2], "unauthorized") then
+          local lr = vim.g.adb_last_restart
+          if lr == nil or vim.uv.gettimeofday() - lr > 3 then
+            vim.schedule(function()
+              notif({"ADB: unauthorized device, restarting the adb server"})
+            end)
+            vim.system({"adb", "kill-server"})
+            vim.g.adb_last_restart = vim.uv.gettimeofday()
+          end
+        end
         vim.g.adb_status = " " .. out_lines[2]:gsub("\t", " ")
         return
       end

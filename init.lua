@@ -997,6 +997,12 @@ callbacks = {
     .configure_language("default", {
       prefer_single_line_comments = true,
     })
+    vim.api.nvim_create_autocmd( "FileType", {
+      pattern = "graphql",
+      callback = function()
+        vim.bo.commentstring = "# %s"
+      end,
+    })
   end}
   use {"windwp/nvim-autopairs", commit='b9cc0a26f3b5610ce772004e1efd452b10b36bc9', config=function()
     require("nvim-autopairs").setup({

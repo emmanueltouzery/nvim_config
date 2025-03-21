@@ -810,6 +810,7 @@ require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})
 vim.keymap.set("n", "<leader>cqs", ":lua select_current_qf(false)<cr>", {desc="quickfix select current"})
 vim.keymap.set("n", "<leader>cqv", ":lua select_current_qf(true)<cr>", {desc="quickfix view & select current"})
 vim.keymap.set("n", "<leader>cqb", ":lua quickfix_goto_bottom()<cr>", {desc="quickfix go to bottom"})
+vim.keymap.set("n", "<leader>cqr", function() require'quicker'.refresh() end, {desc="refresh quickfix lines"})
 
 vim.cmd[[set errorformat^=ERROR\ in\ %f:%l:%c]] -- needed for tsc, typescript
 vim.keymap.set("n", "<leader>cqc", ":cexpr @+<cr>", {desc="Quickfix from clipboard"})

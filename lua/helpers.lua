@@ -1395,7 +1395,7 @@ function _G.open_in_centered_popup(buf, pref_height)
     local opts = {
         style = "minimal",
         border = "rounded",
-        relative = "win",
+        relative = "editor",
         row = (height - win_height) / 2,
         col = (width - 100) / 2,
         width = 100,

@@ -91,9 +91,9 @@ function _G.elixir_insert_inspect_value()
         vim.cmd("norm! O")
       end
       if target.append then
-        vim.cmd('norm! a|> IO.inspect(label: "")')
+        vim.cmd('norm! a|> IO.inspect(label: "", charlists: :as_lists)')
       else
-        vim.cmd('norm! i|> IO.inspect(label: "")')
+        vim.cmd('norm! i|> IO.inspect(label: "", charlists: :as_lists)')
       end
       -- position the cursor in the quotes to enable quick rename
       vim.cmd('norm! h')
@@ -151,9 +151,9 @@ function _G.elixir_insert_inspect_param()
         vim.cmd[[set nopaste]]
       end
       if is_function_name then
-        vim.cmd('norm! aIO.inspect("' .. param_name .. '")')
+        vim.cmd('norm! aIO.inspect("' .. param_name .. '", charlists: :as_lists)')
       else
-        vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '")')
+        vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '", charlists: :as_lists)')
       end
       -- position the cursor in the quotes to enable quick rename
       vim.cmd('norm! h')
@@ -227,9 +227,9 @@ function _G.elixir_insert_inspect_field()
             vim.cmd("norm! O")
           end
           if target.append then
-            vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
+            vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists))')
           else
-            vim.cmd('norm! i|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '"))')
+            vim.cmd('norm! i|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists))')
           end
           -- position the cursor in the quotes to enable quick rename
           vim.cmd('norm! 2h')

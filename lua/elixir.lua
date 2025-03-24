@@ -96,7 +96,7 @@ function _G.elixir_insert_inspect_value()
         vim.cmd('norm! i|> IO.inspect(label: "", charlists: :as_lists)')
       end
       -- position the cursor in the quotes to enable quick rename
-      vim.cmd('norm! h')
+      vim.cmd('norm! 23h')
       vim.cmd('startinsert')
     end
   }

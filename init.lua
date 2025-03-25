@@ -1255,7 +1255,7 @@ callbacks = {
     -- })
   end}
   use {"emmanueltouzery/vim-dadbod", commit="42319fd7dbe45aa4aba44c6d00e55019f89ad6f6"} -- no OOM on large queries, adbsqlite adapter
-  use {"kristijanhusak/vim-dadbod-ui", commit="9ddb0623e69d696b7a8355b93e3950a8dc6e00a0", config=function()
+  use {"kristijanhusak/vim-dadbod-ui", commit="397229f76f4340650e6f8e9ea474a7c1677ae906", config=function()
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_auto_execute_table_helpers = 1
     -- executing on save is annoying when i run :wa in another tab: the query in

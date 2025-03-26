@@ -329,7 +329,7 @@ require('packer').startup(function(use)
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
       ensure_installed = { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc",
-        "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml" },
+        "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css" },
       highlight = {
         enable = true ,
         -- syntax highlight for XML looks significantly worse with tree-sitter than regex,

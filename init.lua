@@ -86,7 +86,7 @@ require('packer').startup(function(use)
   use { 'emmanueltouzery/telescope.nvim', requires = {
     'nvim-lua/plenary.nvim',
     { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
-  }, commit="eec8f90308d6122f47bc35d4143fdb4c42e52eea", config = function()
+  }, commit="81cc3f069ebff3ff632d1266bb6dc189db8020cc", config = function()
     local actions = require("telescope.actions")
     -- https://github.com/nvim-telescope/telescope.nvim/issues/2778#issuecomment-2202572413
     local focus_preview = function(prompt_bufnr)
@@ -115,7 +115,44 @@ require('packer').startup(function(use)
 
     require('telescope').setup {
       defaults = {
-        path_display = {'truncate'},
+        -- path_display = {'truncate'},
+        path_display = function(opts, path)
+          local get_status = require("telescope.state").get_status
+          local truncate = require("plenary.strings").truncate
+          local utils = require("telescope.utils")
+          local Path = require "plenary.path"
+
+          local cwd
+          if opts.cwd then
+            cwd = opts.cwd
+            if not vim.in_fast_event() then
+              cwd = utils.path_expand(opts.cwd)
+            end
+          else
+            cwd = vim.loop.cwd()
+          end
+          path = Path:new(path):make_relative(cwd)
+
+          local status = get_status(vim.api.nvim_get_current_buf())
+          local len = vim.api.nvim_win_get_width(status.layout.results.winid) - status.picker.selection_caret:len() - 2
+
+          path = truncate(path, len, nil, -1)
+
+          local tail = require("telescope.utils").path_tail(path)
+          -- path = string.format("%s (%s)", tail, path)
+
+          local highlights = {
+            {
+              {
+                0,
+                #path - #tail,
+              },
+              "Comment", -- highlight group name
+            },
+          }
+
+          return path, highlights
+        end;
         prompt_prefix = "   ",
         selection_caret = " ",
         sorting_strategy = "ascending",

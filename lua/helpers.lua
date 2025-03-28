@@ -100,7 +100,13 @@ function _G.copy_file_line_sel()
 end
 
 function _G.filter_lsp_symbols(query)
-  if #vim.lsp.buf_get_clients() == 0 then
+  local no_lsp = true
+  if vim.fn.has("nvim-0.11") == 1 then
+    no_lsp = #vim.lsp.get_clients({ buffer = vim.api.nvim_get_current_buf() }) == 0
+  else
+    no_lsp = #vim.lsp.buf_get_clients() == 0
+  end
+  if no_lsp then
     -- no LSP clients. I'm probably in a floating window.
     -- close it so we focus on the parent window that has a LSP
     if vim.api.nvim_win_get_config(0).zindex ~= nil and vim.api.nvim_win_get_config(0).zindex > 0 then
@@ -1238,15 +1244,15 @@ function _G.test_all_bg_run_check_completion(jobid, hide_test_running_notif)
   end
 end
 
-function _G.lsp_check_capabilities(feature, bufnr)
-  local clients = vim.lsp.buf_get_clients(bufnr)
-  for _, client in pairs(clients) do
-    if client.server_capabilities[feature] then
-      return true
-    end
-  end
-  return false
-end
+-- function _G.lsp_check_capabilities(feature, bufnr)
+--   local clients = vim.lsp.buf_get_clients(bufnr)
+--   for _, client in pairs(clients) do
+--     if client.server_capabilities[feature] then
+--       return true
+--     end
+--   end
+--   return false
+-- end
 
 function _G.reload_all()
   vim.cmd("checktime")

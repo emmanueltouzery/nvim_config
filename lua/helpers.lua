@@ -877,8 +877,11 @@ end
 function _G.open_file_cur_dir(with_children)
   local folder = vim.fn.expand('%:h')
   local params = {
-    path_display = function(opts, p) 
-      return string.gsub(p, escape_pattern(folder .. "/"), "") end,
+    path_display = function(opts, p)
+      local path = string.gsub(p, escape_pattern(folder .. "/"), "")
+      local highlights = {}
+      return path, highlights
+    end,
       prompt_title = "Find files in " .. folder .. " (with children: " .. vim.inspect(with_children) .. ")",
   }
   if with_children then

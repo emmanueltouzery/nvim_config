@@ -799,19 +799,35 @@ callbacks = {
             -- textDocument/definition can return Location or Location[]
             -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
 
-            if vim.islist(result) then
-              util.jump_to_location(result[1], client.offset_encoding)
+            if vim.fn.has("nvim-0.11") == 1 then
+              if vim.islist(result) then
+                util.show_document(result[1], client.offset_encoding)
 
-              -- if #result > 1 then
-              --   vim.fn.setqflist({}, ' ', {
-              --     title = 'LSP locations',
-              --     items = util.locations_to_items(result, client.offset_encoding)
-              --   })
-              --   vim.api.nvim_command("botright copen")
-              -- end
-            else
-              util.jump_to_location(result, client.offset_encoding)
-            end
+                -- if #result > 1 then
+                --   vim.fn.setqflist({}, ' ', {
+                  --     title = 'LSP locations',
+                  --     items = util.locations_to_items(result, client.offset_encoding)
+                  --   })
+                  --   vim.api.nvim_command("botright copen")
+                  -- end
+                else
+                  util.jump_to_location(result, client.offset_encoding)
+                end
+              else
+                if vim.islist(result) then
+                  util.show_document(result[1], client.offset_encoding)
+
+                  -- if #result > 1 then
+                  --   vim.fn.setqflist({}, ' ', {
+                    --     title = 'LSP locations',
+                    --     items = util.locations_to_items(result, client.offset_encoding)
+                    --   })
+                    --   vim.api.nvim_command("botright copen")
+                    -- end
+                  else
+                    util.jump_to_location(result, client.offset_encoding)
+                  end
+                end
           end
         }
       }

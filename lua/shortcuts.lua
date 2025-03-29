@@ -47,8 +47,8 @@ vim.keymap.set("n", "gr", function()
   elseif vim.bo.filetype == "rust" then
     params.post_process_results = function(list)
       return vim.tbl_filter(function(match)
-        local file = match.uri:gsub("file://", "")
-        local lnum = match.range.start.line
+        local file = match.filename
+        local lnum = match.user_data.range.start.line
         if lnum+1 == vim.fn.line('.') and file == vim.fn.expand('%:p') then
           -- drop the declaration i'm asking the references from...
           -- not sure why the LSP is listing the declaration in the references...

@@ -117,7 +117,17 @@ vim.keymap.set('n', 'đa', function()
 end, {desc="Next aerial symbol"})
 
 vim.keymap.set('n', '-', '<Cmd>ChooseWin<CR>', {desc="Choose win"})
-vim.keymap.set("n", "K", ":lua vim.lsp.buf.hover()<CR>", {desc="Display type under cursor"})
+vim.keymap.set("n", "K", function()
+  -- https://www.reddit.com/r/neovim/comments/1jebhn4/how_to_bring_back_borders_on_lsp_hover_window/
+  -- https://github.com/nvim-telescope/telescope.nvim/issues/3436
+  if vim.fn.has("nvim-0.11") == 1 then
+    vim.o.winborder = "rounded"
+  end
+  vim.lsp.buf.hover()
+  if vim.fn.has("nvim-0.11") == 1 then
+    vim.o.winborder = nil
+  end
+end, {desc="Display type under cursor"})
 vim.keymap.set("n", "<C-p>", ":lua vim.diagnostic.goto_prev({severity=vim.diagnostic.severity.ERROR})<CR>", {desc="Jump to previous diagnostic"})
 vim.keymap.set("n", "<C-n>", ":lua vim.diagnostic.goto_next({severity=vim.diagnostic.severity.ERROR})<CR>", {desc="Jump to next diagnostic"})
 

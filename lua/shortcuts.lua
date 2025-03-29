@@ -125,7 +125,9 @@ vim.keymap.set("n", "K", function()
   end
   vim.lsp.buf.hover()
   if vim.fn.has("nvim-0.11") == 1 then
-    vim.o.winborder = nil
+    vim.defer_fn(function()
+      vim.o.winborder = ""
+    end, 50)
   end
 end, {desc="Display type under cursor"})
 vim.keymap.set("n", "<C-p>", ":lua vim.diagnostic.goto_prev({severity=vim.diagnostic.severity.ERROR})<CR>", {desc="Jump to previous diagnostic"})

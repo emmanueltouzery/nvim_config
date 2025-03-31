@@ -1507,7 +1507,7 @@ function _G.open_in_centered_popup(buf, pref_height)
     return vim.api.nvim_open_win(cur_bufnr, true, opts)
 end
 
-function _G.unix_timestamp_under_cursor_to_date()
+function _G.under_cursor_unix_timestamp_to_date()
   local under_cursor = vim.fn.expand('<cword>')
   if #under_cursor == 13 then
     -- the timestamp includes milliseconds
@@ -1516,6 +1516,13 @@ function _G.unix_timestamp_under_cursor_to_date()
   vim.system({'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}, {text=true}, vim.schedule_wrap(function(obj)
     vim.cmd("norm ciw" .. obj.stdout)
   end))
+end
+
+function _G.under_cursor_minutes_to_hhmm()
+  local under_cursor = vim.fn.expand('<cword>')
+  local n = tonumber(under_cursor)
+  local remainder = n % 60
+  vim.cmd("norm ciw" .. ((n - remainder) / 60) .. ":" .. remainder)
 end
 
 function _G.open_command_in_popup(cmd, req_width, req_col, req_height, req_row)

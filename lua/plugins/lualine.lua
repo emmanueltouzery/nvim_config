@@ -236,22 +236,26 @@ end
 function setup_lualine()
   local lualine = require('lualine')
 
-  vim.g.lualine_lsp_pending_count = 0
+  local active_lsp_requests = {}
   vim.api.nvim_create_autocmd('LspRequest', {
     callback = function(args)
       local request = args.data.request
+      local request_id = args.data.request_id
+      -- print(request.type .. " " .. request_id)
       if request.type == 'pending' then
-        vim.g.lualine_lsp_pending_count = vim.g.lualine_lsp_pending_count + 1
+        active_lsp_requests[request_id] = true
       elseif request.type == 'cancel' then
-        vim.g.lualine_lsp_pending_count = vim.g.lualine_lsp_pending_count - 1
+        active_lsp_requests[request_id] = nil
       elseif request.type == 'complete' then
-        vim.g.lualine_lsp_pending_count = vim.g.lualine_lsp_pending_count - 1
+        active_lsp_requests[request_id] = nil
       else
         print("Unknown LSP request type: " .. request.type)
         notif({"Unknown LSP request type: " .. request.type})
       end
-      if vim.g.lualine_lsp_pending_count > 0 then
-        vim.g.lualine_lsp_pending = "󰘦 Pending LSP requests: " .. vim.g.lualine_lsp_pending_count 
+      -- print(vim.inspect(active_lsp_requests))
+      local active_lsp_requests = vim.tbl_count(active_lsp_requests)
+      if active_lsp_requests > 0 then
+        vim.g.lualine_lsp_pending = "󰘦 Pending LSP requests: " .. active_lsp_requests
       else
         vim.g.lualine_lsp_pending = ""
       end

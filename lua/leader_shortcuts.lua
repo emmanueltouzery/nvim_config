@@ -335,6 +335,17 @@ vim.keymap.set("n", "<leader>tW", function()
   end
 end, {desc="Toggle white spaces in diff"})
 
+require 'key-menu'.set('n', '<Space>tj', {desc='Toggle overseer Job features...'})
+vim.keymap.set("n", "<leader>tja", function()
+  if vim.g.overseer_disable_autodispose then
+    notif({"Enabling overseer autodispose"})
+    vim.g.overseer_disable_autodispose = false
+  else
+    notif({"Disabling overseer autodispose"})
+    vim.g.overseer_disable_autodispose = true
+  end
+end, {desc="Toggle overseer job autodispose"})
+
 require 'key-menu'.set('n', '<Space>tp', {desc='Toggle picker'})
 vim.keymap.set("n", "<leader>tpp", function()
   vim.g.telescope_entry_fullpath_display = not vim.g.telescope_entry_fullpath_display

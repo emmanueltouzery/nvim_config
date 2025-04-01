@@ -1796,10 +1796,10 @@ if vim.fn.has("nvim-0.10") == 1 then
   })
 end
 
-if vim.fn.has("nvim-0.11") == 1 then
-  -- longer message history, stop making me press enter on longer messages
-  vim.o.mopt='wait:0,history:10000'
-end
+-- if vim.fn.has("nvim-0.11") == 1 then
+--   -- longer message history, stop making me press enter on longer messages
+--   vim.o.mopt='wait:0,history:10000'
+-- end
 
 -- https://stackoverflow.com/a/11710333/516188
 vim.api.nvim_create_autocmd({ "FileType" }, {

@@ -946,6 +946,16 @@ vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.rename()<CR>", {desc="R
 vim.keymap.set("n", "<leader>clf", "<cmd>lua require'telescope.builtin'.lsp_references{path_display={'tail'}, attach_mappings=lsp_refs_extra_mappings}<cr>", {desc="Display lsp references"})
 vim.keymap.set("n", "<leader>clc", "<cmd>lua require'telescope.builtin'.lsp_incoming_calls{path_display={'tail'}}<cr>", {desc="Display lsp incoming calls"})
 vim.keymap.set("n", "<leader>clh", "<cmd>lua telescope_display_call_hierarchy()<cr>", {desc="Display lsp call hierarchy"})
+vim.keymap.set("n", "<leader>clk", function()
+  local count = 0
+  for _, c in ipairs(vim.lsp.get_clients()) do
+    for _, req in ipairs(vim.tbl_keys(c.requests)) do
+      c.cancel_request(req)
+      count = count + 1
+    end
+  end
+  notif({"Killed " .. count .. " pending LSP requests"})
+end, {desc="Kill pending lsp requests"})
 
 -- i had issues after the mason migration where lsp restart would not restart all LSPs.. or i would lose some LSPs or something
 -- => bulletproof it with my own restart that really restarts everything

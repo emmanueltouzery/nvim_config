@@ -552,7 +552,11 @@ require('packer').startup(function(use)
               local left_commit = require'diffview.lib'.get_current_view().cur_layout.a.file.rev.commit
               local right_commit = require'diffview.lib'.get_current_view().cur_layout.b.file.rev.commit
               open_difftastic(file_path, left_commit, right_commit)
-            end, {desc= "Diff with difftastic"}}
+            end, {desc= "Diff with difftastic"}},
+            {"n", "gc", function()
+              local commit = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().commit.hash
+              vim.cmd("DiffviewOpen " .. commit .. "^.." ..commit)
+            end, {desc = "Goto Commit"}},
           },
         },
         file_history_panel = {

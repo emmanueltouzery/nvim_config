@@ -156,7 +156,7 @@ function _G.elixir_insert_inspect_param()
         vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '", charlists: :as_lists)')
       end
       -- position the cursor in the quotes to enable quick rename
-      vim.cmd('norm! h')
+      vim.cmd('norm! 23h')
       vim.cmd('startinsert')
     end
   }

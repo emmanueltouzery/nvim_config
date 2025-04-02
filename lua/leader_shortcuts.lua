@@ -331,9 +331,10 @@ vim.keymap.set("n", "<leader>tH", function()
     vim.g.custom_highlight = nil
     vim.fn.matchdelete(962)
   else
-    vim.ui.input({prompt="Enter pattern to highlight", kind="center_win"}, function(pattern)
+    vim.ui.input({prompt="Enter pattern to highlight", kind="center_win", default=vim.g.custom_highlight_val or ""}, function(pattern)
       vim.fn.matchadd('TodoGroup', pattern, -1, 962)
       vim.g.custom_highlight = true
+      vim.g.custom_highlight_val = pattern
       notif({"Enabling custom highlight"})
     end)
   end

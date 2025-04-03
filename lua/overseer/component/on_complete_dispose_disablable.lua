@@ -2,7 +2,7 @@ local uv = vim.uv or vim.loop
 local constants = require("overseer.constants")
 local log = require("overseer.log")
 local STATUS = constants.STATUS
-local timeout = 9
+local timeout = 900
 
 ---@type overseer.ComponentFileDefinition
 local comp = {

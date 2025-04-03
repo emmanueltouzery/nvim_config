@@ -326,15 +326,15 @@ endfunction
 vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
 vim.keymap.set("n", "<leader>tH", function()
-  if vim.g.custom_highlight then
+  if vim.w.custom_highlight then
     notif({"Disabling custom highlight"})
-    vim.g.custom_highlight = nil
+    vim.w.custom_highlight = nil
     vim.fn.matchdelete(962)
   else
     vim.ui.input({prompt="Enter pattern to highlight", kind="center_win", default=vim.g.custom_highlight_val or ""}, function(pattern)
       vim.fn.matchadd('TodoGroup', pattern, -1, 962)
-      vim.g.custom_highlight = true
-      vim.g.custom_highlight_val = pattern
+      vim.w.custom_highlight = true
+      vim.w.custom_highlight_val = pattern
       notif({"Enabling custom highlight"})
     end)
   end

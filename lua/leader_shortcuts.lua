@@ -350,16 +350,29 @@ vim.keymap.set("n", "<leader>ta", function()
   end
 end, {desc = "Toggle adb device monitoring"})
 
-vim.api.nvim_exec([[
-function! ToggleQuickFix()
-    if empty(filter(getwininfo(), 'v:val.quickfix'))
-        copen
-    else
-        cclose
-    endif
-endfunction
- ]], false)
-vim.keymap.set("n", "<leader>tq", ":call ToggleQuickFix()<cr>", {desc="Toggle quickfix"})
+vim.keymap.set("n", "<leader>tq", function()
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then
+      vim.cmd("cclose")
+      return
+    end
+  end
+  -- no QF.. do we have an open tests terminal?
+  -- i'm doing that because when running tests i'm first running them
+  -- in a terminal and later i rather display the QF. So I'd like the
+  -- same shortcut to work for QF & terminal, as they get "switched"
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if string.match(vim.api.nvim_buf_get_name(buf), "^term://") then
+      vim.api.nvim_win_close(w, false)
+      return
+    end
+  end
+
+  -- neither QR nor terminal => open QF
+  vim.cmd("copen")
+end, {desc="Toggle quickfix"})
 vim.keymap.set("n", "<leader>th", ":set invhlsearch<cr>", {desc="Toggle highlight"})
 vim.keymap.set("n", "<leader>tH", function()
   if vim.w.custom_highlight then

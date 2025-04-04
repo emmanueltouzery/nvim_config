@@ -1507,6 +1507,36 @@ function _G.open_in_centered_popup(buf, pref_height)
     return vim.api.nvim_open_win(cur_bufnr, true, opts)
 end
 
+function _G.open_in_cursor_popup(buf, pref_height)
+    local cur_bufnr = buf or vim.api.nvim_win_get_buf(0)
+    local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
+    local win_height = pref_height or 50
+    if win_height > height then
+      win_height = height
+    end
+
+    local opts = {
+        style = "minimal",
+        border = "rounded",
+        relative = "cursor",
+        row = 1,
+        col = 5,
+        width = 40,
+        height = win_height,
+    }
+    return vim.api.nvim_open_win(cur_bufnr, true, opts)
+end
+
+local function open_text_in_cursor_popup(text, pref_height)
+  local buf = string_to_buffer(text)
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(buf, "readonly", true)
+  vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})
+  vim.api.nvim_set_option_value("modified", false, {buf = buf})
+  vim.api.nvim_set_option_value("bufhidden", 'wipe', {buf = buf})
+  open_in_cursor_popup(buf, pref_height)
+end
+
 function _G.under_cursor_unix_timestamp_to_date()
   local under_cursor = vim.fn.expand('<cword>')
   if #under_cursor == 13 then
@@ -1515,7 +1545,7 @@ function _G.under_cursor_unix_timestamp_to_date()
   end
   vim.system({'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}, {text=true}, vim.schedule_wrap(function(obj)
     if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
-      notif({obj.stdout})
+      open_text_in_cursor_popup(obj.stdout, 2)
     else
       vim.cmd("norm ciw" .. obj.stdout)
     end
@@ -1526,9 +1556,9 @@ function _G.under_cursor_minutes_to_hhmm()
   local under_cursor = vim.fn.expand('<cword>')
   local n = tonumber(under_cursor)
   local remainder = n % 60
-  local res = ((n - remainder) / 60) .. ":" .. remainder
+  local res = ((n - remainder) / 60) .. ":" .. string.format("%02d", remainder)
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
-    notif({res})
+    open_text_in_cursor_popup(res, 2)
   else
     vim.cmd("norm ciw" .. res)
   end
@@ -1538,9 +1568,9 @@ function _G.under_cursor_seconds_to_hhmm()
   local under_cursor = vim.fn.expand('<cword>')
   local n = tonumber(under_cursor) / 60
   local remainder = n % 60
-  local res = ((n - remainder) / 60) .. ":" .. remainder
+  local res = ((n - remainder) / 60) .. ":" .. string.format("%02d", remainder)
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
-    notif({res})
+    open_text_in_cursor_popup(res, 2)
   else
     vim.cmd("norm ciw" .. res)
   end

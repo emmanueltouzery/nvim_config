@@ -669,7 +669,7 @@ require('packer').startup(function(use)
   end}
   use {
     "ggandor/leap.nvim",
-    commit="ff4c3663e5a0a0ecbb3fffbc8318825def35d2aa",
+    commit="0a034970fb430e6027f2df556af04e19e4d9ccc5",
     config = function()
 
     -- require("leap").add_default_mappings()

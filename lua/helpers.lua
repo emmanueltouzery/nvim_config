@@ -1526,10 +1526,11 @@ function _G.under_cursor_minutes_to_hhmm()
   local under_cursor = vim.fn.expand('<cword>')
   local n = tonumber(under_cursor)
   local remainder = n % 60
+  local res = ((n - remainder) / 60) .. ":" .. remainder
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
-    notif({obj.stdout})
+    notif({res})
   else
-    vim.cmd("norm ciw" .. ((n - remainder) / 60) .. ":" .. remainder)
+    vim.cmd("norm ciw" .. res)
   end
 end
 
@@ -1537,10 +1538,11 @@ function _G.under_cursor_seconds_to_hhmm()
   local under_cursor = vim.fn.expand('<cword>')
   local n = tonumber(under_cursor) / 60
   local remainder = n % 60
+  local res = ((n - remainder) / 60) .. ":" .. remainder
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
-    notif({obj.stdout})
+    notif({res})
   else
-    vim.cmd("norm ciw" .. ((n - remainder) / 60) .. ":" .. remainder)
+    vim.cmd("norm ciw" .. res)
   end
 end
 

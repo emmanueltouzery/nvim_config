@@ -862,6 +862,10 @@ end, {desc="align CSV clear", silent=true})
 vim.keymap.set('n', 'šc', ":lua require('decisive').align_csv_prev_col()<cr>", {desc="align CSV prev col", silent=true})
 vim.keymap.set('n', 'đc', ":lua require('decisive').align_csv_next_col()<cr>", {desc="align CSV next col", silent=true})
 
+require 'key-menu'.set('n', '<Space>cu', {desc='Code under cursor'})
+vim.keymap.set('n', '<leader>cuu', function() under_cursor_unix_timestamp_to_date() end, {desc="unix timestamp", silent=true})
+vim.keymap.set('n', '<leader>cum', function() under_cursor_minutes_to_hhmm() end, {desc="minutes", silent=true})
+vim.keymap.set('n', '<leader>cus', function() under_cursor_seconds_to_hhmm() end, {desc="seconds", silent=true})
 
 -- TESTS
 require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})

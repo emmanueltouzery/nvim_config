@@ -746,12 +746,16 @@ vim.keymap.set("n", "<leader>gp", '<cmd>lua run_command("git", {"pull", "--rebas
 vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin"})<CR>', {desc="git fetch origin"})
 
 require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
-vim.keymap.set("n", "<leader>gho", '<cmd>lua telescope_git_list_stashes{}<CR>', {desc="list git stashes"})
+vim.keymap.set("n", "<leader>gho", '<cmd>DiffviewFileHistory -g --range=stash<cr>', {desc="list git stashes"})
 
 function _G.git_do_stash()
   vim.ui.input({prompt="Enter a name for the stash: ", kind="center_win"}, function(input)
     if input ~= nil then
-      run_command("git", {"stash", "push", "-m", input, "-u"}, reload_all)
+      -- untracked files are a mess with git stash: https://stackoverflow.com/a/12681856/516188
+      -- just stage everything before stashing.
+      vim.system({"git", "add", "."}, {text= true}, vim.schedule_wrap(function()
+        run_command("git", {"stash", "push", "-m", input, "-u"}, reload_all)
+      end))
     end
   end)
 end

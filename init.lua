@@ -557,6 +557,39 @@ require('packer').startup(function(use)
               local commit = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().commit.hash
               vim.cmd("DiffviewOpen " .. commit .. "^.." ..commit)
             end, {desc = "Goto Commit"}},
+            {"n", "<C-enter>", function()
+              local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
+              if string.match(stash_info, "^stash@") then
+                -- copy-pasted from telescope actions.git_apply_stash + added the reload_all() and changed apply to pop
+                vim.system({ "git", "stash", "pop", "--index", stash_info }, { text = true}, function()
+                  -- unstage everything. we stage when we stash files to avoid issues with untracked files...
+                  vim.system({"git", "restore", "--staged", "."}, {text=true}, vim.schedule_wrap(function(res)
+                    if res.code == 0 then
+                      vim.cmd("DiffviewClose")
+                      reload_all()
+                      -- utils.notify("actions.git_apply_stash", {
+                      --   msg = string.format("applied: '%s' ", selection.value),
+                      --   level = "INFO",
+                      -- })
+                    else
+                      notif({
+                        string.format("Error when applying: %s. Git returned: '%s'", selection.value, table.concat(stderr, " "))},
+                        vim.log.level.ERROR
+                      )
+                    end
+                  end))
+                end)
+              end
+            end, {desc = "Pop git stash"}},
+            {"n", "<C-Del>", function()
+              local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
+              if string.match(stash_info, "^stash@") then
+                vim.system({"git", "stash", "drop", stash_info}, {text=true}, vim.schedule_wrap(function()
+                    vim.cmd("DiffviewClose")
+                    vim.cmd("DiffviewFileHistory -g --range=stash")
+                end))
+              end
+            end}
           },
         },
         file_history_panel = {
@@ -1492,7 +1525,6 @@ require("telescope_vimgrep")
 require("telescope_global_marks")
 require("telescope_branches")
 require("telescope_recent_or_all")
-require("telescope_git_stash")
 require("telescope_lsp_hierarchy")
 require("telescope_qf_locations")
 require("telescope_modified_git_projects")

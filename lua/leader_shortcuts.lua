@@ -129,7 +129,43 @@ function _G.buffer_fuzzy_find(word_under_cursor)
   opts.tiebreak = function(current_entry, existing_entry, prompt)
     return false
   end
-  require'telescope.builtin'.current_buffer_fuzzy_find(opts)
+  local previewers = require("telescope.previewers")
+  local source_buf = vim.api.nvim_win_get_buf(0)
+  local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
+  require'telescope.builtin'.current_buffer_fuzzy_find({
+    -- the telescope builtin previewer doesn't work on non-saved files
+    previewer = previewers.new_buffer_previewer({
+      define_preview = function(self, entry, status)
+        if vim.api.nvim_buf_line_count(self.state.bufnr) == 1 then
+          local lines = vim.api.nvim_buf_get_lines(source_buf, 0, -1, false)
+          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, true, lines)
+        end
+
+        pcall(
+          vim.hl.range,
+          self.state.bufnr,
+          ns_previewer,
+          "TelescopePreviewLine",
+          { entry.lnum-1,0 },
+          { entry.lnum,0 }
+        )
+
+        -- schedule so that the lines are actually there and can be jumped onto when we call jump_to_line
+        vim.schedule(function()
+          pcall(vim.api.nvim_win_set_cursor, self.state.winid, { entry.lnum + 1, 0 })
+          vim.api.nvim_buf_call(self.state.bufnr, function()
+            vim.cmd "norm! zz"
+          end)
+        end)
+        local ft = vim.api.nvim_buf_get_option(source_buf, 'ft')
+        require("telescope.previewers.utils").highlighter(
+          self.state.bufnr,
+          ft,
+          { preview = { treesitter = { enable = {} } } }
+        )
+      end,
+    }),
+  })
   if word_under_cursor then
     vim.fn.feedkeys(w)
   end

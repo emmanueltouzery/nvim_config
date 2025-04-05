@@ -20,6 +20,8 @@ List enum values         enum_range()
 }}}
 Postgresql syntax {{{1
 Set array value          '{"e1", "e2"}'
+Durations                interval
+# duration * interval '1 sec'
 }}}
 SQLite tips {{{1
 Android get DB version   user_version

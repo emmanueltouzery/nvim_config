@@ -561,23 +561,28 @@ require('packer').startup(function(use)
               local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
               if string.match(stash_info, "^stash@") then
                 -- copy-pasted from telescope actions.git_apply_stash + added the reload_all() and changed apply to pop
-                vim.system({ "git", "stash", "pop", "--index", stash_info }, { text = true}, function()
-                  -- unstage everything. we stage when we stash files to avoid issues with untracked files...
-                  vim.system({"git", "restore", "--staged", "."}, {text=true}, vim.schedule_wrap(function(res)
-                    if res.code == 0 then
-                      vim.cmd("DiffviewClose")
-                      reload_all()
-                      -- utils.notify("actions.git_apply_stash", {
-                      --   msg = string.format("applied: '%s' ", selection.value),
-                      --   level = "INFO",
-                      -- })
-                    else
-                      notif({
-                        string.format("Error when applying: %s. Git returned: '%s'", selection.value, table.concat(stderr, " "))},
-                        vim.log.level.ERROR
-                      )
-                    end
-                  end))
+                vim.system({ "git", "stash", "pop", "--index", stash_info }, { text = true}, function(res)
+                  if res.code ~= 0 then
+                    vim.schedule(function()
+                      local msg = "Stash pop failed: " .. res.stderr
+                      notif({msg}, vim.log.levels.ERROR)
+                    end)
+                  else
+                    -- unstage everything. we stage when we stash files to avoid issues with untracked files...
+                    vim.system({"git", "restore", "--staged", "."}, {text=true}, vim.schedule_wrap(function(res)
+                      if res.code == 0 then
+                        vim.cmd("DiffviewClose")
+                        reload_all()
+                        -- utils.notify("actions.git_apply_stash", {
+                        --   msg = string.format("applied: '%s' ", selection.value),
+                        --   level = "INFO",
+                        -- })
+                      else
+                        local msg = "Unstage after unstash failed: " .. res.stderr
+                        notif({msg}, vim.log.levels.ERROR)
+                      end
+                    end))
+                  end
                 end)
               end
             end, {desc = "Pop git stash"}},

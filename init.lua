@@ -565,7 +565,7 @@ require('packer').startup(function(use)
               local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
               if string.match(stash_info, "^stash@") then
                 -- copy-pasted from telescope actions.git_apply_stash + added the reload_all() and changed apply to pop
-                vim.system({ "git", "stash", "pop", "--index", stash_info }, { text = true}, function(res)
+                vim.system({ "git", "stash", "pop", stash_info }, { text = true}, function(res)
                   if res.code ~= 0 then
                     vim.schedule(function()
                       local msg = "Stash pop failed: " .. res.stderr

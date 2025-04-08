@@ -134,7 +134,11 @@ require('packer').startup(function(use)
           path = Path:new(path):make_relative(cwd)
 
           local status = get_status(vim.api.nvim_get_current_buf())
-          local len = vim.api.nvim_win_get_width(status.layout.results.winid) - status.picker.selection_caret:len() - 2
+          local len = 150
+          -- status.layout is nil at least for spc-oP, the picker's picker
+          if status.layout then
+            len = vim.api.nvim_win_get_width(status.layout.results.winid) - status.picker.selection_caret:len() - 2
+          end
 
           path = truncate(path, len, nil, -1)
 

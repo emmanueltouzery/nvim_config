@@ -497,13 +497,8 @@ require('packer').startup(function(use)
             {"n", "gf", diffview_gf,
               {desc = "Goto File"},
             },
-            {"n", "F",
-              function() -- jump to first file in the diff
-                local view = require'diffview.lib'.get_current_view()
-                view:set_file(view.panel:ordered_file_list()[1], false, true)
-              end,
-              {desc = "Jump to first file"},
-            },
+            { "n", "ćf", require("diffview.config").actions.select_first_entry, { desc = "Open the diff for the first file" } },
+            { "n", "žf", require("diffview.config").actions.select_last_entry, { desc = "Open the diff for the last file" } },
             {"n", "<leader>cm", function()
               local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
               glow_for_buffer(bufnr)

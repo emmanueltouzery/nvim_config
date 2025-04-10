@@ -1296,7 +1296,7 @@ callbacks = {
         ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust", "dom"},
       })
     end}
-  use {"mfussenegger/nvim-lint", commit="f707b3ae50417067fa63fdfe179b0bff6b380da1", config=function()
+  use {"mfussenegger/nvim-lint", commit="5b1bdf306bd3e565908145279e8bbfc594dac3b3", config=function()
     local lint = require("lint")
     lint.linters_by_ft = {
       javascript = { "eslint" },

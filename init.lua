@@ -829,6 +829,8 @@ callbacks = {
         -- https://www.reddit.com/r/neovim/comments/nrfr5h/neovim_auto_opens_quickfix_list/
         -- https://github.com/neovim/neovim/blob/1186f7dd96b054d6a653685089fc845a8f5d2f27/runtime/lua/vim/lsp/handlers.lua#L275-L295
         -- https://github.com/neovim/neovim/blob/v0.7.2/runtime/lua/vim/lsp/handlers.lua#L322
+        -- ######## NOTE THIS IS DEAD CODE FROM 0.11 ON ##########
+        -- replaced by the custom 'gd' - https://www.reddit.com/r/neovim/comments/1jcjg6v/how_to_override_lsp_handlers_in_011/
         handlers = {
           ["textDocument/definition"] = function(_, result, ctx, _)
             if result == nil or vim.tbl_isempty(result) then

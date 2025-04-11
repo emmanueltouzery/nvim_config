@@ -1165,7 +1165,8 @@ local function get_locations(method, opts)
         vim.cmd.lopen()
       else
         vim.fn.setqflist({}, ' ', { title = title, items = all_items })
-        vim.cmd('botright copen')
+        -- vim.cmd('botright copen')
+        telescope_quickfix_locations{}
       end
     end
   end

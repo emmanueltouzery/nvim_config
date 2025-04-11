@@ -160,8 +160,7 @@ function _G.buffer_fuzzy_find(word_under_cursor)
         local ft = vim.api.nvim_buf_get_option(source_buf, 'ft')
         require("telescope.previewers.utils").highlighter(
           self.state.bufnr,
-          ft,
-          { preview = { treesitter = { enable = {} } } }
+          ft
         )
       end,
     }),

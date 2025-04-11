@@ -100,19 +100,21 @@ function _G.copy_file_line_sel()
 end
 
 function _G.filter_lsp_symbols(query)
-  local no_lsp = true
-  if vim.fn.has("nvim-0.11") == 1 then
-    no_lsp = #vim.lsp.get_clients({ buffer = vim.api.nvim_get_current_buf() }) == 0
-  else
-    no_lsp = #vim.lsp.buf_get_clients() == 0
-  end
-  if no_lsp then
+  -- with neovim 0.11, lsp says there are clients even from the popup,
+  -- but telescope fails. So not even check for the lsp but only for the zindex.
+  -- local no_lsp = true
+  -- if vim.fn.has("nvim-0.11") == 1 then
+  --   no_lsp = #vim.lsp.get_clients({ buffer = vim.api.nvim_get_current_buf() }) == 0
+  -- else
+  --   no_lsp = #vim.lsp.buf_get_clients() == 0
+  -- end
+  -- if no_lsp then
     -- no LSP clients. I'm probably in a floating window.
     -- close it so we focus on the parent window that has a LSP
     if vim.api.nvim_win_get_config(0).zindex ~= nil and vim.api.nvim_win_get_config(0).zindex > 0 then
       vim.api.nvim_win_close(0, false)
     end
-  end
+  -- end
   require'telescope.builtin'.lsp_workspace_symbols {query=query,
       fname_width = 45,
       path_display = function(_, path)

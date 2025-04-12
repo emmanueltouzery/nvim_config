@@ -4,4 +4,7 @@ Convert to MixedCase     crm          VN
 Convert to snake_case    crs          VN
 Convert to UPPER_CASE    cru          VN
 Convert to dash-case     cr-          VN
-}}}
+Quickfix history {{{1
+Go to older QF list      :col[der]     N
+Go to newer QF list      :cnew[er]     N
+Show list of QF lists    :chi[story]   N

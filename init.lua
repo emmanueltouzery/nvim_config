@@ -413,7 +413,7 @@ require('packer').startup(function(use)
     -- vim.treesitter.language.register("html", "xml")
   end}
   use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client
-  use {'emmanueltouzery/nvim-cmp', commit='8b0eb760b282f4b02bd9eb52ade793ff0cf6711e'} -- Autocompletion plugin
+  use {'hrsh7th/nvim-cmp', commit='b5311ab3ed9c846b585c0c15b7559be131ec4be9'} -- Autocompletion plugin
   use {'emmanueltouzery/cmp-nvim-lsp', commit='85a1f3ab3324c3bd8be40baf12669dbb53972878'} -- my hack so the rust LSP doesn't overwrite my text
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
   use { "hrsh7th/cmp-path", commit = "91ff86cd9c29299a64f968ebb45846c485725f23" }

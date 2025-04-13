@@ -858,6 +858,13 @@ vim.keymap.set('n', '<leader>ccA', function()
   require('decisive').align_csv_clear({})
   require("zebrazone").stop()
 end, {desc="align CSV clear", silent=true})
+vim.keymap.set('n', '<leader>cch', function()
+  vim.cmd(":1sp")
+  vim.cmd("windo set scrollbind")
+  vim.cmd("windo set scrollopt=hor")
+  vim.cmd("set laststatus=3")
+end, {desc="freeze the csv header"})
+
 vim.keymap.set('n', 'šc', ":lua require('decisive').align_csv_prev_col()<cr>", {desc="align CSV prev col", silent=true})
 vim.keymap.set('n', 'đc', ":lua require('decisive').align_csv_next_col()<cr>", {desc="align CSV next col", silent=true})
 

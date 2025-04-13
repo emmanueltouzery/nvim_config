@@ -1507,7 +1507,12 @@ function _G.open_in_centered_popup(buf, pref_height)
         width = 100,
         height = win_height,
     }
-    return vim.api.nvim_open_win(cur_bufnr, true, opts)
+    local w = vim.api.nvim_open_win(cur_bufnr, true, opts)
+    vim.api.nvim_win_call(w, function()
+      -- noscrollbind useful to explore CSVs (open another window, don't affect the scroll in the main window)
+      vim.cmd("setlocal noscrollbind")
+    end)
+    return w
 end
 
 function _G.open_in_cursor_popup(buf, pref_height)

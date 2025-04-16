@@ -545,7 +545,26 @@ require('packer').startup(function(use)
                   open_command_in_popup("PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. file_path)
                 end
               end
-            end, {desc= "Diff with difftastic"}}
+            end, {desc= "Diff with difftastic"}},
+            { "n", "X", function()
+              local rel_path = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().path
+              local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
+              local absolute_file_path = git_root .. "/" .. rel_path
+              local stat = vim.loop.fs_stat(absolute_file_path)
+              if stat.type == "directory" then
+                vim.ui.select({"Yes", "No"}, {prompt="Discard changes in the whole git folder " .. rel_path .. "?"}, function(choice)
+                  if choice == "Yes" then
+                    vim.system({"git", "checkout", "--", rel_path .. "/"}, {text=true, cwd=git_root}, vim.schedule_wrap(function(res)
+                      if #res.stderr + #res.stdout > 0 then
+                        notif({res.stderr .. " " .. res.stdout})
+                      end
+                    end))
+                  end
+                end)
+              else
+                require'diffview.config'.actions.restore_entry()
+              end
+            end, { desc = "Restore entry to the state on the left side" } },
           },
           file_history_panel = {
             {"n", "gf", diffview_gf,

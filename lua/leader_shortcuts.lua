@@ -422,7 +422,7 @@ local function tab_delete_custom()
   vim.cmd[[:tabc]]
   local tab = vim.api.nvim_get_current_tabpage()
   if tabpage_is_sql(tab) or tabpage_is_terminal(tab) then
-    vim.api.nvim_set_current_tabpage(1)
+    vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1])
   end
 end
 vim.keymap.set("n", "<leader>td", tab_delete_custom, {desc="Delete tab"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
@@ -500,7 +500,7 @@ end
 
 -- TAB
 require 'key-menu'.set('n', '<Space>tt', {desc='Tab'})
-vim.keymap.set("n", "<leader>ttm", function() vim.api.nvim_set_current_tabpage(1) end, {desc = "Switch to main tab"})
+vim.keymap.set("n", "<leader>ttm", function() vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1]) end, {desc = "Switch to main tab"})
 vim.keymap.set("n", "<leader>ttt", "<cmd>lua create_or_switch_tab_terminal()<cr>", {desc = "Open or switch to terminal tab"})
 vim.keymap.set("n", "<leader>ttq", "<cmd>lua switch_to_sql_tab()<cr>", {desc = "Switch to SQL tab"})
 vim.keymap.set("n", "<leader>ttp", "<cmd>ToggleTerm direction=float<CR>", {desc = "Toggle popup terminal"})
@@ -524,7 +524,7 @@ function check_interactive_rebase_done()
     })
   else
     -- the rebase finished
-    vim.api.nvim_set_current_tabpage(1)
+    vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1])
   end
 end
 

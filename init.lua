@@ -632,6 +632,10 @@ require('packer').startup(function(use)
           }
         }
       }
+
+      -- https://github.com/sindrets/diffview.nvim/issues/167#issuecomment-1173673615
+      vim.cmd[[au BufWinEnter diffview://*/log/*/commit_log nnoremap <buffer> q <Cmd>q<CR>]]
+
       -- require('diffview').init()
 
       vim.api.nvim_create_autocmd("FileType", {

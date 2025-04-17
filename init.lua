@@ -596,6 +596,7 @@ require('packer').startup(function(use)
                       if res.code == 0 then
                         vim.cmd("DiffviewClose")
                         reload_all()
+                        vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1])
                         -- utils.notify("actions.git_apply_stash", {
                         --   msg = string.format("applied: '%s' ", selection.value),
                         --   level = "INFO",

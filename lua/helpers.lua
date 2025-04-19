@@ -1734,28 +1734,33 @@ function _G.devdocs_install()
 
         vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/db.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
           local data = vim.fn.json_decode(res.stdout)
+          local target_path = vim.fn.stdpath("data") .. "/devdocs-data/" .. choice
 
           -- save all the files
           for _, key in ipairs(vim.tbl_keys(data)) do
-            local target_path = vim.fn.stdpath("data") .. "/devdocs-data/" .. choice
             vim.fn.mkdir(target_path, "p")
             local sanitized_key = key:gsub("/", "_")
             local file = io.open(target_path .. "/" .. sanitized_key .. ".html", "w")
             file:write(data[key])
             file:close()
+          end
 
-            -- now extract all the entries to non-html files
-            for name, path in pairs(name_to_path) do
-              local file_id = vim.split(path, "#")
-              local sanitized_fname = nil
-              if #file_id == 2 then
-                sanitized_fname = file_id[1]:gsub("/", "_")
-                vim.system({
-                  "sh", "-c",
-                  "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";"
-                  .. "links -dump \"" .. file_id[2] .. ".html\" > \"" .. file_id[2] .. ".txt\""
-                }, {cwd=target_path}):wait()
-              end
+          -- now extract all the entries to non-html files
+          for name, path in pairs(name_to_path) do
+            local file_id = vim.split(path, "#")
+            local sanitized_fname = file_id[1]:gsub("/", "_")
+            if #file_id == 2 then
+              vim.system({
+                "sh", "-c",
+                "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";"
+                .. "links -dump \"" .. file_id[2] .. ".html\" > \"" .. file_id[2] .. ".txt\""
+              }, {cwd=target_path}):wait()
+            end
+            if #file_id == 1 then
+              vim.system({
+                "sh", "-c",
+                "links -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".txt\""
+              }, {cwd=target_path}):wait()
             end
           end
         end))

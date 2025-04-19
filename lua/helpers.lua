@@ -1741,7 +1741,7 @@ function _G.devdocs_install()
             vim.fn.mkdir(target_path, "p")
             local sanitized_key = key:gsub("/", "_")
             local file = io.open(target_path .. "/" .. sanitized_key .. ".html", "w")
-            local contents1 = data[key]:gsub("<pre data%-language=\"(%w+)\">", "<pre>\n```%1\n")
+            local contents1 = data[key]:gsub("<pre [^<>]*data%-language=\"(%w+)\">", "<pre>\n```%1\n")
             local contents2 = contents1:gsub("</pre>", "\n```\n</pre>")
             local contents3 = contents2:gsub("<td class=.font%-monospace.>([^<]+)</td>", "<td>`%1`</td>")
             local contents4 = contents3:gsub("<code>([^<]+)</code>", "<code>`%1`</code>")
@@ -1771,6 +1771,7 @@ function _G.devdocs_install()
       end))
     end)
   end))
+  -- TODO signal when the install is done
 end
 
 function _G.devdocs_open()
@@ -1813,6 +1814,7 @@ function _G.devdocs_open()
       results = candidates,
       entry_maker = entry_maker
     },
+    -- TODO conceal would be really nice in the preview
     previewer = conf.file_previewer({}),
     sorter = conf.generic_sorter({}),
   }):find()

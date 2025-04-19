@@ -1781,11 +1781,35 @@ function _G.devdocs_open()
       while true do
         local name2, type2 = vim.uv.fs_scandir_next(fs2)
         if not name2 then break end
-        if type2 == 'file' then
-          table.insert(candidates, "[" .. name .. "] " .. name2)
+        if type2 == 'file' and vim.endswith(name2, ".txt") then
+          local name_no_txt = name2:gsub("%.txt$", "")
+          table.insert(candidates, name .. "/" .. name_no_txt)
         end
       end
     end
   end
-  print(vim.inspect(candidates))
+
+  local pickers = require "telescope.pickers"
+  local finders = require "telescope.finders"
+  local previewers = require("telescope.previewers")
+  local conf = require("telescope.config").values
+
+  local function entry_maker(entry)
+    return {
+      value = docs_path .. entry .. ".txt",
+      ordinal = entry,
+      display = entry,
+      contents = entry,
+    }
+  end
+
+  pickers.new({}, {
+    prompt_title = "API docs",
+    finder = finders.new_table {
+      results = candidates,
+      entry_maker = entry_maker
+    },
+    previewer = conf.file_previewer({}),
+    sorter = conf.generic_sorter({}),
+  }):find()
 end

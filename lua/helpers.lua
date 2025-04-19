@@ -1741,7 +1741,11 @@ function _G.devdocs_install()
             vim.fn.mkdir(target_path, "p")
             local sanitized_key = key:gsub("/", "_")
             local file = io.open(target_path .. "/" .. sanitized_key .. ".html", "w")
-            file:write(data[key])
+            local contents1 = data[key]:gsub("<pre data%-language=\"(%w+)\">", "<pre>\n```%1\n")
+            local contents2 = contents1:gsub("</pre>", "\n```\n</pre>")
+            local contents3 = contents2:gsub("<td class=.font%-monospace.>([^<]+)</td>", "<td>`%1`</td>")
+            local contents4 = contents3:gsub("<code>([^<]+)</code>", "<code>`%1`</code>")
+            file:write(contents4)
             file:close()
           end
 
@@ -1753,13 +1757,13 @@ function _G.devdocs_install()
               vim.system({
                 "sh", "-c",
                 "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";"
-                .. "links -dump \"" .. file_id[2] .. ".html\" > \"" .. file_id[2] .. ".txt\""
+                .. "links -dump \"" .. file_id[2] .. ".html\" > \"" .. file_id[2] .. ".md\""
               }, {cwd=target_path}):wait()
             end
             if #file_id == 1 then
               vim.system({
                 "sh", "-c",
-                "links -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".txt\""
+                "links -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".md\""
               }, {cwd=target_path}):wait()
             end
           end
@@ -1781,8 +1785,8 @@ function _G.devdocs_open()
       while true do
         local name2, type2 = vim.uv.fs_scandir_next(fs2)
         if not name2 then break end
-        if type2 == 'file' and vim.endswith(name2, ".txt") then
-          local name_no_txt = name2:gsub("%.txt$", "")
+        if type2 == 'file' and vim.endswith(name2, ".md") then
+          local name_no_txt = name2:gsub("%.md$", "")
           table.insert(candidates, name .. "/" .. name_no_txt)
         end
       end
@@ -1796,7 +1800,7 @@ function _G.devdocs_open()
 
   local function entry_maker(entry)
     return {
-      value = docs_path .. entry .. ".txt",
+      value = docs_path .. entry .. ".md",
       ordinal = entry,
       display = entry,
       contents = entry,

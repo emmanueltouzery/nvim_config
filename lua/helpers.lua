@@ -1724,6 +1724,7 @@ function _G.devdocs_install()
     local keys = vim.tbl_keys(slugs_to_mtimes)
     table.sort(keys)
     vim.ui.select(keys, {prompt="Pick a documentation to install"}, function(choice)
+      vim.notify("Fetching documentation for " .. choice)
       local mtime = slugs_to_mtimes[choice]
       vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/index.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
         local data = vim.fn.json_decode(res.stdout)
@@ -1767,11 +1768,11 @@ function _G.devdocs_install()
               }, {cwd=target_path}):wait()
             end
           end
+          vim.notify("Finished fetching documentation for " .. choice)
         end))
       end))
     end)
   end))
-  -- TODO signal when the install is done
 end
 
 function _G.devdocs_open()

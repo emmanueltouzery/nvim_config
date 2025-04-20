@@ -1814,8 +1814,31 @@ function _G.devdocs_open()
       results = candidates,
       entry_maker = entry_maker
     },
-    -- TODO conceal would be really nice in the preview
-    previewer = conf.file_previewer({}),
+    previewer = previewers.new_buffer_previewer({
+      setup = function(self)
+        vim.schedule(function()
+          local winid = self.state.winid
+          vim.wo[winid].conceallevel = 3
+          vim.wo[winid].concealcursor = "n"
+        end)
+        return {}
+      end,
+      define_preview = function(self, entry)
+        local filepath = entry.value
+        if vim.fn.filereadable(filepath) == 1 then
+          local lines = {}
+          for line in io.lines(filepath) do
+            table.insert(lines, line)
+          end
+          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+
+          vim.bo[self.state.bufnr].filetype = "markdown"
+        else
+          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, { "File not readable: " .. filepath })
+        end
+
+      end,
+    }),
     sorter = conf.generic_sorter({}),
   }):find()
 end

@@ -1730,9 +1730,11 @@ function _G.devdocs_install()
       vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/index.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
         local data = vim.fn.json_decode(res.stdout)
         local name_to_path = {}
+        local path_to_name = {}
         local known_keys_per_name = {}
         for _, entry in ipairs(data["entries"]) do
           name_to_path[entry.name] = entry.path
+          path_to_name[entry.path] = entry.name
 
           local file_id = vim.split(entry.path, "#")
           if #file_id == 2 then
@@ -1764,7 +1766,7 @@ function _G.devdocs_install()
           -- save all the files
           for _, key in ipairs(vim.tbl_keys(data)) do
             vim.fn.mkdir(target_path, "p")
-            local sanitized_key = key:gsub("/", "_")
+            local sanitized_key = (path_to_name[key] or key):gsub("/", "_")
             local file = io.open(target_path .. "/" .. sanitized_key .. ".html", "w")
             local contents1 = data[key]:gsub("<pre [^<>]*data%-language=\"(%w+)\">", "<pre>\n```%1\n")
             local contents2 = contents1:gsub("</pre>", "\n```\n</pre>")
@@ -1777,10 +1779,8 @@ function _G.devdocs_install()
             local parser = vim.treesitter.get_string_parser(contents4, "html")
             local tree = parser:parse()[1]
             local elapsed = (vim.loop.hrtime() - start_parse) / 1e9
-            -- vim.notify("Finished parsing " .. sanitized_key .. " in " .. elapsed .. "s.")
             all_parsing = all_parsing + elapsed
 
-            -- print(sanitized_fname)
             name_to_contents[sanitized_key] = contents4
             name_and_id_to_pos[sanitized_key] = {}
             name_known_byte_offsets[sanitized_key] = {#contents4}
@@ -1789,21 +1789,16 @@ function _G.devdocs_install()
             if known_keys_per_name[sanitized_key] ~= nil then
               for id, node, metadata in query:iter_captures(tree:root(), contents4) do
                 id_val = vim.treesitter.get_node_text(node:next_named_sibling():named_child(), contents4)
-                -- print(id_val)
                 if known_keys_per_name[sanitized_key][id_val] then
-                  --   print(id_val .. " => ok")
                   _, _, byte_pos = node:parent():parent():start()
                   name_and_id_to_pos[sanitized_key][id_val] = byte_pos
                   table.insert(name_known_byte_offsets[sanitized_key], byte_pos)
                 end
               end
             end
-            -- vim.notify("Finished reading IDs in " .. sanitized_key .. " in " .. elapsed .. "s.")
             all_reading_ids = all_reading_ids + elapsed
-            -- print(vim.inspect(name_and_id_to_pos))
 
             table.sort(name_known_byte_offsets[sanitized_key])
-            -- print(vim.inspect(name_known_byte_offsets[sanitized_key]))
           end
 
           -- now extract all the entries to non-html files
@@ -1822,7 +1817,6 @@ function _G.devdocs_install()
                     next_byte = name_known_byte_offsets[sanitized_fname][i+1]
                   end
                 end
-                -- print(file_id[2] .. " => " .. byte .. "-" .. next_byte)
                 local sanitized_name = name:gsub("/", "_")
                 local file = io.open(target_path .. "/" .. sanitized_name .. ".html", "w")
                 file:write(string.sub(name_to_contents[sanitized_fname], byte, next_byte))

@@ -1836,7 +1836,7 @@ function _G.devdocs_install()
           -- convert the html to text, on 8 processes concurrently (-P8)
           vim.system({
             "sh", "-c",
-            [[find . -maxdepth 1 -name '*.html' -print0 | xargs -0 -P 8 -I param sh -c 'elinks -dump param > param.md']]
+            [[find . -maxdepth 1 -name '*.html' -print0 | xargs -0 -P 8 -I param sh -c "elinks -dump 'param' > 'param'.md"]]
           }, {cwd=target_path}):wait()
           local elapsed_elinks = (vim.loop.hrtime() - start_elinks) / 1e9
           local elapsed = (vim.loop.hrtime() - start_install) / 1e9
@@ -1859,8 +1859,8 @@ function _G.devdocs_open()
       while true do
         local name2, type2 = vim.uv.fs_scandir_next(fs2)
         if not name2 then break end
-        if type2 == 'file' and vim.endswith(name2, ".md") then
-          local name_no_txt = name2:gsub("%.md$", "")
+        if type2 == 'file' and vim.endswith(name2, ".html.md") then
+          local name_no_txt = name2:gsub("%.html%.md$", "")
           table.insert(candidates, name .. "/" .. name_no_txt)
         end
       end
@@ -1874,7 +1874,7 @@ function _G.devdocs_open()
 
   local function entry_maker(entry)
     return {
-      value = docs_path .. entry .. ".md",
+      value = docs_path .. entry .. ".html.md",
       ordinal = entry,
       display = entry,
       contents = entry,

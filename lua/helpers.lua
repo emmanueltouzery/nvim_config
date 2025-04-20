@@ -1828,23 +1828,30 @@ function _G.devdocs_install()
                 file:write(string.sub(name_to_contents[sanitized_fname], byte, next_byte))
                 file:close()
 
-                vim.system({
-                  "sh", "-c",
-                  -- "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";" ..
-                  "elinks -dump \"" .. sanitized_name .. ".html\" > \"" .. sanitized_name .. ".md\""
-                }, {cwd=target_path}):wait()
+                -- vim.system({
+                --   "sh", "-c",
+                --   -- "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";" ..
+                --   "elinks -dump \"" .. sanitized_name .. ".html\" > \"" .. sanitized_name .. ".md\""
+                -- }, {cwd=target_path}):wait()
               end
             end
-            if #file_id == 1 then
-              vim.system({
-                "sh", "-c",
-                "elinks -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".md\"" -- todo disk_name
-              }, {cwd=target_path}):wait()
-            end
+            -- if #file_id == 1 then
+            --   vim.system({
+            --     "sh", "-c",
+            --     "elinks -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".md\"" -- todo disk_name
+            --   }, {cwd=target_path}):wait()
+            -- end
           end
           local elapsed_writing = (vim.loop.hrtime() - start_writing) / 1e9
+
+          local start_elinks = vim.loop.hrtime()
+          vim.system({
+            "sh", "-c",
+            "for i in *.html; do elinks -dump \"$i\" > \"${i%.html}.md\"; done"
+          }, {cwd=target_path}):wait()
+          local elapsed_elinks = (vim.loop.hrtime() - start_elinks) / 1e9
           local elapsed = (vim.loop.hrtime() - start_install) / 1e9
-          vim.notify("Finished fetching documentation for " .. choice .. " in " .. elapsed .. "s. All parsing: " .. all_parsing .. "s. All reading IDs: " .. all_reading_ids .. "s. All writing: " .. elapsed_writing .. "s.")
+          vim.notify("Finished fetching documentation for " .. choice .. " in " .. elapsed .. "s. All parsing: " .. all_parsing .. "s. All reading IDs: " .. all_reading_ids .. "s. All writing: " .. elapsed_writing .. "s. All elinks: " .. elapsed_elinks .. "s.")
         end))
       end))
     end)

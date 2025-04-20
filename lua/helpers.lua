@@ -1729,13 +1729,34 @@ function _G.devdocs_install()
       vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/index.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
         local data = vim.fn.json_decode(res.stdout)
         local name_to_path = {}
+        local known_keys_per_name = {}
         for _, entry in ipairs(data["entries"]) do
           name_to_path[entry.name] = entry.path
+
+          local file_id = vim.split(entry.path, "#")
+          if #file_id == 2 then
+            local sanitized_fname = file_id[1]:gsub("/", "_")
+            if known_keys_per_name[sanitized_fname] == nil then
+              known_keys_per_name[sanitized_fname] = {[file_id[2]] = true}
+            else
+              known_keys_per_name[sanitized_fname][file_id[2]] = true
+            end
+          end
         end
 
         vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/db.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
           local data = vim.fn.json_decode(res.stdout)
           local target_path = vim.fn.stdpath("data") .. "/devdocs-data/" .. choice
+          local name_and_id_to_pos = {}
+          local name_known_byte_offsets = {}
+          local name_to_contents = {}
+
+          local query = vim.treesitter.query.parse('html', [[
+          (attribute
+            (attribute_name) @_name
+            (#eq? @_name "id")
+          )
+          ]])
 
           -- save all the files
           for _, key in ipairs(vim.tbl_keys(data)) do
@@ -1748,6 +1769,31 @@ function _G.devdocs_install()
             local contents4 = contents3:gsub("<code>([^<]+)</code>", "<code>`%1`</code>")
             file:write(contents4)
             file:close()
+
+            local parser = vim.treesitter.get_string_parser(contents4, "html")
+            local tree = parser:parse()[1]
+
+            -- print(sanitized_fname)
+            name_to_contents[sanitized_key] = contents4
+            name_and_id_to_pos[sanitized_key] = {}
+            name_known_byte_offsets[sanitized_key] = {#contents4}
+
+            if known_keys_per_name[sanitized_key] ~= nil then
+              for id, node, metadata in query:iter_captures(tree:root(), contents4) do
+                id_val = vim.treesitter.get_node_text(node:next_named_sibling():named_child(), contents4)
+                -- print(id_val)
+                if known_keys_per_name[sanitized_key][id_val] then
+                  --   print(id_val .. " => ok")
+                  _, _, byte_pos = node:parent():parent():start()
+                  name_and_id_to_pos[sanitized_key][id_val] = byte_pos
+                  table.insert(name_known_byte_offsets[sanitized_key], byte_pos)
+                end
+              end
+            end
+            -- print(vim.inspect(name_and_id_to_pos))
+
+            table.sort(name_known_byte_offsets[sanitized_key])
+            -- print(vim.inspect(name_known_byte_offsets[sanitized_key]))
           end
 
           -- now extract all the entries to non-html files
@@ -1755,11 +1801,27 @@ function _G.devdocs_install()
             local file_id = vim.split(path, "#")
             local sanitized_fname = file_id[1]:gsub("/", "_")
             if #file_id == 2 then
-              vim.system({
-                "sh", "-c",
-                "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";"
-                .. "links -dump \"" .. file_id[2] .. ".html\" > \"" .. file_id[2] .. ".md\""
-              }, {cwd=target_path}):wait()
+              local byte = name_and_id_to_pos[sanitized_fname][file_id[2]]
+              if byte == nil then
+                print("skipping " .. file_id[2])
+              else
+                local next_byte = nil
+                for i,val in ipairs(name_known_byte_offsets[sanitized_fname]) do
+                  if val == byte then
+                    next_byte = name_known_byte_offsets[sanitized_fname][i+1]
+                  end
+                end
+                -- print(file_id[2] .. " => " .. byte .. "-" .. next_byte)
+                local file = io.open(target_path .. "/" .. sanitized_fname .. "_" .. file_id[2] .. ".html", "w")
+                file:write(string.sub(name_to_contents[sanitized_fname], byte, next_byte))
+                file:close()
+
+                vim.system({
+                  "sh", "-c",
+                  -- "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";" ..
+                  "links -dump \"" .. sanitized_fname .. "_" .. file_id[2] .. ".html\" > \"" .. sanitized_fname .. "_" .. file_id[2] .. ".md\""
+                }, {cwd=target_path}):wait()
+              end
             end
             if #file_id == 1 then
               vim.system({

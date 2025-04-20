@@ -1725,6 +1725,7 @@ function _G.devdocs_install()
     table.sort(keys)
     vim.ui.select(keys, {prompt="Pick a documentation to install"}, function(choice)
       vim.notify("Fetching documentation for " .. choice)
+      local start_install = vim.loop.hrtime()
       local mtime = slugs_to_mtimes[choice]
       vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/index.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
         local data = vim.fn.json_decode(res.stdout)
@@ -1757,6 +1758,8 @@ function _G.devdocs_install()
             (#eq? @_name "id")
           )
           ]])
+          all_parsing = 0
+          all_reading_ids = 0
 
           -- save all the files
           for _, key in ipairs(vim.tbl_keys(data)) do
@@ -1770,14 +1773,19 @@ function _G.devdocs_install()
             file:write(contents4)
             file:close()
 
+            local start_parse = vim.loop.hrtime()
             local parser = vim.treesitter.get_string_parser(contents4, "html")
             local tree = parser:parse()[1]
+            local elapsed = (vim.loop.hrtime() - start_parse) / 1e9
+            -- vim.notify("Finished parsing " .. sanitized_key .. " in " .. elapsed .. "s.")
+            all_parsing = all_parsing + elapsed
 
             -- print(sanitized_fname)
             name_to_contents[sanitized_key] = contents4
             name_and_id_to_pos[sanitized_key] = {}
             name_known_byte_offsets[sanitized_key] = {#contents4}
 
+            local start_ids = vim.loop.hrtime()
             if known_keys_per_name[sanitized_key] ~= nil then
               for id, node, metadata in query:iter_captures(tree:root(), contents4) do
                 id_val = vim.treesitter.get_node_text(node:next_named_sibling():named_child(), contents4)
@@ -1790,6 +1798,8 @@ function _G.devdocs_install()
                 end
               end
             end
+            -- vim.notify("Finished reading IDs in " .. sanitized_key .. " in " .. elapsed .. "s.")
+            all_reading_ids = all_reading_ids + elapsed
             -- print(vim.inspect(name_and_id_to_pos))
 
             table.sort(name_known_byte_offsets[sanitized_key])
@@ -1797,6 +1807,7 @@ function _G.devdocs_install()
           end
 
           -- now extract all the entries to non-html files
+          local start_writing = vim.loop.hrtime()
           for name, path in pairs(name_to_path) do
             local file_id = vim.split(path, "#")
             local sanitized_fname = file_id[1]:gsub("/", "_")
@@ -1812,25 +1823,28 @@ function _G.devdocs_install()
                   end
                 end
                 -- print(file_id[2] .. " => " .. byte .. "-" .. next_byte)
-                local file = io.open(target_path .. "/" .. sanitized_fname .. "_" .. file_id[2] .. ".html", "w")
+                local sanitized_name = name:gsub("/", "_")
+                local file = io.open(target_path .. "/" .. sanitized_name .. ".html", "w")
                 file:write(string.sub(name_to_contents[sanitized_fname], byte, next_byte))
                 file:close()
 
                 vim.system({
                   "sh", "-c",
                   -- "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";" ..
-                  "links -dump \"" .. sanitized_fname .. "_" .. file_id[2] .. ".html\" > \"" .. sanitized_fname .. "_" .. file_id[2] .. ".md\""
+                  "elinks -dump \"" .. sanitized_name .. ".html\" > \"" .. sanitized_name .. ".md\""
                 }, {cwd=target_path}):wait()
               end
             end
             if #file_id == 1 then
               vim.system({
                 "sh", "-c",
-                "links -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".md\""
+                "elinks -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".md\"" -- todo disk_name
               }, {cwd=target_path}):wait()
             end
           end
-          vim.notify("Finished fetching documentation for " .. choice)
+          local elapsed_writing = (vim.loop.hrtime() - start_writing) / 1e9
+          local elapsed = (vim.loop.hrtime() - start_install) / 1e9
+          vim.notify("Finished fetching documentation for " .. choice .. " in " .. elapsed .. "s. All parsing: " .. all_parsing .. "s. All reading IDs: " .. all_reading_ids .. "s. All writing: " .. elapsed_writing .. "s.")
         end))
       end))
     end)

@@ -1827,27 +1827,16 @@ function _G.devdocs_install()
                 local file = io.open(target_path .. "/" .. sanitized_name .. ".html", "w")
                 file:write(string.sub(name_to_contents[sanitized_fname], byte, next_byte))
                 file:close()
-
-                -- vim.system({
-                --   "sh", "-c",
-                --   -- "xmllint --html --xpath \"//*[@id='" .. file_id[2] .. "']\" " .. sanitized_fname .. ".html > \"" .. file_id[2] .. ".html\";" ..
-                --   "elinks -dump \"" .. sanitized_name .. ".html\" > \"" .. sanitized_name .. ".md\""
-                -- }, {cwd=target_path}):wait()
               end
             end
-            -- if #file_id == 1 then
-            --   vim.system({
-            --     "sh", "-c",
-            --     "elinks -dump \"" .. sanitized_fname .. ".html\" > \"" .. sanitized_fname .. ".md\"" -- todo disk_name
-            --   }, {cwd=target_path}):wait()
-            -- end
           end
           local elapsed_writing = (vim.loop.hrtime() - start_writing) / 1e9
 
           local start_elinks = vim.loop.hrtime()
+          -- convert the html to text, on 8 processes concurrently (-P8)
           vim.system({
             "sh", "-c",
-            "for i in *.html; do elinks -dump \"$i\" > \"${i%.html}.md\"; done"
+            [[find . -maxdepth 1 -name '*.html' -print0 | xargs -0 -P 8 -I param sh -c 'elinks -dump param > param.md']]
           }, {cwd=target_path}):wait()
           local elapsed_elinks = (vim.loop.hrtime() - start_elinks) / 1e9
           local elapsed = (vim.loop.hrtime() - start_install) / 1e9

@@ -1751,6 +1751,7 @@ function _G.devdocs_install()
         vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/db.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
           local data = vim.fn.json_decode(res.stdout)
           local target_path = vim.fn.stdpath("data") .. "/devdocs-data/" .. choice
+          vim.system({"sh", "-c", "rm -Rf * " .. target_path}):wait()
           vim.fn.mkdir(target_path, "p")
           local name_and_id_to_pos = {}
           local name_known_byte_offsets = {}

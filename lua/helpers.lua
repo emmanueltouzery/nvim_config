@@ -1731,18 +1731,19 @@ function _G.devdocs_install()
         local data = vim.fn.json_decode(res.stdout)
         local name_to_path = {}
         local path_to_name = {}
-        local known_keys_per_name = {}
+        local known_keys_per_path = {}
         for _, entry in ipairs(data["entries"]) do
           name_to_path[entry.name] = entry.path
           path_to_name[entry.path] = entry.name
 
           local file_id = vim.split(entry.path, "#")
           if #file_id == 2 then
+            path_to_name[file_id[1]] = entry.name
             local sanitized_fname = file_id[1]:gsub("/", "_")
-            if known_keys_per_name[sanitized_fname] == nil then
-              known_keys_per_name[sanitized_fname] = {[file_id[2]] = true}
+            if known_keys_per_path[file_id[1]] == nil then
+              known_keys_per_path[file_id[1]] = {[file_id[2]] = true}
             else
-              known_keys_per_name[sanitized_fname][file_id[2]] = true
+              known_keys_per_path[file_id[1]][file_id[2]] = true
             end
           end
         end
@@ -1772,6 +1773,9 @@ function _G.devdocs_install()
             local contents2 = contents1:gsub("</pre>", "\n```\n</pre>")
             local contents3 = contents2:gsub("<td class=.font%-monospace.>([^<]+)</td>", "<td>`%1`</td>")
             local contents4 = contents3:gsub("<code>([^<]+)</code>", "<code>`%1`</code>")
+            if choice == "openjdk~8" then
+              contents4 = contents4:gsub("</tr>", [[<tr><td colspan="2"><hr/></td></tr>]])
+            end
             file:write(contents4)
             file:close()
 
@@ -1786,10 +1790,10 @@ function _G.devdocs_install()
             name_known_byte_offsets[sanitized_key] = {#contents4}
 
             local start_ids = vim.loop.hrtime()
-            if known_keys_per_name[sanitized_key] ~= nil then
+            if known_keys_per_path[key] ~= nil then
               for id, node, metadata in query:iter_captures(tree:root(), contents4) do
                 id_val = vim.treesitter.get_node_text(node:next_named_sibling():named_child(), contents4)
-                if known_keys_per_name[sanitized_key][id_val] then
+                if known_keys_per_path[key][id_val] then
                   _, _, byte_pos = node:parent():parent():start()
                   name_and_id_to_pos[sanitized_key][id_val] = byte_pos
                   table.insert(name_known_byte_offsets[sanitized_key], byte_pos)
@@ -1798,6 +1802,8 @@ function _G.devdocs_install()
             end
             all_reading_ids = all_reading_ids + elapsed
 
+            -- need to sort offsets, later i search for the byte offset after my current one
+            -- to know where to stop when extracting docs from a larger file
             table.sort(name_known_byte_offsets[sanitized_key])
           end
 
@@ -1805,7 +1811,7 @@ function _G.devdocs_install()
           local start_writing = vim.loop.hrtime()
           for name, path in pairs(name_to_path) do
             local file_id = vim.split(path, "#")
-            local sanitized_fname = file_id[1]:gsub("/", "_")
+            local sanitized_fname = path_to_name[file_id[1]]:gsub("/", "_")
             if #file_id == 2 then
               local byte = name_and_id_to_pos[sanitized_fname][file_id[2]]
               if byte == nil then

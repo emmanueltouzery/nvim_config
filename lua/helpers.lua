@@ -1738,7 +1738,7 @@ function _G.devdocs_install()
 
           local file_id = vim.split(entry.path, "#")
           if #file_id == 2 then
-            path_to_name[file_id[1]] = entry.name
+            path_to_name[entry.path] = entry.name
             local sanitized_fname = file_id[1]:gsub("/", "_")
             if known_keys_per_path[file_id[1]] == nil then
               known_keys_per_path[file_id[1]] = {[file_id[2]] = true}
@@ -1751,6 +1751,7 @@ function _G.devdocs_install()
         vim.system({"curl", "-L", "https://documents.devdocs.io/" .. choice .. "/db.json?" .. mtime}, {text=true}, vim.schedule_wrap(function(res)
           local data = vim.fn.json_decode(res.stdout)
           local target_path = vim.fn.stdpath("data") .. "/devdocs-data/" .. choice
+          vim.fn.mkdir(target_path, "p")
           local name_and_id_to_pos = {}
           local name_known_byte_offsets = {}
           local name_to_contents = {}
@@ -1766,7 +1767,6 @@ function _G.devdocs_install()
 
           -- save all the files
           for _, key in ipairs(vim.tbl_keys(data)) do
-            vim.fn.mkdir(target_path, "p")
             local sanitized_key = (path_to_name[key] or key):gsub("/", "_")
             local file = io.open(target_path .. "/" .. sanitized_key .. ".html", "w")
             local contents1 = data[key]:gsub("<pre [^<>]*data%-language=\"(%w+)\">", "<pre>\n```%1\n")
@@ -1811,21 +1811,22 @@ function _G.devdocs_install()
           local start_writing = vim.loop.hrtime()
           for name, path in pairs(name_to_path) do
             local file_id = vim.split(path, "#")
-            local sanitized_fname = path_to_name[file_id[1]]:gsub("/", "_")
+            local sanitized_containing_file_name = (path_to_name[file_id[1]] or file_id[1]):gsub("/", "_")
+            local sanitized_fname = name:gsub("/", "_")
             if #file_id == 2 then
-              local byte = name_and_id_to_pos[sanitized_fname][file_id[2]]
+              local byte = name_and_id_to_pos[sanitized_containing_file_name][file_id[2]]
               if byte == nil then
                 print("skipping " .. file_id[2])
               else
                 local next_byte = nil
-                for i,val in ipairs(name_known_byte_offsets[sanitized_fname]) do
+                for i,val in ipairs(name_known_byte_offsets[sanitized_containing_file_name]) do
                   if val == byte then
-                    next_byte = name_known_byte_offsets[sanitized_fname][i+1]
+                    next_byte = name_known_byte_offsets[sanitized_containing_file_name][i+1]
                   end
                 end
                 local sanitized_name = name:gsub("/", "_")
                 local file = io.open(target_path .. "/" .. sanitized_name .. ".html", "w")
-                file:write(string.sub(name_to_contents[sanitized_fname], byte, next_byte))
+                file:write(string.sub(name_to_contents[sanitized_containing_file_name], byte, next_byte))
                 file:close()
               end
             end

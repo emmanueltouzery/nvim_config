@@ -1768,8 +1768,8 @@ function _G.devdocs_install()
 
           -- save all the files
           for _, key in ipairs(vim.tbl_keys(data)) do
-            local sanitized_key = (path_to_name[key] or key):gsub("/", "_")
-            local file = io.open(target_path .. "/" .. sanitized_key .. ".html", "w")
+            local sanitized_key = ((path_to_name[key] or key) .. "#" .. key):gsub("/", "_")
+            local file = io.open(target_path .. "/" .. sanitized_key  .. ".html", "w")
             local contents1 = data[key]:gsub("<pre [^<>]*data%-language=\"(%w+)\">", "<pre>\n```%1\n")
             local contents2 = contents1:gsub("</pre>", "\n```\n</pre>")
             local contents3 = contents2:gsub("<td class=.font%-monospace.>([^<]+)</td>", "<td>`%1`</td>")
@@ -1812,12 +1812,15 @@ function _G.devdocs_install()
           local start_writing = vim.loop.hrtime()
           for name, path in pairs(name_to_path) do
             local file_id = vim.split(path, "#")
-            local sanitized_containing_file_name = (path_to_name[file_id[1]] or file_id[1]):gsub("/", "_")
+            local sanitized_containing_file_name = ((path_to_name[file_id[1]] or file_id[1]) .. "#" .. file_id[1]):gsub("/", "_")
             local sanitized_fname = name:gsub("/", "_")
             if #file_id == 2 then
               local byte = name_and_id_to_pos[sanitized_containing_file_name][file_id[2]]
+              local to_write_contents = nil
               if byte == nil then
-                print("skipping " .. file_id[2])
+                -- bad id. this happens with openjdk~8, Vector.add() for instance. Behave the same
+                -- as the devdocs UI, point to the whole file since we can't delimitate the correct subpart.
+                to_write_contents = name_to_contents[sanitized_containing_file_name]
               else
                 local next_byte = nil
                 for i,val in ipairs(name_known_byte_offsets[sanitized_containing_file_name]) do
@@ -1825,11 +1828,12 @@ function _G.devdocs_install()
                     next_byte = name_known_byte_offsets[sanitized_containing_file_name][i+1]
                   end
                 end
-                local sanitized_name = name:gsub("/", "_")
-                local file = io.open(target_path .. "/" .. sanitized_name .. ".html", "w")
-                file:write(string.sub(name_to_contents[sanitized_containing_file_name], byte, next_byte))
-                file:close()
+                to_write_contents = string.sub(name_to_contents[sanitized_containing_file_name], byte, next_byte)
               end
+              local sanitized_name = name:gsub("/", "_")
+              local file = io.open(target_path .. "/" .. sanitized_name .. "#" .. file_id[1]:gsub("/", "_") .. ".html", "w")
+              file:write(to_write_contents)
+              file:close()
             end
           end
           local elapsed_writing = (vim.loop.hrtime() - start_writing) / 1e9
@@ -1862,8 +1866,8 @@ function _G.devdocs_open()
         local name2, type2 = vim.uv.fs_scandir_next(fs2)
         if not name2 then break end
         if type2 == 'file' and vim.endswith(name2, ".html.md") then
-          local name_no_txt = name2:gsub("%.html%.md$", "")
-          table.insert(candidates, name .. "/" .. name_no_txt)
+          local name_no_txt = name2:gsub("#.*$", "")
+          table.insert(candidates, {display = name .. "/" .. name_no_txt, path = name .. "/" .. name2})
         end
       end
     end
@@ -1876,10 +1880,10 @@ function _G.devdocs_open()
 
   local function entry_maker(entry)
     return {
-      value = docs_path .. entry .. ".html.md",
-      ordinal = entry,
-      display = entry,
-      contents = entry,
+      value = docs_path .. entry.path,
+      ordinal = entry.display,
+      display = entry.display,
+      contents = entry.display,
     }
   end
 
@@ -1890,6 +1894,7 @@ function _G.devdocs_open()
       entry_maker = entry_maker
     },
     previewer = previewers.new_buffer_previewer({
+      -- messy because of the conceal
       setup = function(self)
         vim.schedule(function()
           local winid = self.state.winid

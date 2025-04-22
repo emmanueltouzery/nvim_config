@@ -1327,6 +1327,7 @@ callbacks = {
         ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust", "dom"},
       })
     end}
+  use {"emmanueltouzery/apidocs.nvim"}
   use {"mfussenegger/nvim-lint", commit="5b1bdf306bd3e565908145279e8bbfc594dac3b3", config=function()
     local lint = require("lint")
     lint.linters_by_ft = {

@@ -370,7 +370,7 @@ require('packer').startup(function(use)
     })
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='16a51977dcaab1e1adc3152471ac862202f9be83', config=function()
+  use {'nvim-treesitter/nvim-treesitter', commit='684eeac91ed8e297685a97ef70031d19ac1de25a', config=function()
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files

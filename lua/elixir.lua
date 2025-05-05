@@ -340,3 +340,45 @@ function _G.elixir_match_error_details_indent()
   vim.api.nvim_buf_set_lines(0, 0, 1, false, {with_fixed_objects})
   vim.cmd(':%!mix format -')
 end
+
+-- indent stuff that elixir is outputting, some sort of json-like stuff without quotes
+function _G.elixir_indent_output_val()
+  local indent = ""
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local input = vim.fn.join(lines, "")
+  local output = {}
+  local output_line = ""
+  local i=1
+  while i<=#input do
+    local chr = input:sub(i, i)
+    if chr == " " and output_line == indent then
+      -- no extra spaces at the start of lines
+    elseif chr == "," then
+      table.insert(output, output_line .. ",")
+      output_line = indent
+    elseif chr == "{" then
+      indent = indent .. "  "
+      table.insert(output, output_line .. "{")
+      output_line = indent
+    elseif chr == "}" then
+      if #indent > 0 then
+        indent = indent:sub(3)
+      end
+      table.insert(output, output_line)
+      if i<#input and input:sub(i+1, i+1) == "," then
+        table.insert(output, indent .. "},")
+        i = i + 1
+      else
+        table.insert(output, indent .. "}")
+      end
+      output_line = indent
+    else
+      output_line = output_line .. chr
+    end
+    i = i + 1
+  end
+  if #output_line > 0 then
+    table.insert(output, output_line)
+  end
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, output)
+end

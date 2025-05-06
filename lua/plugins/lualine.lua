@@ -27,9 +27,18 @@ local function winnr()
 end
 
 local function tabnr_display(nr)
-  -- worse rendering with nerdfonts...
-  -- if nr == 1 then return '󰯭 '
-  -- elseif nr == 2 then return '󰯰  '
+  -- rendering with nerdfonts...
+  if nr == 1 then return '󰯭 '
+  elseif nr == 2 then return '󰯰  '
+  elseif nr == 3 then return '󰯳  '
+  elseif nr == 4 then return '󰯶  '
+  elseif nr == 5 then return '󰯹  '
+  elseif nr == 6 then return '󰯼  '
+  elseif nr == 7 then return '󰯿  '
+  elseif nr == 8 then return '󰰂  '
+  elseif nr == 9 then return '󰰅  '
+  else return nr
+  end
   
   -- square unicode also less good
   -- if nr == 1 then return '🄰 '
@@ -42,17 +51,18 @@ local function tabnr_display(nr)
   -- elseif nr == 8 then return '🄷 '
   -- elseif nr == 9 then return '🄸 '
 
-  if nr == 1 then return 'Ⓐ '
-  elseif nr == 2 then return 'Ⓑ '
-  elseif nr == 3 then return 'Ⓒ '
-  elseif nr == 4 then return 'Ⓓ '
-  elseif nr == 5 then return 'Ⓔ '
-  elseif nr == 6 then return 'Ⓕ '
-  elseif nr == 7 then return 'Ⓖ '
-  elseif nr == 8 then return 'Ⓗ '
-  elseif nr == 9 then return 'Ⓘ '
-  else return nr
-  end
+  -- circle unicode also less good
+  -- if nr == 1 then return 'Ⓐ '
+  -- elseif nr == 2 then return 'Ⓑ '
+  -- elseif nr == 3 then return 'Ⓒ '
+  -- elseif nr == 4 then return 'Ⓓ '
+  -- elseif nr == 5 then return 'Ⓔ '
+  -- elseif nr == 6 then return 'Ⓕ '
+  -- elseif nr == 7 then return 'Ⓖ '
+  -- elseif nr == 8 then return 'Ⓗ '
+  -- elseif nr == 9 then return 'Ⓘ '
+  -- else return nr
+  -- end
 end
 
 function _G.lualine_project()

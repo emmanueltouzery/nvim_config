@@ -29,14 +29,14 @@ end
 local function tabnr_display(nr)
   -- rendering with nerdfonts...
   if nr == 1 then return '󰯭 '
-  elseif nr == 2 then return '󰯰  '
-  elseif nr == 3 then return '󰯳  '
-  elseif nr == 4 then return '󰯶  '
-  elseif nr == 5 then return '󰯹  '
-  elseif nr == 6 then return '󰯼  '
-  elseif nr == 7 then return '󰯿  '
-  elseif nr == 8 then return '󰰂  '
-  elseif nr == 9 then return '󰰅  '
+  elseif nr == 2 then return '󰯰 '
+  elseif nr == 3 then return '󰯳 '
+  elseif nr == 4 then return '󰯶 '
+  elseif nr == 5 then return '󰯹 '
+  elseif nr == 6 then return '󰯼 '
+  elseif nr == 7 then return '󰯿 '
+  elseif nr == 8 then return '󰰂 '
+  elseif nr == 9 then return '󰰅 '
   else return nr
   end
   
@@ -359,8 +359,20 @@ function setup_lualine()
           {'tabs',
           tabs_color = { active = 'lualine_a_normal', inactive = 'lualine_c_normal' },
           fmt = function(label, tab)
-            if label == "[No Name]" then
-              label = vim.api.nvim_buf_get_option(0, 'ft')
+            local ok, w = pcall(vim.api.nvim_tabpage_get_win, tab.tabnr)
+            if ok then
+              local b = vim.api.nvim_win_get_buf(w)
+              local ft = vim.api.nvim_buf_get_option(b, 'ft')
+              if label == "[No Name]" then
+                label = ft
+              end
+              if ft == "sql" or ft == "dbui" or ft == "dbout" then
+                label = " " .. label
+              elseif ft == "DiffviewFilePanel" or ft == "DiffviewFiles" or ft == "NeogitStatus" then
+                label = "󰊢 " .. label
+              else
+                label = require("nvim-web-devicons").get_icon_by_filetype(ft, {default = true}) .. " " .. label
+              end
             end
             if Str.strdisplaywidth(label) > 25 then
               -- tab_max_length is supposed to allow that but it didn't seem to work

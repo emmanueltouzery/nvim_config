@@ -502,6 +502,10 @@ require('packer').startup(function(use)
             {"n", "gf", diffview_gf,
               {desc = "Goto File"},
             },
+            {"n", "F",
+            require("diffview.config").actions.select_first_entry,
+              {desc = "Jump to first file"},
+            },
             { "n", "ćf", require("diffview.config").actions.select_first_entry, { desc = "Open the diff for the first file" } },
             { "n", "žf", require("diffview.config").actions.select_last_entry, { desc = "Open the diff for the last file" } },
             {"n", "<leader>cm", function()

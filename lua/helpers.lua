@@ -1603,7 +1603,8 @@ function _G.open_command_in_popup(cmd, req_width, req_col, req_height, req_row)
   }
   local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
 
-  vim.fn.termopen(cmd)
+  local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
+  vim.fn.jobstart(cmd, {term = true, cwd=git_root})
 end
 
 function _G.glow_for_buffer(bufnr)

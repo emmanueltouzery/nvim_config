@@ -230,6 +230,7 @@ require('packer').startup(function(use)
           side_by_side = true,
           diff_context_lines = 3,
           layout_strategy = "vertical",
+          sorting_strategy = "descending",
           layout_config = {
             preview_height = 0.8,
             preview_cutoff = 0,

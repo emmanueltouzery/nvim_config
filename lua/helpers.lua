@@ -1558,6 +1558,10 @@ function _G.under_cursor_unix_timestamp_to_date()
       vim.cmd("norm ciw" .. obj.stdout)
     end
   end))
+  -- make dot-repeatable https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
+  vim.go.operatorfunc = "v:lua.noop"
+  vim.cmd("normal! g@l")
+  vim.go.operatorfunc = "v:lua.under_cursor_unix_timestamp_to_date"
 end
 
 function _G.under_cursor_minutes_to_hhmm()
@@ -1570,7 +1574,13 @@ function _G.under_cursor_minutes_to_hhmm()
   else
     vim.cmd("norm ciw" .. res)
   end
+  -- make dot-repeatable https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
+  vim.go.operatorfunc = "v:lua.noop"
+  vim.cmd("normal! g@l")
+  vim.go.operatorfunc = "v:lua.under_cursor_minutes_to_hhmm"
 end
+
+function _G.noop() end
 
 function _G.under_cursor_seconds_to_hhmm()
   local under_cursor = vim.fn.expand('<cword>')
@@ -1582,6 +1592,10 @@ function _G.under_cursor_seconds_to_hhmm()
   else
     vim.cmd("norm ciw" .. res)
   end
+  -- make dot-repeatable https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
+  vim.go.operatorfunc = "v:lua.noop"
+  vim.cmd("normal! g@l")
+  vim.go.operatorfunc = "v:lua.under_cursor_seconds_to_hhmm"
 end
 
 

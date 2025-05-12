@@ -1,6 +1,9 @@
 function _G.get_dbout_filetype()
-  local dbs_key = vim.b.dbui_db_key_name:gsub("_g:dbs$", "")
-  local db_url = vim.g.dbs[dbs_key]
+  local db_url = vim.tbl_values(vim.g.dbs)[1]
+  -- if vim.b.dbui_db_key_name ~= nil then
+  --   local dbs_key = vim.b.dbui_db_key_name:gsub("_g:dbs$", "")
+  --   db_url = vim.g.dbs[dbs_key]
+  -- end
   if db_url:match("^jq:") then
     return "json"
   end

@@ -13,9 +13,13 @@ end
 function _G.get_dbout_win_buf()
   local out_filetype = get_dbout_filetype()
 
+  return get_tab_win_buf_by_ft(out_filetype)
+end
+
+function _G.get_tab_win_buf_by_ft(ft)
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
-    if vim.api.nvim_buf_get_option(buf, "ft") == out_filetype then
+    if vim.api.nvim_buf_get_option(buf, "ft") == ft then
       return vim.api.nvim_win_get_number(w), buf
     end
   end

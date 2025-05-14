@@ -1183,7 +1183,7 @@ callbacks = {
     alpha.setup(dashboard.config)
   end}
   use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
-  use {'emmanueltouzery/vim-dispatch-neovim', commit='2b86cc4e2cc77b64a71ed4034cb2c520861b9a4a'}
+  use {'emmanueltouzery/vim-dispatch-neovim', commit='cdaca4acc8cda00eaf68ef5943c02c1842b5353f'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
     if pcall(require, 'nvim_config_private') then

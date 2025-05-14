@@ -19,11 +19,17 @@ local function ast_grep_buffer()
           col = match.range.start.column,
         })
       end
-      vim.fn.setqflist({}, ' ', { title = title, items = all_items })
-      telescope_quickfix_locations{}
+      if #all_items == 0 then
+        notif({"Ast-grep: no matches"})
+      else
+        vim.fn.setqflist({}, ' ', { title = title, items = all_items })
+        telescope_quickfix_locations{prompt_title = 'Ast-grep matches'}
+      end
     end
   end))
 end
 vim.keymap.set('n', '<localleader>g', ast_grep_buffer, {desc="run ast-grep query", buffer = true})
 
 vim.treesitter.language.register('yaml', 'astgrep')
+
+vim.bo.commentstring =  "#%s"

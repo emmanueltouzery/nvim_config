@@ -86,7 +86,7 @@ _G.telescope_quickfix_locations = function(opts)
 
   local actions = require("telescope.actions")
   pickers.new(opts, {
-    prompt_title = "Quickfix",
+    prompt_title = opts.prompt_title or "Quickfix",
     finder = finders.new_table {
       results = locations,
       entry_maker = opts.entry_maker or my_gen_from_quickfix({

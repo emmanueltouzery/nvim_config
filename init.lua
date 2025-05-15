@@ -966,7 +966,6 @@ callbacks = {
     -- if you only want these mappings for toggle term use term://*toggleterm#* instead
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
-  use {'nvim-treesitter/playground', commit="4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56"}
   use {'stevearc/aerial.nvim', commit="60a784614acb1d7695bd9ae0fee8ada1bf7b0c28", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
@@ -1310,28 +1309,6 @@ callbacks = {
   -- end}
   -- tracking my 'search' branch.
   -- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs
-  use {"emmanueltouzery/nvim-devdocs",
-    commit = '0abc94890747ae5458da6ae17fd1cced63da83d6',
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    config=function()
-      require("nvim-devdocs").setup({
-        float_win = { -- passed to nvim_open_win(), see :h api-floatwin
-          relative = "editor",
-          height = 45,
-          width = 90,
-          border = "rounded",
-        },
-        -- previewer_cmd = 'glow',
-        -- cmd_args = { "-s", "tokyo-night", "-w", "80" },
-        -- picker_cmd = 'glow',
-        -- picker_cmd_args = { "-s", "tokyo-night", "-w", "80", "-p" },
-        ensure_installed = { "lodash-4", "javascript", "date_fns", "react", "openjdk-8", "rust", "dom"},
-      })
-    end}
   use {"emmanueltouzery/apidocs.nvim", config=function()
     require("apidocs").setup()
   end}

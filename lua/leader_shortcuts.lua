@@ -3,8 +3,50 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
+local function apply_buffer_preview(self, ns_previewer, source_buf, entry_lnum)
+  if vim.b[self.state.bufnr].source_buf ~= source_buf then
+    local lines = vim.api.nvim_buf_get_lines(source_buf, 0, -1, false)
+    vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, true, lines)
+    vim.b[self.state.bufnr].source_buf = source_buf
+  end
+
+  pcall(
+    vim.hl.range,
+    self.state.bufnr,
+    ns_previewer,
+    "TelescopePreviewLine",
+    { entry_lnum-1,0 },
+    { entry_lnum,0 }
+  )
+
+  -- schedule so that the lines are actually there and can be jumped onto when we call jump_to_line
+  vim.schedule(function()
+    pcall(vim.api.nvim_win_set_cursor, self.state.winid, { entry_lnum + 1, 0 })
+    vim.api.nvim_buf_call(self.state.bufnr, function()
+      vim.cmd "norm! zz"
+    end)
+  end)
+  local ft = vim.api.nvim_buf_get_option(source_buf, 'ft')
+  require("telescope.previewers.utils").highlighter(
+    self.state.bufnr,
+    ft
+  )
+end
+
 vim.keymap.set( "n", "<leader>.", "<cmd>Telescope file_browser hidden=true<CR>", {desc="Telescope files"})
-vim.keymap.set( "n", "<leader>,", "<cmd>Telescope buffers show_all_buffers=true<CR>", {desc="Telescope buffers"})
+vim.keymap.set( "n", "<leader>,", function()
+  local previewers = require("telescope.previewers")
+  local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
+  require'telescope.builtin'.buffers({
+    show_all_buffers = true,
+    -- the telescope builtin previewer doesn't work on non-saved files
+    previewer = previewers.new_buffer_previewer({
+      define_preview = function(self, entry, status)
+        apply_buffer_preview(self, ns_previewer, entry.bufnr, entry.lnum)
+      end
+    })
+  })
+end, {desc="Telescope buffers"})
 vim.keymap.set("n", "<leader>?", ":Cheat40<cr>", {desc="help"})
 vim.keymap.set("n", "<leader>q", "<cmd>lua jump_to_qf()<cr>", {desc="Jump to the quickfix window"})
 vim.keymap.set( "n", "<leader>;", "<cmd>Telescope resume<CR>", {desc="Resume telescope search"})
@@ -139,32 +181,7 @@ function _G.buffer_fuzzy_find(word_under_cursor)
     -- the telescope builtin previewer doesn't work on non-saved files
     previewer = previewers.new_buffer_previewer({
       define_preview = function(self, entry, status)
-        if vim.api.nvim_buf_line_count(self.state.bufnr) == 1 then
-          local lines = vim.api.nvim_buf_get_lines(source_buf, 0, -1, false)
-          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, true, lines)
-        end
-
-        pcall(
-          vim.hl.range,
-          self.state.bufnr,
-          ns_previewer,
-          "TelescopePreviewLine",
-          { entry.lnum-1,0 },
-          { entry.lnum,0 }
-        )
-
-        -- schedule so that the lines are actually there and can be jumped onto when we call jump_to_line
-        vim.schedule(function()
-          pcall(vim.api.nvim_win_set_cursor, self.state.winid, { entry.lnum + 1, 0 })
-          vim.api.nvim_buf_call(self.state.bufnr, function()
-            vim.cmd "norm! zz"
-          end)
-        end)
-        local ft = vim.api.nvim_buf_get_option(source_buf, 'ft')
-        require("telescope.previewers.utils").highlighter(
-          self.state.bufnr,
-          ft
-        )
+        apply_buffer_preview(self, ns_previewer, source_buf, entry.lnum)
       end,
     }),
   })

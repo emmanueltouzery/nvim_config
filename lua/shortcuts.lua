@@ -185,5 +185,7 @@ vim.cmd('inoremap <C-BS> <C-\\><C-o>db')
 -- way better spell checker than the builtin z=
 vim.keymap.set("n", "z=", ":lua require'telescope.builtin'.spell_suggest{}<cr>")
 
+vim.keymap.set("i", "<C-S-space>", function() telescope_lsp_completions() end, {desc="telescope lsp completion"})
+
 -- center Horizontally https://unix.stackexchange.com/a/585098/36566
 vim.cmd[[nnoremap <silent> z. :<C-u>normal! zszH<CR>]]

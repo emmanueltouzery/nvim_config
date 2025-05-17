@@ -1766,11 +1766,17 @@ function _G.telescope_lsp_completions()
       "󰊄 TypeParameter",
     }
 
+    local make_display = function(entry)
+      local kind = completion_item_kinds[entry.value.kind]
+      local hl = { { { 0, #kind }, "TelescopeResultsClass"} }
+      return kind .. " " .. entry.value.label, hl
+    end
+
     local function entry_maker(entry)
       return {
         value = entry,
         ordinal = entry.label,
-        display = completion_item_kinds[entry.kind] .. " " .. entry.label,
+        display = make_display,
         contents = entry
       }
     end
@@ -1827,7 +1833,7 @@ function _G.telescope_lsp_completions()
             local val = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
             actions.close(prompt_bufnr)
             vim.cmd("norm! a" .. val.textEdit.newText:gsub("%(.*", ""))
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<esc>A<C-space>',true,false,true),'m',true)
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<esc>A<C-space><Down>',true,false,true),'m',true)
           end)
           return true
         end,

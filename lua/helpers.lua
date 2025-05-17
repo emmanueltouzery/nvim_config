@@ -1736,6 +1736,8 @@ function _G.telescope_lsp_completions()
     local finders = require "telescope.finders"
     local previewers = require("telescope.previewers")
     local conf = require("telescope.config").values
+    local actions = require("telescope.actions")
+
     local completion_item_kinds = {
       "  Text",
       "󰆧 Method",
@@ -1820,15 +1822,15 @@ function _G.telescope_lsp_completions()
          end
         }),
         sorter = conf.generic_sorter(opts),
-        -- attach_mappings = function(p, map)
-        --   map("i", "<cr>", function(prompt_nr)
-        --     local current_picker = action_state.get_current_picker(prompt_bufnr) -- picker state
-        --     local entry = action_state.get_selected_entry()
-        --     require'telescope.builtin'.find_files{cwd=entry.ordinal}
-        --   end)
-        --   tel_proj_attach_mappings(p, map)
-        --   return true
-        -- end,
+        attach_mappings = function(p, map)
+          map("i", "<cr>", function(prompt_bufnr)
+            local val = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+            actions.close(prompt_bufnr)
+            vim.cmd("norm! a" .. val.textEdit.newText:gsub("%(.*", ""))
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<esc>A<C-space>',true,false,true),'m',true)
+          end)
+          return true
+        end,
       }):find()
   end)
 end

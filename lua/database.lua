@@ -198,14 +198,14 @@ function _G.open_saved_query()
     sorter = conf.generic_sorter(opts),
     attach_mappings = function(_, map)
       map('i', '<Cr>',  function(prompt_bufnr)
-        filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+        local filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
         local Path = require("plenary.path")
         actions.close(prompt_bufnr)
         -- copy to the clipboard
         vim.fn.setreg('+', Path.new(filename):read())
       end)
       map('i', '<C-o>',  function(prompt_bufnr)
-        filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+        local filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
         local Path = require("plenary.path")
         vim.fn.jobstart({"xdg-open", Path.new(filename):parent().filename})
       end)

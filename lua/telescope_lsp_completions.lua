@@ -82,7 +82,7 @@ function _G.telescope_lsp_completions()
         end,
         define_preview = function(self, entry, status)
           local lines = {
-             entry.contents.data and "# " .. vim.fn.join(vim.tbl_map(function(imp) return imp.full_import_path end, entry.contents.data.imports), ", ") or "",
+             (entry.contents.data and entry.contents.data.imports) and "# " .. vim.fn.join(vim.tbl_map(function(imp) return imp.full_import_path end, entry.contents.data.imports), ", ") or "",
              "",
              entry.contents.detail and "`" .. entry.contents.detail .. "`" or "",
            }

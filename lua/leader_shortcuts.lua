@@ -832,6 +832,23 @@ function _G.git_do_stash()
 end
 vim.keymap.set("n", "<leader>ghh", '<cmd>lua git_do_stash()<CR>', {desc="git stash"})
 
+-- we could stash staged on unstaged, better staged, no mess with untracked files
+function _G.git_do_stash_staged()
+  vim.ui.input({prompt="Enter a name for the stash (staged files only): ", kind="center_win"}, function(input)
+    if input ~= nil then
+      -- get the list of staged files
+      local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
+      vim.system({"git", "diff", "--name-only", "--cached"}, {text=true, cwd=git_root}, vim.schedule_wrap(function(res)
+        local staged = vim.split(vim.trim(res.stdout), "\n")
+        local params = {"stash", "push", "-m", input, "--"}
+        vim.list_extend(params, staged)
+        run_command("git", params, reload_all)
+      end))
+    end
+  end)
+end
+vim.keymap.set("n", "<leader>ghs", '<cmd>lua git_do_stash_staged()<CR>', {desc="git stash only staged files"})
+
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", function() vim.cmd[[norm ghgh]] end, {desc= "stage hunk"})
 -- vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})

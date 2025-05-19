@@ -697,8 +697,10 @@ end
 
 function _G.run_command(command, params, cb)
   local error_msg = nil
+  local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
   Job:new {
     command = command,
+    cwd = git_root,
     args = params,
     on_stderr = function(error, data, self)
       if error_msg == nil then

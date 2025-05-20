@@ -1881,8 +1881,7 @@ vim.api.nvim_create_autocmd("FileType", {
       -- this is an android project, and this is a java file, for which i'm assuming
       -- no LSP. Let's override K to something more useful than nothing.
       vim.keymap.set('n', 'K', function()
-        -- assume we're on top of an import <package>; line
-        local url = "https://developer.android.com/reference/" .. vim.fn.expand('<cWORD>'):gsub(';', ''):gsub('%.', '/')
+        local url = "https://developer.android.com/s/results/?q=" .. vim.fn.expand('<cword>'):gsub('%.', '/')
         vim.fn.jobstart({"xdg-open", url})
       end, { buffer = true })
     end

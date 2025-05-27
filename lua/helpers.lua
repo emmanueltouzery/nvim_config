@@ -547,7 +547,7 @@ function _G.get_qf_locations(opts)
     local filename = loc.filename or vim.api.nvim_buf_get_name(loc.bufnr)
     -- the lnum > 1 is a heuristic: in general things at the first line are useless.
     -- consider maybe changing to >=1, to be seen (EDIT: changed)
-    if loc.lnum >= 1 and vim.fn.filereadable(filename) == 1 then
+    if loc.lnum >= 1 and (vim.fn.filereadable(filename) == 1 or loc.bufnr) then
       table.insert(locations, loc)
     end
   end

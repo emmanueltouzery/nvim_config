@@ -189,8 +189,68 @@ function _G.buffer_fuzzy_find(word_under_cursor)
     vim.fn.feedkeys(w)
   end
 end
-vim.keymap.set("n", "<leader>sbb", "<cmd>lua buffer_fuzzy_find(false)<cr>", {desc="search in Buffer"})
-vim.keymap.set("n", "<leader>sb*", "<cmd>lua buffer_fuzzy_find(true)<cr>", {desc="search in Buffer"})
+vim.keymap.set("n", "<leader>sbb", "<cmd>lua buffer_fuzzy_find(false)<cr>", {desc="fuzzy search in buffer"})
+vim.keymap.set("n", "<leader>sb*", "<cmd>lua buffer_fuzzy_find(true)<cr>", {desc="fuzzy search in buffer word_under_cursor"})
+
+local function telescope_regex_cur_file(opts)
+  opts = opts or {}
+
+  local actions = require("telescope.actions")
+  local pickers = require "telescope.pickers"
+  local conf = require("telescope.config").values
+  local finders = require "telescope.finders"
+  local previewers = require("telescope.previewers")
+  local sorters = require "telescope.sorters"
+  local entry_display = require("telescope.pickers.entry_display")
+  local source_buf = vim.api.nvim_win_get_buf(0)
+  local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
+  local make_entry = require "telescope.make_entry"
+
+  local lines = vim.api.nvim_buf_get_lines(source_buf, 0, -1, false)
+  local lnum = 0
+  local locations = vim.tbl_map(function(l)
+    lnum = lnum + 1
+    return {
+      bufnr = source_buf, lnum = lnum, col = 0, text = l, valid = 1
+    }
+  end, lines)
+
+  local displayer = entry_display.create {
+    items = {
+      { remaining = true },
+    },
+  }
+  pickers.new(opts, {
+    prompt_title = opts.prompt_title or "Regex cur file",
+    finder = finders.new_dynamic {
+      fn = function(prompt)
+        return vim.tbl_filter(function(e) return e.text:match(prompt) end, locations)
+      end,
+      entry_maker = function(entry)
+        entry.value = entry.text
+        entry.ordinal = entry.lnum
+        entry.display = function(entry)
+          return displayer {
+            { entry.text, "TelescopeResultsIdentifier" },
+          }
+        end
+        return make_entry.set_default_entry_mt(entry, opts)
+      end,
+    },
+    previewer = previewers.new_buffer_previewer({
+      define_preview = function(self, entry, status)
+        apply_buffer_preview(self, ns_previewer, source_buf, entry.lnum)
+      end,
+    }),
+    sorter = sorters.highlighter_only(opts),
+    attach_mappings = function(_, map)
+      map('i', '<Cr>',  actions.select_default + actions.center)
+      return true
+    end,
+  }):find()
+end
+vim.keymap.set("n", "<leader>sbr", telescope_regex_cur_file, {desc="search in buffer: lua regex"})
+
 require 'key-menu'.set('n', '<Space>sd', {desc='Search in file Directory'})
 vim.keymap.set("n", "<leader>sdd", function()
   require('telescope').extensions.live_grep_args.live_grep_args({cwd=vim.fn.expand('%:h'), prompt_title="Search text in directory " .. vim.fn.expand('%:h')})

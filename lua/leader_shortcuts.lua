@@ -205,6 +205,7 @@ function _G.telescope_regex_cur_file(opts)
   local source_buf = vim.api.nvim_win_get_buf(0)
   local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
   local make_entry = require "telescope.make_entry"
+  local action_state = require "telescope.actions.state"
 
   local lines = vim.api.nvim_buf_get_lines(source_buf, 0, -1, false)
   local lnum = 0
@@ -244,7 +245,16 @@ function _G.telescope_regex_cur_file(opts)
     }),
     sorter = sorters.highlighter_only(opts),
     attach_mappings = function(_, map)
-      map('i', '<Cr>',  actions.select_default + actions.center)
+      map('i', '<Cr>', function(prompt_bufnr)
+        -- enforce jumping to the line number. not really sure why i need to do that.
+        actions.select_default(prompt_bufnr)
+
+        vim.schedule(function()
+          local selection = action_state.get_selected_entry()
+          vim.cmd("norm! " .. selection.lnum .. "G")
+          vim.cmd("normal! zz")
+        end)
+      end)
       return true
     end,
   }):find()

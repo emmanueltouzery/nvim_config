@@ -10,7 +10,7 @@ syn match LogI '\sI\s' nextgroup=Module
 syn match LogD '\sD\s' nextgroup=Module
 syn match LogV '\sV\s' nextgroup=Module
 syn match Module '\zs\(\(\w\|\.\)\+\)\ze:' contained
-syn match Date '\d\d-\d\d \d\d:\d\d:\d\d.\d\d\d'
+syn match Date '\d\d-\d\d \d\d:\d\d:\d\d.\d\d\d' containedin=ALL
 
 hi def link LogF RedrawDebugRecompose
 hi def link LogE Error

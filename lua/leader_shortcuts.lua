@@ -192,7 +192,7 @@ end
 vim.keymap.set("n", "<leader>sbb", "<cmd>lua buffer_fuzzy_find(false)<cr>", {desc="fuzzy search in buffer"})
 vim.keymap.set("n", "<leader>sb*", "<cmd>lua buffer_fuzzy_find(true)<cr>", {desc="fuzzy search in buffer word_under_cursor"})
 
-local function telescope_regex_cur_file(opts)
+function _G.telescope_regex_cur_file(opts)
   opts = opts or {}
 
   local actions = require("telescope.actions")

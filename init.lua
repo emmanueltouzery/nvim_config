@@ -1321,6 +1321,7 @@ callbacks = {
       typescriptreact = { "eslint" },
       elixir = { "credo" },
       java = { "checkstyle" },
+      rust = { "clippy" },
     }
 
     -- customize credo, remove the --strict flag

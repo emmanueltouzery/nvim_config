@@ -40,6 +40,12 @@ end
 vim.keymap.set('n', '<localleader>x', toggle_expanded_results_marker, { buffer = true, desc = "Toggle expanded results marker" })
 
 vim.keymap.set('v', '<localleader>g', trigger_query_selected, { buffer = true, desc = "Trigger query for selected text" })
+vim.keymap.set('v', '<localleader>G', function()
+  trigger_query_selected()
+  vim.defer_fn(function()
+    vim.api.nvim_feedkeys("gv", "n", false) -- reselect
+  end, 50)
+end, { buffer = true, desc = "Trigger query for selected text, keeping the selection" })
 
 local function jump_to_dbout()
   local dbout_win, dbout_buf = get_dbout_win_buf()

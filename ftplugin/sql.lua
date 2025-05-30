@@ -47,13 +47,38 @@ local function jump_to_dbout()
 end
 vim.keymap.set("n", "<leader>q", jump_to_dbout, {buffer = true, desc="Jump to the sql output window"})
 
--- yeah, that regex... https://stackoverflow.com/questions/21148467/ is a negative lookbehind.
--- so \(;\|\n\)\@<! means that the rest must NOT be preceded by a newline or ;
--- and that also declares a first capture group (;|\n)
--- then we have... \(\n\n\+\) a series of at least two newlines -- and the second capture group
--- this is then replaced by ;\2 -- ; and the second capture group
--- so we append ; to the end of each query if it wasn't there
-vim.keymap.set("n", '<localleader>s', [[<cmd>%s/\(;\|\n\)\@<!\(\n\n\+\)/;\2<cr>]], {buffer = true, desc="Insert sql statement Separators (;)"})
+local function insert_statement_separators()
+  -- find blocks without trailing semicolons
+  local buffer_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local block_ok = nil
+  local lines_to_add_semis = {}
+  for lnum, line in ipairs(buffer_lines) do
+    if block_ok == nil and #line > 0 then
+      -- entering a block
+      block_ok = false
+    elseif block_ok == false and line == ";" then
+      -- the block contains a pure ";" line
+      block_ok = true
+    elseif #line == 0 then
+      -- end of the block
+
+      -- we should schedule to add a ~ at this line?
+      if not block_ok then
+        table.insert(lines_to_add_semis, lnum + #lines_to_add_semis - 1)
+      end
+      block_ok = nil
+    end
+  end
+  if not block_ok then
+    table.insert(lines_to_add_semis, #buffer_lines + #lines_to_add_semis)
+  end
+
+  -- add trailing semicolons whereever they're missing
+  for _, lnum in ipairs(lines_to_add_semis) do
+    vim.api.nvim_buf_set_lines(0, lnum, lnum, false, {";"})
+  end
+end
+vim.keymap.set("n", '<localleader>s', insert_statement_separators, {buffer = true, desc="Insert sql statement Separators (;)"})
 
 require 'key-menu'.set('n', '<localleader>w', {desc='Wrap field in function', buffer = true})
 

@@ -1239,7 +1239,18 @@ callbacks = {
           -- {"on_complete_dispose", timeout = 900},
           "on_complete_dispose_disablable",
         }
-      }
+      },
+      actions = {
+        ["copy output to clipboard"] = {
+          condition = function(task)
+            return task:get_bufnr()
+          end,
+          run = function(task)
+            local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
+            copy_to_clipboard(vim.fn.join(lines, "\n"))
+          end,
+        }
+      },
     }
   end}
   -- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()

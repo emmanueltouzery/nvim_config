@@ -1241,6 +1241,19 @@ callbacks = {
         }
       },
       actions = {
+        ["set output marker"] = {
+          condition = function(task)
+            return task:get_bufnr()
+          end,
+          run = function(task)
+            local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
+            -- for some reason a bunch of extra "" lines at the end
+            while lines[#lines] == "" do
+              table.remove(lines, #lines)
+            end
+            vim.g["overseer_tasks_output_marker_" .. task.id] = #lines+1
+          end,
+        },
         ["copy output to clipboard"] = {
           condition = function(task)
             return task:get_bufnr()
@@ -1249,7 +1262,18 @@ callbacks = {
             local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
             copy_to_clipboard(vim.fn.join(lines, "\n"))
           end,
-        }
+        },
+        ["copy output from marker to clipboard"] = {
+          condition = function(task)
+            return task:get_bufnr()
+          end,
+          run = function(task)
+            local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
+            copy_to_clipboard(vim.fn.join(vim.list_slice(lines, vim.g["overseer_tasks_output_marker_" .. task.id], #lines), "\n"))
+          end,
+        },
+        save = false,
+        edit = false,
       },
     }
   end}

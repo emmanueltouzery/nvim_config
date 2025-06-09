@@ -994,11 +994,39 @@ function _G.print_lsp_path(retry)
   end
 
   local path_components = require'aerial'.get_location()
-  if #path_components == 0 and retry == nil then
-    vim.defer_fn(function()
-      print_lsp_path(true)
-    end, 50)
-    return
+  if #path_components == 0 then
+    if retry == nil then
+      vim.defer_fn(function()
+        print_lsp_path(true)
+      end, 50)
+      return
+    else
+      notif({"spc-cp: indentation fallback"})
+      -- manual fallback: indentation-based printing
+      local l = vim.fn.line(".")
+      local lines = vim.api.nvim_buf_get_lines(0, 0, l + 1, false)
+      local line = lines[l]
+      local levels = {line:gmatch("[%w_?%.%%{]+")()}
+      local indent_level = #line:gmatch(" +")()
+      while l > 1 do
+        l = l - 1
+        line = lines[l]
+        local leading_spaces = line:gmatch(" +")()
+        local cur_indent_level = 0
+        if leading_spaces then
+          cur_indent_level = #leading_spaces
+        end
+        if cur_indent_level < indent_level then
+          indent_level = cur_indent_level
+          local first_word = line:gmatch("[%w_?%.%%{]+")()
+          if first_word ~= nil then
+            table.insert(levels, 1, first_word)
+          end
+        end
+      end
+      print(vim.fn.join(levels, "/"))
+      return
+    end
   end
   -- if #path_components == 0 then
   --   -- it doesn't work for json without the false. not sure why.

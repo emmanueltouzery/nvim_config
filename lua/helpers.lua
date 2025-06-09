@@ -1554,7 +1554,7 @@ function _G.under_cursor_unix_timestamp_to_date()
     under_cursor = under_cursor:sub(1, 10) .. "." .. under_cursor:sub(11, 13)
   end
   vim.system({'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}, {text=true}, vim.schedule_wrap(function(obj)
-    if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
+  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
       open_text_in_cursor_popup(obj.stdout, 2)
     else
       vim.cmd("norm ciw" .. obj.stdout)
@@ -1571,7 +1571,7 @@ function _G.under_cursor_minutes_to_hhmm()
   local n = tonumber(under_cursor)
   local remainder = n % 60
   local res = ((n - remainder) / 60) .. ":" .. string.format("%02d", remainder)
-  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
+  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
     open_text_in_cursor_popup(res, 2)
   else
     vim.cmd("norm ciw" .. res)
@@ -1589,7 +1589,7 @@ function _G.under_cursor_seconds_to_hhmm()
   local n = tonumber(under_cursor) / 60
   local remainder = n % 60
   local res = ((n - remainder) / 60) .. ":" .. string.format("%02d", remainder)
-  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly then
+  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
     open_text_in_cursor_popup(res, 2)
   else
     vim.cmd("norm ciw" .. res)

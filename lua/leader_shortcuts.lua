@@ -225,7 +225,7 @@ function _G.telescope_regex_cur_file(opts)
     prompt_title = opts.prompt_title or "Regex cur file",
     finder = finders.new_dynamic {
       fn = function(prompt)
-        return vim.tbl_filter(function(e) return e.text:match(prompt) end, locations)
+        return vim.tbl_filter(function(e) return vim.fn.match(e.text, '\\v' .. prompt) >= 0 end, locations)
       end,
       entry_maker = function(entry)
         entry.value = entry.text
@@ -259,7 +259,7 @@ function _G.telescope_regex_cur_file(opts)
     end,
   }):find()
 end
-vim.keymap.set("n", "<leader>sbr", telescope_regex_cur_file, {desc="search in buffer: lua regex"})
+vim.keymap.set("n", "<leader>sbr", telescope_regex_cur_file, {desc="search in buffer: vim verymagic regex"})
 
 require 'key-menu'.set('n', '<Space>sd', {desc='Search in file Directory'})
 vim.keymap.set("n", "<leader>sdd", function()

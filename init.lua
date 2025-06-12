@@ -1939,4 +1939,27 @@ vim.api.nvim_set_keymap("", "<kEnter>", "<Enter>", {})
 vim.api.nvim_set_keymap("i", "<kEnter>", "<Enter>", {})
 vim.api.nvim_set_keymap("c", "<kEnter>", "<Enter>", {})
 
+-- https://github.com/neovide/neovide/issues/2050#issuecomment-2571258610
+-- the default red i had in neovide terminals was truly HORRIBLE.
+-- this fixes it, now it's some very light red, perfect.
+-- didn't check the other colors besides the red for now.
+if vim.g.neovide then
+  vim.g.terminal_color_0 = "#45475a"
+  vim.g.terminal_color_1 = "#f38ba8"
+  vim.g.terminal_color_2 = "#a6e3a1"
+  vim.g.terminal_color_3 = "#f9e2af"
+  vim.g.terminal_color_4 = "#89b4fa"
+  vim.g.terminal_color_5 = "#f5c2e7"
+  vim.g.terminal_color_6 = "#94e2d5"
+  vim.g.terminal_color_7 = "#bac2de"
+  vim.g.terminal_color_8 = "#585b70"
+  vim.g.terminal_color_9 = "#f38ba8"
+  vim.g.terminal_color_10 = "#a6e3a1"
+  vim.g.terminal_color_11 = "#f9e2af"
+  vim.g.terminal_color_12 = "#89b4fa"
+  vim.g.terminal_color_13 = "#f5c2e7"
+  vim.g.terminal_color_14 = "#94e2d5"
+  vim.g.terminal_color_15 = "#a6adc8"
+end
+
 -- vim: ts=2 sts=2 sw=2 et

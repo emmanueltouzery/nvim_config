@@ -91,12 +91,12 @@ function _G.elixir_insert_inspect_value()
         vim.cmd("norm! O")
       end
       if target.append then
-        vim.cmd('norm! a|> IO.inspect(label: "", charlists: :as_lists)')
+        vim.cmd('norm! a|> IO.inspect(label: "", charlists: :as_lists, limit: 50)')
       else
-        vim.cmd('norm! i|> IO.inspect(label: "", charlists: :as_lists)')
+        vim.cmd('norm! i|> IO.inspect(label: "", charlists: :as_lists, limit: 50)')
       end
       -- position the cursor in the quotes to enable quick rename
-      vim.cmd('norm! 23h')
+      vim.cmd('norm! 34h')
       vim.cmd('startinsert')
     end
   }
@@ -151,12 +151,12 @@ function _G.elixir_insert_inspect_param()
         vim.cmd[[set nopaste]]
       end
       if is_function_name then
-        vim.cmd('norm! aIO.inspect("' .. param_name .. '", charlists: :as_lists)')
+        vim.cmd('norm! aIO.inspect("' .. param_name .. '", charlists: :as_lists, limit: 50)')
       else
-        vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '", charlists: :as_lists)')
+        vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '", charlists: :as_lists, limit: 50)')
       end
       -- position the cursor in the quotes to enable quick rename
-      vim.cmd('norm! 23h')
+      vim.cmd('norm! 34h')
       vim.cmd('startinsert')
     end
   }
@@ -227,9 +227,9 @@ function _G.elixir_insert_inspect_field()
             vim.cmd("norm! O")
           end
           if target.append then
-            vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists))')
+            vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists, limit: 50))')
           else
-            vim.cmd('norm! i|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists))')
+            vim.cmd('norm! i|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists, limit: 50))')
           end
           -- position the cursor in the quotes to enable quick rename
           vim.cmd('norm! 2h')

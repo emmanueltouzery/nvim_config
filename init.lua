@@ -1277,6 +1277,64 @@ callbacks = {
       },
     }
   end}
+  -- see https://github.com/tjdevries/config.nvim/blob/7cad8009177b4c10083b21cfa14f8eebe308745e/lua/custom/plugins/dap.lua#L45
+  -- see https://youtu.be/lyNfnI-B640?si=E_NRcgMHqptrunKF
+  use {'mfussenegger/nvim-dap', requires={{'rcarriga/nvim-dap-ui'}, {'theHamsta/nvim-dap-virtual-text'}, {'nvim-neotest/nvim-nio'}}, config=function()
+    local dap = require "dap"
+    local ui = require "dapui"
+    require("dapui").setup()
+    require("nvim-dap-virtual-text").setup()
+
+    -- local elixir_ls_debugger = vim.fn.exepath "elixir-ls-debugger"
+    local elixir_ls_debugger = vim.fn.stdpath('data') .. "/mason/bin/elixir-ls-debugger"
+    if elixir_ls_debugger ~= "" then
+      dap.adapters.mix_task = {
+        type = "executable",
+        command = elixir_ls_debugger,
+      }
+
+      dap.configurations.elixir = {
+        {
+          type = "mix_task",
+          name = "phoenix server",
+          task = "phx.server",
+          request = "launch",
+          projectDir = "${workspaceFolder}",
+          exitAfterTaskReturns = false,
+          debugAutoInterpretAllModules = false,
+        },
+      }
+    end
+
+    require 'key-menu'.set('n', '<Space>D', {desc='debugger'})
+    vim.keymap.set("n", "<space>Db", dap.toggle_breakpoint, {desc='toggle breakpoint'})
+    vim.keymap.set("n", "<space>Dg", dap.run_to_cursor, {desc='run to cursor'})
+
+    -- Eval var under cursor
+    vim.keymap.set("n", "<space>Dk", function()
+      require("dapui").eval(nil, { enter = true })
+    end, {desc='eval var under cursor'})
+
+    vim.keymap.set("n", "<F1>", dap.continue)
+    vim.keymap.set("n", "<F2>", dap.step_into)
+    vim.keymap.set("n", "<F3>", dap.step_over)
+    vim.keymap.set("n", "<F4>", dap.step_out)
+    vim.keymap.set("n", "<F5>", dap.step_back)
+    vim.keymap.set("n", "<F13>", dap.restart)
+
+    dap.listeners.before.attach.dapui_config = function()
+      ui.open()
+    end
+    dap.listeners.before.launch.dapui_config = function()
+      ui.open()
+    end
+    dap.listeners.before.event_terminated.dapui_config = function()
+      ui.close()
+    end
+    dap.listeners.before.event_exited.dapui_config = function()
+      ui.close()
+    end
+  end}
   -- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
 -- require'dap'.adapters.codelldb = {
 --   type = 'server',
@@ -1339,9 +1397,6 @@ callbacks = {
 --     --   -- },
 --     -- })
 --   end}
-  -- use {'rcarriga/nvim-dap-ui', commit='f889edb4f2b7fafa2a8f8101aea2dc499849b2ec', config=function()
-  --   require("dapui").setup{}
-  -- end}
   -- tracking my 'search' branch.
   -- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs
   use {"emmanueltouzery/apidocs.nvim", config=function()

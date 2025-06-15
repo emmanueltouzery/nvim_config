@@ -1328,13 +1328,16 @@ callbacks = {
       require("dapui").eval(nil, { enter = true })
     end, {desc='eval var under cursor'})
 
-    vim.keymap.set("n", "<F5>", function()
+    local debug_start = function()
       local file = vim.fn.expand('%:p')
       local line = vim.fn.line('.')
       dap.configurations.elixir[2].taskArgs = { "--trace", file .. ":" .. line }
       dap.continue()
-    end)
-    vim.keymap.set("n", "<F8>", dap.continue)
+    end
+
+    vim.keymap.set("n", "<F5>", debug_start)
+    vim.keymap.set("n", "<space>us", debug_start, {desc='debug start'})
+
     vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<F10>", dap.step_over)
     vim.keymap.set("n", "<S-F11>", dap.step_out)

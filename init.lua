@@ -1303,6 +1303,19 @@ callbacks = {
           exitAfterTaskReturns = false,
           debugAutoInterpretAllModules = false,
         },
+        {
+          type = "mix_task",
+          name = "mix test",
+          task = 'test',
+          taskArgs = { "--trace" },
+          request = "launch",
+          startApps = true, -- for Phoenix projects
+          projectDir = "${workspaceFolder}",
+          requireFiles = {
+            "test/**/test_helper.exs",
+            "test/**/*_test.exs"
+          }
+        },
       }
     end
 
@@ -1315,6 +1328,12 @@ callbacks = {
       require("dapui").eval(nil, { enter = true })
     end, {desc='eval var under cursor'})
 
+    vim.keymap.set("n", "<F5>", function()
+      local file = vim.fn.expand('%:p')
+      local line = vim.fn.line('.')
+      dap.configurations.elixir[2].taskArgs = { "--trace", file .. ":" .. line }
+      dap.continue()
+    end)
     vim.keymap.set("n", "<F8>", dap.continue)
     vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<F10>", dap.step_over)

@@ -68,24 +68,35 @@ local function jump_param()
   local parser = require('nvim-treesitter.parsers').get_parser(0)
   parser:parse()
   local ts_node = parser:named_node_for_range({vim.fn.line('.')-1, vim.fn.col('.')-1, vim.fn.line('.')-1, vim.fn.col('.')-1})
+  if ts_node:type() == "formal_parameters" or ts_node:type() == "arguments" then
+    -- the cursor is on an indentation space outside of the main parameter.
+    -- just move to the next word and re-trigger
+    vim.cmd("norm! w")
+    ts_node = parser:named_node_for_range({vim.fn.line('.')-1, vim.fn.col('.')-1, vim.fn.line('.')-1, vim.fn.col('.')-1})
+  end
   local parent = ts_node
   local required_param = nil
   local is_final_selector = nil
   local param_idx = nil
   while parent do
     if parent:type() == "call_expression" then
-      break
+      local fn_identifier = vim.treesitter.get_node_text(parent:named_child(0), 0)
+      if fn_identifier == "createSelector" then
+        break
+      end
     elseif parent:type() == "required_parameter" then
       required_param = parent
     elseif parent:type() == "arrow_function" then
       -- were we in the injected params or the params of the final selector?
       is_final_selector = parent:next_named_sibling() == nil
       if not is_final_selector then
-        local cur_param = parent:prev_named_sibling()
+        local cur_param = parent
         param_idx = 1
         while cur_param ~= nil do
           cur_param = cur_param:prev_named_sibling()
-          param_idx = param_idx + 1
+          if cur_param ~= nil and cur_param:type() == "arrow_function" then
+            param_idx = param_idx + 1
+          end
         end
         print("Param index is " .. param_idx)
       end
@@ -94,17 +105,19 @@ local function jump_param()
     parent = p
   end
   local fn_identifier = vim.treesitter.get_node_text(parent:named_child(0), 0)
-  if fn_identifier == "createSelector" then
-  else
+  if fn_identifier ~= "createSelector" then
     notif({"Not a redux selector param"})
+    return
   end
   if is_final_selector then
     -- which param index are we?
-    local cur_param = required_param:prev_named_sibling()
+    local cur_param = required_param
     local param_idx = 1
     while cur_param ~= nil do
       cur_param = cur_param:prev_named_sibling()
-      param_idx = param_idx + 1
+      if cur_param ~= nil and cur_param:type() == "required_parameter" then
+        param_idx = param_idx + 1
+      end
     end
     print("Param index is " .. param_idx)
 
@@ -115,9 +128,11 @@ local function jump_param()
     local target = parent:named_child(1):named_child(0)
     local i = 0
     while i < param_idx do
+      -- print("target => " .. vim.treesitter.get_node_text(target, 0))
       if target:type() == "arrow_function" then
         i = i + 1
       end
+      -- print("final target => " .. vim.treesitter.get_node_text(target, 0))
       target = target:next_named_sibling()
     end
     local start_row, _, _, _ = target:range(target)
@@ -127,14 +142,21 @@ local function jump_param()
     -- go to target
     local params = parent:named_child(1)
     local selector_callback = params:named_child(params:named_child_count()-1)
-    print(selector_callback:type())
-    print(selector_callback:named_child(0):type())
-    -- TODO could be comments or other nodes. should make a loop
-    -- like with the other go to target
-    local param = selector_callback:named_child(0):named_child(param_idx)
-    local start_row, _, _, _ = param:range()
+    -- i would like to say named_child(param_idx) but for instance
+    -- if there are comments, they are named nodes too and will
+    -- shift parameters. rather count the nodes of the arrow_function type.
+    local target = selector_callback:named_child(0):named_child(0)
+    local i = 0
+    while i < param_idx-1 do
+      if target:type() == "required_parameter" then
+        i = i + 1
+      end
+      target = target:next_named_sibling()
+    end
+
+    local start_row, _, _, _ = target:range()
     vim.cmd("normal! m'") -- add to jump list
-    vim.cmd(":" .. start_row)
+    vim.cmd(":" .. (start_row + 1))
   end
 end
 

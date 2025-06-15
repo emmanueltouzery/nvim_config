@@ -1306,12 +1306,12 @@ callbacks = {
       }
     end
 
-    require 'key-menu'.set('n', '<Space>D', {desc='debugger'})
-    vim.keymap.set("n", "<space>Db", dap.toggle_breakpoint, {desc='toggle breakpoint'})
-    vim.keymap.set("n", "<space>Dg", dap.run_to_cursor, {desc='run to cursor'})
+    require 'key-menu'.set('n', '<Space>u', {desc='debUgger'})
+    vim.keymap.set("n", "<space>ub", dap.toggle_breakpoint, {desc='toggle breakpoint'})
+    vim.keymap.set("n", "<space>ug", dap.run_to_cursor, {desc='run to cursor'})
 
     -- Eval var under cursor
-    vim.keymap.set("n", "<space>Dk", function()
+    vim.keymap.set("n", "<space>uk", function()
       require("dapui").eval(nil, { enter = true })
     end, {desc='eval var under cursor'})
 

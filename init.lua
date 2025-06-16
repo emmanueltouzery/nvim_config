@@ -1335,15 +1335,17 @@ callbacks = {
       dap.continue()
     end
 
-    vim.keymap.set("n", "<F5>", debug_start)
     vim.keymap.set("n", "<space>us", debug_start, {desc='debug start'})
     vim.keymap.set("n", "<space>uR", dap.restart, {desc='debug restart'})
+    vim.keymap.set("n", "<space>uS", function()
+      vim.cmd("DapTerminate")
+      ui.close()
+    end, {desc='debug stop'})
 
     vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<F10>", dap.step_over)
     vim.keymap.set("n", "<S-F11>", dap.step_out)
     vim.keymap.set("n", "<F12>", dap.step_back)
-    vim.keymap.set("n", "<F7>", dap.restart)
 
     dap.listeners.before.attach.dapui_config = function()
       ui.open()

@@ -906,7 +906,6 @@ vim.keymap.set("n", "<leader>ghh", '<cmd>lua git_do_stash()<CR>', {desc="git sta
 function _G.git_do_stash_staged()
   vim.ui.input({prompt="Enter a name for the stash (staged files only): ", kind="center_win"}, function(input)
     if input ~= nil then
-      -- get the list of staged files
       local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
       vim.system({"git", "stash", "push", "--staged", "-m", input}, {text=true, cwd=git_root}, vim.schedule_wrap(function(res)
         reload_all()

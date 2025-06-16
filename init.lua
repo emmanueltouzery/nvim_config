@@ -1337,6 +1337,7 @@ callbacks = {
 
     vim.keymap.set("n", "<F5>", debug_start)
     vim.keymap.set("n", "<space>us", debug_start, {desc='debug start'})
+    vim.keymap.set("n", "<space>uR", dap.restart, {desc='debug restart'})
 
     vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<F10>", dap.step_over)

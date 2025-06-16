@@ -908,11 +908,8 @@ function _G.git_do_stash_staged()
     if input ~= nil then
       -- get the list of staged files
       local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
-      vim.system({"git", "diff", "--name-only", "--cached"}, {text=true, cwd=git_root}, vim.schedule_wrap(function(res)
-        local staged = vim.split(vim.trim(res.stdout), "\n")
-        local params = {"stash", "push", "-m", input, "--"}
-        vim.list_extend(params, staged)
-        run_command("git", params, reload_all)
+      vim.system({"git", "stash", "push", "--staged", "-m", input}, {text=true, cwd=git_root}, vim.schedule_wrap(function(res)
+        reload_all()
       end))
     end
   end)

@@ -239,6 +239,20 @@ local function adb_status()
   return vim.g.adb_status or ""
 end
 
+local function dap_status()
+  local dap_sessions = vim.fn.join(
+    vim.tbl_map(
+      function(s) return s.config.name end,
+      vim.tbl_filter(function(s) return s ~= nil end, require'dap'.sessions())
+    ),
+    ", ")
+  if #dap_sessions > 0 then
+    return " " .. dap_sessions
+  else
+    return dap_sessions
+  end
+end
+
 local function lsp_pending()
   return vim.g.lualine_lsp_pending or ""
 end
@@ -274,6 +288,9 @@ function setup_lualine()
   if lualine then
     -- these extra entries are defined in my private configuration
     local lualine_tabline_end = vim.g.lualine_extra_entries and vim.g.lualine_extra_entries() or {}
+    table.insert(lualine_tabline_end,
+      {dap_status, color = "@comment.todo"}
+    )
     table.insert(lualine_tabline_end,
     {
       adb_status,

@@ -1321,6 +1321,7 @@ callbacks = {
 
     require 'key-menu'.set('n', '<Space>u', {desc='debUgger'})
     vim.keymap.set("n", "<space>ub", dap.toggle_breakpoint, {desc='toggle breakpoint'})
+    vim.keymap.set("n", "<space>uB", dap.clear_breakpoints, {desc='clear all breakpoints'})
     vim.keymap.set("n", "<space>ug", dap.run_to_cursor, {desc='run to cursor'})
 
     -- Eval var under cursor

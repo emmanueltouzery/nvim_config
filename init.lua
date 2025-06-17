@@ -1336,6 +1336,7 @@ callbacks = {
     end
 
     vim.keymap.set("n", "<space>us", debug_start, {desc='debug start'})
+    vim.keymap.set("n", "<space>uc", dap.continue, {desc='debug continue'})
     vim.keymap.set("n", "<space>uR", dap.restart, {desc='debug restart'})
     vim.keymap.set("n", "<space>uS", function()
       vim.cmd("DapTerminate")
@@ -1343,8 +1344,8 @@ callbacks = {
       vim.cmd("DapVirtualTextForceRefresh")
     end, {desc='debug stop'})
 
-    vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<F10>", dap.step_over)
+    vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<S-F11>", dap.step_out)
     vim.keymap.set("n", "<F12>", dap.step_back)
 

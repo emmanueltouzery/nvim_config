@@ -317,10 +317,6 @@ function setup_lualine()
           'aerial',
           'agitator',
           'dbui',
-          'dapui_watches',
-          'dapui_stacks',
-          'dapui_breakpoints',
-          'dapui_scopes',
         },
         theme = 'nord',
         component_separators = '|',
@@ -409,6 +405,7 @@ function setup_lualine()
         },
         lualine_x = lualine_tabline_end,
       },
+      extensions = { 'nvim-dap-ui' },
     }
   end
 end

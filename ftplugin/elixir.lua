@@ -15,3 +15,26 @@ vim.keymap.set('n', '<localleader>mc', ":lua require'elixir-extras'.module_compl
 require 'key-menu'.set('n', '<localleader>n', {desc='iNdent', buffer = true})
 vim.keymap.set('n', '<localleader>nm', ":lua elixir_match_error_details_indent({})<cr>", {desc="elixir indent match error details", buffer = true})
 vim.keymap.set('n', '<localleader>nv', ":lua elixir_indent_output_val()<cr>", {desc="elixir indent output value", buffer = true})
+
+local function elixir_add_stack_to_qf()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  vim.fn.setqflist({}, 'r')
+  for _, line in ipairs(lines) do
+    local match = vim.fn.matchlist(line, [[\v<((\w|_|/)+\.ex):(\d+)]])
+    if #match > 0 then
+      vim.fn.setqflist({}, 'a', {
+        items = {
+          {
+            filename = match[2],
+            lnum = match[4],
+            col = 1,
+            text = match[2] .. ":" .. match[4],
+          },
+        },
+      })
+    end
+  end
+  telescope_quickfix_locations{}
+end
+
+vim.keymap.set('n', '<localleader>cqa', elixir_add_stack_to_qf, {desc = "add stacktrace to quickfix", buffer = true})

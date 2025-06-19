@@ -340,7 +340,9 @@ require('packer').startup(function(use)
     -- put a priority higher than the default 10 for diagnostic errors, so that
     -- the signs for a hunk are together on the left, and prioritized instead of individual
     -- diagnostics moving the sign for a line to not line up
-    local priority = 11
+    -- put 30 to be more than the 21/22 that nvim-dap uses for breakpoint signs,
+    -- otherwise diff vertical lines are broken by breakpoints
+    local priority = 30
     if vim.version().major == 0 and vim.version().minor < 11 then
       -- only neovim < 0.11, i want the the diff signs on the left => need a lower value
       priority = 9
@@ -1318,6 +1320,10 @@ callbacks = {
         },
       }
     end
+
+    vim.api.nvim_set_hl(0, 'DapStopped', { bg='#4c5870' })
+    vim.fn.sign_define('DapStopped', {text='→', texthl='', linehl='DapStopped', numhl=''})
+    vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl='' })
 
     require 'key-menu'.set('n', '<Space>u', {desc='debUgger'})
     vim.keymap.set("n", "<space>ub", dap.toggle_breakpoint, {desc='toggle breakpoint'})

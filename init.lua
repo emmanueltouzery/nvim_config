@@ -1281,7 +1281,11 @@ callbacks = {
   end}
   -- see https://github.com/tjdevries/config.nvim/blob/7cad8009177b4c10083b21cfa14f8eebe308745e/lua/custom/plugins/dap.lua#L45
   -- see https://youtu.be/lyNfnI-B640?si=E_NRcgMHqptrunKF
-  use {'mfussenegger/nvim-dap', requires={{'rcarriga/nvim-dap-ui'}, {'theHamsta/nvim-dap-virtual-text'}, {'nvim-neotest/nvim-nio'}}, config=function()
+  use {'mfussenegger/nvim-dap', commit='40a8189b8a57664a1850b0823fdcb3ac95b9f635', requires={
+        {'rcarriga/nvim-dap-ui', commit='73a26abf4941aa27da59820fd6b028ebcdbcf932'},
+        {'theHamsta/nvim-dap-virtual-text', commit='fbdb48c2ed45f4a8293d0d483f7730d24467ccb6'},
+        {'nvim-neotest/nvim-nio', commit='21f5324bfac14e22ba26553caf69ec76ae8a7662'},
+      }, config=function()
     local dap = require "dap"
     local ui = require "dapui"
     require("dapui").setup()
@@ -1304,6 +1308,7 @@ callbacks = {
           projectDir = "${workspaceFolder}",
           exitAfterTaskReturns = false,
           debugAutoInterpretAllModules = false,
+          -- debugInterpretModulesPatterns = {},
         },
         {
           type = "mix_task",
@@ -1313,10 +1318,12 @@ callbacks = {
           request = "launch",
           startApps = true, -- for Phoenix projects
           projectDir = "${workspaceFolder}",
-          requireFiles = {
-            "test/**/test_helper.exs",
-            "test/**/*_test.exs"
-          }
+          -- requireFiles = {
+          --   "test/**/test_helper.exs",
+          --   "test/**/*_test.exs"
+          -- },
+          debugAutoInterpretAllModules = false,
+          -- debugInterpretModulesPatterns = {},
         },
       }
     end
@@ -1336,9 +1343,26 @@ callbacks = {
     end, {desc='eval var under cursor'})
 
     local debug_start = function()
+      local modules_to_interpret = vim.g.dap_mods_to_interpret and vim.split(vim.g.dap_mods_to_interpret, ",") or {}
+      for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        local has_signs = #vim.fn.sign_getplaced(bufnr, { group = "dap_breakpoints" })[1].signs > 0
+        if has_signs then
+            local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 10, false)
+            for _, line in ipairs(lines) do
+              if line:match("defmodule") then
+                table.insert(modules_to_interpret, vim.trim(line:gsub("defmodule", ""):gsub("do", "")))
+              end
+            end
+        end
+      end
+      print("DAP will interpret modules: " .. vim.inspect(modules_to_interpret))
+
+      dap.configurations.elixir[1].debugInterpretModulesPatterns = modules_to_interpret
+
       local file = vim.fn.expand('%:p')
       local line = vim.fn.line('.')
       dap.configurations.elixir[2].taskArgs = { "--trace", file .. ":" .. line }
+      dap.configurations.elixir[2].debugInterpretModulesPatterns = modules_to_interpret
       dap.continue()
     end
 
@@ -1368,6 +1392,8 @@ callbacks = {
     dap.listeners.before.event_exited.dapui_config = function()
       ui.close()
     end
+
+    -- vim.cmd("DapSetLogLevel TRACE")
   end}
   -- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
 -- require'dap'.adapters.codelldb = {

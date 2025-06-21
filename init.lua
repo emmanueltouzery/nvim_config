@@ -1289,7 +1289,20 @@ callbacks = {
     local dap = require "dap"
     local ui = require "dapui"
     require("dapui").setup()
-    require("nvim-dap-virtual-text").setup()
+    require("nvim-dap-virtual-text").setup({
+      display_callback = function(variable, buf, stackframe, node, options)
+          local val = variable.value:gsub("%s+", " ")
+          if #val > 20 then
+            val = val:sub(1, 20) .. "…"
+          end
+        -- by default, strip out new line characters
+        if options.virt_text_pos == 'inline' then
+          return ' = ' .. val
+        else
+          return variable.name .. ' = ' .. val
+        end
+      end,
+    })
 
     -- local elixir_ls_debugger = vim.fn.exepath "elixir-ls-debugger"
     local elixir_ls_debugger = vim.fn.stdpath('data') .. "/mason/bin/elixir-ls-debugger"
@@ -1363,6 +1376,11 @@ callbacks = {
       local line = vim.fn.line('.')
       dap.configurations.elixir[2].taskArgs = { "--trace", file .. ":" .. line }
       dap.configurations.elixir[2].debugInterpretModulesPatterns = modules_to_interpret
+
+      if type(_G.extra_dap_init) == "function" then
+          extra_dap_init()
+      end
+
       dap.continue()
     end
 
@@ -1393,7 +1411,7 @@ callbacks = {
       ui.close()
     end
 
-    -- vim.cmd("DapSetLogLevel TRACE")
+      -- vim.defer_fn(function() vim.cmd("DapSetLogLevel TRACE") end, 1000)
   end}
   -- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
 -- require'dap'.adapters.codelldb = {

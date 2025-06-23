@@ -2097,4 +2097,14 @@ if vim.g.neovide then
   vim.g.terminal_color_15 = "#a6adc8"
 end
 
+-- q to close open terminals, let's try this out.
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function(args)
+    vim.keymap.set('n', 'q', function()
+      vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+    end, {buffer = bufnr})
+  end,
+})
+
 -- vim: ts=2 sts=2 sw=2 et

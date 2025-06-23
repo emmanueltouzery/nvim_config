@@ -1390,7 +1390,9 @@ callbacks = {
     vim.keymap.set("n", "<space>uS", function()
       vim.cmd("DapTerminate")
       ui.close()
-      vim.cmd("DapVirtualTextForceRefresh")
+      vim.defer_fn(function()
+        vim.cmd("DapVirtualTextForceRefresh")
+      end, 100)
     end, {desc='debug stop'})
 
     vim.keymap.set("n", "<F10>", dap.step_over)

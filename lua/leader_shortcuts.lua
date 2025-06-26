@@ -915,6 +915,24 @@ function _G.git_do_stash_staged()
 end
 vim.keymap.set("n", "<leader>ghs", '<cmd>lua git_do_stash_staged()<CR>', {desc="git stash only staged files"})
 
+vim.keymap.set("n", "<leader>gxb", function()
+  local merge_ctx = require'diffview.lib'.get_current_view().cur_entry.merge_ctx
+  local commit = merge_ctx.base.hash
+  vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
+end, {desc="view conflicting commit - base"})
+
+vim.keymap.set("n", "<leader>gxo", function()
+  local merge_ctx = require'diffview.lib'.get_current_view().cur_entry.merge_ctx
+  local commit = merge_ctx.ours.hash
+  vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
+end, {desc="view conflicting commit - ours"})
+
+vim.keymap.set("n", "<leader>gxt", function()
+  local merge_ctx = require'diffview.lib'.get_current_view().cur_entry.merge_ctx
+  local commit = merge_ctx.theirs.hash
+  vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
+end, {desc="view conflicting commit - theirs"})
+
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", function() vim.cmd[[norm ghgh]] end, {desc= "stage hunk"})
 -- vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})

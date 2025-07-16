@@ -105,7 +105,10 @@ require('packer').startup(function(use)
 
     local telescope_pick_win_and_open = function(prompt_bufnr)
       local entry = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
-      filename = entry.cwd .. "/" .. entry.filename
+      filename = entry.filename
+      if entry.cwd then
+        filename = entry.cwd .. "/" .. entry.filename
+      end
       actions.close(prompt_bufnr)
       if vim.fn.winnr('$') > 1 then
         vim.cmd[[ChooseWin]]

@@ -1604,6 +1604,20 @@ callbacks = {
           desc = "Collapse quickfix context",
         },
       },
+      -- https://github.com/stevearc/quicker.nvim/issues/43#issuecomment-2675837219
+      on_qf = function(bufnr)
+        vim.b.detectindent_has_tried_to_detect = 1
+        vim.keymap.set('n', 'dd', function()
+          vim.o.lazyredraw = true
+          vim.cmd.normal{vim.api.nvim_replace_termcodes('<CR>', true, true, true), bang = true}
+          vim.cmd.delete()
+          vim.cmd.normal{vim.api.nvim_replace_termcodes('<C-o>', true, true, true), bang = true}
+          vim.cmd.wincmd("p")
+          vim.o.lazyredraw = false
+        end, {
+            buffer = true,
+          })
+      end,
     })
   end}
   use {"emmanueltouzery/telescope-sg", commit="4c9e7946772a85c70108b8fc0bf2aa03b78132df"}

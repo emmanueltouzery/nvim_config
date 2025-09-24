@@ -1309,7 +1309,7 @@ function _G.toggle_diff()
   -- some windows may not be in diff mode, these that I ignore in this function
   -- => check if any window is in diff mode
   local has_diff = false
-  local wins = vim.api.nvim_list_wins()
+  local wins = vim.api.nvim_tabpage_list_wins(0)
   for i, win in pairs(wins) do
     has_diff = has_diff or vim.api.nvim_win_call(win, function() return vim.opt.diff:get() end)
   end

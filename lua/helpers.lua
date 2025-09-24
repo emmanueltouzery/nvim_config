@@ -1318,7 +1318,7 @@ function _G.toggle_diff()
     vim.cmd("windo diffoff")
   else
     -- used to do a plain 'windo diffthis', but i want to exclude some window types
-    local wins = vim.api.nvim_list_wins()
+    local wins = vim.api.nvim_tabpage_list_wins(0)
     for i, win in pairs(wins) do
       local buf = vim.api.nvim_win_get_buf(win)
       local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")

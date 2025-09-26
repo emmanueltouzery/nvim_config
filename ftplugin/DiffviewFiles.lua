@@ -68,13 +68,6 @@ local function toggle_expand_panel()
 end
 vim.keymap.set('n', '<localleader>s', toggle_expand_panel, { buffer = true, desc = "Toggle expansion of file panel to fit" })
 
-require 'key-menu'.set('n', '<localleader>c', {buffer = true, desc='Code'})
-local function display_md()
-  local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
-  glow_for_buffer(bufnr)
-end
-vim.keymap.set('n', '<localleader>cm', display_md, { buffer = true, desc = "Display markdown" })
-
 require 'key-menu'.set('n', '<localleader>x', {buffer = true, desc='Conflicts'})
 
 vim.keymap.set("n", "<localleader>xb", function()

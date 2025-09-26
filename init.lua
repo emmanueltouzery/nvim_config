@@ -530,6 +530,13 @@ require('packer').startup(function(use)
                 require'diffview.config'.actions.restore_entry()
               end
             end, { desc = "Restore entry to the state on the left side" } },
+            -- makes sense here and not in localleader because in this case we override a global shortcut
+            {"n", "<leader>cm", function()
+              local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
+              glow_for_buffer(bufnr)
+            end,
+              {desc = "Display markdown"},
+            },
           },
           file_history_panel = {
             {"n", "gf", diffview_gf,

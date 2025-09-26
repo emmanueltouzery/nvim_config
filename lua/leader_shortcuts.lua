@@ -915,24 +915,6 @@ function _G.git_do_stash_staged()
 end
 vim.keymap.set("n", "<leader>ghs", '<cmd>lua git_do_stash_staged()<CR>', {desc="git stash only staged files"})
 
-vim.keymap.set("n", "<leader>gxb", function()
-  local merge_ctx = require'diffview.lib'.get_current_view().cur_entry.merge_ctx
-  local commit = merge_ctx.base.hash
-  vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
-end, {desc="view conflicting commit - base"})
-
-vim.keymap.set("n", "<leader>gxo", function()
-  local merge_ctx = require'diffview.lib'.get_current_view().cur_entry.merge_ctx
-  local commit = merge_ctx.ours.hash
-  vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
-end, {desc="view conflicting commit - ours"})
-
-vim.keymap.set("n", "<leader>gxt", function()
-  local merge_ctx = require'diffview.lib'.get_current_view().cur_entry.merge_ctx
-  local commit = merge_ctx.theirs.hash
-  vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
-end, {desc="view conflicting commit - theirs"})
-
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", function() vim.cmd[[norm ghgh]] end, {desc= "stage hunk"})
 -- vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
@@ -967,11 +949,6 @@ vim.keymap.set('n', '<leader>cnf', function()
   vim.cmd[[norm! zf]]
 end, {desc="fold custom block"})
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path", silent=true})
-
-require 'key-menu'.set('n', '<Space>cC', {desc='Code Conflicts'})
-vim.keymap.set('n', '<leader>cCb', ":lua diffview_conflict_view_commit('base')<cr>", {desc="conflict show BASE commit", silent=true})
-vim.keymap.set('n', '<leader>cCo', ":lua diffview_conflict_view_commit('ours')<cr>", {desc="conflict show OURS commit", silent=true})
-vim.keymap.set('n', '<leader>cCt', ":lua diffview_conflict_view_commit('theirs')<cr>", {desc="conflict show THEIRS commit", silent=true})
 
 require 'key-menu'.set('n', '<Space>cc', {desc='Code Csv'})
 vim.keymap.set('n', '<leader>cca', function()

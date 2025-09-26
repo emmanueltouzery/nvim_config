@@ -414,9 +414,6 @@ require('packer').startup(function(use)
         },
       },
     })
-    -- currently not tree-sitter support for XML, use the HTML support instead
-    -- https://github.com/nvim-treesitter/nvim-treesitter/issues/3295
-    -- vim.treesitter.language.register("html", "xml")
   end}
   use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client
   use {'emmanueltouzery/nvim-cmp', commit='473a1c508757d93b29c142b8c97f915f7a909b04'} -- Autocompletion plugin
@@ -514,48 +511,6 @@ require('packer').startup(function(use)
             },
             { "n", "ćf", require("diffview.config").actions.select_first_entry, { desc = "Open the diff for the first file" } },
             { "n", "žf", require("diffview.config").actions.select_last_entry, { desc = "Open the diff for the last file" } },
-            {"n", "<leader>cm", function()
-              local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
-              glow_for_buffer(bufnr)
-            end,
-              {desc = "Display markdown"},
-            },
-            {"n", "<leader>x", function()
-              if vim.w.orig_width == nil then
-                local bufnr = vim.api.nvim_win_get_buf(0)
-                local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-                local maxcols = 0
-                for _, line in ipairs(lines) do
-                  local cols = #line
-                  if cols > maxcols then
-                    maxcols = cols
-                  end
-                end
-                vim.w.orig_width = vim.api.nvim_win_get_width(0)
-                vim.api.nvim_win_set_width(0, maxcols)
-              else
-                vim.api.nvim_win_set_width(0, vim.w.orig_width)
-                vim.w.orig_width = nil
-              end
-            end, {desc = "Toggle expansion of file panel to fit"}
-            },
-            {"n", "<leader>cF", function()
-              local absolute_file_path = require'diffview.lib'.get_current_view().panel.cur_file.absolute_path
-              local git_path = vim.fs.root(absolute_file_path, '.git')
-              local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
-              local conflicts = require'diffview.lib'.get_current_view().panel.cur_file.stats.conflicts
-              if conflicts ~= nil and conflicts > 0 then
-                open_command_in_popup("difft " .. file_path)
-              else
-                local left_commit = require'diffview.lib'.get_current_view().left.commit
-                local right_commit = require'diffview.lib'.get_current_view().right.commit
-                if left_commit ~= nil and right_commit ~= nil then
-                  open_difftastic(file_path, left_commit, right_commit)
-                else
-                  open_command_in_popup("PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. file_path)
-                end
-              end
-            end, {desc= "Diff with difftastic"}},
             { "n", "X", function()
               local rel_path = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().path
               local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
@@ -580,12 +535,6 @@ require('packer').startup(function(use)
             {"n", "gf", diffview_gf,
               {desc = "Goto File"},
             },
-            {"n", "<leader>cF", function()
-              local file_path = require'diffview.lib'.get_current_view().cur_layout.b.file.path
-              local left_commit = require'diffview.lib'.get_current_view().cur_layout.a.file.rev.commit
-              local right_commit = require'diffview.lib'.get_current_view().cur_layout.b.file.rev.commit
-              open_difftastic(file_path, left_commit, right_commit)
-            end, {desc= "Diff with difftastic"}},
             {"n", "gc", function()
               local commit = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().commit.hash
               vim.cmd("DiffviewOpen " .. commit .. "^.." ..commit)

@@ -866,13 +866,6 @@ function _G.diffview_gf()
   end
 end
 
-function _G.diffview_conflict_view_commit(which)
-  local merge_ctx = require("diffview.lib").get_current_view().merge_ctx
-  if merge_ctx then
-    show_commit(merge_ctx[which].hash)
-  end
-end
-
 function _G.get_nvimtree_window()
   local wins = vim.api.nvim_list_wins()
   for i, win in ipairs(wins) do

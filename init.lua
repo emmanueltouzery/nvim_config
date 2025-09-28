@@ -1545,7 +1545,7 @@ callbacks = {
     -- tone down the zebra effect with my theme
     vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
   end}
-  use {"stevearc/quicker.nvim", commit="cde090601b24cd6f4982e702dd31a810c19ee975", config=function()
+  use {"stevearc/quicker.nvim", commit="12a2291869a326424b1cbee937f4f80334433012", config=function()
     require("quicker").setup({
       keys = {
         {

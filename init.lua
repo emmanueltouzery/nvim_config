@@ -84,7 +84,7 @@ require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -- UI to select things (files, grep results, open buffers...)
   use { 'emmanueltouzery/telescope.nvim', requires = {
-    { 'emmanueltouzery/plenary.nvim', commit = '7750bc895a1f06aa7a940f5aea43671a74143be0' },
+    { 'nvim-lua/plenary.nvim', commit = 'b9fd5226c2f76c951fc8ed5923d85e4de065e509' },
     { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
   }, commit="e233ab41870184b2177dda46d0f54cedd7a760e0", config = function()
     local actions = require("telescope.actions")

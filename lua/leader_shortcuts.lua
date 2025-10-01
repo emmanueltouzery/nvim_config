@@ -916,9 +916,9 @@ end
 vim.keymap.set("n", "<leader>ghs", '<cmd>lua git_do_stash_staged()<CR>', {desc="git stash only staged files"})
 
 require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
-vim.keymap.set({"n", "v"}, "<leader>hS", function() vim.cmd[[norm ghgh]] end, {desc= "stage hunk"})
+vim.keymap.set({"n", "v"}, "<leader>hS", function() vim.cmd[[norm ghgh]] end, {desc= "stage hunk"}) -- provided by mini.diff
 -- vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
-vim.keymap.set({"n", "v"}, "<leader>hr", function() vim.cmd[[norm gHgh]] end, {desc="reset hunk"})
+vim.keymap.set({"n", "v"}, "<leader>hr", function() vim.cmd[[norm gHgh]] end, {desc="reset hunk"}) -- provided by mini.diff
 vim.keymap.set("n", "<leader>hh", function() hunk_popup() end, {desc="preview hunk"})
 
 -- CODE

@@ -2076,7 +2076,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
   callback = function(args)
     vim.keymap.set('n', 'q', function()
       vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
-    end, {buffer = bufnr})
+    end, {buffer = true})
   end,
 })
 

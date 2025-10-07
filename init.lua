@@ -336,7 +336,7 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope-file-browser.nvim', commit='ea7905ed9b13bcf50e0ba4f3bff13330028d298c', config=function()
     require("telescope").load_extension "file_browser"
   end}
-  use { 'nvim-lualine/lualine.nvim', commit='2a5bae925481f999263d6f5ed8361baef8df4f83', config=function()
+  use { 'nvim-lualine/lualine.nvim', commit='b8c23159c0161f4b89196f74ee3a6d02cdc3a955', config=function()
     setup_lualine()
   end}
   use {'echasnovski/mini.diff', commit = '65c59f9967fec965d8759a88c1baa43147699035', config=function()
@@ -738,7 +738,6 @@ callbacks = {
       mappings = "<leader>gy"
     })
   end}
-  use {'emmanueltouzery/lualine-lsp-progress', commit='323c172eb74dd2007682bc8f7aaf52dc0517d6cf'}
   use {'emmanueltouzery/dressing.nvim', commit='ed59504b70f2ced477eb39f1fe6e1acc668dcfbf', config=function()
     require('dressing').setup({
       input = {

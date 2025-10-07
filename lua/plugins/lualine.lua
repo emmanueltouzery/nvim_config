@@ -253,6 +253,22 @@ local function dap_status()
   end
 end
 
+local lsp_status_component = require('lualine.components.lsp_status'):extend()
+function lsp_status_component:update_status()
+  -- Call the original method and then modify it
+  local result = lsp_status_component.super.update_status(self)
+  -- only display LSP progress info if the LSP is loading
+  local spin_chars = vim.tbl_filter(
+    function(spin_symbol) return result:find(spin_symbol) end,
+    { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' }
+  )
+  if #spin_chars == 0 then
+    -- no LSP loading (no LSP at all, or all LSPs fully loaded)
+    return ""
+  end
+  return result
+end
+
 local function lsp_pending()
   return vim.g.lualine_lsp_pending or ""
 end
@@ -340,14 +356,7 @@ function setup_lualine()
         -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
         -- don't color the filetype icon, else it's not always visible with the 'nord' theme.
         lualine_x = { 'filesize', {'filetype', colored = false, icon_only = true}},
-        lualine_y = {'progress', scroll_indicator, {
-          'lsp_progress', 
-          display_components = { 
-            -- 'spinner', 'lsp_client_name', {'percentage'},
-            'spinner', 'lsp_client_name',
-          },
-          spinner_symbols = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
-        }},
+        lualine_y = { {lsp_status_component, icon = '󰘦 '} },
         -- lualine_z = {'location'}
         lualine_z = {
           { 'location', separator = { right = '' }, left_padding = 2 },

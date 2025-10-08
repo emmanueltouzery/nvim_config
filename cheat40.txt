@@ -1,3 +1,5 @@
+Join lines, no spaces    :%join!       N
+Pipe through program     :%!prog       N
 Case conversion {{{1
 Convert to camelCase     crc          VN
 Convert to MixedCase     crm          VN

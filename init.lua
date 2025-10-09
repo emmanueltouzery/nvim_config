@@ -455,6 +455,17 @@ require('packer').startup(function(use)
       end
 
       require('diffview').setup {
+        hooks = {
+          view_opened = function(view)
+            -- duplicated with another FileType hook because matchadd() is per-window,
+            -- and diffview reuses buffers on new windows so the autocomand doesn't help
+            for _, win in ipairs(vim.api.nvim_tabpage_list_wins(view.tabpage)) do
+              vim.api.nvim_win_call(win, function()
+                vim.cmd("call matchadd('TodoGroup', 'TODO', -1)")
+              end)
+            end
+          end,
+        },
         keymaps = {
           view = {
             ["šx"] = function()
@@ -598,7 +609,7 @@ require('packer').startup(function(use)
             },
             relative_date_cutoff_seconds = 3 * 24 * 60 * 60,
           }
-        }
+        },
       }
 
       -- https://github.com/sindrets/diffview.nvim/issues/167#issuecomment-1173673615

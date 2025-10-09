@@ -683,7 +683,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
       table.insert(branches, entry.value)
     end
     if #branches == 0 then
-      branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+      local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
       actions.close(prompt_bufnr)
       -- heuristics.. will see if it works out
       if string.match(branch, "develop") or string.match(branch, "master") or string.match(branch, "main") then
@@ -701,7 +701,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     end
   end, {desc = "Git diff"})
   map('i', '<C-enter>', function(nr) -- create a local branch to track an origin branch
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
     if string.match(branch, "^origin/") then
       actions.close(prompt_bufnr)
@@ -728,7 +728,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     end
   end, {desc = "Create local branch"})
   map('i', '<C-g>', function(nr) -- merge another branch
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     local cmd_output = {}
     actions.close(prompt_bufnr)
     local require_ff_msg = "Fail if a merge commit would be created"
@@ -764,7 +764,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
   map('i', '<C-Del>', function(nr) -- delete
     local current_picker = action_state.get_current_picker(prompt_bufnr)
     current_picker:delete_selection(function(selection)
-      branch = require("telescope.actions.state").get_selected_entry(selection.bufnr).value
+      local branch = require("telescope.actions.state").get_selected_entry(selection.bufnr).value
       actions.close(prompt_bufnr)
       local Job = require'plenary.job'
       if string.match(branch, "^origin/") then
@@ -811,7 +811,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
     end)
   end, {desc="Delete"})
   map('i', '<C-c>', function(nr) -- commits
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     -- require'telescope.builtin'.git_commits{
     telescope_commits({
@@ -822,16 +822,16 @@ function telescope_branches_mappings(prompt_bufnr, map)
       })
   end, {desc="Commits"})
   map('i', '<C-h>', function(nr) -- history
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     actions.close(prompt_bufnr)
     vim.cmd('DiffviewFileHistory ' ..  vim.fs.root(0, '.git') .. " --range=" .. branch)
   end)
   map('i', '<C-y>', function(nr) -- copy branch name
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     copy_to_clipboard(branch)
   end, {desc="Copy branch name"})
   map('i', '<C-w>', function(nr) -- fast-forWard to origin
-    branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
     -- https://samuelgruetter.net/blog/2018/08/31/git-ffwd-without-checkout/
     local cmd_output = {"FF branch:"}
     vim.fn.jobstart('git fetch origin ' .. branch .. ":" .. branch, {
@@ -855,6 +855,10 @@ function telescope_branches_mappings(prompt_bufnr, map)
       end,
     })
   end, {desc="fast-forward to origin"})
+  map('i', '<C-a>', function(nr) -- search in added compared to branch
+    local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    require'agitator'.search_in_added({git_rev = branch})
+  end, {desc="search in added compared to branch"})
   return true
 end
 vim.keymap.set("n", "<leader>gc", function()

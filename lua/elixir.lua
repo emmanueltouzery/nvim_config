@@ -129,6 +129,7 @@ function _G.inspect_point_candidate_param(winid)
   end
 end
 
+-- see  typescript_insert_inspect_param
 function _G.elixir_insert_inspect_param()
   winid = vim.api.nvim_get_current_win()
   local cur_line = vim.fn.line('.')

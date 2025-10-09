@@ -555,6 +555,7 @@ require('packer').startup(function(use)
                     vim.schedule(function()
                       local msg = "Stash pop failed: " .. res.stderr
                       notif({msg}, vim.log.levels.ERROR)
+                      print(msg)
                     end)
                   else
                     -- unstage everything. we stage when we stash files to avoid issues with untracked files...
@@ -570,6 +571,7 @@ require('packer').startup(function(use)
                       else
                         local msg = "Unstage after unstash failed: " .. res.stderr
                         notif({msg}, vim.log.levels.ERROR)
+                        print(msg)
                       end
                     end))
                   end

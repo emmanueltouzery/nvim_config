@@ -184,7 +184,7 @@ local function typescript_insert_inspect_param()
         vim.cmd("norm! O")
         vim.cmd[[set nopaste]]
       end
-      vim.cmd('norm! aconsole.log(`' .. param_name .. ': ${JSON.stringify(' .. param_name .. ')}`)')
+      vim.cmd('norm! aconsole.log(`' .. param_name .. ': ${JSON.stringify(' .. param_name .. ', null, 2)}`)')
       -- position the cursor in the quotes to enable quick rename
       vim.cmd('norm! 0')
       vim.cmd('norm! 13l')

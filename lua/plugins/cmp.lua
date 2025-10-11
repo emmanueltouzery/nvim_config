@@ -32,15 +32,12 @@ local function get_kind_icon(kind_type)
   return kind_icons[kind_type]
 end
 
--- luasnip setup
-local luasnip = require 'luasnip'
-
 -- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
   snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
+    expand = function(arg)
+      vim.snippet.expand(arg.body)
     end,
   },
   mapping = cmp.mapping.preset.insert({

@@ -421,8 +421,6 @@ require('packer').startup(function(use)
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
   use { "hrsh7th/cmp-path", commit = "91ff86cd9c29299a64f968ebb45846c485725f23" }
   use { "hrsh7th/cmp-emoji", commit = "0acd702358230abeb6576769f7116e766bca28a0" }
-  -- i NEED a snippet engine, whether I want it or not, see https://github.com/hrsh7th/nvim-cmp/issues/304#issuecomment-939279715
-  use {'saadparwaiz1/cmp_luasnip', commit = '18095520391186d634a0045dacaa346291096566'}
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
   use {'emmanueltouzery/doom-one.nvim', commit='2dedefe10f3294b6fd8b7b459673548e209da06d', config = function()
@@ -1154,7 +1152,6 @@ callbacks = {
     dashboard.config.opts.noautocmd = true
     alpha.setup(dashboard.config)
   end}
-  use {'L3MON4D3/LuaSnip', commit = '52f4aed58db32a3a03211d31d2b12c0495c45580'} -- Snippets plugin
   use {'emmanueltouzery/vim-dispatch-neovim', commit='cdaca4acc8cda00eaf68ef5943c02c1842b5353f'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()

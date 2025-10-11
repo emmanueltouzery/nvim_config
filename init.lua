@@ -437,6 +437,12 @@ require('packer').startup(function(use)
     vim.g.rooter_silent_chdir = 1
     vim.g.rooter_cd_cmd = 'lcd'
     vim.g.rooter_change_directory_for_non_project_files = 'current'
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "RooterChDir",
+      callback=function()
+        set_extra_spellfiles()
+      end})
   end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
   use {'emmanueltouzery/vim-choosewin', commit='12098bc747ccb593c87b163fb67f1c8367b1e2c8',
     -- fork which adds the "close window" feature
@@ -1845,12 +1851,6 @@ end
 -- https://vi.stackexchange.com/a/15053/38754
 vim.api.nvim_create_autocmd("FileType", {
   callback=function(ev)
-    set_extra_spellfiles()
-  end})
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = "RooterChDir",
-  callback=function()
     set_extra_spellfiles()
   end})
 

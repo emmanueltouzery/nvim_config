@@ -1,5 +1,5 @@
 
--- lifted from git-signs
+-- START lifted from git-signs
 
 --- @param old_start integer
 --- @param old_count integer
@@ -168,21 +168,28 @@ local function hunk_popup_show(lines, width)
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, lines)
   vim.api.nvim_set_option_value("filetype", "diff", {buf = popup_buf})
   vim.b.popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
+  local parent_buf = vim.api.nvim_get_current_buf()
+
+  local function close_popup()
+    local ok, popup_win = pcall(vim.api.nvim_buf_get_var, parent_buf, 'popup_win')
+    if ok then
+      local ok, isvalid = pcall(vim.api.nvim_win_is_valid, popup_win)
+      if ok and isvalid then
+        pcall(vim.api.nvim_win_close, popup_win, true)
+        vim.api.nvim_buf_del_var(parent_buf, 'popup_win')
+      end
+    end
+  end
+
+  vim.api.nvim_buf_call(popup_buf, function()
+    vim.keymap.set('n', 'q', close_popup, { buffer = true })
+  end)
 
   do_inline_diff(popup_buf, lines)
 
   vim.api.nvim_create_autocmd({ "WinEnter", "WinLeave", "TabClosed", "CursorMoved" }, {
     group = "hunkAtCurpos",
-    callback = function()
-      local ok, popup_win = pcall(vim.api.nvim_buf_get_var, 0, 'popup_win')
-      if ok then
-        local ok, isvalid = pcall(vim.api.nvim_win_is_valid, popup_win)
-        if ok and isvalid then
-          pcall(vim.api.nvim_win_close, popup_win, true)
-          vim.b.popup_win = nil
-        end
-      end
-    end,
+    callback = close_popup,
     once = true,
   })
 end

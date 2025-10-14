@@ -1170,8 +1170,32 @@ vim.keymap.set("n", "<leader>vz", ":let g:neovide_scale_factor = ", {desc="neovi
 require 'key-menu'.set('n', '<Space>j', {desc='Jobs'})
 vim.keymap.set("n", "<leader>jt", ":lua overseer_popup_running_task()<cr>", {desc="open running job Terminal"})
 vim.keymap.set("n", "<leader>js", ":lua overseer_show_running_task()<cr>", {desc="show running job Terminal"})
-vim.keymap.set("n", "<leader>jlt", function() vim.cmd[[OverseerToggle]]; vim.defer_fn(function() vim.cmd[[execute "horizontal wincmd ="]] end, 50) end, {desc="Jobs List Toggle"})
-vim.keymap.set("n", "<leader>jlo", function() vim.cmd[[OverseerOpen]]; vim.defer_fn(function() vim.cmd[[execute "horizontal wincmd ="]] end, 50) end, {desc="Jobs List Open"})
+
+function overseer_list_opentoggle(is_open)
+  local ok, is_valid = pcall(vim.api.nvim_win_is_valid, vim.g.overseer_winid)
+  if not ok or not is_valid then
+    vim.g.overseer_winid = vim.api.nvim_open_win(0, false, {
+      relative="editor", border="rounded", width=20,
+      height=vim.api.nvim_get_option("lines") - vim.o.cmdheight - 4,
+      anchor="NE", row=1, col=vim.api.nvim_get_option("columns")
+    })
+  end
+  if is_open then
+    require'overseer'.open({winid=vim.g.overseer_winid})
+  else
+    require'overseer'.toggle({winid=vim.g.overseer_winid})
+  end
+  vim.defer_fn(function()
+    vim.cmd[[execute "horizontal wincmd ="]]
+  end, 50)
+end
+
+vim.keymap.set("n", "<leader>jlt", function()
+  overseer_list_opentoggle(false)
+end, {desc="Jobs List Toggle"})
+vim.keymap.set("n", "<leader>jlo", function()
+  overseer_list_opentoggle(true)
+end, {desc="Jobs List Open"})
 vim.keymap.set("n", "<leader>jr", "<cmd>OverseerRun<CR>", {desc="Run job"})
 vim.keymap.set("n", "<leader>jC", "<cmd>OverseerClearCache<CR>", {desc="Clear tasks cache"})
 vim.keymap.set("n", "<leader>jd", ":lua overseer_dispose_completed_jobs()<cr>", {desc="Dispose completed jobs"})

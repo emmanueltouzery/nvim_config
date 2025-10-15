@@ -1171,13 +1171,24 @@ callbacks = {
   -- and other improvements
   -- alternative => https://github.com/ggandor/leap-ast.nvim
   use {'emmanueltouzery/nvim-treehopper', commit='e1824c4'}
-  use {'kylechui/nvim-surround', commit='d91787d5a716623be7cec3be23c06c0856dc21b8', config=function()
-    require("nvim-surround").setup({
-      keymaps = {
-        -- https://github.com/ggandor/lightspeed.nvim/issues/31
-        -- fix conflict with lightspeed
-        visual = "gs",
-      }
+  -- previously used a very old version of kylechui/nvim-surround
+  -- mini.surround: slightly less code
+  -- shortcuts all start with 's', a little more regular
+  -- supports JSX <></> tags (rename to <> to <div> for instance - the latest nvim-surround might support it too...)
+  use {'nvim-mini/mini.surround', commit='444e155147e2b5159dd28a65f9736254c16cb817', config=function()
+    require('mini.surround').setup({
+      highlight_duration = 3000,
+      custom_surroundings = {
+        -- rename tag while keeping attributes https://github.com/nvim-mini/mini.nvim/issues/1293#issuecomment-2423827325
+        T = {
+          input = { '<(%w+)[^<>]->.-</%1>', '^<()%w+().*</()%w+()>$' },
+          output = function()
+            local tag_name = MiniSurround.user_input('Tag name')
+            if tag_name == nil then return nil end
+            return { left = tag_name, right = tag_name }
+          end,
+        },
+      },
     })
   end}
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}

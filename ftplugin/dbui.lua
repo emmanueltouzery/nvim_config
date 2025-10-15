@@ -56,6 +56,8 @@ local function open_table_def()
 
         vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, {table_name, ""})
         vim.api.nvim_buf_set_lines(popup_buf, 2, -1, false, records)
+
+        require("zebrazone").start()
       end))
     else
       print("Unsupported DB")

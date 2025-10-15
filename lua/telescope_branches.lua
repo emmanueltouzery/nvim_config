@@ -146,7 +146,7 @@ _G.git_branches_with_base = function(base, opts)
 
   pickers
     .new(opts, {
-      prompt_title = "Git Branches",
+      prompt_title = "Git Branches (base: " .. base .. ")",
       finder = finders.new_table {
         results = results,
         entry_maker = function(entry)
@@ -161,12 +161,16 @@ _G.git_branches_with_base = function(base, opts)
       sorter = conf.file_sorter(opts),
       attach_mappings = function(_, map)
         actions.select_default:replace(actions.git_checkout)
-        map({ "i", "n" }, "<c-t>", actions.git_track_branch)
-        map({ "i", "n" }, "<c-b>", actions.git_rebase_branch)
-        map({ "i", "n" }, "<c-a>", actions.git_create_branch)
-        map({ "i", "n" }, "<c-s>", actions.git_switch_branch)
-        map({ "i", "n" }, "<c-delete>", actions.git_delete_branch)
-        map({ "i", "n" }, "<c-y>", actions.git_merge_branch)
+        map({ "i", "n" }, "<c-t>", actions.git_track_branch, {desc="Track branch"})
+        map({ "i", "n" }, "<c-b>", actions.git_rebase_branch, {desc="reBase branch"})
+        map({ "i", "n" }, "<c-a>", actions.git_create_branch, {desc="Add branch"})
+        map({ "i", "n" }, "<c-s>", actions.git_switch_branch, {desc="Switch branch"})
+        map({ "i", "n" }, "<c-delete>", actions.git_delete_branch, {desc="Delete branch"})
+        map({ "i", "n" }, "<c-y>", actions.git_merge_branch, {desc="merge branch"})
+        map({ "i", "n" }, "<c-u>", function(prompt_bufnr) -- based upon
+          local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+          git_branches_with_base(branch, opts)
+        end, {desc="base picker Upon branch"})
         return true
       end,
     })

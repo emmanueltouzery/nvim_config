@@ -74,7 +74,9 @@ local function open_table_def()
     end
   elseif line_drawer_info.type == "table" and line_drawer_info.action == "open" then
     local query = line_drawer_info.content
-    :gsub("{table}", line_drawer_info.table):gsub("{optional_schema}", line_drawer_info.schema .. ".") .. ";"
+    :gsub("{table}", line_drawer_info.table)
+    :gsub("{optional_schema}", line_drawer_info.schema .. ".")
+    :gsub("{schema}", line_drawer_info.schema) .. ";"
     copy_to_clipboard(query)
     open_query_in_popup(db_name, line_drawer_info.table, query)
     notif({"Copied query to clipboard", query}, vim.log.levels.INFO)

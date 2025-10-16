@@ -1534,6 +1534,10 @@ function _G.open_in_centered_popup(buf, pref_height)
     vim.api.nvim_win_call(w, function()
       -- noscrollbind useful to explore CSVs (open another window, don't affect the scroll in the main window)
       vim.cmd("setlocal noscrollbind")
+
+      vim.keymap.set({'n', 'v'}, 'q', function()
+        vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+      end, {buffer = true})
     end)
     return w
 end

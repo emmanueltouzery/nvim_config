@@ -1224,7 +1224,7 @@ function _G.close_nonvisible_buffers()
   end
   deleted_count = 0
   for _, b in pairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(b) and not vim.tbl_contains(visible_bufs, b) then
+    if vim.api.nvim_buf_is_loaded(b) and not vim.tbl_contains(visible_bufs, b) and vim.bo[self.state.bufnr].filetype ~= "OverseerList" then
       local force = vim.api.nvim_buf_get_option(b, "buftype") == "terminal"
       local ok = pcall(vim.api.nvim_buf_delete, b, { force = force })
       if ok then

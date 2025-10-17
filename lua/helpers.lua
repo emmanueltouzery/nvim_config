@@ -1253,8 +1253,8 @@ function _G.test_all_bg_run()
     end
   end
   vim.g.test_bg_jobid = jobid
-  hide_test_running_notif = notif(
-  {" Tests running..."}, 
+  local hide_test_running_notif = notif(
+  {" Tests running..."},
   vim.log.levels.INFO, {dont_hide = true})
   vim.defer_fn(function()
     test_all_bg_run_check_completion(jobid, hide_test_running_notif)

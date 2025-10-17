@@ -756,6 +756,12 @@ function telescope_branches_mappings(prompt_bufnr, map)
           end),
           on_exit = vim.schedule_wrap(function(j, output)
             notif(cmd_output)
+            if string.find(vim.fn.join(cmd_output, "\n"), "CONFLICT") then
+              local hide_conflict_notif = notif({"The merge produced a conflict"}, vim.log.levels.ERROR, {dont_hide = true})
+              vim.defer_fn(function()
+                hide_conflict_notif()
+              end, 7000)
+            end
           end),
         })
       end

@@ -54,24 +54,25 @@ end
 local function open_table_def()
   local line_drawer_info = vim.fn['db_ui#drawer#get']().content[vim.fn.line('.')]
   local url = vim.tbl_values(vim.fn['db_ui#drawer#get']().dbui.dbs)[1].url 
+
+  if not vim.startswith(url, "postgresql://") then
+    print("Unsupported DB")
+  end
+
   local db_name = vim.tbl_values(vim.fn['db_ui#drawer#get']().dbui.dbs)[1].db_name
 
   local schema, table_name = string.match(line_drawer_info.type, "([%w_]+)%->tables%->items%->([%w_]+)$")
   if table_name then
     local cols_query = vim.tbl_values(vim.fn['db_ui#drawer#get']().dbui.dbs)[1].table_helpers.Columns
-      :gsub("{table}", table_name):gsub("{schema}", schema)
+    :gsub("{table}", table_name):gsub("{schema}", schema)
 
 
-    if vim.startswith(url, "postgresql://") then
-      cols_query = cols_query:gsub("%*", "column_name, column_default, is_nullable, data_type, character_maximum_length")
+    cols_query = cols_query:gsub("%*", "column_name, column_default, is_nullable, data_type, character_maximum_length")
 
-      -- trying to run the query through dadbod lead nowhere. it's just not extensible..
-      -- vim.cmd("topleft DB " .. vim.tbl_values(vim.fn['db_ui#drawer#get']().dbui.dbs)[1].url .. " " .. cols_query)
+    -- trying to run the query through dadbod lead nowhere. it's just not extensible..
+    -- vim.cmd("topleft DB " .. vim.tbl_values(vim.fn['db_ui#drawer#get']().dbui.dbs)[1].url .. " " .. cols_query)
 
-      open_query_in_popup(db_name, table_name, cols_query)
-    else
-      print("Unsupported DB")
-    end
+    open_query_in_popup(db_name, table_name, cols_query)
   elseif line_drawer_info.type == "table" and line_drawer_info.action == "open" then
     local query = line_drawer_info.content
     :gsub("{table}", line_drawer_info.table)

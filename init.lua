@@ -1177,6 +1177,7 @@ callbacks = {
   -- supports JSX <></> tags (rename to <> to <div> for instance - the latest nvim-surround might support it too...)
   use {'nvim-mini/mini.surround', commit='444e155147e2b5159dd28a65f9736254c16cb817', config=function()
     require('mini.surround').setup({
+      n_lines = 50,
       highlight_duration = 3000,
       custom_surroundings = {
         -- rename tag while keeping attributes https://github.com/nvim-mini/mini.nvim/issues/1293#issuecomment-2423827325

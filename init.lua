@@ -376,55 +376,15 @@ require('packer').startup(function(use)
     })
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='684eeac91ed8e297685a97ef70031d19ac1de25a', config=function()
-
-    -- WIP treesitter main branch port
-    -- -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-    -- -- groovy is for gradle build files
-    -- require'nvim-treesitter'.install { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
-    --   "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css" }
-    -- vim.api.nvim_create_autocmd('FileType', {
-    --   pattern = {  "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
-    --     "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css"  },
-    --   callback = function() vim.treesitter.start() end,
-    -- })
-
-    require("nvim-treesitter.configs").setup({
-      -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-      -- groovy is for gradle build files
-      ensure_installed = { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
-        "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css" },
-      highlight = {
-        enable = true ,
-        -- syntax highlight for XML looks significantly worse with tree-sitter than regex,
-        -- and we use HTML support for XML
-        -- disable = {"html"},
-      },
-      autopairs = {
-        enable = true,
-      },
-      indent = { enable = false },
-      playground = { enable = true },
-      tree_docs = { enable = true },
-      context_commentstring = { enable = true },
-      matchup = {
-        enable = true,
-        disable_virtual_text = true,
-      },
-      incremental_selection = {
-        enable = false, -- not using, always afraid of treesitter in terms of perf
-      },
-      autotag = {
-        enable = true,
-        filetypes = {
-          "html",
-          "javascript",
-          "javascriptreact",
-          "svelte",
-          "vue",
-          "markdown",
-        },
-      },
+  use {'nvim-treesitter/nvim-treesitter', commit='30c466ad571b8b99fd06e3df8b2336e3ae63a53a', config=function()
+    -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+    -- groovy is for gradle build files
+    require'nvim-treesitter'.install { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
+      "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css" }
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = {  "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
+        "elixir","jsdoc","json","scss","typescript", "typescriptreact", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css"  },
+      callback = function() vim.treesitter.start() end,
     })
   end}
   use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client

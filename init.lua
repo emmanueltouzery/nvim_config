@@ -377,6 +377,18 @@ require('packer').startup(function(use)
   end}
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use {'nvim-treesitter/nvim-treesitter', commit='684eeac91ed8e297685a97ef70031d19ac1de25a', config=function()
+
+    -- WIP treesitter main branch port
+    -- -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+    -- -- groovy is for gradle build files
+    -- require'nvim-treesitter'.install { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
+    --   "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css" }
+    -- vim.api.nvim_create_autocmd('FileType', {
+    --   pattern = {  "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
+    --     "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css"  },
+    --   callback = function() vim.treesitter.start() end,
+    -- })
+
     require("nvim-treesitter.configs").setup({
       -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
       -- groovy is for gradle build files
@@ -948,6 +960,11 @@ callbacks = {
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
     end
+
+    local function node_from_match(match, path)
+      return ((match or {})[path] or {}).node
+    end
+
     vim.api.nvim_set_hl(0, 'AerialPrivate', { default = true, italic = true})
     require("aerial").setup({
       -- i find the lazy load is not all worth it for me
@@ -976,10 +993,8 @@ callbacks = {
       k = 2,
       post_parse_symbol = function(bufnr, item, ctx)
         if ctx.backend_name == "treesitter" and (ctx.lang == "typescript" or ctx.lang == "tsx") then
-          local utils = require"nvim-treesitter.utils"
-
           -- don't want to display in-function items
-          local value_node = (utils.get_at_path(ctx.match, "var_type") or {}).node
+          local value_node = node_from_match(ctx.match, "var_type")
           local cur_parent = value_node and value_node:parent()
           while cur_parent do
             if cur_parent:type() == "arrow_function"
@@ -994,7 +1009,7 @@ callbacks = {
           -- this combines with get_highlight for which we highlight
           -- private symbols differently
           item.scope = "private"
-          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
+          local value_node = node_from_match(ctx.match, "symbol")
           local cur_parent = value_node and value_node:parent()
           while cur_parent do
             if cur_parent:type() == "export_statement" then
@@ -1006,10 +1021,9 @@ callbacks = {
           if ctx.match.kind ~= "Constant" then
             return true
           end
-          local utils = require"nvim-treesitter.utils"
 
           -- don't want to display in-function items
-          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
+          local value_node = node_from_match(ctx.match, "symbol")
           local cur_parent = value_node and value_node:parent()
           while cur_parent do
             if cur_parent:type() == "closure" then
@@ -1032,15 +1046,13 @@ callbacks = {
             return false
           end
         elseif ctx.backend_name == "treesitter" and ctx.lang == "rust" then
-          local utils = require"nvim-treesitter.utils"
-          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
+          local value_node = node_from_match(ctx.match, "symbol")
           local child_text = vim.treesitter.get_node_text(value_node:child(0), bufnr) or "<parse error>"
           if child_text ~= "pub" then
             item.scope = "private"
           end
         elseif ctx.backend_name == "treesitter" and ctx.lang == "java" then
-          local utils = require"nvim-treesitter.utils"
-          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
+          local value_node = node_from_match(ctx.match, "symbol")
           local child_text = vim.treesitter.get_node_text(value_node:child(0), bufnr) or "<parse error>"
           local is_private = child_text:match("private")
           if is_private then
@@ -1048,8 +1060,7 @@ callbacks = {
           end
         elseif ctx.backend_name == "treesitter" and ctx.lang == "python" then
           -- don't want to display in-function items
-          local utils = require"nvim-treesitter.utils"
-          local value_node = (utils.get_at_path(ctx.match, "symbol") or {}).node
+          local value_node = node_from_match(ctx.match, "symbol")
           local cur_parent = value_node and value_node:parent()
           while cur_parent do
             if cur_parent:type() == "function_definition" then
@@ -1670,26 +1681,6 @@ vim.cmd[[au TextYankPost * silent! lua vim.highlight.on_yank()]]
 --   group = highlight_group,
 --   pattern = '*',
 -- })
-
--- Treesitter configuration
--- Parsers must be installed manually via :TSInstall
-require('nvim-treesitter.configs').setup {
-  highlight = {
-    enable = true, -- false will disable the whole extension
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = 'gnn',
-      node_incremental = 'grn',
-      scope_incremental = 'grc',
-      node_decremental = 'grm',
-    },
-  },
-  indent = {
-    enable = true,
-  },
-}
 
 -- guifont = "JetBrains Mono Nerd Font"
 -- or 10.9 or 11

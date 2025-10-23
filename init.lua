@@ -1081,7 +1081,7 @@ callbacks = {
       end,
     })
   end}
-  use {"windwp/nvim-autopairs", commit='b9cc0a26f3b5610ce772004e1efd452b10b36bc9', config=function()
+  use {"windwp/nvim-autopairs", commit='7a2c97cccd60abc559344042fefb1d5a85b3e33b', config=function()
     require("nvim-autopairs").setup({
       check_ts = true,
       enable_afterquote = true,
@@ -1166,7 +1166,7 @@ callbacks = {
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
   -- language syntax-aware matchit. for instance, json {"test": "value}rest"}
   -- or JSX <TextField<string> ... />, or things in comments which are correctly ignored
-  use {'andymass/vim-matchup', commit='aca23ce53ebfe34e02c4fe07e29e9133a2026481', config=function()
+  use {'andymass/vim-matchup', commit='ca538c3bb02836510526ff7d07cf7e4c8e9a3b90', config=function()
     -- https://github.com/andymass/vim-matchup#customizing-the-highlighting-colors
     vim.cmd [[
       augroup matchup_matchparen_highlight

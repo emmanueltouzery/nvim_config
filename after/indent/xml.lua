@@ -100,7 +100,10 @@ end
 
 function _G.xml_get_indent(lnum)
   -- print("lnum: " .. (lnum or "nil"))
-  local parser = require('nvim-treesitter.parsers').get_parser(0)
+  local parser = vim.treesitter.get_parser(0, nil, {error=false})
+  if parser == nil then
+    return
+  end
   parser:parse()
 
   local first_col_previous, nodes_on_line_previous, indent_offset_previous_line = xml_indent_offset_for_lnum(parser, lnum-2, "previous_line")

@@ -85,7 +85,10 @@ function typescript_remove_unused_import(diag)
     -- https://github.com/ziontee113/syntax-tree-surfer/pull/9#issuecomment-1236067198
     -- https://github.com/neovim/neovim/blob/4686bda06c9f3b7b309cfdc3782effdd465b4010/runtime/lua/vim/treesitter.lua#L281
     -- https://neovim.io/doc/user/treesitter.html#treesitter-node
-    local parser = require('nvim-treesitter.parsers').get_parser(0)
+    local parser = vim.treesitter.get_parser(0, nil, {error=false})
+    if parser == nil then
+      return
+    end
     parser:parse()
     local ts_node = parser
       :named_node_for_range({diag.lnum, diag.col, diag.lnum, diag.col})

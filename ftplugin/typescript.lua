@@ -1,5 +1,8 @@
 local function extract_type()
-  local parser = require('nvim-treesitter.parsers').get_parser(0)
+  local parser = vim.treesitter.get_parser(0, nil, {error=false})
+  if parser == nil then
+    return
+  end
   parser:parse()
   local ts_node = parser:named_node_for_range({vim.fn.line('.')-1, vim.fn.col('.')-1, vim.fn.line('.')-1, vim.fn.col('.')-1})
   local parent = ts_node
@@ -65,7 +68,10 @@ end
 vim.keymap.set('n', '<localleader>t', extract_type, { buffer = true, desc = "Extract type for K exploration" })
 
 local function jump_param()
-  local parser = require('nvim-treesitter.parsers').get_parser(0)
+  local parser = vim.treesitter.get_parser(0, nil, {error=false})
+  if parser == nil then
+    return
+  end
   parser:parse()
   local ts_node = parser:named_node_for_range({vim.fn.line('.')-1, vim.fn.col('.')-1, vim.fn.line('.')-1, vim.fn.col('.')-1})
   if ts_node:type() == "formal_parameters" or ts_node:type() == "arguments" then

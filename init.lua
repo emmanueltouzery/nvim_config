@@ -1141,7 +1141,7 @@ callbacks = {
   -- https://github.com/mfussenegger/nvim-treehopper/issues/10#issuecomment-1126289736
   -- and other improvements
   -- alternative => https://github.com/ggandor/leap-ast.nvim
-  use {'emmanueltouzery/nvim-treehopper', commit='e1824c4'}
+  use {'emmanueltouzery/nvim-treehopper', commit='402e65c326671adba7af75657910620af80702b8'}
   -- previously used a very old version of kylechui/nvim-surround
   -- mini.surround: slightly less code
   -- shortcuts all start with 's', a little more regular

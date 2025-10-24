@@ -1191,9 +1191,6 @@ function overseer_list_opentoggle(is_open)
   else
     require'overseer'.toggle({winid=vim.g.overseer_winid})
   end
-  vim.defer_fn(function()
-    vim.cmd[[execute "horizontal wincmd ="]]
-  end, 50)
 end
 
 vim.keymap.set("n", "<leader>jlt", function()

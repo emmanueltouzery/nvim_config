@@ -1144,10 +1144,19 @@ callbacks = {
   use {'emmanueltouzery/nvim-treehopper', commit='402e65c326671adba7af75657910620af80702b8'}
   -- previously used a very old version of kylechui/nvim-surround
   -- mini.surround: slightly less code
-  -- shortcuts all start with 's', a little more regular
   -- supports JSX <></> tags (rename to <> to <div> for instance - the latest nvim-surround might support it too...)
   use {'nvim-mini/mini.surround', commit='444e155147e2b5159dd28a65f9736254c16cb817', config=function()
     require('mini.surround').setup({
+      -- back to nvim-surround mappings. muscle memory
+      -- and conflict with leap.nvim 's' leader key
+      mappings = {
+        add = 'ys',
+        delete = 'ds',
+        find = '',
+        find_left = '',
+        highlight = '',
+        replace = 'cs',
+      },
       n_lines = 50,
       highlight_duration = 3000,
       custom_surroundings = {

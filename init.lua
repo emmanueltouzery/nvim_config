@@ -2021,6 +2021,12 @@ vim.g.telescope_entry_fullpath_display = true
 -- move: https://www.reddit.com/r/neovim/comments/1ilcdqa/comment/mbtx5ds/
 vim.cmd[[autocmd CursorHold * normal! m']]
 
+-- https://github.com/nvim-treesitter/nvim-treesitter/issues/7674
+-- for sure that's not the "right" fix for sh files being loaded as
+-- sh but being bash and then showing a bunch of syntax errors...
+-- but for now it'll do.
+vim.cmd[[autocmd FileType sh set filetype=bash]]
+
 -- alias numpad (keypad) enter to normal enter
 -- https://github.com/neovide/neovide/issues/2230
 -- https://github.com/neovim/neovim/issues/24577

@@ -169,3 +169,13 @@ end
 
 vim.keymap.set('n', '<localleader>cqa', elixir_add_stack_to_qf, {desc = "add stacktrace to quickfix", buffer = true})
 vim.keymap.set('v', '<leader>cqa', elixir_add_stack_to_qf_sel, {desc = "add stacktrace to quickfix"})
+
+vim.b.minisurround_config = {
+  custom_surroundings = {
+    -- "struct", %{}
+    s = {
+      input = { '%%%{().-()%}' },
+      output = { left = '%{', right = '}' },
+    },
+  },
+}

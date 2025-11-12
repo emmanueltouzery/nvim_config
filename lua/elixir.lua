@@ -76,32 +76,6 @@ function _G.inspect_point_candidate(winid)
   end
 end
 
-function _G.elixir_insert_inspect_value()
-  winid = vim.api.nvim_get_current_win()
-  local cur_col = vim.fn.col('.')
-  require('leap').leap {
-    target_windows = { winid },
-    targets = inspect_point_candidate(winid),
-    action = function(target)
-      if target.offset then
-        target.pos[2] = target.pos[2] + target.offset
-      end
-      vim.api.nvim_win_set_cursor(0, target.pos)
-      if target.pos[2] == 1 then
-        vim.cmd("norm! O")
-      end
-      if target.append then
-        vim.cmd('norm! a|> IO.inspect(label: "", charlists: :as_lists, limit: 50)')
-      else
-        vim.cmd('norm! i|> IO.inspect(label: "", charlists: :as_lists, limit: 50)')
-      end
-      -- position the cursor in the quotes to enable quick rename
-      vim.cmd('norm! 34h')
-      vim.cmd('startinsert')
-    end
-  }
-end
-
 function _G.inspect_point_candidate_param(winid)
   local wininfo =  vim.fn.getwininfo(winid)[1]
   local cur_line = vim.fn.line('.')
@@ -129,40 +103,6 @@ function _G.inspect_point_candidate_param(winid)
   end
 end
 
--- see  typescript_insert_inspect_param
-function _G.elixir_insert_inspect_param()
-  winid = vim.api.nvim_get_current_win()
-  local cur_line = vim.fn.line('.')
-  local cur_col = vim.fn.col('.')
-  local param_name = vim.fn.expand("<cword>")
-  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
-  local is_function_name = string.match(cur_line_str, "^%s*def%s+" .. param_name .. "%(")
-  require('leap').leap {
-    target_windows = { winid },
-    targets = inspect_point_candidate_param(winid),
-    action = function(target)
-      vim.api.nvim_win_set_cursor(0, target.pos)
-      if target.pos[2] == 1 then
-        -- setting 'set paste' to fix an issue where the first line of the function
-        -- is a comment, and without the set paste, here vim would insert a new
-        -- COMMENTED line.
-        -- https://superuser.com/a/963068/214371
-        vim.cmd[[set paste]]
-        vim.cmd("norm! O")
-        vim.cmd[[set nopaste]]
-      end
-      if is_function_name then
-        vim.cmd('norm! aIO.inspect("' .. param_name .. '", charlists: :as_lists, limit: 50)')
-      else
-        vim.cmd('norm! aIO.inspect(' .. param_name .. ', label: "' .. param_name .. '", charlists: :as_lists, limit: 50)')
-      end
-      -- position the cursor in the quotes to enable quick rename
-      vim.cmd('norm! 34h')
-      vim.cmd('startinsert')
-    end
-  }
-end
-
 function _G.inspect_point_candidate_label(winid)
   local wininfo =  vim.fn.getwininfo(winid)[1]
   local cur_line = vim.fn.line('.')
@@ -181,64 +121,6 @@ function _G.inspect_point_candidate_label(winid)
   if #targets >= 1 then
     return targets
   end
-end
-
-function _G.elixir_insert_inspect_label()
-  winid = vim.api.nvim_get_current_win()
-  local cur_line = vim.fn.line('.')
-  local cur_col = vim.fn.col('.')
-  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
-  require('leap').leap {
-    target_windows = { winid },
-    targets = inspect_point_candidate_label(winid),
-    action = function(target)
-      vim.api.nvim_win_set_cursor(0, target.pos)
-      if target.pos[2] == 1 then
-        -- setting 'set paste' to fix an issue where the first line of the function
-        -- is a comment, and without the set paste, here vim would insert a new
-        -- COMMENTED line.
-        -- https://superuser.com/a/963068/214371
-        vim.cmd[[set paste]]
-        vim.cmd("norm! O")
-        vim.cmd[[set nopaste]]
-      end
-      vim.cmd('norm! aIO.inspect("")')
-      -- position the cursor in the quotes to enable quick rename
-      vim.cmd('norm! h')
-      vim.cmd('startinsert')
-    end
-  }
-end
-
-
-function _G.elixir_insert_inspect_field()
-  vim.ui.input({prompt="Enter field name please: ", kind="center_win"}, function(field)
-    if field ~= nil then
-      winid = vim.api.nvim_get_current_win()
-      local cur_col = vim.fn.col('.')
-      require('leap').leap {
-        target_windows = { winid },
-        targets = inspect_point_candidate(winid),
-        action = function(target)
-          vim.api.nvim_win_set_cursor(0, target.pos)
-          if target.offset then
-            target.pos[2] = target.pos[2] + target.offset
-          end
-          if target.pos[2] == 1 then
-            vim.cmd("norm! O")
-          end
-          if target.append then
-            vim.cmd('norm! a|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists, limit: 50))')
-          else
-            vim.cmd('norm! i|> tap(&IO.inspect(&1.' .. field .. ', label: "' .. field .. '", charlists: :as_lists, limit: 50))')
-          end
-          -- position the cursor in the quotes to enable quick rename
-          vim.cmd('norm! 2h')
-          vim.cmd('startinsert')
-        end
-      }
-    end
-  end)
 end
 
 _G.telescope_elixir_stacktrace = function(opts)

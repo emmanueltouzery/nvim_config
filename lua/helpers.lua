@@ -927,47 +927,6 @@ function _G.reopen_buffer()
 
 end
 
-function _G.lsp_restart_all()
-  -- get clients that would match this buffer but aren't connected
-  local other_matching_configs = require('lspconfig.util').get_other_matching_providers(vim.bo.filetype)
-
-  -- first restart the existing clients
-  for _, client in ipairs(require('lspconfig.util').get_managed_clients()) do
-    client.stop()
-    vim.defer_fn(function()
-      require('lspconfig.configs')[client.name].launch()
-    end, 500)
-  end
-
-  -- now restart those that were not connected
-  for _, client in ipairs(other_matching_configs) do
-    vim.defer_fn(function()
-      require('lspconfig.configs')[client.name].launch()
-    end, 500)
-  end
-
-  -- handle null-ls separately as it's not managed by lspconfig
-  -- nullls_client = require'null-ls.client'.get_client()
-  -- if nullls_client ~= nil then
-  --   nullls_client.stop()
-  -- end
-  -- vim.defer_fn(function()
-  --   require'null-ls.client'.try_add()
-  -- end, 500)
-  local current_top_line = vim.fn.line('w0')
-  local current_line = vim.fn.line('.')
-
-  if vim.bo.modified then
-    vim.cmd[[echohl ErrorMsg | echo "Reload will work better if you save the file & re-trigger" | echohl None]]
-  else
-    vim.cmd[[edit]]
-  end
-  -- edit can move the scrollpos, restore it
-  vim.cmd(":" .. current_top_line)
-  vim.cmd("norm! zt") -- set to top of window
-  vim.cmd(":" .. current_line)
-end
-
 function _G.convert_dos()
   if vim.bo.modified then
     vim.cmd(":%s/\r$//")

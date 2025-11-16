@@ -1138,10 +1138,7 @@ vim.keymap.set("n", "<leader>clk", function()
   notif({"Killed " .. count .. " pending LSP requests"})
 end, {desc="Kill pending lsp requests"})
 
--- i had issues after the mason migration where lsp restart would not restart all LSPs.. or i would lose some LSPs or something
--- => bulletproof it with my own restart that really restarts everything
--- vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
-vim.keymap.set("n", "<leader>clR", "<cmd>:lua lsp_restart_all()<CR>", {desc="Restart LSP clients for this buffer"})
+vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
 vim.keymap.set("n", "<leader>cli", "<cmd>lua remove_unused_imports()<CR>", {desc="Remove unused imports"})
 
 -- override LSP for java, not using LSP there

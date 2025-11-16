@@ -1245,6 +1245,7 @@ end
 
 function _G.reload_all()
   vim.cmd("checktime")
+  lualine_refresh_all()
   -- vim.cmd("Gitsigns refresh")
 end
 
@@ -1623,9 +1624,27 @@ function _G.glow_for_buffer(bufnr)
   end, 1000)
 end
 
-function _G.lualine_refresh_all()
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    vim.api.nvim_win_call(win, function() require('lualine').refresh() end)
+function _G.lualine_refresh_all(w, wins)
+  if w == nil then
+    w = vim.api.nvim_get_current_win()
+  end
+  if wins == nil then
+    wins = vim.api.nvim_tabpage_list_wins(0)
+  end
+  pcall(vim.api.nvim_set_current_win, wins[1])
+  require('lualine').refresh()
+  if #wins == 1 then
+    -- done
+    vim.defer_fn(function()
+      vim.api.nvim_set_current_win(w)
+    end, 10)
+    vim.cmd[[windo redrawstatus!]]
+  else
+    -- do the next window
+    vim.defer_fn(function()
+      table.remove(wins, 1)
+      lualine_refresh_all(w, wins)
+    end, 10)
   end
 end
 

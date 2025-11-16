@@ -387,7 +387,7 @@ require('packer').startup(function(use)
       callback = function() vim.treesitter.start() end,
     })
   end}
-  use {'neovim/nvim-lspconfig', commit='3ad562700d0615818bf358268ac8914f6ce2b079'} -- Collection of configurations for built-in LSP client
+  use {'neovim/nvim-lspconfig', commit='abf6d190f2c06818489c0bd4b926e7e3a06c5e51'} -- Collection of configurations for built-in LSP client
   use {'emmanueltouzery/nvim-cmp', commit='473a1c508757d93b29c142b8c97f915f7a909b04'} -- Autocompletion plugin
   use {'emmanueltouzery/cmp-nvim-lsp', commit='85a1f3ab3324c3bd8be40baf12669dbb53972878'} -- my hack so the rust LSP doesn't overwrite my text
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
@@ -785,105 +785,58 @@ callbacks = {
   end}
   use {
     "williamboman/mason.nvim",
-    commit = "e2f7f9044ec30067bc11800a9e266664b88cda22",
+    commit = "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
   }
   use {
     "williamboman/mason-lspconfig.nvim",
-    commit = "f75e877f5266e87523eb5a18fcde2081820d087b",
+    commit = "b1d9a914b02ba5660f1e272a03314b31d4576fe2",
     config = function()
       require("mason").setup()
-      require("mason-lspconfig").setup {
-        automatic_installation = true,
-      }
-      local lspconfig = require("lspconfig")
-      local log = require 'vim.lsp.log';
-      local util = require 'vim.lsp.util'
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      require("mason-lspconfig").setup {}
 
-      lspconfig.tsserver.setup {
-        on_attach = function(client)
-        -- use prettier for JS indentation (through conform.nvim)
-          client.server_capabilities.documentFormattingProvider = false
-          client.server_capabilities.documentRangeFormattingProvider = false
-        end,
+      vim.lsp.config("ts_ls", {})
+      vim.lsp.enable({"ts_ls"})
 
-        -- fix annoying quickfix opening because tsserver returns multiple matches
-        -- usually the first one is the right one
-        -- https://www.reddit.com/r/neovim/comments/nrfr5h/neovim_auto_opens_quickfix_list/
-        -- https://github.com/neovim/neovim/blob/1186f7dd96b054d6a653685089fc845a8f5d2f27/runtime/lua/vim/lsp/handlers.lua#L275-L295
-        -- https://github.com/neovim/neovim/blob/v0.7.2/runtime/lua/vim/lsp/handlers.lua#L322
-        -- ######## NOTE THIS IS DEAD CODE FROM 0.11 ON ##########
-        -- replaced by the custom 'gd' - https://www.reddit.com/r/neovim/comments/1jcjg6v/how_to_override_lsp_handlers_in_011/
-        handlers = {
-          ["textDocument/definition"] = function(_, result, ctx, _)
-            if result == nil or vim.tbl_isempty(result) then
-              local _ = log.info() and log.info(ctx.method, 'No location found')
-              return nil
-            end
-            local client = vim.lsp.get_client_by_id(ctx.client_id)
-
-            -- textDocument/definition can return Location or Location[]
-            -- https://microsoft.github.io/language-server-protocol/specifications/specification-current/#textDocument_definition
-
-            if vim.fn.has("nvim-0.11") == 1 then
-              if vim.islist(result) then
-                util.show_document(result[1], client.offset_encoding)
-
-                -- if #result > 1 then
-                --   vim.fn.setqflist({}, ' ', {
-                  --     title = 'LSP locations',
-                  --     items = util.locations_to_items(result, client.offset_encoding)
-                  --   })
-                  --   vim.api.nvim_command("botright copen")
-                  -- end
-                else
-                  util.jump_to_location(result, client.offset_encoding)
-                end
-              else
-                if vim.islist(result) then
-                  util.show_document(result[1], client.offset_encoding)
-
-                  -- if #result > 1 then
-                  --   vim.fn.setqflist({}, ' ', {
-                    --     title = 'LSP locations',
-                    --     items = util.locations_to_items(result, client.offset_encoding)
-                    --   })
-                    --   vim.api.nvim_command("botright copen")
-                    -- end
-                  else
-                    util.jump_to_location(result, client.offset_encoding)
-                  end
-                end
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if vim.tbl_contains({"elixir_ls", "ts_ls", "jsonls"}, client.config.name) then
+            -- use manual indentation (through conform.nvim) -- prettier for JS+json, elixir fmt
+            -- for elixir conform is better than the elixirls indentation, because it can give me the mix fmt output
+            -- which sometimes pinpoints the syntax error
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
           end
-        }
-      }
+        end,
+      })
 
-      lspconfig.rust_analyzer.setup {}
-      lspconfig.elixirls.setup {
-        cmd = { "elixir-ls" }; -- for some reason I must specify the command. I think I shouldn't have to, due to mason
-        -- use conform.nvim for elixir indentation, because it can give me the mix fmt output
-        -- which sometimes pinpoints the syntax error
-        on_attach = function(client, bufnr)
-          client.server_capabilities.documentFormattingProvider = false
-          client.server_capabilities.documentRangeFormattingProvider = false
-        end,
-      }
-      lspconfig.bashls.setup {}
-      lspconfig.jsonls.setup {
-        -- use prettier for json indentation (through conform.nvim)
-        on_attach = function(client, bufnr)
-          client.server_capabilities.documentFormattingProvider = false
-          client.server_capabilities.documentRangeFormattingProvider = false
-        end,
-      }
-      lspconfig.cssls.setup {
-        capabilities = capabilities
-      }
-      lspconfig.graphql.setup {
+      vim.lsp.config("rust_analyzer", {})
+      vim.lsp.enable({"rust_analyzer"})
+
+      vim.lsp.config("elixirls", {})
+      vim.lsp.enable({"elixirls"})
+
+      vim.lsp.config("bashls", {})
+      vim.lsp.enable({"bashls"})
+
+      vim.lsp.config("jsonls", {})
+      vim.lsp.enable({"jsonls"})
+
+      vim.lsp.config("cssls", {})
+      vim.lsp.enable({"cssls"})
+
+      vim.lsp.config("graphql", {
         -- disabling for typescript & typescriptreact as i don't know what it gives me
         -- and i suspect it slows things down
         filetypes = {'graphql'}
-      }
+      })
+      vim.lsp.enable({"graphql"})
+
+      -- lspconfig.elixirls.setup {
+      --   cmd = { "elixir-ls" }; -- for some reason I must specify the command. I think I shouldn't have to, due to mason
+      --   -- use conform.nvim for elixir indentation, because it can give me the mix fmt output
+      --   -- which sometimes pinpoints the syntax error
+      -- }
     end,
     after = "nvim-lspconfig",
   }

@@ -31,5 +31,6 @@ end
 vim.keymap.set('n', '<localleader>g', ast_grep_buffer, {desc="run ast-grep query", buffer = true})
 
 vim.treesitter.language.register('yaml', 'astgrep')
+vim.treesitter.start()
 
 vim.bo.commentstring =  "#%s"

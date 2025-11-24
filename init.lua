@@ -1677,6 +1677,19 @@ else
   vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "DiagnosticSignHint", })
 end
 
+-- https://qmacro.org/blog/posts/2025/08/04/excluding-specific-diagnostics-in-neovim/
+local original_vim_diagnostic_set = vim.diagnostic.set
+vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
+  original_vim_diagnostic_set(ns, bufnr, vim.tbl_filter(function(d)
+    if d.source == "typescript" and d.code == 80006 then
+      -- may be converted to an async function
+      return false
+    end
+    -- by default keep diagnostics
+    return true
+  end, diagnostics), opts)
+end
+
 -- for some reason the Red default color looks horrible in neovide for me...
 -- bad subpixel rendering, i think => pick a diff tone of red, looks OK
 vim.cmd("hi DiagnosticError guifg=#ff6262")

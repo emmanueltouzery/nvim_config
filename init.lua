@@ -868,7 +868,7 @@ callbacks = {
     -- if you only want these mappings for toggle term use term://*toggleterm#* instead
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
   end}
-  use {'stevearc/aerial.nvim', commit="60a784614acb1d7695bd9ae0fee8ada1bf7b0c28", config = function()
+  use {'stevearc/aerial.nvim', commit="8bb8697d180681746da41bef5c8691d04443af36", config = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"

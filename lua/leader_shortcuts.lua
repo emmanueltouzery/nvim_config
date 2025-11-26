@@ -886,8 +886,8 @@ vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy l
 vim.keymap.set("n", "<leader>gr", '<cmd>lua git_branches{attach_mappings=telescope_branches_mappings, pattern="--sort=-committerdate"}<CR>', {desc="git bRanches"})
 vim.keymap.set("n", "<leader>ga", "<cmd>lua require'agitator'.search_in_added()<CR>", {desc="git search in added files & lines/diff"})
 -- using neogit to push
-vim.keymap.set("n", "<leader>gp", '<cmd>lua run_command("git", {"pull", "--rebase", "--autostash"}, reload_all)<CR>', {desc="git pull"})
-vim.keymap.set("n", "<leader>gF", '<cmd>lua run_command("git", {"fetch", "origin"})<CR>', {desc="git fetch origin"})
+vim.keymap.set("n", "<leader>gp", function() run_command({"git", "pull", "--rebase", "--autostash"}, reload_all) end, {desc="git pull"})
+vim.keymap.set("n", "<leader>gF", function() run_command({"git", "fetch", "origin"}) end, {desc="git fetch origin"})
 
 require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
 vim.keymap.set("n", "<leader>gho", '<cmd>DiffviewFileHistory -g --range=stash<cr>', {desc="list git stashes"})
@@ -898,7 +898,7 @@ function _G.git_do_stash()
       -- untracked files are a mess with git stash: https://stackoverflow.com/a/12681856/516188
       -- just stage everything before stashing.
       vim.system({"git", "add", "."}, {text= true}, vim.schedule_wrap(function()
-        run_command("git", {"stash", "push", "-m", input, "-u"}, reload_all)
+        run_command({"git", "stash", "push", "-m", input, "-u"}, reload_all)
       end))
     end
   end)

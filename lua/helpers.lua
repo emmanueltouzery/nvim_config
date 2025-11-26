@@ -1,4 +1,3 @@
-local Job = require'plenary.job'
 local strings = require'plenary.strings'
 
 function _G.my_open_tele(cur_folder_only)
@@ -145,15 +144,10 @@ function _G.goto_fileline()
       -- or only like app/win.rs instead of src/app/win.rs
       -- we can leverage 'fd' for that.
       for _, project in pairs(get_project_objects()) do
-        local output = nil
-        Job:new({
-          command = 'fd',
-          args = { '-p', fname },
-          cwd = project.path,
-          on_exit = function(j, return_val)
-            output = j:result()
-          end,
-        }):sync()
+        local output = vim.split(vim.system({
+          { 'fd', '-p', fname },
+          {cwd = project.path},
+        }):wait().stdout, "\n")
         if output ~= nil and #output > 0 and vim.fn.filereadable(project.path .. "/" .. output[1]) == 1 then
           vim.cmd(":e " .. project.path .. "/" .. output[1])
           vim.cmd(":" .. line)
@@ -695,37 +689,27 @@ function _G.telescope_jumplist()
     :find()
 end
 
-function _G.run_command(command, params, cb)
-  local error_msg = nil
-  local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
-  Job:new {
-    command = command,
-    cwd = git_root,
-    args = params,
-    on_stderr = function(error, data, self)
-      if error_msg == nil then
-        error_msg = data
-      end
-    end,
-    on_exit = function(self, code, signal)
-      vim.schedule_wrap(function()
-        if code == 0 then
-          notif({command .. " executed successfully"}, vim.log.levels.INFO)
-          if cb then
-            cb()
-          end
-        else
-          local info = {command .. " failed!"}
-          if error_msg ~= nil then
-            table.insert(info, error_msg)
-            print(error_msg)
-          end
-          notif(info, vim.log.levels.ERROR)
+function _G.run_command(command, cb)
+  vim.system(
+    command,
+    {text = true, cwd = vim.fs.root(vim.fn.getcwd(), ".git")},
+    vim.schedule_wrap(function(res)
+      if res.code == 0 then
+        notif({command[1] .. " executed successfully"}, vim.log.levels.INFO)
+        if cb then
+          cb()
         end
-      end)()
-    end
-  }:start()
-  notif({command .. " launched..."}, vim.log.levels.INFO)
+      else
+        local info = {command .. " failed!"}
+        if res.stderr ~= nil then
+          table.insert(info, res.stderr)
+          print(res.stderr)
+        end
+        notif(info, vim.log.levels.ERROR)
+      end
+    end)
+  )
+  notif({command[1] .. " launched..."}, vim.log.levels.INFO)
 end
 
 -- pasted and modified from telescope's lua/telescope/make_entry.lua

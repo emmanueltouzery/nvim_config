@@ -179,7 +179,6 @@ end
 
 local defaulter = utils.make_default_callable
 local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
-local Job = require'plenary.job'
 
 function get_ansi_escape_cols(line)
   local idx = 1
@@ -313,27 +312,26 @@ git_foresta_branch_log = defaulter(function(opts)
     end,
 
     define_preview = function(self, entry, status)
-      local args = {
+      local command = {
+        "sh",
         "-c",
         "git-foresta " .. entry.name .. " --style=10 --no-status | head -n 1500",
         entry.value,
       }
 
-      Job:new({
-        command = "sh",
-        args = args,
-        cwd = opts.cwd,
-        on_exit = vim.schedule_wrap(function(j)
+      vim.system(
+        command,
+        {text = true, cwd = opts.cwd},
+        vim.schedule_wrap(function(res)
           if self.state.bufnr == nil or not vim.api.nvim_buf_is_valid(self.state.bufnr) then
             return
           end
-          local output = j:result()
-          local fields = vim.tbl_map(get_ansi_escape_cols, output)
+          local fields = vim.tbl_map(get_ansi_escape_cols, vim.split(res.stdout, "\n"))
           local clean_output = vim.tbl_map(function(cols) return table.concat(cols) end, fields)
           vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, clean_output)
           highlight_buffer(self.state.bufnr, clean_output, fields)
-        end),
-      }):start()
+        end)
+      )
     end,
   }
 end, {})

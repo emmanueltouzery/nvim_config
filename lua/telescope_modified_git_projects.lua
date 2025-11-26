@@ -2,7 +2,6 @@ local pickers = require "telescope.pickers"
 local action_state = require "telescope.actions.state"
 local previewers = require("telescope.previewers")
 local conf = require("telescope.config").values
-local Job = require'plenary.job'
 local finders = require "telescope.finders"
 local entry_display = require "telescope.pickers.entry_display"
 
@@ -20,14 +19,11 @@ _G.telescope_modified_git_projects = function(opts)
 
   -- ideally should be async but...
   local get_git_status = function(folder)
-    local r = nil
-    Job:new({
-      command = 'git',
-      args = { '-C', folder, 'status', '-s' },
-      on_exit = function(j, return_val)
-        r = j:result()
-      end,
-    }):sync()
+    local r = vim.tbl_filter(
+      function(v) return #v > 0 end, -- drop blank lines
+      vim.split(vim.system(
+        { 'git', '-C', folder, 'status', '-s' }
+      ):wait().stdout, '\n'))
     local res = {}
     if #r > 0 then
       res.folder = folder

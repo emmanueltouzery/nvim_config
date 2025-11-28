@@ -1167,7 +1167,9 @@ function _G.close_nonvisible_buffers()
   end
   deleted_count = 0
   for _, b in pairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(b) and not vim.tbl_contains(visible_bufs, b) then
+    -- also deleted unlisted buffers, needed sometimes to fix diffview when it gets confused
+    -- if vim.api.nvim_buf_is_loaded(b) and not vim.tbl_contains(visible_bufs, b) then
+    if not vim.tbl_contains(visible_bufs, b) then
       -- skip terminals otherwise spc-bo can break overseer which is running terminals in the background
       if vim.api.nvim_buf_get_option(b, "buftype") ~= "terminal" then
         local force = false

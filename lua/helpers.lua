@@ -1723,3 +1723,10 @@ function _G.stop_adb_monitor()
   vim.g.stop_adb_monitor = true
   vim.g.adb_status = ""
 end
+
+function _G.truncate_no_plenary(str, max)
+  if vim.fn.strcharlen(str) <= max then
+    return str
+  end
+  return vim.fn.strcharpart(str, 0, max - 1) .. "…"
+end

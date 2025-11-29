@@ -631,9 +631,91 @@ require('packer').startup(function(use)
   -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
   -- drop s and S due to lightspeed
   vim.g.yoinkIncludeDeleteOperations = 1
+  vim.g.yoinkSwapClampAtEnds = 0
   use {'svermeulen/vim-yoink', commit='89ed6934679fdbc3c20f552b50b1f869f624cd22', config= function()
-    vim.cmd[[nmap <M-p> <plug>(YoinkPostPasteSwapBack)]]
-    vim.cmd[[nmap <M-P> <plug>(YoinkPostPasteSwapForward)]]
+
+    -- create a popup displaying the previous and next yoink pastes that can be switched to
+    local ns = vim.api.nvim_create_namespace "yoink.popup"
+    function check_close_paste_popup()
+      if vim.uv.hrtime() > vim.b.paste_popup_timeout then
+        if vim.b.hide_paste_ring_popup ~= nil then
+          vim.b.hide_paste_ring_popup()
+          vim.b.hide_paste_ring_popup = nil
+          vim.b.paste_popup_timeout = nil
+        end
+      else
+        vim.defer_fn(function()
+          check_close_paste_popup()
+        end, 200)
+      end
+    end
+    function update_popup(hist)
+      local select_hist = {}
+      for i, w in ipairs(hist) do
+        table.insert(select_hist, truncate_no_plenary(vim.trim(w.text), 70))
+      end
+      vim.api.nvim_buf_set_lines(vim.b.paste_popup_buf, 0, -1, false, select_hist)
+      vim.hl.range(vim.b.paste_popup_buf, ns, "@label", {1, 0}, {1, #select_hist[2]})
+    end
+    function swap_back_or_fro(cmd)
+      local hist = vim.fn['yoink#getYankHistory']()
+      if vim.b.paste_popup_timeout == nil then
+        vim.defer_fn(function()
+          check_close_paste_popup()
+        end, 200)
+
+        local popup_buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
+        vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")
+        vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
+        vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
+
+        local width = vim.api.nvim_get_option("columns")
+        local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
+
+        local win_opts = {
+          focusable = false,
+          style = "minimal",
+          border = "rounded",
+          relative = "editor",
+          width = 70,
+          height = #hist,
+          anchor = "SE",
+          row = height,
+          col = width,
+          noautocmd = true,
+        }
+        -- vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
+        vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
+
+        local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
+
+        vim.b.paste_popup_buf = popup_buf
+        vim.b.hide_paste_ring_popup = function()
+          if vim.api.nvim_win_is_valid(popup_win) then
+            vim.api.nvim_win_close(popup_win, true)
+          end
+          if vim.api.nvim_buf_is_valid(popup_buf) then
+            vim.api.nvim_buf_delete(popup_buf, {force=true})
+          end
+        end
+      end
+      vim.b.paste_popup_timeout = vim.uv.hrtime() + 3000000000 --3s
+      vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(cmd, true, false, true),
+        "n",   -- mode: normal mode
+        true   -- escape keycodes
+      )
+      update_popup(hist)
+    end
+    -- end yoink popup
+
+    vim.keymap.set("n", "<M-p>", function()
+      swap_back_or_fro("<Plug>(YoinkPostPasteSwapBack)")
+    end)
+    vim.keymap.set("n", "<M-P>", function()
+      swap_back_or_fro("<Plug>(YoinkPostPasteSwapForward)")
+    end)
 
     vim.cmd[[nmap p <plug>(YoinkPaste_p)]]
     vim.cmd[[nmap P <plug>(YoinkPaste_P)]]

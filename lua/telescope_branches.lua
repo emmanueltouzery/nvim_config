@@ -49,7 +49,7 @@ end
 _G.git_branches_with_base = function(base, opts)
   local format = "%(HEAD)"
   .. "%(refname)"
-  .. "%(ahead-behind:origin/" .. base .. ")"
+  .. "%(ahead-behind:" .. base .. ")"
   .. "%(authorname)"
   .. "%(upstream:lstrip=2)"
   .. "%(committerdate:format-local:%Y/%m/%d %H:%M:%S)"

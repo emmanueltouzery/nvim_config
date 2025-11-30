@@ -655,7 +655,7 @@ require('packer').startup(function(use)
         table.insert(select_hist, truncate_no_plenary(vim.trim(w.text), 70))
       end
       vim.api.nvim_buf_set_lines(vim.b.paste_popup_buf, 0, -1, false, select_hist)
-      vim.hl.range(vim.b.paste_popup_buf, ns, "@label", {1, 0}, {1, #select_hist[2]})
+      vim.hl.range(vim.b.paste_popup_buf, ns, "BufferTabPages", {1, 0}, {1, #select_hist[2]})
     end
     function swap_back_or_fro(cmd)
       local hist = vim.fn['yoink#getYankHistory']()

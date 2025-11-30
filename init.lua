@@ -652,7 +652,13 @@ require('packer').startup(function(use)
     function update_popup(hist)
       local select_hist = {}
       for i, w in ipairs(hist) do
-        table.insert(select_hist, truncate_no_plenary(vim.trim(w.text), 70))
+        local st = truncate_no_plenary(vim.trim(w.text), 70)
+        if #st < 70 then
+          -- couldn't find another way to highlight the row beyond the end
+          -- of the text -- pad with spaces so that the highlight reaches the end of the line
+          st = st .. string.rep(" ", 70 - #st)
+        end
+        table.insert(select_hist, st)
       end
       vim.api.nvim_buf_set_lines(vim.b.paste_popup_buf, 0, -1, false, select_hist)
       vim.hl.range(vim.b.paste_popup_buf, ns, "BufferTabPages", {1, 0}, {1, #select_hist[2]})

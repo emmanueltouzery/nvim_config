@@ -655,7 +655,7 @@ require('packer').startup(function(use)
         local text = w.text
         local lines = vim.tbl_filter(function(l) return #l > 0 end, vim.split(text, "\n"))
         if #lines > 1 then
-          text = string.format("[%d lines] %s", #lines, vim.trim(lines[1]))
+          text = string.format("[%d ] %s", #lines, vim.trim(lines[1]))
         end
         local st = truncate_no_plenary(vim.trim(text), 70)
         if #st < 70 then

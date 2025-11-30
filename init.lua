@@ -652,7 +652,12 @@ require('packer').startup(function(use)
     function update_popup(hist)
       local select_hist = {}
       for i, w in ipairs(hist) do
-        local st = truncate_no_plenary(vim.trim(w.text), 70)
+        local text = w.text
+        local lines = vim.tbl_filter(function(l) return #l > 0 end, vim.split(text, "\n"))
+        if #lines > 1 then
+          text = string.format("[%d lines] %s", #lines, vim.trim(lines[1]))
+        end
+        local st = truncate_no_plenary(vim.trim(text), 70)
         if #st < 70 then
           -- couldn't find another way to highlight the row beyond the end
           -- of the text -- pad with spaces so that the highlight reaches the end of the line

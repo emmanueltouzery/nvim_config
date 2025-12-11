@@ -1730,3 +1730,35 @@ function _G.truncate_no_plenary(str, max)
   end
   return vim.fn.strcharpart(str, 0, max - 1) .. "…"
 end
+
+function _G.yank_folds()
+  local start_line = vim.fn.getpos("v")[2]
+  local end_line = vim.fn.getcurpos()[2]
+  if start_line > end_line then
+    local tmp = start_line
+    start_line = end_line
+    end_line = tmp
+  end
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local line_idx = start_line
+  local closed_curfold = 0
+  local res = {}
+  for _, line in ipairs(lines) do
+    if vim.fn.foldclosed(line_idx) ~= -1 then
+      closed_curfold = closed_curfold + 1
+    else
+      if closed_curfold > 0 then
+        table.insert(res, string.format("+-- Skipped %d lines", closed_curfold))
+        closed_curfold = 0
+      end
+      table.insert(res, line)
+    end
+    line_idx = line_idx + 1
+  end
+  if closed_curfold > 0 then
+    table.insert(res, string.format("+-- Skipped %d lines", closed_curfold))
+    closed_curfold = 0
+  end
+  copy_to_clipboard(vim.fn.join(res, "\n"))
+  notif({string.format("Yanked %d lines", #res)})
+end

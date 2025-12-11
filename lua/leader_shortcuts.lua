@@ -146,7 +146,7 @@ function _G.set_fm(choice)
     vim.cmd("setlocal foldmethod=" .. choice .. " | setlocal foldenable | set foldlevel=2")
   end
 end
-
+vim.keymap.set("x", "<leader>fy", function() yank_folds() end, {desc="Yank without folds"})
 vim.keymap.set("n", "<leader>fM", ":lua quick_set_fm()<cr>", {desc="Quickly change folding method"})
 vim.keymap.set("n", "<leader>fmi", ":lua set_fm('indent')<cr>", {desc="Set indent folding method"})
 vim.keymap.set("n", "<leader>fms", ":lua set_fm('syntax')<cr>", {desc="Set syntax folding method"})

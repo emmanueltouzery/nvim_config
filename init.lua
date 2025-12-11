@@ -2016,6 +2016,10 @@ vim.cmd[[autocmd! FileType man :wincmd L]]
 -- for nicer diff lines matching
 vim.o.diffopt = "internal,filler,closeoff,linematch:60"
 
+-- fold even 1 line, because for instance with foldexpr i use folds
+-- as a marker for "interesting or not"
+vim.o.foldminlines = 0
+
 -- move the cursor to the beginning of non-whitespace characters in a line
 -- EDIT: undo. want to be able to move back to the 0th column in case of right scroll
 -- vim.cmd[[

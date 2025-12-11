@@ -150,6 +150,18 @@ end
 vim.keymap.set("n", "<leader>fM", ":lua quick_set_fm()<cr>", {desc="Quickly change folding method"})
 vim.keymap.set("n", "<leader>fmi", ":lua set_fm('indent')<cr>", {desc="Set indent folding method"})
 vim.keymap.set("n", "<leader>fms", ":lua set_fm('syntax')<cr>", {desc="Set syntax folding method"})
+vim.keymap.set("n", "<leader>fme", function()
+  vim.ui.input({prompt="vim verymagic regexp of the lines not to fold", kind="center_win", default=vim.b.fme_reg}, function(reg)
+    if reg ~= nil then
+      vim.b.fme_reg = reg
+      vim.cmd[[set foldmethod=expr]]
+      local regexp = reg:gsub("%|", [[\|]])
+      local cmd = [[set foldexpr=(getline(v:lnum)=~'\\v]] .. regexp .. [['?0:1)]]
+      vim.cmd(cmd)
+      vim.cmd[[norm! zC]]
+    end
+  end)
+end, {desc="Set expr folding method"})
 vim.keymap.set("n", "<leader>fmd", ":lua set_fm('disable')<cr>", {desc="Disable folding"})
 
 -- SEARCH

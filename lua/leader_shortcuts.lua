@@ -158,7 +158,7 @@ vim.keymap.set("n", "<leader>fme", function()
       local regexp = reg:gsub("%|", [[\|]])
       local cmd = [[set foldexpr=(getline(v:lnum)=~'\\v]] .. regexp .. [['?0:1)]]
       vim.cmd(cmd)
-      vim.cmd[[norm! zC]]
+      vim.cmd[[silent! norm! zC]]
     end
   end)
 end, {desc="Set expr folding method"})

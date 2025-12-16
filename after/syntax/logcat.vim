@@ -10,7 +10,7 @@ syn match LogI '\sI\s' nextgroup=Module
 syn match LogD '\sD\s' nextgroup=Module
 syn match LogV '\sV\s' nextgroup=Module
 " \zs marks the start of the text to be highlighted. \ze marks the end of the text to be highlighted.
-syn match Module '\zs\(\(\w\|\.\)\+\)\s*\ze:' contained
+syn match Module '\zs\(\(\w\|\.\|-\)\+\)\s*\ze:' contained
 syn match Date '\d\d-\d\d \d\d:\d\d:\d\d.\d\d\d' containedin=ALL
 
 hi def link LogF RedrawDebugRecompose

@@ -19,7 +19,6 @@ function _G.telescope_display_call_hierarchy()
 
   local displayer = entry_display.create {
     separator = " ",
-    hl_chars = { [":"] = "Comment" },
     items = {
       { width = 35, },
       { remaining = true },
@@ -30,7 +29,7 @@ function _G.telescope_display_call_hierarchy()
     local p = entry.path:match("[^/]+/[^/]+$")
     return displayer {
       { entry.name, "TelescopeResultsIdentifier" },
-      { string.format("%s:%d", p, entry.lnum), function() return { {{0, #p}, "Special"}, {{#p+1, #p+2+#tostring(entry.lnum)}, "Comment"}} end},
+      { string.format("%s:%d", p, entry.lnum), function() return { {{0, #p}, "Special"}, {{#p, #p+1+#tostring(entry.lnum)}, "Comment"}} end},
     }
   end
 
@@ -38,7 +37,7 @@ function _G.telescope_display_call_hierarchy()
     local p = entry.path:match("[^/]+/[^/]+$")
     return displayer {
       { entry.name, "TelescopeResultsFunction" },
-      { string.format("%s:%d", p, entry.lnum), function() return { {{0, #p}, "Special"}, {{#p+1, #p+2+#tostring(entry.lnum)}, "Comment"}} end},
+      { string.format("%s:%d", p, entry.lnum), function() return { {{0, #p}, "Special"}, {{#p, #p+1+#tostring(entry.lnum)}, "Comment"}} end},
     }
   end
 

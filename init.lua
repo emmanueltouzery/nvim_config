@@ -422,7 +422,7 @@ require('packer').startup(function(use)
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
     vim.keymap.set("n", "¸¸", function() vim.fn.feedkeys('--') end)
   end} 
-  use {'emmanueltouzery/diffview.nvim', commit='d24a9fd81614decd701a26c1a88a1b8af09c82e6',
+  use {'emmanueltouzery/diffview.nvim', commit='200467703c35a584f572b2c840f32ec24995d054',
     config = function()
       local function open_difftastic(file_path, left_commit, right_commit)
         local cmd = "PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. left_commit .. ":" .. file_path .. " " .. right_commit .. ":" ..  file_path

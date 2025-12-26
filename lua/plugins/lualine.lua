@@ -356,7 +356,7 @@ function setup_lualine()
         -- lualine_x = { 'encoding', 'fileformat', 'filetype'},
         -- don't color the filetype icon, else it's not always visible with the 'nord' theme.
         lualine_x = { 'filesize', {'filetype', colored = false, icon_only = true}},
-        lualine_y = { {lsp_status_component, icon = '󰘦 '} },
+        lualine_y = {'progress', scroll_indicator, {lsp_status_component, icon = '󰘦 '} },
         -- lualine_z = {'location'}
         lualine_z = {
           { 'location', separator = { right = '' }, left_padding = 2 },

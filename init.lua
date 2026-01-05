@@ -1230,12 +1230,30 @@ callbacks = {
       augroup END
     ]]
   end}
-  use {'emmanueltouzery/overseer.nvim', commit='1c8841ff81e33d75bbddadbc325b9a32d58a249c', config=function()
+  -- next TODO: https://github.com/stevearc/overseer.nvim/issues/455
+  use {'stevearc/overseer.nvim', commit='3cde0d84bdae56cd119cbf835f764fa30cec384c', config=function()
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = { "OverseerOutput"},
+      callback = function()
+        vim.keymap.set({'n', 'v'}, 'q', function()
+          vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+        end, {buffer = true})
+      end,
+    })
     require('overseer').setup{
       dap = false,
       task_list = {
         direction = 'right',
-        default_detail = 2,
+        render = function(task)
+          local render = require("overseer.render")
+          local ret = {
+            render.status_and_name(task),
+            render.duration(task),
+          }
+          vim.list_extend(ret, render.result_lines(task, { oneline = true }))
+          vim.list_extend(ret, render.output_lines(task, { num_lines = 4 }))
+          return render.remove_empty_lines(ret)
+        end,
       },
       task_editor = {
         bindings = {

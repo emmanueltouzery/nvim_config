@@ -879,13 +879,13 @@ callbacks = {
   use {
     "williamboman/mason.nvim",
     commit = "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
-  }
-  use {
-    "williamboman/mason-lspconfig.nvim",
-    commit = "b1d9a914b02ba5660f1e272a03314b31d4576fe2",
+  -- }
+  -- use {
+  --   "williamboman/mason-lspconfig.nvim",
+  --   commit = "b1d9a914b02ba5660f1e272a03314b31d4576fe2",
     config = function()
       require("mason").setup()
-      require("mason-lspconfig").setup {}
+      -- require("mason-lspconfig").setup {}
 
       vim.lsp.config("ts_ls", {})
       vim.lsp.enable({"ts_ls"})
@@ -931,7 +931,7 @@ callbacks = {
       --   -- which sometimes pinpoints the syntax error
       -- }
     end,
-    after = "nvim-lspconfig",
+    -- after = "nvim-lspconfig",
   }
   use {'emmanueltouzery/key-menu.nvim', commit='171ad5c40fe978ebba86026beac1ac3ed8eda42d'} -- originally linty-org/key-menu.nvim but the git repo was deleted...
   use {'akinsho/toggleterm.nvim', commit='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', config = function()

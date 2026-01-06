@@ -689,18 +689,18 @@ function _G.telescope_jumplist()
     :find()
 end
 
-function _G.run_command(command, cb)
+function _G.run_command(command_table, cb)
   vim.system(
-    command,
+    command_table,
     {text = true, cwd = vim.fs.root(vim.fn.getcwd(), ".git")},
     vim.schedule_wrap(function(res)
       if res.code == 0 then
-        notif({command[1] .. " executed successfully"}, vim.log.levels.INFO)
+        notif({command_table[1] .. " executed successfully"}, vim.log.levels.INFO)
         if cb then
           cb()
         end
       else
-        local info = {command .. " failed!"}
+        local info = {command_table[1] .. " failed!"}
         if res.stderr ~= nil then
           table.insert(info, res.stderr)
           print(res.stderr)
@@ -709,7 +709,7 @@ function _G.run_command(command, cb)
       end
     end)
   )
-  notif({command[1] .. " launched..."}, vim.log.levels.INFO)
+  notif({command_table[1] .. " launched..."}, vim.log.levels.INFO)
 end
 
 -- pasted and modified from telescope's lua/telescope/make_entry.lua

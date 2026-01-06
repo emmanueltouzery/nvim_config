@@ -86,6 +86,23 @@ vim.keymap.set("n", "<leader>bw",  "<cmd>lua open_buf_in_window(true)<cr>", {des
 vim.keymap.set("n", "<leader>bW",  "<cmd>lua open_buf_in_window(false)<cr>", {desc="Open cur. buffer in window"})
 vim.keymap.set("n", "<leader>bo", "<cmd>lua close_nonvisible_buffers()<cr>", {desc="Close all buffers but the visible ones"})
 vim.keymap.set("n", "<leader>bR", "<cmd>lua reopen_buffer()<cr>", {desc="Reopen the current buffer. Can be useful to reset LSP and similar"})
+vim.keymap.set("n", "<leader>by", function()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  copy_to_clipboard(table.concat(lines, "\n"))
+
+  -- manually simulate vim.highlight.on_yank()
+    local ns_id = vim.api.nvim_create_namespace('yank_highlight')
+    vim.api.nvim_buf_set_extmark(0, ns_id, 0, 0, {
+        end_row = vim.api.nvim_buf_line_count(0),
+        hl_group = 'IncSearch',
+    })
+    vim.defer_fn(function()
+        if vim.api.nvim_buf_is_valid(0) then
+            vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
+        end
+    end, 200)
+
+end, {desc="Yank the whole buffer to the clipboard"})
 
 require 'key-menu'.set('n', '<Space>')
 require 'key-menu'.set('n', ',')

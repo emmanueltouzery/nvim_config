@@ -19,29 +19,45 @@ _G.telescope_modified_git_projects = function(opts)
 
   -- ideally should be async but...
   local get_git_status = function(folder)
-    local r = vim.tbl_filter(
+    return vim.tbl_filter(
       function(v) return #v > 0 end, -- drop blank lines
       vim.split(vim.system(
         { 'git', '-C', folder, 'status', '-s' }
       ):wait().stdout, '\n'))
-    local res = {}
-    if #r > 0 then
-      res.folder = folder
-      res.status = r
+  end
+
+  local get_git_branch = function(folder)
+    return vim.trim(vim.system({'git', 'branch', '--show-current'}, {text=true, cwd=folder}):wait().stdout)
+  end
+
+  local get_modified_status = function(folder)
+    local git_status = get_git_status(folder)
+    if #git_status > 0 then
+      return {
+        folder = folder,
+        status = git_status,
+      }
     end
-    return res
+    local branch = get_git_branch(folder)
+    if not vim.tbl_contains({"master", "main", "develop"}, branch) then
+      return {
+        folder = folder,
+        status = {"git branch: " .. branch},
+      }
+    end
+    return {folder = folder, status = nil}
   end
 
   local get_modified_git_repos = function ()
     local root_path = vim.fn.expand('~/projects/')
     local dir_contents = vim.fn.readdir(root_path)
-    local dir_contents_path = vim.tbl_map(function(p) 
+    local dir_contents_path = vim.tbl_map(function(p)
       return root_path .. p
     end, dir_contents)
-    local subfolders = vim.tbl_filter(function(p) 
-      return vim.fn.isdirectory(p) 
+    local subfolders = vim.tbl_filter(function(p)
+      return vim.fn.isdirectory(p) == 1 and vim.fn.isdirectory(p .. "/.git") == 1
     end, dir_contents_path)
-    return vim.tbl_filter(function(p) return p.status ~= nil end, vim.tbl_map(get_git_status, subfolders))
+    return vim.tbl_filter(function(p) return p.status ~= nil end, vim.tbl_map(get_modified_status, subfolders))
   end
 
   modified_git_repos = get_modified_git_repos()

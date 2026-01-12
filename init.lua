@@ -1230,8 +1230,7 @@ callbacks = {
       augroup END
     ]]
   end}
-  -- next TODO: https://github.com/stevearc/overseer.nvim/issues/455
-  use {'stevearc/overseer.nvim', commit='3cde0d84bdae56cd119cbf835f764fa30cec384c', config=function()
+  use {'stevearc/overseer.nvim', commit='fe4c8a06796c3da68b4dbbb0fcc3aa4ba8971385', config=function()
     vim.api.nvim_create_autocmd('FileType', {
       pattern = { "OverseerOutput"},
       callback = function()

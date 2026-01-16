@@ -98,5 +98,6 @@ vim.keymap.set("n", '<localleader>wj', [[:normal gewysaw(bijsonb_pretty<cr>]], {
 
 -- start similar to -j. wrap in two levels of brackets, use % to switch to the other bracket, esc to exit insert mode
 vim.keymap.set("n", '<localleader>wa', [[:normal gewysaw(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%hi::jsonb<esc>]], {buffer = true, desc="Pretty display for array"})
+vim.keymap.set("n", '<localleader>wA', [[:normal gewysaw(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%i::jsonb<esc>]], {buffer = true, desc="Pretty display for json array"})
 
 vim.keymap.set("n", '<localleader>wc', [[:normal gewysaw(bicount<cr>]], {buffer = true, desc="Wrap in count"})

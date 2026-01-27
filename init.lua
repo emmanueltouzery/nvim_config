@@ -681,14 +681,14 @@ require('packer').startup(function(use)
         vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
         vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
 
-        local width = vim.api.nvim_get_option("columns")
-        local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
+        local width = vim.api.nvim_win_get_width(0)
+        local height = vim.api.nvim_win_get_height(0) - 1
 
         local win_opts = {
           focusable = false,
           style = "minimal",
           border = "rounded",
-          relative = "editor",
+          relative = "win",
           width = 70,
           height = #hist,
           anchor = "SE",

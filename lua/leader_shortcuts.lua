@@ -103,6 +103,25 @@ vim.keymap.set("n", "<leader>by", function()
     end, 200)
 
 end, {desc="Yank the whole buffer to the clipboard"})
+vim.keymap.set("n", "<leader>bp", function()
+  vim.api.nvim_win_set_cursor(0, {1, 0})
+  -- trim trailing newline otherwise we create an extra line at the end of the buffer
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(vim.fn.getreg('+'):gsub("\n$", ""), '\n'))
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+  -- manually simulate vim.highlight.on_yank()
+    local ns_id = vim.api.nvim_create_namespace('yank_highlight')
+    vim.api.nvim_buf_set_extmark(0, ns_id, 0, 0, {
+        end_row = vim.api.nvim_buf_line_count(0),
+        hl_group = 'IncSearch',
+    })
+    vim.defer_fn(function()
+        if vim.api.nvim_buf_is_valid(0) then
+            vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
+        end
+    end, 200)
+
+end, {desc="Overwrite buffer contents with the clipboard"})
 
 require 'key-menu'.set('n', '<Space>')
 require 'key-menu'.set('n', ',')

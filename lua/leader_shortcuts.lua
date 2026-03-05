@@ -385,7 +385,36 @@ end
 vim.keymap.set( "n", "<leader>s*", "<cmd>lua ws_symbol_under_cursor()<CR>", {desc="Goto workspace symbol under cursor"})
 require 'key-menu'.set('n', '<Space>sc', {desc='Search code'})
 vim.keymap.set( "n", "<leader>scd", "<cmd>lua search_code_deps()<CR>", {desc="Search code deps"})
-vim.keymap.set( "n", "<leader>sct", "<cmd>Telescope ast_grep<CR>", {desc="ast-grep code search"})
+
+local function astgrep_open_buf()
+  local ft = vim.api.nvim_buf_get_option(0, 'ft')
+  if ft == 'typescriptreact' then
+    ft = 'tsx'
+  end
+  local buf = vim.api.nvim_create_buf(true, true)
+  vim.api.nvim_buf_set_option(buf, 'ft', 'astgrep')
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
+    -- this is for the elixir AST, but easy enough to modify
+    "id: fdf",
+    "language: " .. ft,
+    "severity: error",
+    "rule:",
+    "  kind: 'map_content'",
+    "  has:",
+    "    all:",
+    "      - kind: 'pair'",
+    "      - regex: 'post_process: .*'",
+    "    stopBy: end",
+    "  follows:",
+    "    all:",
+    "      - kind: 'struct'",
+    "      - regex: TypeDef",
+    "    stopBy:",
+    "      kind: 'struct'",
+  })
+  vim.api.nvim_win_set_buf(0, buf)
+end
+vim.keymap.set( "n", "<leader>sct", astgrep_open_buf, {desc="ast-grep code search"})
 
 -- WINDOW
 require 'key-menu'.set('n', '<Space>w', {desc='Window'})

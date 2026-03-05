@@ -317,14 +317,6 @@ require('packer').startup(function(use)
           col1_width = 2,
           col2_width = 32,
         },
-        ast_grep = {
-          command = {
-            "sg",
-            "--json=stream",
-          }, -- must have --json=stream
-          grep_open_files = false, -- search in opened files
-          lang = nil, -- string value, specify language for ast-grep `nil` for default
-        }
       },
     }
     require("telescope").load_extension("undo")
@@ -1632,7 +1624,6 @@ callbacks = {
       end,
     })
   end}
-  use {"emmanueltouzery/telescope-sg", commit="4c9e7946772a85c70108b8fc0bf2aa03b78132df"}
 end)
 
 --Set highlight on search

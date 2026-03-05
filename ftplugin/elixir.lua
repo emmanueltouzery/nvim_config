@@ -130,6 +130,7 @@ require 'key-menu'.set('n', '<localleader>o', {desc='Open...', buffer = true})
 vim.keymap.set('n', '<localleader>os', ":lua telescope_elixir_stacktrace({})<cr>", {desc="elixir open stacktrace", buffer = true})
 require 'key-menu'.set('n', '<localleader>m', {desc='module...', buffer = true})
 vim.keymap.set('n', '<localleader>mc', ":lua require'elixir-extras'.module_complete()<cr>", {desc="elixir module complete", buffer = true})
+vim.keymap.set('n', '<localleader>ma', ":lua require'elixir-extras'.module_alias()<cr>", {desc="elixir module alias", buffer = true})
 
 require 'key-menu'.set('n', '<localleader>n', {desc='iNdent', buffer = true})
 vim.keymap.set('n', '<localleader>nm', ":lua elixir_match_error_details_indent({})<cr>", {desc="elixir indent match error details", buffer = true})

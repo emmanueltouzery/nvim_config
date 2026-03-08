@@ -1,9 +1,9 @@
 -- see elixir_insert_inspect_param
-local function typescript_insert_inspect_param()
+local function typescript_insert_inspect_param(v)
   winid = vim.api.nvim_get_current_win()
   local cur_line = vim.fn.line('.')
   local cur_col = vim.fn.col('.')
-  local param_name = vim.fn.expand("<cword>")
+  local param_name = v or vim.fn.expand("<cword>")
   local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
   local is_function_name = string.match(cur_line_str, "^%s*def%s+" .. param_name .. "%(")
   require('leap').leap {
@@ -29,6 +29,13 @@ local function typescript_insert_inspect_param()
   }
 end
 vim.keymap.set('n', '<localleader>ip', typescript_insert_inspect_param, { buffer = true, desc = "console inspect parameter"})
+
+vim.keymap.set('v', '<localleader>ip', function()
+  local txt = get_visual_selection()
+  -- Exit visual mode back to normal mode
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "x", true)
+  typescript_insert_inspect_param(txt)
+end, { buffer = true, desc = "console inspect parameter"})
 
 -- see  elixir_insert_inspect_label
 local function typescript_insert_inspect_label()

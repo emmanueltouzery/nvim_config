@@ -722,7 +722,7 @@ function _G.custom_make_entry_gen_from_git_commits(opts)
     separator = " ",
     -- hl_chars = { ["("] = "TelescopeBorder", [")"] = "TelescopeBorder" }, --
     items = {
-      { width = 8 },
+      { width = 9 },
       { width = 16 },
       { width = 10 },
       { remaining = true },

@@ -19,7 +19,7 @@ local function lua_insert_inspect_param()
         vim.cmd("norm! O")
         vim.cmd[[set nopaste]]
       end
-      vim.cmd('norm! aprint(vim.inspect(' .. param_name .. ')')
+      vim.cmd('norm! aprint(vim.inspect(' .. param_name .. '))')
       -- position the cursor in the quotes to enable quick rename
       vim.cmd('startinsert')
     end

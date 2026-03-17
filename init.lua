@@ -2121,4 +2121,10 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
+-- Map 'iq' to act as 'i`'
+-- the ` is annoying to type on my slovenian keyboard.
+-- don't want to depend on mini.ai just for this...
+vim.keymap.set({'o', 'x'}, 'iq', 'i`', { desc = "Inner backtick (alias)" })
+vim.keymap.set({'o', 'x'}, 'aq', 'a`', { desc = "Around backtick (alias)" })
+
 -- vim: ts=2 sts=2 sw=2 et

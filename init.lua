@@ -1210,18 +1210,6 @@ callbacks = {
     })
   end}
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
-  -- language syntax-aware matchit. for instance, json {"test": "value}rest"}
-  -- or JSX <TextField<string> ... />, or things in comments which are correctly ignored
-  use {'andymass/vim-matchup', commit='ca538c3bb02836510526ff7d07cf7e4c8e9a3b90', config=function()
-    -- https://github.com/andymass/vim-matchup#customizing-the-highlighting-colors
-    vim.cmd [[
-      augroup matchup_matchparen_highlight
-        autocmd!
-        autocmd ColorScheme * hi MatchParen ctermfg=yellow guifg=yellow,\
-            hi MatchWord cterm=bold,underline gui=bold,underline ctermfg=NONE guifg=NONE
-      augroup END
-    ]]
-  end}
   use {'emmanueltouzery/overseer.nvim', commit='1c8841ff81e33d75bbddadbc325b9a32d58a249c', config=function()
     require('overseer').setup{
       dap = false,

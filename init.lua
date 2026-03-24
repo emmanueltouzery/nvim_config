@@ -1194,7 +1194,7 @@ callbacks = {
         highlight = '',
         replace = 'cs',
       },
-      n_lines = 50,
+      n_lines = 150,
       highlight_duration = 3000,
       custom_surroundings = {
         -- rename tag while keeping attributes https://github.com/nvim-mini/mini.nvim/issues/1293#issuecomment-2423827325

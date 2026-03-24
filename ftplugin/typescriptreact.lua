@@ -2,6 +2,7 @@
 vim.cmd.runtime({"ftplugin/typescript.lua",  bang = true })
 
 -- Set specific surrounding in 'mini.surround'
+-- depends on custom after/queries/tsx/textobjects.scm
 local ts_input = require('mini.surround').gen_spec.input.treesitter
 vim.b.minisurround_config = {
   custom_surroundings = {

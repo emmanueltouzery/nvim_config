@@ -170,3 +170,70 @@ local function jump_param()
 end
 
 vim.keymap.set('n', '<localleader>jp', jump_param, { buffer = true, desc = "redux selector jump to matching param"})
+
+-- the following is an improved % jump for react tags.
+-- this can also be achieved with vim-matchup, which I dropped in b792e95253629d38284972227ea16961ecb09ed5
+-- however i'd like to drop the dependency if possible.
+
+local function smart_percent()
+  local node = vim.treesitter.get_node()
+
+  if not node then
+    vim.cmd('normal! %')
+    return
+  end
+
+  local target_types = {
+    jsx_opening_element = true,
+    jsx_closing_element = true,
+    jsx_self_closing_element = true,
+  }
+
+  -- Climb the tree
+  local current = node
+  while current and not target_types[current:type()] do
+    current = current:parent()
+  end
+
+  -- If we didn't find a JSX node after climbing, fallback
+  if not current then
+    vim.cmd('normal! %')
+    return
+  end
+
+  -- JSX Jumping Logic
+  local node_type = current:type()
+  local parent = current:parent()
+
+  if node_type == 'jsx_opening_element' then
+    -- Try to find the closing tag via the 'jsx_element' parent
+    local closing = parent:field('close_tag')[1]
+    if closing then
+      local start_row, start_col = closing:range()
+      vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
+    else
+      -- It's probably a single line tag or malformed, just go to the end of the opener
+      local _, _, end_row, end_col = current:range()
+      vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col - 1 })
+    end
+
+  elseif node_type == 'jsx_closing_element' then
+    local opening = parent:field('open_tag')[1]
+    if opening then
+      local start_row, start_col = opening:range()
+      vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
+    end
+
+  elseif node_type == 'jsx_self_closing_element' then
+    local start_row, start_col, end_row, end_col = current:range()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    -- Jump to end if at start, otherwise jump to start
+    if cursor[1] == start_row + 1 and cursor[2] == start_col then
+      vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col - 1 })
+    else
+      vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
+    end
+  end
+end
+
+vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX jump" })

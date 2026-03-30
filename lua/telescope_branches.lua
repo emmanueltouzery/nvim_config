@@ -222,6 +222,7 @@ end
 
 git_foresta_branch_log = defaulter(function(opts)
   local highlight_buffer = function(bufnr, content, fields)
+    local sha_length = #fields[1][2] -- the sha may be shorter or longer 8..10 or so depending on the size of the project
     for i = 1, #content do
       local line = content[i]
       local cols = fields[i]
@@ -239,7 +240,7 @@ git_foresta_branch_log = defaulter(function(opts)
       "TelescopeResultsIdentifier",
       i - 1,
       0,
-      9
+      sha_length
       )
 
       -- highlight tag info if present; it'll be in brackets and highlighted

@@ -892,6 +892,10 @@ callbacks = {
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentRangeFormattingProvider = false
           end
+
+          if client:supports_method('textDocument/documentColor') and vim.version().major == 0 and vim.version().minor >= 12 then
+            vim.lsp.document_color.enable(true, {bufnr=args.buf}, {style='virtual'})
+          end
         end,
       })
 

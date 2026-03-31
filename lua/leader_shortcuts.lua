@@ -44,7 +44,16 @@ vim.keymap.set( "n", "<leader>,", function()
       define_preview = function(self, entry, status)
         apply_buffer_preview(self, ns_previewer, entry.bufnr, entry.lnum)
       end
-    })
+    }),
+    attach_mappings = function(_, map)
+      map({ "i", "n" }, "<c-f>", function(prompt_bufnr)
+        require("telescope.actions").close(prompt_bufnr)
+        local source_bufnr = require("telescope.actions.state").get_selected_entry(prompt_bufnr).bufnr
+        local lines = vim.api.nvim_buf_get_lines(source_bufnr, 0, -1, false)
+        require('mini.diff').set_ref_text(0, table.concat(lines, '\n'))
+      end, {desc="diff with buffer"})
+      return true
+    end,
   })
 end, {desc="Telescope buffers"})
 vim.keymap.set("n", "<leader>?", ":Cheat40<cr>", {desc="help"})

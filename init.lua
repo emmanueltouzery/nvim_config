@@ -2004,6 +2004,12 @@ vim.o.diffopt = "internal,filler,closeoff,linematch:60"
 -- as a marker for "interesting or not"
 vim.o.foldminlines = 0
 
+-- https://pawelgrzybek.com/vim-tip-more-intuitive-ctrl-a-adding-and-ctrl-x-subtracting/
+-- smarter behavior for C-a and C-x -- if there's a "-" the number is only considered negative
+-- if there's a leading space.
+-- unsigned is not good because you can't work with negative numbers then.
+vim.o.nrformats = "bin,hex,blank"
+
 -- move the cursor to the beginning of non-whitespace characters in a line
 -- EDIT: undo. want to be able to move back to the 0th column in case of right scroll
 -- vim.cmd[[

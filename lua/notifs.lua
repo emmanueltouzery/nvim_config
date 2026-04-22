@@ -95,6 +95,7 @@ function _G.notif(msg, level, opts)
     row = height - offset*3,
     col = width,
     noautocmd = true,
+    zindex = 300,
   }
 
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, notif_format_msg(msg))

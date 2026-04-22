@@ -236,4 +236,4 @@ local function smart_percent()
   end
 end
 
-vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX jump" })
+vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX jump", buf = 0 })

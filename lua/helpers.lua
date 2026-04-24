@@ -1581,7 +1581,7 @@ function _G.open_command_in_popup(cmd, req_width, req_col, req_height, req_row)
   local width = req_width or vim.o.columns-6
   local height = req_height or vim.o.lines-6
   local win_opts = {
-    focusable = false,
+    focusable = true,
     style = "minimal",
     border = "rounded",
     relative = "editor",

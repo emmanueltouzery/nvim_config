@@ -1528,13 +1528,12 @@ function _G.under_cursor_unix_timestamp_to_date()
     -- the timestamp includes milliseconds
     under_cursor = under_cursor:sub(1, 10) .. "." .. under_cursor:sub(11, 13)
   end
-  vim.system({'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}, {text=true}, vim.schedule_wrap(function(obj)
+  local out = vim.system({'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}, {text=true}):wait().stdout
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
-      open_text_in_cursor_popup(obj.stdout, 2)
-    else
-      vim.cmd("norm ciw" .. obj.stdout)
-    end
-  end))
+    open_text_in_cursor_popup(out, 2)
+  else
+    vim.cmd("norm ciw" .. out)
+  end
   -- make dot-repeatable https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
   vim.go.operatorfunc = "v:lua.noop"
   vim.cmd("normal! g@l")

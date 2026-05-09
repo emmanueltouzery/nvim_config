@@ -1058,7 +1058,9 @@ vim.keymap.set('n', 'šc', ":lua require('decisive').align_csv_prev_col()<cr>", 
 vim.keymap.set('n', 'đc', ":lua require('decisive').align_csv_next_col()<cr>", {desc="align CSV next col", silent=true})
 
 require 'key-menu'.set('n', '<Space>cu', {desc='Code under cursor'})
-vim.keymap.set('n', '<leader>cuu', function() under_cursor_unix_timestamp_to_date() end, {desc="unix timestamp", silent=true})
+require 'key-menu'.set('n', '<Space>cuu', {desc='Code under cursor - unix timestamp'})
+vim.keymap.set('n', '<leader>cuuu', function() under_cursor_unix_timestamp_to_date(false) end, {desc="unix timestamp to UTC", silent=true})
+vim.keymap.set('n', '<leader>cuul', function() under_cursor_unix_timestamp_to_date(true) end, {desc="unix timestamp to local", silent=true})
 vim.keymap.set('n', '<leader>cum', function() under_cursor_minutes_to_hhmm() end, {desc="minutes", silent=true})
 vim.keymap.set('n', '<leader>cus', function() under_cursor_seconds_to_hhmm() end, {desc="seconds", silent=true})
 

@@ -1522,17 +1522,22 @@ local function open_text_in_cursor_popup(text, pref_height)
   open_in_cursor_popup(buf, pref_height)
 end
 
-function _G.under_cursor_unix_timestamp_to_date()
+function _G.under_cursor_unix_timestamp_to_date(format_local)
   local under_cursor = vim.fn.expand('<cword>')
   if #under_cursor == 13 then
     -- the timestamp includes milliseconds
     under_cursor = under_cursor:sub(1, 10) .. "." .. under_cursor:sub(11, 13)
   end
-  local out = vim.system({'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}, {text=true}):wait().stdout
+  local params = {'date', '-d', '@' .. under_cursor, '-u', '+"%Y-%m-%d %H:%M:%S.%3N"'}
+  if format_local then
+    -- drop the -u
+    params = {'date', '-d', '@' .. under_cursor, '+"%Y-%m-%d %H:%M:%S.%3N"'}
+  end
+  local out = vim.system(params, {text=true}):wait().stdout
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
     open_text_in_cursor_popup(out, 2)
   else
-    vim.cmd("norm ciw" .. out)
+    vim.cmd("norm! ciw" .. out)
   end
   -- make dot-repeatable https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
   vim.go.operatorfunc = "v:lua.noop"
@@ -1548,7 +1553,7 @@ function _G.under_cursor_minutes_to_hhmm()
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
     open_text_in_cursor_popup(res, 2)
   else
-    vim.cmd("norm ciw" .. res)
+    vim.cmd("norm! ciw" .. res)
   end
   -- make dot-repeatable https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
   vim.go.operatorfunc = "v:lua.noop"
@@ -1566,7 +1571,7 @@ function _G.under_cursor_seconds_to_hhmm()
   if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
     open_text_in_cursor_popup(res, 2)
   else
-    vim.cmd("norm ciw" .. res)
+    vim.cmd("norm! ciw" .. res)
   end
   -- make dot-repeatable https://gist.github.com/kylechui/a5c1258cd2d86755f97b10fc921315c3
   vim.go.operatorfunc = "v:lua.noop"

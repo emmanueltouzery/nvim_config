@@ -237,3 +237,59 @@ local function smart_percent()
 end
 
 vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX jump", buf = 0 })
+
+-- typescript hover popup with dynamic verbosity that can be increased with +
+local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
+  local contents = vim.split(res.contents.value, '\n')
+  if res.canIncreaseVerbosityLevel then
+    table.insert(contents, 1, "----[+]----")
+
+    vim.keymap.set('n', '<kPlus>', function()
+      params.verbosityLevel = params.verbosityLevel + 1
+      vim.schedule(function()
+        vim.lsp.buf_request(orig_buf, 'textDocument/hover', params, function(err, res)
+          hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
+        end)
+      end)
+    end, { buf = popup_buf})
+  elseif params.verbosityLevel > 1 then
+    vim.keymap.del('n', '<kPlus>', { buf = popup_buf})
+  end
+  vim.api.nvim_win_set_height(popup_win, #contents)
+  vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, contents)
+end
+
+vim.keymap.set('n', 'K', function()
+  local params = vim.lsp.util.make_position_params()
+  params.verbosityLevel = 1
+  vim.lsp.buf_request(0, 'textDocument/hover', params, function(err, res)
+    local orig_buf = vim.api.nvim_win_get_buf(0)
+
+    local popup_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_option(popup_buf, 'ft', 'markdown')
+
+    local width = 70
+    local height = 15
+    local win_opts = {
+      focusable = true,
+      style = "minimal",
+      border = "rounded",
+      relative = "cursor",
+      width = width,
+      height = height,
+      anchor = "NW",
+      row = 2,
+      col = 30,
+      noautocmd = true,
+    }
+    local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
+    vim.api.nvim_set_option_value("conceallevel", 2, {win = popup_win})
+
+    hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
+
+    vim.keymap.set('n', 'q', function()
+      vim.api.nvim_win_close(popup_win, true)
+      vim.api.nvim_buf_delete(popup_buf, { force = true })
+    end, { buf = popup_buf})
+  end)
+end)

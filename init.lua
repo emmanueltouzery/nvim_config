@@ -879,7 +879,11 @@ callbacks = {
       require("mason").setup()
       -- require("mason-lspconfig").setup {}
 
-      vim.lsp.config("ts_ls", {})
+      vim.lsp.config("ts_ls", {
+        init_options = {
+          supportsHoverVerbosity=true
+        },
+      })
       vim.lsp.enable({"ts_ls"})
 
       vim.api.nvim_create_autocmd('LspAttach', {

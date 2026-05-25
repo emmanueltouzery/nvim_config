@@ -16,7 +16,7 @@ local function display_changes(entry)
   if summary.add > 0 then table.insert(t, '+' .. summary.add) end
   if summary.change > 0 then table.insert(t, '~' .. summary.change) end
   if summary.delete > 0 then table.insert(t, '-' .. summary.delete) end
-  return table.concat(t, ' ')
+  return table.concat(t, '')
 end
 
 function _G.my_gen_from_buffer()
@@ -73,7 +73,7 @@ function _G.my_gen_from_buffer()
     items = {
       { width = opts.bufnr_width },
       { width = 4 },
-      { width = 4 },
+      { width = 7 }, -- number of chars to display for 'display_changes' mini.diff summary
       { width = icon_width },
       { remaining = true },
     },

@@ -34,12 +34,14 @@ local function apply_buffer_preview(self, ns_previewer, source_buf, entry_lnum)
 end
 
 vim.keymap.set( "n", "<leader>.", "<cmd>Telescope file_browser hidden=true<CR>", {desc="Telescope files"})
+
 vim.keymap.set( "n", "<leader>,", function()
   local previewers = require("telescope.previewers")
   local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
   require'telescope.builtin'.buffers({
     show_all_buffers = true,
     -- the telescope builtin previewer doesn't work on non-saved files
+    entry_maker = my_gen_from_buffer({show_all_buffers=true}),
     previewer = previewers.new_buffer_previewer({
       define_preview = function(self, entry, status)
         apply_buffer_preview(self, ns_previewer, entry.bufnr, entry.lnum)

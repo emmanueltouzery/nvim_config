@@ -236,7 +236,7 @@ local function smart_percent()
   end
 end
 
-vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX jump", buf = 0 })
+vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX jump", buffer = 0 })
 
 -- typescript hover popup with dynamic verbosity that can be increased with +
 local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
@@ -251,7 +251,7 @@ local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
           hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
         end)
       end)
-    end, { buf = popup_buf})
+    end, { buffer = popup_buf})
   elseif params.verbosityLevel > 1 then
     vim.keymap.del('n', '<kPlus>', { buf = popup_buf})
   end
@@ -290,6 +290,6 @@ vim.keymap.set('n', 'K', function()
     vim.keymap.set('n', 'q', function()
       vim.api.nvim_win_close(popup_win, true)
       vim.api.nvim_buf_delete(popup_buf, { force = true })
-    end, { buf = popup_buf})
+    end, { buffer = popup_buf})
   end)
-end)
+end, { buffer = true})

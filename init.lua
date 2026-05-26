@@ -881,7 +881,10 @@ callbacks = {
 
       vim.lsp.config("ts_ls", {
         init_options = {
-          supportsHoverVerbosity=true
+          supportsHoverVerbosity=true,
+          preferences = {
+            maximumHoverLength = 1500,
+          }
         },
       })
       vim.lsp.enable({"ts_ls"})

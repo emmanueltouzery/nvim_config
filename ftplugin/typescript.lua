@@ -241,11 +241,28 @@ vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX ju
 -- typescript hover popup with dynamic verbosity that can be increased with +
 local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
   local contents = vim.split(res.contents.value, '\n')
+  local plusMinusOpts = ""
+  if params.verbosityLevel > 1 then
+    plusMinusOpts = plusMinusOpts .. "[-]"
+
+    vim.keymap.set('n', '<kMinus>', function()
+      params.verbosityLevel = params.verbosityLevel - 1
+      vim.schedule(function()
+        vim.lsp.buf_request(orig_buf, 'textDocument/hover', params, function(err, res)
+          hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
+        end)
+      end)
+    end, { buffer = popup_buf})
+  elseif params.hadPlus then
+    vim.keymap.del('n', '<kMinus>', { buf = popup_buf})
+    params.hadPlus = false
+  end
   if res.canIncreaseVerbosityLevel then
-    table.insert(contents, 1, "----[+]----")
+    plusMinusOpts = plusMinusOpts .. "[+]"
 
     vim.keymap.set('n', '<kPlus>', function()
       params.verbosityLevel = params.verbosityLevel + 1
+      params.hadPlus = true
       vim.schedule(function()
         vim.lsp.buf_request(orig_buf, 'textDocument/hover', params, function(err, res)
           hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
@@ -254,6 +271,9 @@ local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
     end, { buffer = popup_buf})
   elseif params.verbosityLevel > 1 then
     vim.keymap.del('n', '<kPlus>', { buf = popup_buf})
+  end
+  if #plusMinusOpts > 0 then
+    table.insert(contents, 1, "----" .. plusMinusOpts .. "----")
   end
   vim.api.nvim_win_set_height(popup_win, #contents)
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, contents)

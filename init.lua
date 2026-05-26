@@ -883,7 +883,7 @@ callbacks = {
         init_options = {
           supportsHoverVerbosity=true,
           preferences = {
-            maximumHoverLength = 1500,
+            maximumHoverLength = 2500,
           }
         },
       })

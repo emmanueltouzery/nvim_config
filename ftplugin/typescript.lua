@@ -275,7 +275,7 @@ local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
   if #plusMinusOpts > 0 then
     table.insert(contents, 1, "----" .. plusMinusOpts .. "----")
   end
-  vim.api.nvim_win_set_height(popup_win, #contents)
+  vim.api.nvim_win_set_height(popup_win, math.min(#contents, vim.o.lines-3))
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, contents)
 end
 

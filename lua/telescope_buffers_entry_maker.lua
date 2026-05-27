@@ -12,6 +12,9 @@ local function display_changes(entry)
     return "-"
   end
   local summary = bufdat.summary
+  if summary == nil then
+    return "-"
+  end
   local t = {}
   if summary.add > 0 then table.insert(t, '+' .. summary.add) end
   if summary.change > 0 then table.insert(t, '~' .. summary.change) end

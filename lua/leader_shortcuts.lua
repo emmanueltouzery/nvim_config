@@ -1068,12 +1068,11 @@ vim.keymap.set('n', '<leader>cus', function() under_cursor_seconds_to_hhmm() end
 
 -- TESTS
 require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})
-vim.keymap.set("n", "<leader>ctf", ":TestFile -strategy=dispatch<cr>", {desc="test file"})
-vim.keymap.set("n", "<leader>ctn", ":TestNearest -strategy=dispatch<cr>", {desc="test nearest"})
-vim.keymap.set("n", "<leader>ctl", ":TestLast -strategy=dispatch<cr>", {desc="test last"})
-vim.keymap.set("n", "<leader>cta", ":TestSuite -strategy=dispatch<cr>", {desc="test all"})
+vim.keymap.set("n", "<leader>ctf", ":TestFile<cr>", {desc="test file"})
+vim.keymap.set("n", "<leader>ctn", ":TestNearest<cr>", {desc="test nearest"})
+vim.keymap.set("n", "<leader>ctl", ":TestLast<cr>", {desc="test last"})
+vim.keymap.set("n", "<leader>cta", ":TestSuite<cr>", {desc="test all"})
 vim.keymap.set("n", "<leader>ctA", ":lua test_all_bg_run()<cr>", {desc="test all, background run"})
-vim.keymap.set("n", "<leader>ctk", ":AbortDispatch<cr>", {desc="kill tests"})
 vim.keymap.set("n", "<leader>ctK", ":lua vim.fn.jobstop(vim.g.test_bg_jobid)<cr>", {desc="kill background tests"})
 vim.keymap.set("n", "<leader>ctp", "<cmd>lua test_output_in_popup()<cr>", {desc="test output in popup"})
 vim.keymap.set("n", "<leader>cto", "<cmd>lua test_output_open()<cr>", {desc="open test output"})

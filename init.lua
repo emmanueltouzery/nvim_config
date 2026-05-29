@@ -768,7 +768,6 @@ require('packer').startup(function(use)
       require("leap").opts.highlight_unlabeled_phase_one_targets = true
     end
   }
-  use {'tpope/vim-dispatch', commit='00e77d90452e3c710014b26dc61ea919bc895e92'} -- used by vim-test
   use {'vim-test/vim-test', commit='c63b94c1e5089807f4532e05f087351ddb5a207c', config = function()
     -- https://github.com/vim-test/vim-test/issues/711
     -- trigger tests also for non-test elixir files, useful to run all tests
@@ -782,6 +781,18 @@ require('packer').startup(function(use)
     -- need this to parse more errors from tests into quickfix when i have debugging statements
     -- otherwise the test output may get truncated
     vim.cmd[[set scrollback=40000]]
+
+    -- https://github.com/vim-test/vim-test/issues/902#issuecomment-4388304422
+    vim.g['test#custom_strategies'] = {
+      overseer = function(cmd)
+        require('overseer').new_task({ cmd = cmd, components = {
+          "vim_test_qf",
+          "on_exit_set_status",
+          "on_complete_notify",
+        } }):start()
+      end,
+    }
+    vim.g['test#strategy'] = 'overseer'
   end}
   -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
   use {'dhruvasagar/vim-markify', commit='14158865c0f37a02a5d6d738437eb00a821b31ef', config = function()
@@ -1177,7 +1188,6 @@ callbacks = {
     dashboard.config.opts.noautocmd = true
     alpha.setup(dashboard.config)
   end}
-  use {'emmanueltouzery/vim-dispatch-neovim', commit='cdaca4acc8cda00eaf68ef5943c02c1842b5353f'}
   -- private, optional stuff
   use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
     if pcall(require, 'nvim_config_private') then

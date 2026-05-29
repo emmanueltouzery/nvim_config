@@ -1072,18 +1072,10 @@ vim.keymap.set("n", "<leader>ctf", ":TestFile<cr>", {desc="test file"})
 vim.keymap.set("n", "<leader>ctn", ":TestNearest<cr>", {desc="test nearest"})
 vim.keymap.set("n", "<leader>ctl", ":TestLast<cr>", {desc="test last"})
 vim.keymap.set("n", "<leader>cta", ":TestSuite<cr>", {desc="test all"})
-vim.keymap.set("n", "<leader>ctA", ":lua test_all_bg_run()<cr>", {desc="test all, background run"})
-vim.keymap.set("n", "<leader>ctK", ":lua vim.fn.jobstop(vim.g.test_bg_jobid)<cr>", {desc="kill background tests"})
-vim.keymap.set("n", "<leader>ctp", "<cmd>lua test_output_in_popup()<cr>", {desc="test output in popup"})
-vim.keymap.set("n", "<leader>cto", "<cmd>lua test_output_open()<cr>", {desc="open test output"})
-vim.keymap.set("n", "<leader>ctO", ":Copen<cr>", {desc="open test output for background run"})
-function  tests_current_buffer_to_qf()
-  if vim.g['test#last_command']:match("^mix test") then
-    vim.cmd("compiler exunit")
-  end
-  vim.cmd("cb!")
-end
-vim.keymap.set("n", "<leader>ctq", tests_current_buffer_to_qf, {desc="load the test results from the current buffer to quickfix"})
+vim.keymap.set("n", "<leader>cto", function()
+  vim.g.open_test_output = not vim.g.open_test_output
+  notif({string.format("Test output auto-open: %s", vim.g.open_test_output)})
+end, {desc="Toggle auto-open test output when tests are run"})
 
 -- QUICKFIX
 require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})

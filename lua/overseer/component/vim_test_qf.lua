@@ -7,6 +7,9 @@ return {
 
       on_init = function(self, task)
         vim.fn.setqflist({})
+        if vim.g.open_test_output then
+          overseer_open_float_last_job()
+        end
       end,
 
       on_output_lines = function(self, task, lines)

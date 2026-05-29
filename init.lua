@@ -788,7 +788,8 @@ require('packer').startup(function(use)
         require('overseer').new_task({ cmd = cmd, components = {
           "vim_test_qf",
           "on_exit_set_status",
-          "on_complete_notify",
+          -- "on_complete_notify", -- i limited my notify to filter out messages, notifs.lua and overseer doesn't give markers i can use to whitelist it
+          "on_complete_notif",
         } }):start()
       end,
     }

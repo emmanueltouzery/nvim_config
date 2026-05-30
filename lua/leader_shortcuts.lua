@@ -377,6 +377,11 @@ vim.keymap.set("n", "<leader>ssf", function()
   end
 
   require('telescope').extensions.aerial.aerial({
+    -- in my main telescope config, i set file_ignore_patterns to ignore node_modules and similar.
+    -- in a funny turn of events that also blocks aerial from displaying list of functions for
+    -- files in node_modules folders, which is occasionally handy. So override the setting only
+    -- for aerial.
+    file_ignore_patterns = {},
     get_entry_text = aerial_elixir_get_entry_text,
     attach_mappings = telescope_center_mappings,
     sorter = sorter,

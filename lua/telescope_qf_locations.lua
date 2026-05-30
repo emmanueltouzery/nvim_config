@@ -3,7 +3,6 @@ local utils = require "telescope.utils"
 local finders = require "telescope.finders"
 local entry_display = require "telescope.pickers.entry_display"
 local conf = require("telescope.config").values
-local Str = require'plenary.strings'
 
 _G.my_gen_from_quickfix = function(opts)
   local firstcol_width = 30
@@ -33,7 +32,7 @@ _G.my_gen_from_quickfix = function(opts)
     end
 
     -- truncate myself so i can calculate offsets to move highlights
-    local display_fname = Str.truncate(filename:match("[^/]+$"), firstcol_width)
+    local display_fname = truncate_no_plenary(filename:match("[^/]+$"), firstcol_width)
     local d = displayer {
       line_info,
       display_fname,

@@ -1,4 +1,3 @@
-local Str = require'plenary.strings'
 
 local function winnr()
   local nr = vim.fn.winnr()
@@ -400,10 +399,8 @@ function setup_lualine()
                 label = require("nvim-web-devicons").get_icon_by_filetype(ft, {default = true}) .. " " .. label
               end
             end
-            if Str.strdisplaywidth(label) > 25 then
-              -- tab_max_length is supposed to allow that but it didn't seem to work
-              label = Str.truncate(label, 25)
-            end
+            -- tab_max_length is supposed to allow that but it didn't seem to work
+            label = truncate_no_plenary(label, 25)
             return tabnr_display(tab.tabnr) .. ' ' .. label
           end,
           section_separators = { left = "", right = "" },

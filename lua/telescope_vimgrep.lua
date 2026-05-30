@@ -1,6 +1,5 @@
 local utils = require "telescope.utils"
 local entry_display = require "telescope.pickers.entry_display"
-local Str = require'plenary.strings'
 local Path = require("plenary.path")
 
 -- 99% copy-pasted from telescope, i only changed the display,
@@ -101,7 +100,7 @@ _G.my_gen_from_vimgrep = function(opts)
     end
 
     -- truncate myself so i can calculate offsets to move highlights
-    local display_fname = Str.truncate(filename:match("[^/]+$"), firstcol_width)
+    local display_fname = truncate_no_plenary(filename:match("[^/]+$"), firstcol_width)
     local res, hl = displayer {
       line_info,
       display_fname,

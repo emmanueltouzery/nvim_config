@@ -3,8 +3,6 @@
 --   want to reorganize imports except from TS 4.9+, is a little slow).
 -- * using eslint autofix (but must still call in a loop, and i didn't
 --   realize until late that this was an option)
-local strings = require'plenary.strings'
-
 function add_comma_node(node)
   local comma_node = node:next_sibling()
   if comma_node ~= nil and comma_node:type() == ',' then
@@ -48,8 +46,8 @@ end
 function delete_range(start_row, start_col, end_row, end_col)
   local start_line = vim.api.nvim_buf_get_lines(0, start_row, start_row+1, false)[1]
   local end_line = vim.api.nvim_buf_get_lines(0, end_row, end_row+1, false)[1]
-  local new_start = strings.strcharpart(start_line, 0, start_col)
-  local new_end = strings.strcharpart(end_line, end_col)
+  local new_start = vim.fn.strcharpart(start_line, 0, start_col)
+  local new_end = vim.fn.strcharpart(end_line, end_col)
   local new_lines_arr
   if start_row == end_row then
     new_lines_arr = {new_start .. new_end}

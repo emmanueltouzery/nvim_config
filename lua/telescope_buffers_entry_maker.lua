@@ -24,7 +24,6 @@ end
 
 function _G.my_gen_from_buffer()
   local utils = require("telescope.utils")
-  local strings = require'plenary.strings'
   local entry_display = require("telescope.pickers.entry_display")
   local Path = require "plenary.path"
   local make_entry = require "telescope.make_entry"
@@ -68,7 +67,7 @@ function _G.my_gen_from_buffer()
   local icon_width = 0
   if not disable_devicons then
     local icon, _ = utils.get_devicons("fname", disable_devicons)
-    icon_width = strings.strdisplaywidth(icon)
+    icon_width = vim.fn.strdisplaywidth(icon)
   end
 
   local displayer = entry_display.create {

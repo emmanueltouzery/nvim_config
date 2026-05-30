@@ -1,8 +1,6 @@
 -- i'm aware of rcarriga/nvim-notify but this is much smaller
 -- i don't want to bloat my config or modify the behavior of builtin messages
 
-local Str = require'plenary.strings'
-
 local aug = vim.api.nvim_create_augroup("Notifs", {})
 vim.api.nvim_create_autocmd("FocusGained", {
   desc = "Track editor focus for notifs",
@@ -49,11 +47,14 @@ function _G.notif_length(msg)
 end
 
 local function force_length(msg, len)
-    if Str.strdisplaywidth(msg) > len then
-        return Str.truncate(msg, len)
-    else
-        return Str.align_str(msg, len, false)
+  if vim.fn.strcharlen(msg) <= max then
+    while vim.strstrcharlen(msg) < len do
+      msg = msg .. " "
     end
+    return msg
+  else
+    return truncate_no_plenary(msg, len)
+  end
 end
 
 function _G.notif_format_msg(msg)

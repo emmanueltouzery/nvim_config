@@ -6,8 +6,6 @@ local conf = require("telescope.config").values
 local make_entry = require "telescope.make_entry"
 local entry_display = require "telescope.pickers.entry_display"
 local get_status = require("telescope.state").get_status
-local Str = require'plenary.strings'
-local Path = require'plenary.path'
 
 -- https://stackoverflow.com/a/34953646/516188
 local function escape_pattern(text)

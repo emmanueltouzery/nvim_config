@@ -121,10 +121,9 @@ api.events.subscribe(Event.FileCreated, function(data)
       package_name = package_name .. package_elements[i]
     end
     local class_name = string.gsub(folders[#folders], ".java$", "")
-    local path = require("plenary.path")
-    path.new(data.fname):write(
-      "package " .. package_name .. ";\n\npublic class " .. class_name .. " {\n\n}", 'w'
-    )
+    local f = io.open(data.fname, "w")
+    f:write("package " .. package_name .. ";\n\npublic class " .. class_name .. " {\n\n}")
+    f:close()
   end
   -- require'nvim-tree.api'.tree.find_file(data.fname)
 end)

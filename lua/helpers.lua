@@ -1,5 +1,3 @@
-local strings = require'plenary.strings'
-
 function _G.my_open_tele(cur_folder_only)
     local w = vim.fn.expand('<cword>')
     local params = {}
@@ -1478,13 +1476,13 @@ end
 
 function _G.glow_for_buffer(bufnr)
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  local path = require("plenary.path")
   local fname = "/tmp/emm-diff.md"
-  local f = path:new(fname)
-  f:write(table.concat(lines, "\n"), "w")
+  local f = io.open(fname, "w")
+  f:write(table.concat(lines, "\n"))
+  f:close()
   open_command_in_popup("glow -s " .. vim.fn.stdpath("config") .. "/glow-tokyo-night-plus.json -w 115 " .. fname, 120, (vim.o.columns-120)/2)
   vim.defer_fn(function()
-    f:rm()
+    os.remove(fname)
   end, 1000)
 end
 

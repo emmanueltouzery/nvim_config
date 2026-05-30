@@ -7,7 +7,6 @@ local previewers = require("telescope.previewers")
 local conf = require("telescope.config").values
 local actions = require("telescope.actions")
 local entry_display = require("telescope.pickers.entry_display")
-local strings = require'plenary.strings'
 
 _G.match_whole = function(word)
   -- https://stackoverflow.com/a/32854326/516188
@@ -101,7 +100,7 @@ _G.git_branches_with_base = function(base, opts)
 
     entry.name = string.sub(entry.refname, string.len(prefix) + 1)
     for key, value in pairs(widths) do
-      widths[key] = math.max(value, strings.strdisplaywidth(entry[key] or ""))
+      widths[key] = math.max(value, vim.fn.strdisplaywidth(entry[key] or ""))
     end
     if string.len(entry.upstream) > 0 then
       widths.upstream_indicator = 2

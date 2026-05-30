@@ -24,7 +24,6 @@ vim.keymap.set("n", "gr", function()
   telescope_add_extra_params(params)
   if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
     -- for typescript, filter out import statements
-    local Path = require("plenary.path")
     params.post_process_results = function(list)
       return vim.tbl_filter(function(match)
         local file = match.filename
@@ -34,8 +33,9 @@ vim.keymap.set("n", "gr", function()
           -- not sure why typescript is listing the declaration in the references...
           return false
         end
-        local path = Path.new(file)
-        local contents = path:read()
+        local path = io.open(file)
+        local contents = path:read("*a")
+        path:close()
         local it = contents:gmatch("([^\n]*)\n?")
         local line = ""
         for _i = 0,lnum,1 do

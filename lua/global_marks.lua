@@ -5,12 +5,12 @@ function _G.my_marks_fname()
 end
 
 function _G.load_my_marks()
-  local Path = require("plenary.path")
-  local path = Path.new(my_marks_fname())
-  if not path:exists() then
+  local path = io.open(my_marks_fname())
+  if path == nil then
     return {}
   else
-    local contents = path:read()
+    local contents = path:read("*a")
+    path:close()
     local marks = {}
     for line in contents:gmatch("([^\n]*)\n?") do
       if #line > 0 then
@@ -56,13 +56,17 @@ function _G.my_mark_file_row(mark)
 end
 
 function _G.add_my_mark(mark)
-  local Path = require("plenary.path")
-  local path = Path.new(my_marks_fname())
+  local fname = my_marks_fname()
+  local exists = vim.uv.fs_stat(fname) ~= nil
   local cur_mark_str = my_mark_file_row(mark)
-  if not path:exists() then
-    path:write(cur_mark_str, 'w')
+  if not exists then
+    local path = io.open(fname, "w")
+    path:write(cur_mark_str)
+    path:close()
   else
-    path:write("\n" .. cur_mark_str, 'a')
+    local path = io.open(fname, "a")
+    path:write("\n" .. cur_mark_str)
+    path:close()
   end
 end
 
@@ -91,9 +95,9 @@ function _G.remove_global_mark(fname, lnum)
       mark_str = mark_str .. my_mark_file_row(mark)
     end
   end
-  local Path = require("plenary.path")
-  local path = Path.new(my_marks_fname())
-  path:write(mark_str, 'w')
+  local path = io.open(my_marks_fname(), "w")
+  path:write(mark_str)
+  path:close()
 end
 
 function _G.edit_global_mark_desc(fname, lnum, desc)
@@ -107,7 +111,6 @@ function _G.edit_global_mark_desc(fname, lnum, desc)
       mark_str = mark_str .. my_mark_file_row(mark)
     end
   end
-  local Path = require("plenary.path")
-  local path = Path.new(my_marks_fname())
-  path:write(mark_str, 'w')
+  local path = io.open(my_marks_fname(), "w")
+  path:write(mark_str)
 end

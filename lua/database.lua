@@ -141,8 +141,12 @@ end
 
 function _G.open_saved_query()
   local folder = string.gsub(vim.g.db_ui_save_location, '~', vim.loop.os_homedir())
-  local sd = vim.loop.fs_scandir(folder)
+  local exists = vim.uv.fs_stat(folder) ~= nil
+  if not exists then
+    return {}
+  end
   local saved_queries = {}
+  local sd = vim.loop.fs_scandir(folder)
   while true do
     local name, type = vim.loop.fs_scandir_next(sd)
     if name == nil then break end
@@ -199,10 +203,12 @@ function _G.open_saved_query()
     attach_mappings = function(_, map)
       map('i', '<Cr>',  function(prompt_bufnr)
         local filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-        local Path = require("plenary.path")
         actions.close(prompt_bufnr)
         -- copy to the clipboard
-        vim.fn.setreg('+', Path.new(filename):read())
+        local f = io.open(filename)
+        local contents = f:read("*a")
+        f:close()
+        vim.fn.setreg('+', contents)
       end)
       map('i', '<C-o>',  function(prompt_bufnr)
         local filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value

@@ -126,7 +126,6 @@ require('packer').startup(function(use)
         -- path_display = {'truncate'},
         path_display = function(opts, path)
           local get_status = require("telescope.state").get_status
-          local truncate = require("plenary.strings").truncate
           local utils = require("telescope.utils")
           local Path = require "plenary.path"
 
@@ -148,7 +147,7 @@ require('packer').startup(function(use)
             len = vim.api.nvim_win_get_width(status.layout.results.winid) - status.picker.selection_caret:len() - 2
           end
 
-          path = truncate(path, len, nil, -1)
+          path = truncate_left_no_plenary(path, len)
 
           local tail = require("telescope.utils").path_tail(path)
           -- path = string.format("%s (%s)", tail, path)

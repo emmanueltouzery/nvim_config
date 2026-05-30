@@ -115,8 +115,7 @@ function _G.filter_lsp_symbols(query)
   require'telescope.builtin'.lsp_workspace_symbols {query=query,
       fname_width = 45,
       path_display = function(_, path)
-        local Str = require'plenary.strings'
-        return Str.truncate(path, 45, nil, -1)
+        return truncate_left_no_plenary(path, 45)
       end,
 }
 end
@@ -1605,6 +1604,14 @@ function _G.truncate_no_plenary(str, max)
     return str
   end
   return vim.fn.strcharpart(str, 0, max - 1) .. "…"
+end
+
+function _G.truncate_left_no_plenary(str, max)
+  local len = vim.fn.strcharlen(str)
+  if len <= max then
+    return str
+  end
+  return "…" .. vim.fn.strcharpart(str, len - max + 1, len)
 end
 
 function _G.yank_folds()

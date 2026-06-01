@@ -212,8 +212,7 @@ function _G.open_saved_query()
       end)
       map('i', '<C-o>',  function(prompt_bufnr)
         local filename = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-        local Path = require("plenary.path")
-        vim.fn.jobstart({"xdg-open", Path.new(filename):parent().filename})
+        vim.fn.jobstart({"xdg-open", vim.fn.fnamemodify(filename, ":h")})
       end)
       return true
     end,

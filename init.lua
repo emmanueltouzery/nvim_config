@@ -127,7 +127,6 @@ require('packer').startup(function(use)
         path_display = function(opts, path)
           local get_status = require("telescope.state").get_status
           local utils = require("telescope.utils")
-          local Path = require "plenary.path"
 
           local cwd
           if opts.cwd then
@@ -138,7 +137,7 @@ require('packer').startup(function(use)
           else
             cwd = vim.loop.cwd()
           end
-          path = Path:new(path):make_relative(cwd)
+          path = path:gsub("^" .. escape_pattern(cwd) .. "/?", "")
 
           local status = get_status(vim.api.nvim_get_current_buf())
           local len = 150

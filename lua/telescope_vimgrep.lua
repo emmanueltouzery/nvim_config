@@ -1,6 +1,5 @@
 local utils = require "telescope.utils"
 local entry_display = require "telescope.pickers.entry_display"
-local Path = require("plenary.path")
 
 -- 99% copy-pasted from telescope, i only changed the display,
 -- which is unfortunately not pluggable, to get a nicer multi-column view
@@ -144,10 +143,12 @@ _G.my_gen_from_vimgrep = function(opts)
 
   local execute_keys = {
     path = function(t)
-      if Path:new(t.filename):is_absolute() then
+      if vim.startswith(t.filename, "/") then
         return t.filename, false
+      elseif vim.endswith(t.cwd, "/") then
+        return t.cwd .. t.filename
       else
-        return Path:new({ t.cwd, t.filename }):absolute(), false
+        return t.cwd .. "/" .. t.filename
       end
     end,
 

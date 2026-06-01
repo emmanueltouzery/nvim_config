@@ -25,7 +25,6 @@ end
 function _G.my_gen_from_buffer()
   local utils = require("telescope.utils")
   local entry_display = require("telescope.pickers.entry_display")
-  local Path = require "plenary.path"
   local make_entry = require "telescope.make_entry"
   opts = opts or {}
 
@@ -105,7 +104,16 @@ function _G.my_gen_from_buffer()
 
   return function(entry)
     local filename = entry.info.name ~= "" and entry.info.name or nil
-    local bufname = filename and Path:new(filename):normalize(cwd) or "[No Name]"
+    local bufname = "[No Name]"
+    if filename then
+      if vim.startswith(filename, "/") then
+        bufname = vim.fs.normalize(filename)
+      elseif vim.endswith(cwd, "/") then
+        bufname = vim.fs.normalize(cwd .. filename)
+      else
+        bufname = vim.fs.normalize(cwd .. "/" .. filename)
+      end
+    end
 
     local hidden = entry.info.hidden == 1 and "h" or "a"
     local readonly = vim.api.nvim_buf_get_option(entry.bufnr, "readonly") and "=" or " "

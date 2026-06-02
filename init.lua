@@ -1731,6 +1731,7 @@ require("ts_unused_imports")
 require("elixir")
 require("database")
 require("mini_diff_extras")
+require("git_commit")
 
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 

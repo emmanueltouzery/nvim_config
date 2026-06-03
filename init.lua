@@ -2128,4 +2128,15 @@ vim.api.nvim_create_autocmd("TermOpen", {
 vim.keymap.set({'o', 'x'}, 'iq', 'i`', { desc = "Inner backtick (alias)" })
 vim.keymap.set({'o', 'x'}, 'aq', 'a`', { desc = "Around backtick (alias)" })
 
+
+vim.api.nvim_create_autocmd({ "User" }, {
+  pattern = 'GitCommitComplete',
+  callback = function()
+    -- the defer_fn helps. lualine reads from mini.diff, it has some cache...
+    vim.defer_fn(function()
+      lualine_refresh_all()
+      vim.cmd[[NvimTreeRefresh]]
+    end, 500)
+  end,
+})
 -- vim: ts=2 sts=2 sw=2 et

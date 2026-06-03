@@ -9,6 +9,9 @@ local function commit_buffer(popup_buf, popup_win)
         vim.notify("Git commit successful!", vim.log.levels.INFO)
         vim.api.nvim_win_close(popup_win, true)
         vim.api.nvim_buf_delete(popup_buf, { force = true })
+        vim.api.nvim_exec_autocmds("User", {
+          pattern = "GitCommitComplete",
+        })
       else
         -- If it fails (e.g., nothing to commit), show the stderr error
         local err = obj.stderr ~= "" and obj.stderr or "Unknown error"

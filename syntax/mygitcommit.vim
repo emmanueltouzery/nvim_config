@@ -2,7 +2,9 @@ if exists("b:current_syntax")
     finish
 endif
 
-syn match FirstLineGroup /\%1l.*/ containedin=ALL
+syn spell toplevel
+
+syn match FirstLineGroup /\%1l.*/ contains=@Spell
 hi def link FirstLineGroup @label
 
 syn match GitCommitComment '^#.*' contains=BranchPrefix,GitCommitDiffPrefix
@@ -21,9 +23,8 @@ hi def link GitCommitDiffPrefix Comment
 syn match GitCommitFile '\s\+\S\+' contained nextgroup=GitCommitDiffStats
 hi def link GitCommitFile @module
 
-syn match GitCommitDiffStats '.*' contained
+syn match GitCommitDiffStats ' |\zs.*' contained
 hi def link GitCommitDiffStats @attribute
-
 
 " syn match BranchName '^# branch: \zs\S\+'
 " hi def link BranchName @label

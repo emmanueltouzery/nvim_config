@@ -50,6 +50,7 @@ function _G.open_git_commit_popup()
           }
           local popup_win = vim.api.nvim_open_win(popup_buf, true, win_opts)
           vim.wo[popup_win].winbar = "%=--- Git commit message ---%="
+          vim.wo[popup_win].spell = true
 
           vim.keymap.set('n', 'q', function()
             vim.api.nvim_win_close(popup_win, true)

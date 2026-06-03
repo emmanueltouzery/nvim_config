@@ -18,7 +18,7 @@ local function commit_buffer(popup_buf, popup_win)
   end)
 end
 
-local function open_git_commit_popup()
+function _G.open_git_commit_popup()
     vim.system({"bash", "-c", "echo -n 'branch: ' ; git branch --show-current; git diff --staged --stat --exit-code"}, {text=true}, function(res)
       vim.schedule(function()
         if res.code == 0 then

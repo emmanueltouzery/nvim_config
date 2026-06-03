@@ -1,7 +1,7 @@
 local function commit_buffer(popup_buf, popup_win)
   local lines = vim.api.nvim_buf_get_lines(popup_buf, 0, -1, false)
   local stdin_text = table.concat(lines, "\n")
-  vim.system({ "git", "commit", "-F", "-" }, {
+  vim.system({ "git", "commit", "--cleanup=strip", "-F", "-" }, {
     stdin = stdin_text,
   }, function(obj)
     vim.schedule(function()
@@ -26,7 +26,7 @@ local function open_git_commit_popup()
         else
           -- changes present, proceed to commit
           local popup_buf = vim.api.nvim_create_buf(true, false)
-          vim.api.nvim_buf_set_option(popup_buf, 'ft', 'bash')
+          vim.api.nvim_buf_set_option(popup_buf, 'ft', 'mygitcommit') -- syntax/mygitcommit.lua
           vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, vim.tbl_map(function(l) return "# " .. l end, vim.split(res.stdout, "\n")))
 
           local editor_width = vim.api.nvim_get_option("columns")

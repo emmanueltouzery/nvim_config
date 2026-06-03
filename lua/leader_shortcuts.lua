@@ -977,8 +977,12 @@ vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy l
 -- vim.keymap.set("n", "<leader>gb", '<cmd>lua require"gitsigns".blame_line()<CR>', {desc="blame line"})
 vim.keymap.set("n", "<leader>gr", '<cmd>lua git_branches{attach_mappings=telescope_branches_mappings, pattern="--sort=-committerdate"}<CR>', {desc="git bRanches"})
 vim.keymap.set("n", "<leader>ga", "<cmd>lua require'agitator'.search_in_added()<CR>", {desc="git search in added files & lines/diff"})
--- using neogit to push
-vim.keymap.set("n", "<leader>gp", function() run_command({"git", "pull", "--rebase", "--autostash"}, reload_all) end, {desc="git pull"})
+
+require 'key-menu'.set('n', '<Space>gp', {desc='git push or pull'})
+vim.keymap.set("n", "<leader>gpl", function() run_command({"git", "pull", "--rebase", "--autostash"}, reload_all) end, {desc="git pull"})
+vim.keymap.set("n", "<leader>gps", function() run_command({"git", "push"}, reload_all) end, {desc="git push"})
+vim.keymap.set("n", "<leader>gpf", function() run_command({"git", "push", "--force-with-lease"}, reload_all) end, {desc="git push force w lease"})
+
 vim.keymap.set("n", "<leader>gF", function() run_command({"git", "fetch", "origin"}) end, {desc="git fetch origin"})
 
 require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})

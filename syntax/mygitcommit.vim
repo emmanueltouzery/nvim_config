@@ -2,6 +2,9 @@ if exists("b:current_syntax")
     finish
 endif
 
+syn match FirstLineGroup /\%1l.*/ containedin=ALL
+hi def link FirstLineGroup @label
+
 syn match GitCommitComment '^#.*' contains=BranchPrefix,GitCommitDiffPrefix
 hi def link GitCommitComment Comment
 

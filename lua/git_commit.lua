@@ -25,7 +25,19 @@ local function commit_buffer(popup_buf, popup_win, also_push)
 end
 
 function _G.open_git_commit_popup()
-    vim.system({"bash", "-c", "echo -n 'branch: ' ; git branch --show-current; git diff --staged --stat --exit-code"}, {text=true}, function(res)
+    vim.system({"bash", "-c", [[
+      echo -n 'branch: '
+      git branch --show-current
+      echo 'Staged changes, will be committed:'
+      git diff --staged --stat --exit-code
+      staged_res=$?
+      non_staged=$(git diff --stat --exit-code)
+      if [ $? -gt 0 ]; then
+        echo
+        echo 'Non-staged changes, will NOT be committed:'
+        echo "$non_staged"
+      fi
+      exit $staged_res ]]}, {text=true}, function(res)
       vim.schedule(function()
         if res.code == 0 then
           vim.notify("Nothing staged, can't commit", vim.log.levels.ERROR)

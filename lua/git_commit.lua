@@ -1,4 +1,4 @@
-local function commit_buffer(popup_buf, popup_win)
+local function commit_buffer(popup_buf, popup_win, also_push)
   local lines = vim.api.nvim_buf_get_lines(popup_buf, 0, -1, false)
   local stdin_text = table.concat(lines, "\n")
   vim.system({ "git", "commit", "--cleanup=strip", "-F", "-" }, {
@@ -12,6 +12,9 @@ local function commit_buffer(popup_buf, popup_win)
         vim.api.nvim_exec_autocmds("User", {
           pattern = "GitCommitComplete",
         })
+        if also_push then
+          run_command({"git", "push"}, reload_all)
+        end
       else
         -- If it fails (e.g., nothing to commit), show the stderr error
         local err = obj.stderr ~= "" and obj.stderr or "Unknown error"
@@ -30,6 +33,7 @@ function _G.open_git_commit_popup()
           -- changes present, proceed to commit
           local popup_buf = vim.api.nvim_create_buf(true, false)
           vim.api.nvim_buf_set_option(popup_buf, 'ft', 'mygitcommit') -- syntax/mygitcommit.lua
+          vim.api.nvim_buf_set_option(popup_buf, 'textwidth', 80)
           vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, vim.tbl_map(function(l) return "# " .. l end, vim.split(res.stdout, "\n")))
 
           local editor_width = vim.api.nvim_get_option("columns")
@@ -58,13 +62,17 @@ function _G.open_git_commit_popup()
           end, { buffer = popup_buf})
 
           vim.keymap.set('n', '<localleader>c', function()
-            commit_buffer(popup_buf, popup_win)
+            commit_buffer(popup_buf, popup_win, false)
           end, { buffer = popup_buf, desc = "Perform git commit"})
+
+          vim.keymap.set('n', '<localleader>p', function()
+            commit_buffer(popup_buf, popup_win, true)
+          end, { buffer = popup_buf, desc = "Perform git commit and push"})
 
           -- color characters after various limits for 1st line, 2nd line and all followup lines
           vim.cmd([[match ErrorMsg '\%1l\%>72v.\+\|\%2l.\+\|\%>2l\%>100v.\+']])
 
-          vim.api.nvim_buf_set_lines(popup_buf, 0, 0, false, { "", "", "# Use <localleader>c to commit", "# " })
+          vim.api.nvim_buf_set_lines(popup_buf, 0, 0, false, { "", "", "# Use <localleader>c and <localleader>p to commit and push to commit", "# " })
           vim.api.nvim_win_set_cursor(popup_win, { 1, 0 })
           vim.cmd("startinsert")
         end

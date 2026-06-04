@@ -4,7 +4,7 @@ endif
 
 syn spell toplevel
 
-syn match FirstLineGroup /\%1l.*/ contains=@Spell
+syn match FirstLineGroup /\%1l.*/ contains=@Spell containedin=ShortNoSpell
 hi def link FirstLineGroup @label
 
 syn match GitCommitComment '^#.*' contains=BranchPrefix,GitCommitDiffPrefix

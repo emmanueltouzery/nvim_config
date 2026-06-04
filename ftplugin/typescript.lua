@@ -283,6 +283,10 @@ vim.keymap.set('n', 'K', function()
   local params = vim.lsp.util.make_position_params()
   params.verbosityLevel = 1
   vim.lsp.buf_request(0, 'textDocument/hover', params, function(err, res)
+    if res == nil then
+      -- happens for instance when triggering hover on a plain string
+      return
+    end
     local orig_buf = vim.api.nvim_win_get_buf(0)
 
     local popup_buf = vim.api.nvim_create_buf(false, true)

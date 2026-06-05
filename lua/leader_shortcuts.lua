@@ -33,8 +33,6 @@ local function apply_buffer_preview(self, ns_previewer, source_buf, entry_lnum)
   )
 end
 
-vim.keymap.set( "n", "<leader>.", "<cmd>Telescope file_browser hidden=true<CR>", {desc="Telescope files"})
-
 vim.keymap.set( "n", "<leader>,", function()
   local previewers = require("telescope.previewers")
   local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
@@ -490,8 +488,6 @@ _G.telescope_project_command = [[<cmd>lua require'telescope'.extensions.project.
 require 'key-menu'.set('n', '<Space>o', {desc='Open'})
 vim.keymap.set("n", "<leader>op", telescope_project_command, {desc="Open project"})
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
-vim.keymap.set("n", "<leader>ob", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>", {desc="Open file browser"})
-vim.keymap.set("n", "<leader>of", "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true, path=vim.fn.expand(\"%:p:h\"), select_buffer=true})<CR>", {desc="Open browser in current folder"})
 vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
 vim.keymap.set("n", "<leader>om", function() require("telescope.builtin").man_pages{sections={'ALL'}} end, {desc="Open man page"})
 vim.keymap.set("n", "<leader>oh", require("telescope.builtin").help_tags, {desc="Open vim help"})

@@ -299,18 +299,6 @@ require('packer').startup(function(use)
               },
           },
         },
-        file_browser = {
-          mappings = {
-            i = {
-              ["<CR>"] = require("telescope.actions").select_default,
-              ["<C-S-N>"] = require'telescope'.extensions.file_browser.actions.sort_by_date,
-            },
-            n = {
-              ["<CR>"] = require("telescope.actions").select_default,
-              ["<C-S-N>"] = require'telescope'.extensions.file_browser.actions.sort_by_date,
-            },
-          },
-        },
         aerial = {
           col1_width = 2,
           col2_width = 32,
@@ -323,9 +311,6 @@ require('packer').startup(function(use)
     require('telescope').load_extension 'fzf'
   end}
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', commit="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" }
-  use { 'nvim-telescope/telescope-file-browser.nvim', commit='ea7905ed9b13bcf50e0ba4f3bff13330028d298c', config=function()
-    require("telescope").load_extension "file_browser"
-  end}
   use { 'nvim-lualine/lualine.nvim', commit='b8c23159c0161f4b89196f74ee3a6d02cdc3a955', config=function()
     setup_lualine()
   end}
@@ -1142,7 +1127,6 @@ callbacks = {
     dashboard.section.buttons.val = {
       dashboard.button( "e", "  New file" , ":ene <BAR> startinsert <CR>"),
       dashboard.button( "p", "  Open project" , _G.telescope_project_command),
-      dashboard.button( "b", "  Open file browser" , "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({grouped = true})<CR>"), -- alt icon: 󰙅
       dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
     }
     dashboard.config.opts.noautocmd = true

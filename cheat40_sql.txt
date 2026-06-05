@@ -22,6 +22,7 @@ Expand array to rows     unnest()
 Postgresql syntax {{{1
 Set array value          '{"e1", "e2"}'
 Durations                interval
+Access JSON field        ->>
 # duration * interval '1 sec'
 }}}
 SQLite tips {{{1

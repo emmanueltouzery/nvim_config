@@ -1082,9 +1082,15 @@ vim.keymap.set("n", "<leader>ctn", ":TestNearest<cr>", {desc="test nearest"})
 vim.keymap.set("n", "<leader>ctl", ":TestLast<cr>", {desc="test last"})
 vim.keymap.set("n", "<leader>cta", ":TestSuite<cr>", {desc="test all"})
 vim.keymap.set("n", "<leader>cto", function()
-  vim.g.open_test_output = not vim.g.open_test_output
-  notif({string.format("Test output auto-open: %s", vim.g.open_test_output)})
-end, {desc="Toggle auto-open test output when tests are run"})
+  vim.g.hide_test_output = not vim.g.hide_test_output
+  notif({string.format("Test output hide: %s", vim.g.hide_test_output)})
+end, {desc="Toggle hide test output when tests are run"})
+vim.keymap.set("n", "<leader>ctc", function()
+  if vim.g.tests_winnr ~= nil and vim.api.nvim_win_is_valid(vim.g.tests_winnr) then
+    vim.api.nvim_win_close(vim.g.tests_winnr, true)
+    vim.g.tests_winnr = nil
+  end
+end, {desc="close tests output window"})
 
 -- QUICKFIX
 require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})

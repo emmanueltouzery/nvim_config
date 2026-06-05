@@ -6,7 +6,7 @@ local function commit_buffer(popup_buf, popup_win, also_push)
   }, function(obj)
     vim.schedule(function()
       if obj.code == 0 then
-        vim.notify("Git commit successful!", vim.log.levels.INFO)
+        vim.notify("Git commit successful!", vim.log.levels.INFO, {title='Git commit'})
         vim.api.nvim_win_close(popup_win, true)
         vim.api.nvim_buf_delete(popup_buf, { force = true })
         vim.api.nvim_exec_autocmds("User", {
@@ -18,7 +18,7 @@ local function commit_buffer(popup_buf, popup_win, also_push)
       else
         -- If it fails (e.g., nothing to commit), show the stderr error
         local err = obj.stderr ~= "" and obj.stderr or "Unknown error"
-        vim.notify("Git commit failed:\n" .. err, vim.log.levels.ERROR)
+        vim.notify("Git commit failed:\n" .. err, vim.log.levels.ERROR, {title='Git commit'})
       end
     end)
   end)
@@ -40,7 +40,7 @@ function _G.open_git_commit_popup()
       exit $staged_res ]]}, {text=true}, function(res)
       vim.schedule(function()
         if res.code == 0 then
-          vim.notify("Nothing staged, can't commit", vim.log.levels.ERROR)
+          vim.notify("Nothing staged, can't commit", vim.log.levels.ERROR, {title='Git commit'})
         else
           -- changes present, proceed to commit
           local popup_buf = vim.api.nvim_create_buf(true, false)
@@ -84,7 +84,8 @@ function _G.open_git_commit_popup()
           -- color characters after various limits for 1st line, 2nd line and all followup lines
           vim.cmd([[match ErrorMsg '\%1l\%>72v.\+\|\%2l.\+\|\%>2l\%>100v.\+']])
 
-          vim.api.nvim_buf_set_lines(popup_buf, 0, 0, false, { "", "", "# Use <localleader>c and <localleader>p to commit and push to commit", "# " })
+          vim.api.nvim_buf_set_lines(popup_buf, 0, 0, false,
+            { "", "", "# <localleader>c -> commit; <localleader>p -> commit and push", "# " })
           vim.api.nvim_win_set_cursor(popup_win, { 1, 0 })
           vim.cmd("startinsert")
         end

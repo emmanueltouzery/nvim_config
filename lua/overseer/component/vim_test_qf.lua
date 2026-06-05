@@ -8,7 +8,9 @@ return {
       on_init = function(self, task)
         vim.fn.setqflist({})
         if vim.g.open_test_output then
-          overseer_open_float_last_job()
+          task:subscribe("on_start", function()
+            require('overseer').run_action(task, 'open float')
+          end)
         end
       end,
 

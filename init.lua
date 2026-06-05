@@ -1798,25 +1798,37 @@ vim.cmd("set spelllang=en,sl")
 -- don't spellcheck URLs in markdown files and similar
 vim.cmd([[autocmd FileType NeogitCommitMessage syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])
--- ignore words shorter than 4 (helps with short variables in code)
--- http://www.panozzaj.com/blog/2016/03/21/ignore-urls-and-acroynms-while-spell-checking-vim/
--- word 1 to 4 characters longs (typically variable name)
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
--- word 1 to 4 characters longs (typically variable name), leading underscore
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,4}\>" contains=@NoSpell]])
--- word up to 5 chars with underscore in the middle (typically variable name)
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,2}_\(\w\|\d\)\{1,3}\>" contains=@NoSpell]])
--- word up to 5 chars with underscore in the middle (typically variable name), leading underscore
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,2}_\(\w\|\d\)\{1,3}\>" contains=@NoSpell]])
--- word up to 5 chars with underscore in the middle (typically variable name)
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell]])
--- word up to 5 chars with underscore in the middle (typically variable name), leading underscore
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "\<_\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell]])
--- colors eg #ffffff or #ffffffff -- rgb(a)
-vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match ShortNoSpell "#\([abcdefABCDEF]\|\d\)\{6,8}\>" contains=@NoSpell]])
 -- generic type parameters eg TInput
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter *.ts syn match ShortNoSpell "\<T[A-Z]\w\{1,20}\>" contains=@NoSpell]])
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter *.tsx syn match ShortNoSpell "\<T[A-Z]\w\{1,20}\>" contains=@NoSpell]])
+
+-- ignore words shorter than 4 (helps with short variables in code)
+-- http://www.panozzaj.com/blog/2016/03/21/ignore-urls-and-acroynms-while-spell-checking-vim/
+vim.api.nvim_create_autocmd({"BufNewFile", "BufRead", "BufEnter"}, {
+    pattern = "*",
+    callback = function(ev)
+      local filetype = vim.bo[ev.buf].filetype
+      if filetype ~= "mygitcommit" then
+        vim.cmd([[
+        " word 1 to 4 characters longs (typically variable name)
+        syn match ShortNoSpell "\<\(\w\|\d\)\{1,4}\>" contains=@NoSpell
+        " word 1 to 4 characters longs (typically variable name), leading underscore
+        syn match ShortNoSpell "\<_\(\w\|\d\)\{1,4}\>" contains=@NoSpell
+
+        " word up to 5 chars with underscore in the middle (typically variable name)
+        syn match ShortNoSpell "\<\(\w\|\d\)\{1,2}_\(\w\|\d\)\{1,3}\>" contains=@NoSpell
+        " word up to 5 chars with underscore in the middle (typically variable name), leading underscore
+        syn match ShortNoSpell "\<_\(\w\|\d\)\{1,2}_\(\w\|\d\)\{1,3}\>" contains=@NoSpell
+        " word up to 5 chars with underscore in the middle (typically variable name)
+        syn match ShortNoSpell "\<\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell
+        " word up to 5 chars with underscore in the middle (typically variable name), leading underscore
+        syn match ShortNoSpell "\<_\(\w\|\d\)\{1,3}_\(\w\|\d\)\{1,2}\>" contains=@NoSpell
+        " colors eg #ffffff or #ffffffff -- rgb(a)
+        syn match ShortNoSpell "#\([abcdefABCDEF]\|\d\)\{6,8}\>" contains=@NoSpell
+        ]])
+      end
+    end
+})
 
 -- word-wrapping in markdown files
 vim.cmd('autocmd FileType markdown setlocal wrap linebreak')

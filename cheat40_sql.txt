@@ -17,6 +17,7 @@ Format JSON              json_pretty()
 Array to JSON            array_to_json()
 List enum values         enum_range()
 # select enum_range(null::enum_t);
+Expand array to rows     unnest()
 }}}
 Postgresql syntax {{{1
 Set array value          '{"e1", "e2"}'

@@ -606,24 +606,6 @@ vim.keymap.set("n", "<leader>td", tab_delete_custom, {desc="Delete tab"}) -- tha
 vim.keymap.set("n", "<leader>to", ":tabo<cr>", {desc="Delete other tabs"}) -- that one doesn't fit under toggle.. it's TAB delete. but keeping it here for now.
 vim.keymap.set("n", "<leader>tl", "<cmd>lua toggle_linting()<cr>", {desc = "Toggle linting for the whole neovim"})
 
-function _G.neogit_open_or_switch_to()
-  local tabs = vim.api.nvim_list_tabpages()
-  for _, tab in ipairs(tabs) do
-    local wins = vim.api.nvim_tabpage_list_wins(tab)
-    if #wins == 1 then
-      win = wins[1]
-      local buf = vim.api.nvim_win_get_buf(win)
-      if vim.api.nvim_buf_get_option(buf, "ft") == 'NeogitStatus' then
-        -- found the terminal tab, switch to it
-        vim.api.nvim_set_current_tabpage(tab)
-        return
-      end
-    end
-  end
-  -- didn't find the terminal tab, create it
-  vim.cmd("Neogit")
-end
-
 function _G.tabpage_is_terminal(tab)
   local wins = vim.api.nvim_tabpage_list_wins(tab)
   if #wins == 1 then
@@ -967,8 +949,7 @@ vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_bran
 vim.keymap.set("n", "<leader>gs", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
 vim.keymap.set("n", "<leader>gL", function() vim.cmd('DiffviewFileHistory ' .. vim.fs.root(vim.fn.getcwd(), '.git')) end, {desc="project_history"})
 vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
-vim.keymap.set("n", "<leader>gg", "<cmd>lua neogit_open_or_switch_to()<cr>", {desc="neogit"})
-vim.keymap.set("n", "<leader>gG", "<cmd>DiffviewOpen<cr>", {desc="Git two-way diff"})
+vim.keymap.set("n", "<leader>gg", "<cmd>DiffviewOpen<cr>", {desc="Git two-way diff"})
 vim.keymap.set("n", "<leader>gC", ":lua display_git_commit()<cr>", {desc="Git display commit"})
 vim.keymap.set("n", "<leader>gv", ":lua ShowCommitAtLine()<cr>", {desc="View commit for line"})
 vim.keymap.set("n", "<leader>gY", ":lua copy_file_line()<cr>", {desc="Copy line and line number"})

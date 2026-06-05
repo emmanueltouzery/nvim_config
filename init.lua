@@ -453,7 +453,7 @@ require('packer').startup(function(use)
             },
             {"n", "c",
               function()
-              -- cc should commit from diffview same as from neogit
+              -- cc should commit from diffview
               vim.cmd('DiffviewClose')
               vim.api.nvim_set_current_tabpage(1) -- in case i had a dadbod in the second tab, where i could have jumped after closing the diffview tab
               open_git_commit_popup()
@@ -1081,28 +1081,6 @@ callbacks = {
       end,
     })
     require('telescope').load_extension('aerial')
-  end}
-  use {'NeogitOrg/neogit', commit='bc0c609e3568a171e0549b449aa1b2b4b5b20e8c', config = function()
-    require('neogit').setup {
-      -- disable_context_highlighting = true,
-      signs = {
-        -- { CLOSED, OPENED }
-        section = { "▶", "▼" },
-        item = { "▶", "▼" },
-        hunk = { "", "" },
-      },
-      integrations = {
-        diffview = true,
-      },
-    }
-
-    vim.api.nvim_create_autocmd({ "User" }, {
-      pattern = 'NeogitCommitComplete',
-      callback = function()
-        lualine_refresh_all()
-        vim.cmd[[NvimTreeRefresh]]
-      end,
-    })
   end}
   use {
     'nvim-tree/nvim-tree.lua', commit='50e919426a4a2053f78b2f8ab001c8ad8eb47ef6',
@@ -1790,13 +1768,9 @@ vim.cmd[[au TermOpen * setlocal nospell]]
 
 vim.cmd("hi clear SpellCap")
 vim.cmd("au BufNewFile,BufRead,BufWritePost *.lua setlocal nospell")
--- neogit has stuff like [c]ommit that don't spell check well
--- and generally nothing mine to spell check there
-vim.cmd('autocmd FileType NeogitStatus setlocal nospell')
 vim.cmd("set spelllang=en,sl")
 -- https://vi.stackexchange.com/a/4003/38754
 -- don't spellcheck URLs in markdown files and similar
-vim.cmd([[autocmd FileType NeogitCommitMessage syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter * syn match UrlNoSpell "\w\+:\/\/[^]] .. '[:space:]]' .. [[\+" contains=@NoSpell]])
 -- generic type parameters eg TInput
 vim.cmd([[autocmd BufNewFile,BufRead,BufEnter *.ts syn match ShortNoSpell "\<T[A-Z]\w\{1,20}\>" contains=@NoSpell]])

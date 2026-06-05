@@ -319,12 +319,10 @@ function setup_lualine()
     lualine.setup {
       options = {
         disabled_filetypes = {
-          'NeogitStatus', -- perf issues over sshfs
           'dashboard',
           'alpha',
           'NvimTree',
           'Outline',
-          'NeogitCommitMessage',
           'DiffviewFiles',
           'packer',
           'cheat40',
@@ -393,7 +391,7 @@ function setup_lualine()
               end
               if ft == "sql" or ft == "dbui" or ft == "dbout" then
                 label = " " .. label
-              elseif ft == "DiffviewFilePanel" or ft == "DiffviewFiles" or ft == "NeogitStatus" then
+              elseif ft == "DiffviewFilePanel" or ft == "DiffviewFiles" then
                 label = "󰊢 " .. label
               else
                 label = require("nvim-web-devicons").get_icon_by_filetype(ft, {default = true}) .. " " .. label

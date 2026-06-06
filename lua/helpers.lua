@@ -596,17 +596,21 @@ function _G.telescope_jumplist()
 end
 
 function _G.run_command(command_table, cb)
+  local desc = command_table[1]
+  if desc == 'git' then
+    desc = "git " .. command_table[2]
+  end
   vim.system(
     command_table,
     {text = true, cwd = vim.fs.root(vim.fn.getcwd(), ".git")},
     vim.schedule_wrap(function(res)
       if res.code == 0 then
-        notif({command_table[1] .. " executed successfully"}, vim.log.levels.INFO)
+        notif({desc .. " executed successfully"}, vim.log.levels.INFO)
         if cb then
           cb()
         end
       else
-        local info = {command_table[1] .. " failed!"}
+        local info = {desc .. " failed!"}
         if res.stderr ~= nil then
           table.insert(info, res.stderr)
           print(res.stderr)

@@ -1,9 +1,9 @@
 -- see  typescript_insert_inspect_param
-local function lua_insert_inspect_param()
+local function lua_insert_inspect_param(v)
   winid = vim.api.nvim_get_current_win()
   local cur_line = vim.fn.line('.')
   local cur_col = vim.fn.col('.')
-  local param_name = vim.fn.expand("<cword>")
+  local param_name = v or vim.fn.expand("<cword>")
   local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
   require('leap').leap {
     target_windows = { winid },
@@ -26,6 +26,13 @@ local function lua_insert_inspect_param()
   }
 end
 vim.keymap.set('n', '<localleader>ip', lua_insert_inspect_param, {desc="lua add inspect parameter", buffer = true})
+
+vim.keymap.set('v', '<localleader>ip', function()
+  local txt = get_visual_selection()
+  -- Exit visual mode back to normal mode
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "x", true)
+  lua_insert_inspect_param(txt)
+end, { buffer = true, desc = "console inspect parameter"})
 
 local function lua_insert_inspect_label()
   winid = vim.api.nvim_get_current_win()

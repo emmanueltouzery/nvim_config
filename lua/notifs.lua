@@ -103,49 +103,53 @@ function _G.notif(msg, level, opts)
   vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
   vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
 
-  local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
+  -- wrapping this in a schedule call seems to help to avoid the cursor jumping
+  -- to the window and back despite focus and others being false
+  vim.schedule(function()
+    local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 
-  if level == nil or level == vim.log.levels.INFO then
-    vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifInfo,FloatBorder:NotifInfo")
-  elseif level == vim.log.levels.WARN then
-    vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifWarning,FloatBorder:NotifWarning")
-  else
-    vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifError,FloatBorder:NotifError")
-  end
-
-  local active_notifs = vim.g.active_notifs
-  active_notifs[popup_win .. ""] = {
-    popup_win = popup_win,
-    popup_buf = popup_buf,
-    offset = offset
-  }
-  vim.g.active_notifs = active_notifs
-
-  -- seems like numbers don't get copied to the defer_fn closure
-  -- if i don't transform to string, the closure gets the latest value,
-  -- not the scheduled one
-  local popup_win_closure = popup_win .. ""
-
-  function hide_closure()
-    local notif = vim.g.active_notifs[popup_win_closure]
-    if notif ~= nil then
-      if vim.api.nvim_win_is_valid(notif.popup_win) then
-        vim.api.nvim_win_close(notif.popup_win, true)
-      end
-      if vim.api.nvim_buf_is_valid(notif.popup_buf) then
-        vim.api.nvim_buf_delete(notif.popup_buf, {force=true})
-      end
+    if level == nil or level == vim.log.levels.INFO then
+      vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifInfo,FloatBorder:NotifInfo")
+    elseif level == vim.log.levels.WARN then
+      vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifWarning,FloatBorder:NotifWarning")
+    else
+      vim.api.nvim_win_set_option(popup_win, "winhl", "Normal:NotifError,FloatBorder:NotifError")
     end
-    local active_notifs = vim.g.active_notifs
-    active_notifs[popup_win_closure] = nil
-    vim.g.active_notifs = active_notifs
-  end
 
-  if not (opts or {}).dont_hide then
-    vim.defer_fn(hide_closure, 2000)
-  else
-    return hide_closure
-  end
+    local active_notifs = vim.g.active_notifs
+    active_notifs[popup_win .. ""] = {
+      popup_win = popup_win,
+      popup_buf = popup_buf,
+      offset = offset
+    }
+    vim.g.active_notifs = active_notifs
+
+    -- seems like numbers don't get copied to the defer_fn closure
+    -- if i don't transform to string, the closure gets the latest value,
+    -- not the scheduled one
+    local popup_win_closure = popup_win .. ""
+
+    function hide_closure()
+      local notif = vim.g.active_notifs[popup_win_closure]
+      if notif ~= nil then
+        if vim.api.nvim_win_is_valid(notif.popup_win) then
+          vim.api.nvim_win_close(notif.popup_win, true)
+        end
+        if vim.api.nvim_buf_is_valid(notif.popup_buf) then
+          vim.api.nvim_buf_delete(notif.popup_buf, {force=true})
+        end
+      end
+      local active_notifs = vim.g.active_notifs
+      active_notifs[popup_win_closure] = nil
+      vim.g.active_notifs = active_notifs
+    end
+
+    if not (opts or {}).dont_hide then
+      vim.defer_fn(hide_closure, 2000)
+    else
+      return hide_closure
+    end
+  end)
 end
 
 vim.notify = function(msg, level, opts)

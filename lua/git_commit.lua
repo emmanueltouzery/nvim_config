@@ -13,7 +13,12 @@ local function commit_buffer(popup_buf, popup_win, also_push)
           pattern = "GitCommitComplete",
         })
         if also_push then
-          run_command({"git", "push"}, reload_all)
+          run_command({"git", "push"}, function()
+            reload_all()
+            vim.api.nvim_exec_autocmds("User", {
+              pattern = "GitPushComplete",
+            })
+          end)
         end
       else
         -- If it fails (e.g., nothing to commit), show the stderr error

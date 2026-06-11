@@ -956,9 +956,15 @@ vim.keymap.set("n", "<leader>gr", '<cmd>lua git_branches{attach_mappings=telesco
 vim.keymap.set("n", "<leader>ga", "<cmd>lua require'agitator'.search_in_added()<CR>", {desc="git search in added files & lines/diff"})
 
 require 'key-menu'.set('n', '<Space>gp', {desc='git push or pull'})
+local function reload_and_push_evt()
+  reload_all()
+  vim.api.nvim_exec_autocmds("User", {
+    pattern = "GitPushComplete",
+  })
+end
 vim.keymap.set("n", "<leader>gpl", function() run_command({"git", "pull", "--rebase", "--autostash"}, reload_all) end, {desc="git pull"})
-vim.keymap.set("n", "<leader>gps", function() run_command({"git", "push"}, reload_all) end, {desc="git push"})
-vim.keymap.set("n", "<leader>gpf", function() run_command({"git", "push", "--force-with-lease"}, reload_all) end, {desc="git push force w lease"})
+vim.keymap.set("n", "<leader>gps", function() run_command({"git", "push"}, reload_and_push_evt) end, {desc="git push"})
+vim.keymap.set("n", "<leader>gpf", function() run_command({"git", "push", "--force-with-lease"}, reload_and_push_evt) end, {desc="git push force w lease"})
 
 vim.keymap.set("n", "<leader>gF", function() run_command({"git", "fetch", "origin"}) end, {desc="git fetch origin"})
 

@@ -272,6 +272,10 @@ local function lsp_pending()
   return vim.g.lualine_lsp_pending or ""
 end
 
+local function build_info()
+  return vim.g.build_info or ""
+end
+
 function setup_lualine()
   local lualine = require('lualine')
 
@@ -407,7 +411,8 @@ function setup_lualine()
         lualine_c = {
           {lsp_pending, color = 'Comment'}
         },
-        lualine_x = lualine_tabline_end,
+        lualine_x = {{build_info, color = 'Comment'}},
+        lualine_y = lualine_tabline_end,
       },
       extensions = { 'nvim-dap-ui' },
     }

@@ -272,8 +272,8 @@ local function lsp_pending()
   return vim.g.lualine_lsp_pending or ""
 end
 
-local function build_info()
-  return vim.g.build_info or ""
+local function job_info()
+  return vim.g.job_info or ""
 end
 
 function setup_lualine()
@@ -305,19 +305,13 @@ function setup_lualine()
     end
   })
   if lualine then
-    -- these extra entries are defined in my private configuration
-    local lualine_tabline_end = vim.g.lualine_extra_entries and vim.g.lualine_extra_entries() or {}
+    local lualine_tabline_end = {}
     table.insert(lualine_tabline_end,
       {dap_status, color = "@comment.todo"}
     )
     table.insert(lualine_tabline_end,
     {
       adb_status,
-    })
-    table.insert(lualine_tabline_end, {
-      "overseer",
-      name = vim.g.lualine_extra_entries_names or "",
-      name_not = true,
     })
 
     lualine.setup {
@@ -411,7 +405,7 @@ function setup_lualine()
         lualine_c = {
           {lsp_pending, color = 'Comment'}
         },
-        lualine_x = {{build_info, color = 'Comment'}},
+        lualine_x = {{job_info, color = 'Comment'}},
         lualine_y = lualine_tabline_end,
       },
       extensions = { 'nvim-dap-ui' },

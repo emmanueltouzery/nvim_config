@@ -1073,18 +1073,6 @@ callbacks = {
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
   }
-  use {"b3nj5m1n/kommentary", commit='533d768a140b248443da8346b88e88db704212ab', config = function()
-    require('kommentary.config')
-    .configure_language("default", {
-      prefer_single_line_comments = true,
-    })
-    vim.api.nvim_create_autocmd( "FileType", {
-      pattern = "graphql",
-      callback = function()
-        vim.bo.commentstring = "# %s"
-      end,
-    })
-  end}
   use {"windwp/nvim-autopairs", commit='7a2c97cccd60abc559344042fefb1d5a85b3e33b', config=function()
     require("nvim-autopairs").setup({
       check_ts = true,
@@ -2092,7 +2080,6 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- don't want to depend on mini.ai just for this...
 vim.keymap.set({'o', 'x'}, 'iq', 'i`', { desc = "Inner backtick (alias)" })
 vim.keymap.set({'o', 'x'}, 'aq', 'a`', { desc = "Around backtick (alias)" })
-
 
 vim.api.nvim_create_autocmd({ "User" }, {
   pattern = 'GitCommitComplete',

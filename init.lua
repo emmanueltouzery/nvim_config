@@ -1445,14 +1445,9 @@ callbacks = {
       javascriptreact = { "eslint" },
       typescript = { "eslint" },
       typescriptreact = { "eslint" },
-      elixir = { "credo" },
       java = { "checkstyle" },
       rust = { "clippy" },
     }
-
-    -- customize credo, remove the --strict flag
-    local credo = lint.linters.credo
-    credo.args = vim.tbl_filter(function(p) return p ~= "--strict" end, credo.args)
 
     -- install checkstyle using mason (spc-pl)
     local checkstyle = lint.linters.checkstyle

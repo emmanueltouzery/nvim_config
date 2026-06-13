@@ -968,6 +968,29 @@ vim.keymap.set("n", "<leader>gpf", function() run_command({"git", "push", "--for
 
 vim.keymap.set("n", "<leader>gF", function() run_command({"git", "fetch", "origin"}) end, {desc="git fetch origin"})
 
+vim.keymap.set("n", "<leader>gy", function()
+  local has_git_changes = #require('mini.diff').get_buf_data(0).hunks > 0
+  local lnum = vim.fn.line('.')
+  local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
+  local git_path = vim.fn.expand("%:p"):gsub(escape_pattern(git_root) .. "/", "")
+  local git_rev = vim.trim(vim.system({"git", "rev-parse", "HEAD"}):wait().stdout)
+  local git_url = vim.system({"git", "config", "--get", "remote.origin.url"}):wait().stdout
+  local github_repo = git_url:match("github%.com[:/](.-)%.git")
+  local gitlab_repo, gitlab_path = git_url:match("[/@]([^/@]-gitlab.-)[:/](.-)%.git")
+  local url = nil
+  if github_repo ~= nil then
+    url = string.format("https://github.com/%s/blob/%s/%s#L%d", github_repo, git_rev, git_path, lnum)
+  elseif gitlab_repo ~= nil then
+    url = string.format("https://%s/%s/-/blob/%s/%s#L%d", gitlab_repo, gitlab_path, git_rev, git_path, lnum)
+  end
+  if url ~= nil then
+    if has_git_changes then
+      vim.notify("git line number is probably wrong as the file was modified", vim.log.levels.WARN)
+    end
+    vim.fn.setreg('+', string.format("`%s:%d` %s", git_path, lnum, url))
+  end
+end, {desc="git yank file+line link"})
+
 require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
 vim.keymap.set("n", "<leader>gho", '<cmd>DiffviewFileHistory -g --range=stash<cr>', {desc="list git stashes"})
 

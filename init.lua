@@ -769,27 +769,6 @@ require('packer').startup(function(use)
     vim.g.markify_info_texthl = "Todo"
     vim.g.markify_echo_current_message = 0
   end}
-  use {'ruifm/gitlinker.nvim', commit='ff33d07', config = function()
-    require"gitlinker".setup({
-      opts = {
-        action_callback = function(url)
-          local human_readable_url = ''
-          if vim.fn.mode() == 'n' then
-            human_readable_url = _G.get_file_line()
-          else
-            human_readable_url = _G.get_file_line_sel()
-          end
-
-          vim.fn.setreg('+', human_readable_url .. ' ' .. url)
-        end,
-      },
-callbacks = {
-        ["gitlab.*"] = require"gitlinker.hosts".get_gitlab_type_url
-      },
-      -- default mapping to call url generation with action_callback
-      mappings = "<leader>gy"
-    })
-  end}
   use {'emmanueltouzery/dressing.nvim', commit='ed59504b70f2ced477eb39f1fe6e1acc668dcfbf', config=function()
     require('dressing').setup({
       input = {

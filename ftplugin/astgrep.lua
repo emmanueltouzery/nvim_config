@@ -17,6 +17,7 @@ local function ast_grep_buffer()
           filename = match.file,
           lnum = match.range.start.line+1,
           col = match.range.start.column,
+          text = string.match(match.text, "([^\n]*)"), -- keep only the first line of the match
         })
       end
       if #all_items == 0 then

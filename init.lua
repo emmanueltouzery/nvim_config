@@ -752,6 +752,7 @@ require('packer').startup(function(use)
     vim.g['test#custom_strategies'] = {
       overseer = function(cmd)
         require('overseer').new_task({ cmd = cmd, components = {
+          {'job_display_info', message = " Tests running"},
           "vim_test_qf",
           "on_exit_set_status",
           -- "on_complete_notify", -- i limited my notify to filter out messages, notifs.lua and overseer doesn't give markers i can use to whitelist it

@@ -8,11 +8,26 @@ local entry_display = require "telescope.pickers.entry_display"
 _G.telescope_modified_git_projects = function(opts)
   opts = opts or {}
 
+  local displayer = entry_display.create {
+    separator = " ",
+    items = {
+      { width = 55 },
+      { remaining = true },
+    },
+  }
+
+  local function make_display(entry)
+    return displayer {
+      {entry.value, "TelescopeResultsConstant"},
+      {entry.contents and vim.trim(table.concat(entry.contents, ", ")) or "", "@keyword"},
+    }
+  end
+
   local function entry_maker(entry)
     return {
       value = entry.folder,
       ordinal = entry.folder,
-      display = entry.folder,
+      display = make_display,
       contents = entry.status
     }
   end
@@ -70,7 +85,18 @@ _G.telescope_modified_git_projects = function(opts)
     },
     previewer = previewers.new_buffer_previewer({
       define_preview = function(self, entry, status)
-        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, true, entry.contents)
+        local command = {"git", "diff"}
+        print(entry.value)
+        print(table.concat(entry.contents, " "))
+        if string.match(table.concat(entry.contents, " "), "^git branch: ") then
+          command = {"bash", "-c", "echo 'checkout status:'; git status; echo; echo 'diff to base branch:';git diff $(git rev-parse --abbrev-ref origin/HEAD | sed s/origin.//)... | diffstat"}
+        end
+        vim.system(command, {cwd = entry.value, text=true}, function(res)
+          vim.schedule(function()
+            vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, true, vim.split(res.stdout, "\n"))
+            vim.bo[self.state.bufnr].filetype = "diff"
+          end)
+        end)
         -- require("telescope.previewers.utils").highlighter(
         --   self.state.bufnr,
         --   "diff",
@@ -88,6 +114,11 @@ _G.telescope_modified_git_projects = function(opts)
       tel_proj_attach_mappings(p, map)
       return true
     end,
+    layout_strategy = "vertical",
+    layout_config = {
+      preview_height = 0.8,
+      preview_cutoff = 0,
+    },
   }):find()
 
 end

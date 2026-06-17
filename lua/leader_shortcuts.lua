@@ -1097,6 +1097,15 @@ vim.keymap.set("n", "<leader>ctc", function()
     vim.g.tests_winnr = nil
   end
 end, {desc="close tests output window"})
+vim.keymap.set("n", "<leader>ctk", function()
+  local overseer = require('overseer')
+  local tasks = overseer.list_tasks({ recent_first = true })
+  for _, task in ipairs(tasks) do
+    if task.metadata and task.metadata.type == "test" then
+      overseer.run_action(task, "stop")
+    end
+  end
+end, {desc = "Kill currently running test"})
 
 -- QUICKFIX
 require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})

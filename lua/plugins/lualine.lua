@@ -313,6 +313,7 @@ function setup_lualine()
     {
       adb_status,
     })
+    table.insert(lualine_tabline_end, { "overseer", })
 
     lualine.setup {
       options = {

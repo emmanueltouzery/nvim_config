@@ -85,14 +85,19 @@ _G.telescope_modified_git_projects = function(opts)
     },
     previewer = previewers.new_buffer_previewer({
       define_preview = function(self, entry, status)
+        local winid = self.state.winid
+        vim.wo[winid].conceallevel = 2
+        vim.wo[winid].concealcursor = "n"
         local command = {"git", "diff"}
+        local ft = "diff"
         if string.match(table.concat(entry.contents, " "), "^git branch: ") then
-          command = {"bash", "-c", "echo 'checkout status:'; git status; echo; echo 'diff to base branch:';git diff $(git rev-parse --abbrev-ref origin/HEAD | sed s/origin.//)... | diffstat"}
+          command = {"bash", "-c", "echo -e '# Checkout status\n\n```diff'; git status; echo '```'; echo -e '\n# Diff to base branch\n\n```diff';git diff $(git rev-parse --abbrev-ref origin/HEAD | sed s/origin.//)...;echo '```'"}
+          ft = "markdown"
         end
         vim.system(command, {cwd = entry.value, text=true}, function(res)
           vim.schedule(function()
             vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, true, vim.split(res.stdout, "\n"))
-            vim.bo[self.state.bufnr].filetype = "diff"
+            vim.bo[self.state.bufnr].filetype = ft
           end)
         end)
         -- require("telescope.previewers.utils").highlighter(

@@ -1206,13 +1206,9 @@ require('packer').startup(function(use)
   -- see https://github.com/tjdevries/config.nvim/blob/7cad8009177b4c10083b21cfa14f8eebe308745e/lua/custom/plugins/dap.lua#L45
   -- see https://youtu.be/lyNfnI-B640?si=E_NRcgMHqptrunKF
   use {'mfussenegger/nvim-dap', commit='40a8189b8a57664a1850b0823fdcb3ac95b9f635', requires={
-        {'rcarriga/nvim-dap-ui', commit='73a26abf4941aa27da59820fd6b028ebcdbcf932'},
         {'theHamsta/nvim-dap-virtual-text', commit='fbdb48c2ed45f4a8293d0d483f7730d24467ccb6'},
-        {'nvim-neotest/nvim-nio', commit='21f5324bfac14e22ba26553caf69ec76ae8a7662'},
       }, config=function()
     local dap = require "dap"
-    local ui = require "dapui"
-    require("dapui").setup()
     require("nvim-dap-virtual-text").setup({
       display_callback = function(variable, buf, stackframe, node, options)
           local val = variable.value:gsub("%s+", " ")
@@ -1274,10 +1270,14 @@ require('packer').startup(function(use)
     vim.keymap.set("n", "<space>uB", dap.clear_breakpoints, {desc='clear all breakpoints'})
     vim.keymap.set("n", "<space>ug", dap.run_to_cursor, {desc='run to cursor'})
 
-    -- Eval var under cursor
-    vim.keymap.set("n", "<space>uk", function()
-      require("dapui").eval(nil, { enter = true })
-    end, {desc='eval var under cursor'})
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "dap-float",
+      callback = function(ev)
+        vim.keymap.set('n', 'q', function()
+          vim.api.nvim_win_close(0, true)
+        end, { buffer = true })
+      end
+    })
 
     local debug_start = function()
       local modules_to_interpret = vim.g.dap_mods_to_interpret and vim.split(vim.g.dap_mods_to_interpret, ",") or {}
@@ -1308,12 +1308,14 @@ require('packer').startup(function(use)
       dap.continue()
     end
 
-    vim.keymap.set("n", "<space>us", debug_start, {desc='debug start'})
-    vim.keymap.set("n", "<space>uc", dap.continue, {desc='debug continue'})
-    vim.keymap.set("n", "<space>uR", dap.restart, {desc='debug restart'})
-    vim.keymap.set("n", "<space>uS", function()
+    vim.keymap.set("n", "<leader>uh", function()
+      require('dap.ui.widgets').hover()
+    end, {desc='debug hover'})
+    vim.keymap.set("n", "<leader>us", debug_start, {desc='debug start'})
+    vim.keymap.set("n", "<leader>uc", dap.continue, {desc='debug continue'})
+    vim.keymap.set("n", "<leader>uR", dap.restart, {desc='debug restart'})
+    vim.keymap.set("n", "<leader>uS", function()
       vim.cmd("DapTerminate")
-      ui.close()
       vim.defer_fn(function()
         vim.cmd("DapVirtualTextForceRefresh")
       end, 100)
@@ -1323,19 +1325,6 @@ require('packer').startup(function(use)
     vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<S-F11>", dap.step_out)
     vim.keymap.set("n", "<F12>", dap.step_back)
-
-    dap.listeners.before.attach.dapui_config = function()
-      ui.open()
-    end
-    dap.listeners.before.launch.dapui_config = function()
-      ui.open()
-    end
-    dap.listeners.before.event_terminated.dapui_config = function()
-      ui.close()
-    end
-    dap.listeners.before.event_exited.dapui_config = function()
-      ui.close()
-    end
 
       -- vim.defer_fn(function() vim.cmd("DapSetLogLevel TRACE") end, 1000)
   end}

@@ -61,7 +61,7 @@ vim.keymap.set("n", "<leader>q", "<cmd>lua jump_to_qf()<cr>", {desc="Jump to the
 vim.keymap.set( "n", "<leader>;", "<cmd>Telescope resume<CR>", {desc="Resume telescope search"})
 
 -- BUFFER
-require 'key-menu'.set('n', '<Space>b', {desc='Buffer'})
+require 'key-menu'.set('n', '<leader>b', {desc='Buffer'})
 -- https://stackoverflow.com/a/19619038/516188
 --":b#<bar>bd#<CR>",
 -- that didn't cut it => https://github.com/qpkorr/vim-bufkill
@@ -136,7 +136,7 @@ require 'key-menu'.set('n', '<Space>')
 require 'key-menu'.set('n', ',')
 
 -- FILES
-require 'key-menu'.set('n', '<Space>f', {desc='File'})
+require 'key-menu'.set('n', '<leader>f', {desc='File'})
 vim.keymap.set('n', '<leader>fn', ":enew<cr>", {desc = "New file"})
 vim.keymap.set("n", "<leader>fs", ":w<cr>", {desc="Save file"})
 vim.keymap.set("n", "<leader>fS", ":wa<cr>", {desc="Save all files"})
@@ -148,7 +148,7 @@ vim.keymap.set("n", "<leader>fp", ':lua copy_to_clipboard(cur_file_path_in_proje
 vim.keymap.set("n", "<leader>fP", ':let @+ = expand("%:p")<cr>', {desc="Copy file full path"})
 vim.keymap.set("n", "<leader>fW", ":noautocmd w<cr>", {desc="save without indenting/formatting the file"})
 vim.keymap.set("n", "<leader>fD", ":lua convert_dos()<cr>", {desc="reload file as DOS"}) -- https://vim.fandom.com/wiki/File_format many typescript library files have windows line endings except for the copyright header
-require 'key-menu'.set('n', '<Space>fd', {desc='file Directory'})
+require 'key-menu'.set('n', '<leader>fd', {desc='file Directory'})
 vim.keymap.set("n", "<leader>fdd", ":lua open_file_cur_dir(false)<cr>", {desc="open a file from the current Directory"})
 vim.keymap.set("n", "<leader>fdc", ":lua open_file_cur_dir(true)<cr>", {desc="open a file from the current directory and Children dirs"})
 vim.keymap.set('n', '<leader>f!', ":lua reload_all()<cr>", {desc = "Reload all files from disk"})
@@ -210,7 +210,7 @@ end, {desc="Set expr folding method"})
 vim.keymap.set("n", "<leader>fmd", ":lua set_fm('disable')<cr>", {desc="Disable folding"})
 
 -- SEARCH
-require 'key-menu'.set('n', '<Space>s', {desc='Search'})
+require 'key-menu'.set('n', '<leader>s', {desc='Search'})
 vim.keymap.set("n", "<leader>*", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>*", "<cmd>lua my_open_tele_sel()<cr>", {desc="Search selected text, raw"})
 vim.keymap.set("n", "<leader><kMultiply>", "<cmd>lua my_open_tele()<cr>", {desc="Search word under cursor, raw"})
@@ -320,13 +320,13 @@ function _G.telescope_regex_cur_file(opts)
 end
 vim.keymap.set("n", "<leader>sbr", telescope_regex_cur_file, {desc="search in buffer: vim verymagic regex"})
 
-require 'key-menu'.set('n', '<Space>sd', {desc='Search in file Directory'})
+require 'key-menu'.set('n', '<leader>sd', {desc='Search in file Directory'})
 vim.keymap.set("n", "<leader>sdd", function()
   require('telescope').extensions.live_grep_args.live_grep_args({cwd=vim.fn.expand('%:h'), prompt_title="Search text in directory " .. vim.fn.expand('%:h')})
 end, {desc="Search text raw in Directory"})
 vim.keymap.set("n", "<leader>sd*", "<cmd>lua my_open_tele(true)<cr>", {desc="Search word under cursor, raw"})
 vim.keymap.set("v", "<leader>sd*", "<cmd>lua my_open_tele_sel(true)<cr>", {desc="Search selected text, raw"})
-require 'key-menu'.set('n', '<Space>ss', {desc='Search LSP symbols'})
+require 'key-menu'.set('n', '<leader>ss', {desc='Search LSP symbols'})
 -- vim.keymap.set("n", "<leader>ssf", "<cmd>lua require'telescope.builtin'.lsp_document_symbols{symbol_width=80}<cr>", { desc = "Goto file LSP symbol"}) -- show_line=true would be another possible option
 vim.keymap.set("n", "<leader>sD", "<cmd>:DevdocsGrep<cr>", {desc="Search in apidocs"})
 
@@ -399,7 +399,7 @@ function ws_symbol_under_cursor()
   filter_lsp_symbols(word)
 end
 vim.keymap.set( "n", "<leader>s*", "<cmd>lua ws_symbol_under_cursor()<CR>", {desc="Goto workspace symbol under cursor"})
-require 'key-menu'.set('n', '<Space>sc', {desc='Search code'})
+require 'key-menu'.set('n', '<leader>sc', {desc='Search code'})
 vim.keymap.set( "n", "<leader>scd", "<cmd>lua search_code_deps()<CR>", {desc="Search code deps"})
 
 local function astgrep_open_buf()
@@ -433,7 +433,7 @@ end
 vim.keymap.set( "n", "<leader>sct", astgrep_open_buf, {desc="ast-grep code search"})
 
 -- WINDOW
-require 'key-menu'.set('n', '<Space>w', {desc='Window'})
+require 'key-menu'.set('n', '<leader>w', {desc='Window'})
 vim.keymap.set("n", "<leader>wd", "<C-W>c", {desc="Close current window"})
 vim.keymap.set("n", "<leader>w=", "<C-W>=", {desc = "Balance window"})
 vim.keymap.set("n", "<leader>ws", "<C-W>s", {desc = "Split window below"})
@@ -446,15 +446,15 @@ vim.keymap.set("n", "<leader>wq", "<cmd>lua win_bring_qf_here()<cr>", {desc="Bri
 -- workaround for.. sometimes this gets enabled. might be me hitting the wrong shortcut, or a neovim/plugin bug
 vim.keymap.set("n", "<leader>wS", "<cmd>windo set nocursorbind | windo set noscrollbind<cr>", {desc="Disable cursor bind & scroll lock"})
 
-require 'key-menu'.set('n', '<Space>wf', {desc='Window diFF'})
+require 'key-menu'.set('n', '<leader>wf', {desc='Window diFF'})
 vim.keymap.set("n", "<leader>wfj", "<cmd>lua window_diff_json()<cr>", {desc="window diff JSON"})
 
-require 'key-menu'.set('n', '<Space>wh', {desc='Window highlight'})
+require 'key-menu'.set('n', '<leader>wh', {desc='Window highlight'})
 vim.keymap.set("n", "<leader>whs", "<cmd>lua window_highlight_set()<cr>", {desc="window highlight set"})
 vim.keymap.set("n", "<leader>whc", "<cmd>lua window_highlight_clear()<cr>", {desc="window highlight clear"})
 
 -- PACKAGES
-require 'key-menu'.set('n', '<Space>p', {desc='Packages'})
+require 'key-menu'.set('n', '<leader>p', {desc='Packages'})
 vim.keymap.set("n", "<leader>pp", "<cmd>PackerSync<cr>", { desc = "Packer sync"})
 vim.keymap.set("n", "<leader>pl", "<cmd>Mason<cr>", { desc = "LSP install info"})
 vim.keymap.set("n", "<leader>pt", "<cmd>TSInstallInfo<cr>", { desc = "Tree-sitter install info"})
@@ -485,7 +485,7 @@ end
 _G.telescope_project_command = [[<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full', attach_mappings = tel_proj_attach_mappings}<CR>]]
 
 -- OPEN
-require 'key-menu'.set('n', '<Space>o', {desc='Open'})
+require 'key-menu'.set('n', '<leader>o', {desc='Open'})
 vim.keymap.set("n", "<leader>op", telescope_project_command, {desc="Open project"})
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
 vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
@@ -509,7 +509,7 @@ vim.keymap.set("n", "<leader>oP", "<cmd>lua require'telescope.builtin'.pickers{}
 vim.keymap.set("n", "<leader>ow", "<cmd>lua open_in_centered_popup()<CR>", {desc = "open the current buffer in a centered window"})
 
 -- TOGGLE
-require 'key-menu'.set('n', '<Space>t', {desc='Toggle'})
+require 'key-menu'.set('n', '<leader>t', {desc='Toggle'})
 vim.keymap.set("n", "<leader>te", "<cmd>NvimTreeToggle<CR>", {desc = "Toggle file explorer"})
 vim.keymap.set("n", "<leader>ts", "<cmd>AerialToggle!<CR>", {desc = "Toggle symbols"})
 vim.keymap.set("n", "<leader>tm", "<cmd>lua toggle_highlight_global_marks()<CR>", {desc = "Toggle highlight of global marks"})
@@ -581,7 +581,7 @@ vim.keymap.set("n", "<leader>tW", function()
   end
 end, {desc="Toggle white spaces in diff"})
 
-require 'key-menu'.set('n', '<Space>tp', {desc='Toggle picker'})
+require 'key-menu'.set('n', '<leader>tp', {desc='Toggle picker'})
 vim.keymap.set("n", "<leader>tpp", function()
   vim.g.telescope_entry_fullpath_display = not vim.g.telescope_entry_fullpath_display
   notif({"Picker full path display is now " .. vim.inspect(vim.g.telescope_entry_fullpath_display)})
@@ -654,7 +654,7 @@ end
 
 
 -- TAB
-require 'key-menu'.set('n', '<Space>tt', {desc='Tab'})
+require 'key-menu'.set('n', '<leader>tt', {desc='Tab'})
 vim.keymap.set("n", "<leader>ttm", function() vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1]) end, {desc = "Switch to main tab"})
 vim.keymap.set("n", "<leader>ttt", "<cmd>lua create_or_switch_tab_terminal()<cr>", {desc = "Open or switch to terminal tab"})
 vim.keymap.set("n", "<leader>ttq", "<cmd>lua switch_to_sql_tab()<cr>", {desc = "Switch to SQL tab"})
@@ -663,7 +663,7 @@ vim.keymap.set("n", "<leader>ttv", "<cmd>ToggleTerm direction=vertical<CR>", {de
 vim.keymap.set("n", "<leader>tth", "<cmd>ToggleTerm direction=horizontal<CR>", {desc = "Open terminal in horizontal window"})
 
 -- GIT
-require 'key-menu'.set('n', '<Space>g', {desc='Git'})
+require 'key-menu'.set('n', '<leader>g', {desc='Git'})
 
 -- when we detect the rebase finished, switch the first tab
 function check_interactive_rebase_done()
@@ -955,7 +955,7 @@ vim.keymap.set("v", "<leader>gY", ":lua copy_file_line_sel()<cr>", {desc="Copy l
 vim.keymap.set("n", "<leader>gr", '<cmd>lua git_branches{attach_mappings=telescope_branches_mappings, pattern="--sort=-committerdate"}<CR>', {desc="git bRanches"})
 vim.keymap.set("n", "<leader>ga", "<cmd>lua require'agitator'.search_in_added()<CR>", {desc="git search in added files & lines/diff"})
 
-require 'key-menu'.set('n', '<Space>gp', {desc='git push or pull'})
+require 'key-menu'.set('n', '<leader>gp', {desc='git push or pull'})
 local function reload_and_push_evt()
   reload_all()
   vim.api.nvim_exec_autocmds("User", {
@@ -991,7 +991,7 @@ vim.keymap.set("n", "<leader>gy", function()
   end
 end, {desc="git yank file+line link"})
 
-require 'key-menu'.set('n', '<Space>gh', {desc='git stasH'})
+require 'key-menu'.set('n', '<leader>gh', {desc='git stasH'})
 vim.keymap.set("n", "<leader>gho", '<cmd>DiffviewFileHistory -g --range=stash<cr>', {desc="list git stashes"})
 
 function _G.git_do_stash()
@@ -1020,14 +1020,14 @@ function _G.git_do_stash_staged()
 end
 vim.keymap.set("n", "<leader>ghs", '<cmd>lua git_do_stash_staged()<CR>', {desc="git stash only staged files"})
 
-require 'key-menu'.set('n', '<Space>h', {desc='Hunks'})
+require 'key-menu'.set('n', '<leader>h', {desc='Hunks'})
 vim.keymap.set({"n", "v"}, "<leader>hS", function() vim.cmd[[norm ghgh]] end, {desc= "stage hunk"}) -- provided by mini.diff
 -- vim.keymap.set("n", "<leader>hu", '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', {desc="undo stage hunk"})
 vim.keymap.set({"n", "v"}, "<leader>hr", function() vim.cmd[[norm gHgh]] end, {desc="reset hunk"}) -- provided by mini.diff
 vim.keymap.set("n", "<leader>hh", function() hunk_popup() end, {desc="preview hunk"})
 
 -- CODE
-require 'key-menu'.set('n', '<Space>c', {desc='Code'})
+require 'key-menu'.set('n', '<leader>c', {desc='Code'})
 
 function format_buf()
   if vim.bo.filetype == 'html' then
@@ -1046,7 +1046,7 @@ function format_buf()
 end
 vim.keymap.set("n", "<leader>cf", ":lua format_buf()<cr>", {desc="Code format/indent"})
 vim.keymap.set("n", "<leader>cm", function() glow_for_buffer(0) end, {desc="Markdown preview"})
-require 'key-menu'.set('n', '<Space>cn', {desc='Code Nodes'})
+require 'key-menu'.set('n', '<leader>cn', {desc='Code Nodes'})
 vim.keymap.set('n', '<leader>cns', ":lua require('tsht').nodes()<cr>", {desc="select custom block"})
 vim.keymap.set('n', '<leader>cnj', ":lua require('tsht').jump_nodes()<cr>", {desc="jump to code node"})
 vim.keymap.set('n', '<leader>cnf', function()
@@ -1055,7 +1055,7 @@ vim.keymap.set('n', '<leader>cnf', function()
 end, {desc="fold custom block"})
 vim.keymap.set('n', '<leader>cp', ":lua print_lsp_path()<cr>", {desc="print & yank code LSP Path", silent=true})
 
-require 'key-menu'.set('n', '<Space>cc', {desc='Code Csv'})
+require 'key-menu'.set('n', '<leader>cc', {desc='Code Csv'})
 vim.keymap.set('n', '<leader>cca', function()
   require('decisive').align_csv({print_speed=true})
   require("zebrazone").start()
@@ -1074,15 +1074,15 @@ end, {desc="freeze the csv header"})
 vim.keymap.set('n', 'šc', ":lua require('decisive').align_csv_prev_col()<cr>", {desc="align CSV prev col", silent=true})
 vim.keymap.set('n', 'đc', ":lua require('decisive').align_csv_next_col()<cr>", {desc="align CSV next col", silent=true})
 
-require 'key-menu'.set('n', '<Space>cu', {desc='Code under cursor'})
-require 'key-menu'.set('n', '<Space>cuu', {desc='Code under cursor - unix timestamp'})
+require 'key-menu'.set('n', '<leader>cu', {desc='Code under cursor'})
+require 'key-menu'.set('n', '<leader>cuu', {desc='Code under cursor - unix timestamp'})
 vim.keymap.set('n', '<leader>cuuu', function() under_cursor_unix_timestamp_to_date(false) end, {desc="unix timestamp to UTC", silent=true})
 vim.keymap.set('n', '<leader>cuul', function() under_cursor_unix_timestamp_to_date(true) end, {desc="unix timestamp to local", silent=true})
 vim.keymap.set('n', '<leader>cum', function() under_cursor_minutes_to_hhmm() end, {desc="minutes", silent=true})
 vim.keymap.set('n', '<leader>cus', function() under_cursor_seconds_to_hhmm() end, {desc="seconds", silent=true})
 
 -- TESTS
-require 'key-menu'.set('n', '<Space>ct', {desc='Tests'})
+require 'key-menu'.set('n', '<leader>ct', {desc='Tests'})
 vim.keymap.set("n", "<leader>ctf", ":TestFile<cr>", {desc="test file"})
 vim.keymap.set("n", "<leader>ctn", ":TestNearest<cr>", {desc="test nearest"})
 vim.keymap.set("n", "<leader>ctl", ":TestLast<cr>", {desc="test last"})
@@ -1108,7 +1108,7 @@ vim.keymap.set("n", "<leader>ctk", function()
 end, {desc = "Kill currently running test"})
 
 -- QUICKFIX
-require 'key-menu'.set('n', '<Space>cq', {desc='Quickfix'})
+require 'key-menu'.set('n', '<leader>cq', {desc='Quickfix'})
 vim.keymap.set("n", "<leader>cqs", ":lua select_current_qf(false)<cr>", {desc="quickfix select current"})
 vim.keymap.set("n", "<leader>cqv", ":lua select_current_qf(true)<cr>", {desc="quickfix view & select current"})
 vim.keymap.set("n", "<leader>cqb", ":lua quickfix_goto_bottom()<cr>", {desc="quickfix go to bottom"})
@@ -1192,7 +1192,7 @@ function count_lines(string)
 end
 
 -- LSP
-require 'key-menu'.set('n', '<Space>cl', {desc='LSP'})
+require 'key-menu'.set('n', '<leader>cl', {desc='LSP'})
 vim.keymap.set("n", "<leader>cla", "<cmd>lua vim.lsp.buf.code_action()<CR>", {desc="Code actions"})
 vim.keymap.set("n", "<leader>cll", function()
   if vim.bo.filetype == "typescriptreact" or vim.bo.filetype == 'typescript' then
@@ -1263,17 +1263,17 @@ vim.api.nvim_create_autocmd("FileType", {
   end})
 
 -- MARKS
-require 'key-menu'.set('n', '<Space>m', {desc='Marks'})
+require 'key-menu'.set('n', '<leader>m', {desc='Marks'})
 vim.keymap.set("n", "<leader>ma", ":lua add_global_mark()<cr>", {desc="Add mark"})
 
 -- VIM
-require 'key-menu'.set('n', '<Space>v', {desc='Vim'})
+require 'key-menu'.set('n', '<leader>v', {desc='Vim'})
 vim.keymap.set("n", "<leader>vc", ":let @+=@:<cr>", {desc="Yank last ex command text"})
 vim.keymap.set("n", "<leader>vm", [[:let @+=substitute(execute('messages'), '\n\+', '\n', 'g')<cr>]], {desc="Yank vim messages output"})
 vim.keymap.set("n", "<leader>vz", ":let g:neovide_scale_factor = ", {desc="neovide zoom"})
 
 -- JOBS
-require 'key-menu'.set('n', '<Space>j', {desc='Jobs'})
+require 'key-menu'.set('n', '<leader>j', {desc='Jobs'})
 vim.keymap.set("n", "<leader>jt", ":lua overseer_popup_running_task()<cr>", {desc="open running job Terminal"})
 vim.keymap.set("n", "<leader>js", ":lua overseer_show_running_task()<cr>", {desc="show running job Terminal"})
 

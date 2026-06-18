@@ -86,8 +86,6 @@ _G.telescope_modified_git_projects = function(opts)
     previewer = previewers.new_buffer_previewer({
       define_preview = function(self, entry, status)
         local command = {"git", "diff"}
-        print(entry.value)
-        print(table.concat(entry.contents, " "))
         if string.match(table.concat(entry.contents, " "), "^git branch: ") then
           command = {"bash", "-c", "echo 'checkout status:'; git status; echo; echo 'diff to base branch:';git diff $(git rev-parse --abbrev-ref origin/HEAD | sed s/origin.//)... | diffstat"}
         end

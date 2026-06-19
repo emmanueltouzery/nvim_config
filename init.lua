@@ -1308,19 +1308,30 @@ require('packer').startup(function(use)
       dap.continue()
     end
 
-    vim.keymap.set("n", "<leader>uh", function()
+    vim.keymap.set("n", "<F7>", function()
       require('dap.ui.widgets').hover()
     end, {desc='debug hover'})
+
+    vim.keymap.set("v", "<F7>", function()
+      local start_pos = vim.fn.getpos("v")
+      local end_pos = vim.fn.getpos(".")
+      local lines = vim.fn.getregion(start_pos, end_pos, { type = vim.fn.mode() })
+      local selection = table.concat(lines, '\n')
+
+      require('dap.ui.widgets').hover(selection)
+    end, {desc='debug hover, visual mode'})
+
     vim.keymap.set("n", "<leader>us", debug_start, {desc='debug start'})
     vim.keymap.set("n", "<leader>uc", dap.continue, {desc='debug continue'})
     vim.keymap.set("n", "<leader>uR", dap.restart, {desc='debug restart'})
-    vim.keymap.set("n", "<leader>uS", function()
+    vim.keymap.set("n", "<leader>uk", function()
       vim.cmd("DapTerminate")
       vim.defer_fn(function()
         vim.cmd("DapVirtualTextForceRefresh")
       end, 100)
-    end, {desc='debug stop'})
+    end, {desc='debug stop (kill)'})
 
+    vim.keymap.set("n", "<F5>", dap.continue)
     vim.keymap.set("n", "<F10>", dap.step_over)
     vim.keymap.set("n", "<F11>", dap.step_into)
     vim.keymap.set("n", "<S-F11>", dap.step_out)

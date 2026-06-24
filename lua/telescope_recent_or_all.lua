@@ -16,7 +16,7 @@ _G.telescope_recent_or_all = function(opts)
   if opts.cwd_only or opts.cwd then
     local utils = require "telescope.utils"
     local cwd = opts.cwd or vim.loop.cwd()
-    cwd = cwd .. utils.get_separator()
+    cwd = cwd .. "/"
     cwd = cwd:gsub([[\]], [[\\]])
     results = vim.tbl_filter(function(file)
       return vim.fn.matchstrpos(file, cwd)[2] ~= -1

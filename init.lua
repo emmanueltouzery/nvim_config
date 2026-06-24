@@ -757,6 +757,7 @@ require('packer').startup(function(use)
           "on_exit_set_status",
           -- "on_complete_notify", -- i limited my notify to filter out messages, notifs.lua and overseer doesn't give markers i can use to whitelist it
           "on_complete_notif",
+          "only_tree_tests",
         }, metadata = {type = "test"} }):start()
       end,
     }

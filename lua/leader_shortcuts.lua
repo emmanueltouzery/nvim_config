@@ -460,33 +460,8 @@ vim.keymap.set("n", "<leader>pl", "<cmd>Mason<cr>", { desc = "LSP install info"}
 vim.keymap.set("n", "<leader>pt", "<cmd>TSInstallInfo<cr>", { desc = "Tree-sitter install info"})
 vim.keymap.set("n", "<leader>pT", "<cmd>TSUpdate<cr>", { desc = "Tree-sitter update packages"})
 
--- a bit messy to remap telescope-project key mappings: https://github.com/nvim-telescope/telescope-project.nvim/issues/84
--- I want telescope-live-grep-raw instead of the normal telescope-rg
--- also used by telescope_modified_git_projects
-function _G.tel_proj_attach_mappings(prompt_bufnr, map)
-  map('i', '<C-s>', function(nr)
-    require('telescope').extensions.live_grep_args.live_grep_args{
-      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    }
-  end)
-  map('i', '<C-g>', function(nr)
-    require('telescope.builtin').git_status{
-      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    }
-  end)
-  map('i', '<C-r>', function(nr)
-    telescope_recent_or_all{
-      cwd_only=true,
-      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    }
-  end)
-  return true
-end
-_G.telescope_project_command = [[<cmd>lua require'telescope'.extensions.project.project{ display_type = 'full', attach_mappings = tel_proj_attach_mappings}<CR>]]
-
 -- OPEN
 require 'key-menu'.set('n', '<leader>o', {desc='Open'})
-vim.keymap.set("n", "<leader>op", telescope_project_command, {desc="Open project"})
 vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
 vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
 vim.keymap.set("n", "<leader>om", function() require("telescope.builtin").man_pages{sections={'ALL'}} end, {desc="Open man page"})

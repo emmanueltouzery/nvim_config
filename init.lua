@@ -277,9 +277,6 @@ require('packer').startup(function(use)
             },
           },
         },
-        project = {
-          hidden_files = true,
-        },
         live_grep_args = {
           auto_quoting = false,
           vimgrep_arguments = {
@@ -585,7 +582,6 @@ require('packer').startup(function(use)
     require'elixir-extras'.setup_multiple_clause_gutter()
   end
   }
-  use {'nvim-telescope/telescope-project.nvim', commit='8cd22b696e14b353fe8ea9648a03364cb56c39d4'}
   -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
   -- drop s and S due to lightspeed
   vim.g.yoinkIncludeDeleteOperations = 1
@@ -1095,7 +1091,7 @@ require('packer').startup(function(use)
     }
     dashboard.section.buttons.val = {
       dashboard.button( "e", "  New file" , ":ene <BAR> startinsert <CR>"),
-      dashboard.button( "p", "  Open project" , _G.telescope_project_command),
+      dashboard.button( "p", "  Open project" , ":lua telescope_projects()<cr>"),
       dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
     }
     dashboard.config.opts.noautocmd = true
@@ -1635,6 +1631,7 @@ require("telescope_lsp_hierarchy")
 require("telescope_qf_locations")
 require("telescope_modified_git_projects")
 require("telescope_buffers_entry_maker")
+require("telescope_projects")
 require("notifs")
 require("ts_unused_imports")
 require("elixir")

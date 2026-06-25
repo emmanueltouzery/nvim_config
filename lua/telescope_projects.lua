@@ -64,6 +64,26 @@ local function add_current_folder_as_project(cb)
   end)
 end
 
+-- shared with telescope_modified_git_projects
+function _G.tel_proj_attach_mappings(prompt_bufnr, map)
+  map('i', '<C-s>', function(nr)
+    require('telescope').extensions.live_grep_args.live_grep_args{
+      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    }
+  end)
+  map('i', '<C-g>', function(nr)
+    require('telescope.builtin').git_status{
+      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    }
+  end)
+  map('i', '<C-r>', function(nr)
+    telescope_recent_or_all{
+      cwd_only=true,
+      cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
+    }
+  end)
+end
+
 function _G.telescope_projects()
   local pickers = require "telescope.pickers"
   local finders = require "telescope.finders"
@@ -109,22 +129,7 @@ function _G.telescope_projects()
         path = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
         require'telescope.builtin'.find_files{cwd=path}
       end)
-      map('i', '<C-s>', function(nr)
-        require('telescope').extensions.live_grep_args.live_grep_args{
-          cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-        }
-      end)
-      map('i', '<C-g>', function(nr)
-        require('telescope.builtin').git_status{
-          cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-        }
-      end)
-      map('i', '<C-r>', function(nr)
-        telescope_recent_or_all{
-          cwd_only=true,
-          cwd=require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-        }
-      end)
+      tel_proj_attach_mappings(prompt_bufnr, map)
       map('i', '<C-a>', function(nr)
         local actions = require("telescope.actions")
         local action_state = require "telescope.actions.state"

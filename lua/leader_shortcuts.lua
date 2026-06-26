@@ -915,7 +915,7 @@ vim.keymap.set("n", "<leader>gc", function()
   }
 end, {desc ="Browse git commits"})
 vim.keymap.set("n", "<leader>gt", "<cmd>lua require'agitator'.git_time_machine({use_current_win=true})<cr>", {desc = "Time machine"})
-vim.keymap.set("n", "<leader>gB", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
+vim.keymap.set("n", "<leader>gb", "<cmd>lua require'agitator'.git_blame_toggle()<cr>", {desc="Git blame"})
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})
 vim.keymap.set("n", "<leader>gs", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
 vim.keymap.set("n", "<leader>gl", function() vim.cmd('DiffviewFileHistory ' .. vim.fs.root(vim.fn.getcwd(), '.git')) end, {desc="project history (Log)"})

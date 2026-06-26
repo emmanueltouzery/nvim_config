@@ -1637,6 +1637,7 @@ require("elixir")
 require("database")
 require("mini_diff_extras")
 require("git_commit")
+require("gitlab_mr_helpers")
 
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 

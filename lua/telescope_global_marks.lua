@@ -98,7 +98,7 @@ function global_marks_entry_maker()
     return displayer {
       -- {entry.mark, "TelescopeResultsNumber"},
       {entry.project, "TelescopeResultsTitle"},
-      relative_fname,
+      string.format("%s:%d", relative_fname, entry.lnum),
       entry.desc
     }
   end

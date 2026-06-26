@@ -88,10 +88,12 @@ function _G.my_gen_from_buffer()
     local display_bufname, path_style = utils.transform_path(opts, entry.filename)
     local icon, hl_group = utils.get_devicons(entry.filename, disable_devicons)
 
+    local changes = display_changes(entry)
+
     return displayer {
       { entry.bufnr, "TelescopeResultsNumber" },
       { entry.indicator, "TelescopeResultsComment" },
-      { display_changes(entry), "BufferInactiveMod" },
+      { changes, #changes > 0 and "BufferInactiveMod" or nil }, -- without the check, "" changes causes a column to be highlighted
       { icon, hl_group },
       {
         display_bufname .. ":" .. entry.lnum,

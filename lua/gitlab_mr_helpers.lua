@@ -17,6 +17,9 @@ end
 
 local function gitlab_mr_open_at_line()
   local absolute_file_path = vim.api.nvim_buf_get_name(0)
+  if vim.startswith(absolute_file_path, "diffview://") then
+    absolute_file_path = require('diffview.lib').get_current_view().cur_entry.path
+  end
   local git_path = vim.fs.root(absolute_file_path, '.git')
   local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
   local path_sha1 = vim.trim(vim.system({ "bash", "-c", string.format("echo -n %s | sha1sum | cut -d' ' -f1", file_path) }):wait().stdout)

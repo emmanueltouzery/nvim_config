@@ -90,8 +90,24 @@ _G.telescope_modified_git_projects = function(opts)
         vim.wo[winid].concealcursor = "n"
         local command = {"git", "diff"}
         local ft = "diff"
-        if string.match(table.concat(entry.contents, " "), "^git branch: ") then
-          command = {"bash", "-c", "echo -e '# Checkout status\n\n```diff'; git status; echo '```'; echo -e '\n# Diff to base branch\n\n```diff';git diff $(git rev-parse --abbrev-ref origin/HEAD | sed s/origin.//)...;echo '```'"}
+        if string.match(table.concat(entry.contents, " "), "^git branch: ") or string.match(table.concat(entry.contents, " "), "^%?%? ") then -- ?? -> untracked files
+          command = {"bash", "-c", [[
+          echo -e '# Checkout status\n\n```diff'
+          git status; echo '```'
+          echo -e '\n# Diff to base branch\n\n```diff'
+          git diff $(git rev-parse --abbrev-ref origin/HEAD | sed s/origin.//)...
+          echo '```'
+          echo '# untracked files'
+          git ls-files --others --exclude-standard |
+          while IFS= read -r f; do
+            ext=${f##*.}
+            [ "$ext" = "$f" ] && ext=""
+            printf '## %s\n\n' "$f"
+            printf '```%s\n' "$ext"
+            cat -- "$f"
+            printf '\n```\n\n'
+            done
+          ]]}
           ft = "markdown"
         end
         vim.system(command, {cwd = entry.value, text=true}, function(res)

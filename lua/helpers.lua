@@ -25,7 +25,7 @@ function _G.copy_to_clipboard(to_copy)
 end
 
 function _G.to_file_path_in_project(full_path)
-    for _, project in pairs(get_project_objects()) do
+    for _, project in pairs(telescope_load_projects()) do
         if full_path:match("^" .. escape_pattern(project.path)) then
             return {project.path, full_path:gsub("^" .. escape_pattern(project.path .. "/"), "")}
         end
@@ -126,7 +126,7 @@ function _G.goto_fileline()
       vim.cmd("redraw") -- https://stackoverflow.com/a/44892301/516188
       local fname = input:match("[^:]+")
       local line = input:gsub("[^:]+:", "")
-      for _, project in pairs(get_project_objects()) do
+      for _, project in pairs(telescope_load_projects()) do
         if vim.fn.filereadable(project.path .. "/" .. fname) == 1 then
           vim.cmd(":e " .. project.path .. "/" .. fname)
           if string.match(line, "^%d+$") then
@@ -140,7 +140,7 @@ function _G.goto_fileline()
       -- maybe we got a subpath, not rooted. eg only a filename,
       -- or only like app/win.rs instead of src/app/win.rs
       -- we can leverage 'fd' for that.
-      for _, project in pairs(get_project_objects()) do
+      for _, project in pairs(telescope_load_projects()) do
         local output = vim.split(vim.system({
           { 'fd', '-p', fname },
           {cwd = project.path},
@@ -186,42 +186,6 @@ function _G.show_commit(commit_sha)
     vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. vim.fn.expand("%:p"))
   end
 end
-
--- TELESCOPE-PROJECT START
--- lifted from https://github.com/nvim-telescope/telescope-project.nvim/blob/master/lua/telescope/_extensions/project/utils.lua
-telescope_projects_file = vim.fn.stdpath('data') .. '/telescope-projects.txt'
-
--- Get project info for all (de)activated projects
-get_project_objects = function()
-  local projects = {}
-  for line in io.lines(telescope_projects_file) do
-    local project = parse_project_line(line)
-    table.insert(projects, project)
-  end
-  return projects
-end
-
--- Extracts information from telescope projects line
-parse_project_line = function(line)
-  local title, path, workspace, activated = line:match("^(.-)=(.-)=(.-)=(.-)$")
-  if not workspace then
-    title, path = line:match("^(.-)=(.-)$")
-    workspace = 'w0'
-  end
-  if not activated then
-    title, path, workspace = line:match("^(.-)=(.-)=(.-)$")
-    activated = 1
-  end
-  return {
-    title = title,
-    path = path,
-    workspace = workspace,
-    activated = activated
-  }
-end
-
--- 
--- TELESCOPE-PROJECT END
 
 function _G.select_current_qf(also_print)
     local qf_entries = vim.fn.getqflist()

@@ -2,7 +2,7 @@ local function telescope_projects_fname()
   return vim.fn.stdpath('data') .. '/telescope-projects.txt'
 end
 
-local function load_projects()
+function _G.telescope_load_projects()
   local path = io.open(telescope_projects_fname())
   if path == nil then
     return {}
@@ -36,7 +36,7 @@ local function add_project(project)
 end
 
 local function remove_project(project)
-  local projects = load_projects()
+  local projects = telescope_load_projects()
   -- drop a single entry max. otherwise if i get duplicates, i end up
   -- deleting all the duplicates, not just one
   local dropped_one_already = false
@@ -109,7 +109,7 @@ function _G.telescope_projects()
     end
 
     return finders.new_table {
-      results = load_projects(),
+      results = telescope_load_projects(),
       entry_maker = global_marks_entry_maker(),
       entry_maker = function(entry)
         entry.value = entry.path

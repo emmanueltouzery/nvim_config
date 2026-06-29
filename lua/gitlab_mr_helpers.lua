@@ -2,7 +2,10 @@ local function get_mr_number()
   return vim.trim(vim.system({"bash", "-c", "git ls-remote origin 'refs/merge-requests/*' | grep $(git rev-parse HEAD) | cut -d/ -f3"}):wait().stdout)
 end
 
-local function diff_new_to_old_line(diff, new_line)
+local function diff_new_to_old_line(old_file, diff, new_line)
+  if #old_file == 0 then
+    return 0
+  end
   for _, h in ipairs(diff) do
     local old_start, old_count, new_start, new_count = unpack(h)
     if new_start + new_count >= new_line then
@@ -35,7 +38,7 @@ local function gitlab_mr_open_at_line()
   local orig_file = vim.system({"git", "show", base_branch .. ':' .. file_path}):wait().stdout
   local cur_file = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
   local diff = vim.diff(orig_file, cur_file, { result_type = "indices", ignore_whitespace = true })
-  local old_lnum = diff_new_to_old_line(diff, vim.fn.line('.'))
+  local old_lnum = diff_new_to_old_line(orig_file, diff, vim.fn.line('.'))
 
   vim.system({"xdg-open", string.format("https://%s/%s/-/merge_requests/%d/diffs#%s_%d_%d", gitlab_repo, gitlab_path, mr_number, path_sha1, old_lnum, vim.fn.line("."))})
 end

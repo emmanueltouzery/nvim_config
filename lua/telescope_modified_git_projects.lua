@@ -64,15 +64,11 @@ _G.telescope_modified_git_projects = function(opts)
   end
 
   local get_modified_git_repos = function ()
-    local root_path = vim.fn.expand('~/projects/')
-    local dir_contents = vim.fn.readdir(root_path)
-    local dir_contents_path = vim.tbl_map(function(p)
-      return root_path .. p
-    end, dir_contents)
-    local subfolders = vim.tbl_filter(function(p)
+    local project_paths = vim.tbl_map(function(p) return p.path end, telescope_load_projects())
+    local git_paths = vim.tbl_filter(function(p)
       return vim.fn.isdirectory(p) == 1 and vim.fn.isdirectory(p .. "/.git") == 1
-    end, dir_contents_path)
-    return vim.tbl_filter(function(p) return p.status ~= nil end, vim.tbl_map(get_modified_status, subfolders))
+    end, project_paths)
+    return vim.tbl_filter(function(p) return p.status ~= nil end, vim.tbl_map(get_modified_status, git_paths))
   end
 
   modified_git_repos = get_modified_git_repos()

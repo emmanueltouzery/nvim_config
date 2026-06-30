@@ -462,7 +462,7 @@ vim.keymap.set("n", "<leader>pT", "<cmd>TSUpdate<cr>", { desc = "Tree-sitter upd
 
 -- OPEN
 require 'key-menu'.set('n', '<leader>o', {desc='Open'})
-vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file+line)"})
+vim.keymap.set("n", "<leader>oc", ":lua goto_fileline()<cr>", {desc="Open code (file:line)"})
 vim.keymap.set("n", "<leader>og", "<cmd>lua telescope_global_marks{}<CR>", {desc="Open global marks"})
 vim.keymap.set("n", "<leader>om", function() require("telescope.builtin").man_pages{sections={'ALL'}} end, {desc="Open man page"})
 vim.keymap.set("n", "<leader>oh", require("telescope.builtin").help_tags, {desc="Open vim help"})
@@ -964,7 +964,7 @@ vim.keymap.set("n", "<leader>gy", function()
     end
     vim.fn.setreg('+', string.format("`%s:%d` %s", git_path, lnum, url))
   end
-end, {desc="git yank file+line link"})
+end, {desc="git yank file:line link"})
 
 require 'key-menu'.set('n', '<leader>gh', {desc='git stasH'})
 vim.keymap.set("n", "<leader>gho", '<cmd>DiffviewFileHistory -g --range=stash<cr>', {desc="list git stashes"})

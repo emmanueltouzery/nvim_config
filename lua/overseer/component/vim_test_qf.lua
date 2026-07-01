@@ -52,6 +52,11 @@ return {
           end
         end
       end,
+
+      on_exit = function(self, task, code)
+        vim.cmd[[MarkifyClear]]
+        vim.cmd[[Markify]]
+      end,
     }
   end,
 }

@@ -24,8 +24,9 @@ return {
       end,
 
       on_output_lines = function(self, task, lines)
+        -- for now implemented with elixir only
         if vim.startswith(task.cmd, "mix ") then
-          -- for now tested with elixir only
+          local previous_is_stacktrace = false
           for _, line in ipairs(lines) do
             -- test error
             local filename, line_num = string.match(line, "([%w-_./]+):(%d+): %(test%)")
@@ -33,11 +34,21 @@ return {
               vim.fn.setqflist({{filename = filename, lnum = line_num, col = 1, type = 'E'}}, 'a')
             end
 
+            -- runtime error
+            if previous_is_stacktrace then
+              local filename, line_num = string.match(line, "%([^)]+%)[ \t]+([%w-_./]+):(%d+):")
+              if filename and line_num then
+                vim.fn.setqflist({{filename = filename, lnum = line_num, col = 1, type = 'E'}}, 'a')
+              end
+            end
+
             -- build error
             local filename, line_num = string.match(line, "└─ ([%w-_./]+):(%d+):")
             if filename and line_num then
               vim.fn.setqflist({{filename = filename, lnum = line_num, col = 1, type = 'E'}}, 'a')
             end
+
+            previous_is_stacktrace = string.match(line, "^[ \t]+stacktrace:$")
           end
         end
       end,

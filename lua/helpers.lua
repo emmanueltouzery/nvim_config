@@ -1401,7 +1401,7 @@ function _G.lualine_refresh_all(w, wins)
   if #wins == 1 then
     -- done
     vim.defer_fn(function()
-      vim.api.nvim_set_current_win(w)
+      pcall(vim.api.nvim_set_current_win, w)
     end, 10)
     vim.cmd[[windo redrawstatus!]]
   else

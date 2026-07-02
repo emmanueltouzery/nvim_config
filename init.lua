@@ -1604,7 +1604,17 @@ vim.cmd[[au TextYankPost * silent! lua vim.highlight.on_yank()]]
 -- or 10.9 or 11
 -- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h10.6"
 -- vim.opt.guifont = "JetBrainsM3n3 Nerd Font:h9.8"
-vim.opt.guifont = "JetBrainsMono Nerd Font,Noto Color Emoji:h9.8"
+vim.system({"bash", "-c", "swaymsg -t get_outputs | jq 'max_by(.scale).scale'"}, vim.schedule_wrap(function(out)
+  if vim.trim(out.stdout) == "1.25" then
+    vim.opt.guifont = "JetBrainsMono Nerd Font,Noto Color Emoji:h10"
+  else
+    vim.opt.guifont = "JetBrainsMono Nerd Font,Noto Color Emoji:h9.8"
+  end
+  -- need this hack or neovide is confused and has the wrong grid size
+  vim.defer_fn(function()
+    vim.g.neovide_scale_factor = 1
+  end, 200)
+end))
 -- the stl is related to https://vi.stackexchange.com/a/34849/38754
 -- workaround for carets in the statusline
 vim.opt.fillchars = vim.opt.fillchars + 'diff:╱,stl: '

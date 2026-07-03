@@ -1389,27 +1389,39 @@ function _G.glow_for_buffer(bufnr)
   end, 1000)
 end
 
+local function is_telescope_open()
+  local state = require('telescope.state')
+  local cached_pickers = state.get_existing_prompt_bufnrs()
+  -- If the table is not empty, at least one picker is open
+  return not vim.tbl_isempty(cached_pickers)
+end
+
 function _G.lualine_refresh_all(w, wins)
-  if w == nil then
-    w = vim.api.nvim_get_current_win()
-  end
-  if wins == nil then
-    wins = vim.api.nvim_tabpage_list_wins(0)
-  end
-  pcall(vim.api.nvim_set_current_win, wins[1])
-  require('lualine').refresh()
-  if #wins == 1 then
-    -- done
-    vim.defer_fn(function()
-      pcall(vim.api.nvim_set_current_win, w)
-    end, 10)
-    vim.cmd[[windo redrawstatus!]]
+  if is_telescope_open() then
+    -- don't want to steal the focus from the telescope picker, very annoying
+    vim.defer_fn(lualine_refresh_all, 200)
   else
-    -- do the next window
-    vim.defer_fn(function()
-      table.remove(wins, 1)
-      lualine_refresh_all(w, wins)
-    end, 10)
+    if w == nil then
+      w = vim.api.nvim_get_current_win()
+    end
+    if wins == nil then
+      wins = vim.api.nvim_tabpage_list_wins(0)
+    end
+    pcall(vim.api.nvim_set_current_win, wins[1])
+    require('lualine').refresh()
+    if #wins == 1 then
+      -- done
+      vim.defer_fn(function()
+        pcall(vim.api.nvim_set_current_win, w)
+      end, 10)
+      vim.cmd[[windo redrawstatus!]]
+    else
+      -- do the next window
+      vim.defer_fn(function()
+        table.remove(wins, 1)
+        lualine_refresh_all(w, wins)
+      end, 10)
+    end
   end
 end
 

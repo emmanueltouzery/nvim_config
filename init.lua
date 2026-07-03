@@ -1139,12 +1139,31 @@ require('packer').startup(function(use)
     })
   end}
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
-  use {'emmanueltouzery/overseer.nvim', commit='1c8841ff81e33d75bbddadbc325b9a32d58a249c', config=function()
+  use {'emmanueltouzery/overseer.nvim', commit='cf30a6d48fd8e007abfce4f39ad273d0e02d4489', config=function()
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = { "OverseerOutput"},
+      callback = function()
+        vim.keymap.set({'n', 'v'}, 'q', function()
+          vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+        end, {buffer = true})
+      end,
+    })
     require('overseer').setup{
       dap = false,
       task_list = {
         direction = 'right',
-        default_detail = 2,
+        render = function(task)
+          local render = require("overseer.render")
+          local ret = {
+            render.status_and_name(task),
+          }
+          local folder_name = "[" .. string.match(task.cwd, "[^/]+$") .. "]"
+          vim.list_extend(ret, {{{folder_name}}})
+          vim.list_extend(ret, {render.duration(task)})
+          vim.list_extend(ret, render.result_lines(task, { oneline = true }))
+          vim.list_extend(ret, render.output_lines(task, { num_lines = 4 }))
+          return render.remove_empty_lines(ret)
+        end,
       },
       task_editor = {
         bindings = {
@@ -1155,8 +1174,6 @@ require('packer').startup(function(use)
       },
       component_aliases = {
         default = {
-          { "display_duration", detail_level = 2 },
-          "on_output_summarize",
           "on_exit_set_status",
           -- {"on_complete_dispose", timeout = 900},
           "on_complete_dispose_disablable",

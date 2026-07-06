@@ -436,7 +436,7 @@ require('packer').startup(function(use)
               function()
               -- cc should commit from diffview
               vim.cmd('DiffviewClose')
-              vim.api.nvim_set_current_tabpage(1) -- in case i had a dadbod in the second tab, where i could have jumped after closing the diffview tab
+              vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1]) -- in case i had a dadbod in the second tab, where i could have jumped after closing the diffview tab
               open_git_commit_popup()
             end,
               {desc = "Invoke diffview"}

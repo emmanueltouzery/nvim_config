@@ -11,7 +11,7 @@ return {
         for _, task in ipairs(tasks) do
           if task.metadata and task.metadata.type == "test" then
             test_jobs = test_jobs + 1
-            if test_jobs > 3 then
+            if test_jobs > 1 then
               task:dispose(true)
             end
           end

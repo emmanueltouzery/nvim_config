@@ -69,8 +69,8 @@ vim.keymap.set('n', 'đQ', '<Cmd>:cp<CR>', {desc="Next quickfix"})
 -- like a popup, and in that case it blows up.
 vim.keymap.set('n', 'šh', function() pcall(MiniDiff.goto_hunk, "prev") end, {desc="Previous git hunk"})
 vim.keymap.set('n', 'đh', function() pcall(MiniDiff.goto_hunk, "next") end, {desc="Next git hunk"})
-vim.keymap.set('n', 'šd', '[c', {desc="Previous diff hunk"}) -- :h jumpto-diffs diffs+diffview.nvim
-vim.keymap.set('n', 'đd', ']c', {desc="Next diff hunk"})
+vim.keymap.set('n', 'šf', '[c', {desc="Previous diff hunk"}) -- :h jumpto-diffs diffs+diffview.nvim
+vim.keymap.set('n', 'đf', ']c', {desc="Next diff hunk"})
 vim.keymap.set('n', 'šg', '<Cmd>lua vim.diagnostic.goto_prev()<CR>', {desc="Previous diagnostic"})
 vim.keymap.set('n', 'đg', '<Cmd>lua vim.diagnostic.goto_next()<CR>', {desc="Next diagnostic"})
 vim.keymap.set('n', 'šs', '[S', {desc="Previous misspelled word"})
@@ -79,8 +79,8 @@ vim.keymap.set('n', 'šq', '<cmd>lua previous_quickfix()<cr>', {desc="Previous q
 vim.keymap.set('n', 'đq', '<cmd>lua next_quickfix()<cr>', {desc="Next quickfix location"})
 vim.keymap.set('n', 'š%', '<plug>(matchup-[%)', {desc="Previous % marker"})
 vim.keymap.set('n', 'đ%', '<plug>(matchup-]%)', {desc="Next % marker"})
-vim.keymap.set('n', 'šf', '<cmd>lua previous_closed_fold()<cr>', {desc="Previous closed fold"})
-vim.keymap.set('n', 'đf', '<cmd>lua next_closed_fold()<cr>', {desc="Next closed fold"})
+vim.keymap.set('n', 'šz', '<cmd>lua previous_closed_fold()<cr>', {desc="Previous closed fold"})
+vim.keymap.set('n', 'đz', '<cmd>lua next_closed_fold()<cr>', {desc="Next closed fold"})
 vim.keymap.set('n', 'ša', function()
   vim.cmd('AerialPrev')
   -- in the case of typescriptreact, we want to skip "Struct" items, they're JSX nodes

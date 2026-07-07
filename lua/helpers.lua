@@ -840,6 +840,16 @@ function _G.win_bring_qf_here()
 end
 
 function _G.jump_to_qf()
+  -- first try overseeroutput, for tests
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.bo[buf].filetype == "OverseerOutput" then
+      vim.cmd(vim.api.nvim_win_get_number(w) .. ' wincmd w')
+      return
+    end
+  end
+
+  -- then actual QF
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
     if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then

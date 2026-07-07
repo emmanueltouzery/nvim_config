@@ -135,6 +135,44 @@ end, {desc="Overwrite buffer contents with the clipboard"})
 require 'key-menu'.set('n', '<Space>')
 require 'key-menu'.set('n', ',')
 
+require 'key-menu'.set('n', '<leader>z', {desc='Folds'})
+function _G.quick_set_fm()
+  local filetypes = {"syntax", "indent", "manual", "disable"}
+  vim.ui.select(filetypes, {prompt="Pick fold method to switch to"}, function(choice)
+    if choice ~= nil then
+      set_fm(choice)
+    end 
+  end)
+end
+
+function _G.set_fm(choice)
+  if choice == "disable" then
+    vim.cmd("set nofoldenable")
+  else
+    if choice == "syntax" then
+      vim.cmd("syntax on")
+    end
+    vim.cmd("setlocal foldmethod=" .. choice .. " | setlocal foldenable | set foldlevel=2")
+  end
+end
+vim.keymap.set("x", "<leader>zy", function() yank_folds() end, {desc="Yank without folds"})
+vim.keymap.set("n", "<leader>zM", ":lua quick_set_fm()<cr>", {desc="Quickly change folding method"})
+vim.keymap.set("n", "<leader>zmi", ":lua set_fm('indent')<cr>", {desc="Set indent folding method"})
+vim.keymap.set("n", "<leader>zms", ":lua set_fm('syntax')<cr>", {desc="Set syntax folding method"})
+vim.keymap.set("n", "<leader>zme", function()
+  vim.ui.input({prompt="vim verymagic regexp of the lines not to fold", kind="center_win", default=vim.b.fme_reg}, function(reg)
+    if reg ~= nil then
+      vim.b.fme_reg = reg
+      vim.cmd[[set foldmethod=expr]]
+      local regexp = reg:gsub("%|", [[\|]])
+      local cmd = [[set foldexpr=(getline(v:lnum)=~'\\v]] .. regexp .. [['?0:1)]]
+      vim.cmd(cmd)
+      vim.cmd[[silent! norm! zM]]
+    end
+  end)
+end, {desc="Set expr folding method"})
+vim.keymap.set("n", "<leader>zmd", ":lua set_fm('disable')<cr>", {desc="Disable folding"})
+
 -- FILES
 require 'key-menu'.set('n', '<leader>f', {desc='File'})
 vim.keymap.set('n', '<leader>fn', ":enew<cr>", {desc = "New file"})
@@ -169,43 +207,6 @@ function _G.quick_set_ft()
   end)
 end
 vim.keymap.set("n", "<leader>ft", ":lua quick_set_ft()<cr>", {desc="Quickly change to common file types"})
-
-function _G.quick_set_fm()
-  local filetypes = {"syntax", "indent", "manual", "disable"}
-  vim.ui.select(filetypes, {prompt="Pick fold method to switch to"}, function(choice)
-    if choice ~= nil then
-      set_fm(choice)
-    end 
-  end)
-end
-
-function _G.set_fm(choice)
-  if choice == "disable" then
-    vim.cmd("set nofoldenable")
-  else
-    if choice == "syntax" then
-      vim.cmd("syntax on")
-    end
-    vim.cmd("setlocal foldmethod=" .. choice .. " | setlocal foldenable | set foldlevel=2")
-  end
-end
-vim.keymap.set("x", "<leader>fy", function() yank_folds() end, {desc="Yank without folds"})
-vim.keymap.set("n", "<leader>fM", ":lua quick_set_fm()<cr>", {desc="Quickly change folding method"})
-vim.keymap.set("n", "<leader>fmi", ":lua set_fm('indent')<cr>", {desc="Set indent folding method"})
-vim.keymap.set("n", "<leader>fms", ":lua set_fm('syntax')<cr>", {desc="Set syntax folding method"})
-vim.keymap.set("n", "<leader>fme", function()
-  vim.ui.input({prompt="vim verymagic regexp of the lines not to fold", kind="center_win", default=vim.b.fme_reg}, function(reg)
-    if reg ~= nil then
-      vim.b.fme_reg = reg
-      vim.cmd[[set foldmethod=expr]]
-      local regexp = reg:gsub("%|", [[\|]])
-      local cmd = [[set foldexpr=(getline(v:lnum)=~'\\v]] .. regexp .. [['?0:1)]]
-      vim.cmd(cmd)
-      vim.cmd[[silent! norm! zM]]
-    end
-  end)
-end, {desc="Set expr folding method"})
-vim.keymap.set("n", "<leader>fmd", ":lua set_fm('disable')<cr>", {desc="Disable folding"})
 
 -- SEARCH
 require 'key-menu'.set('n', '<leader>s', {desc='Search'})

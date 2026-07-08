@@ -48,7 +48,7 @@ end
 
 local function force_length(msg, len)
   if vim.fn.strcharlen(msg) <= max then
-    while vim.strcharlen(msg) < len do
+    while vim.fn.strcharlen(msg) < len do
       msg = msg .. " "
     end
     return msg

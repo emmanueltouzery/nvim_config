@@ -1139,7 +1139,7 @@ require('packer').startup(function(use)
     })
   end}
   use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
-  use {'emmanueltouzery/overseer.nvim', commit='cf30a6d48fd8e007abfce4f39ad273d0e02d4489', config=function()
+  use {'emmanueltouzery/overseer.nvim', commit='cb099fc886e43d9a827753dc2ab9bb6063df4244', config=function()
     vim.api.nvim_create_autocmd('FileType', {
       pattern = { "OverseerOutput"},
       callback = function()

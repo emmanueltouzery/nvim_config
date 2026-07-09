@@ -508,6 +508,15 @@ vim.keymap.set("n", "<leader>ta", function()
 end, {desc = "Toggle adb device monitoring"})
 
 vim.keymap.set("n", "<leader>tq", function()
+  -- first try overseeroutput, for tests
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.bo[buf].filetype == "OverseerOutput" then
+      vim.api.nvim_win_close(w, false)
+      return
+    end
+  end
+
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
     if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then

@@ -900,7 +900,7 @@ function telescope_branches_mappings(prompt_bufnr, map)
   end, {desc="fast-forward to origin"})
   map('i', '<M-a>', function(nr) -- search in added compared to branch
     local branch = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
-    require'agitator'.search_in_added({git_rev = branch})
+    require'agitator'.search_in_added({git_rev = branch .. "..."})
   end, {desc="search in added compared to branch"})
   return true
 end

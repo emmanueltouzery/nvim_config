@@ -1015,7 +1015,7 @@ end
 -- end
 
 function _G.reload_all()
-  vim.cmd("checktime")
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do vim.api.nvim_buf_call(b, function() vim.cmd('checktime') end) end
   lualine_refresh_all()
   -- vim.cmd("Gitsigns refresh")
 end

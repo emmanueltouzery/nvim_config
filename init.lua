@@ -392,6 +392,8 @@ require('packer').startup(function(use)
   config = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
     vim.keymap.set("n", "¸¸", function() vim.fn.feedkeys('--') end)
+
+    vim.g.choosewin_blink_on_land = 0 -- causes issues where the blinking is not stopped and the word under cursor gets highlighted forever
   end} 
   use {'emmanueltouzery/diffview.nvim', commit='200467703c35a584f572b2c840f32ec24995d054',
     config = function()

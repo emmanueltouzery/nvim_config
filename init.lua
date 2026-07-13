@@ -425,6 +425,7 @@ require('packer').startup(function(use)
               require'diffview.config'.actions.next_conflict()
               vim.cmd("norm! zz") -- center on screen
             end,
+            ["<leader>b"] = false, -- don't block my own leader.b (buffer) shortcuts
             {"n", "gf", diffview_gf,
               {desc = "Goto File"},
             },

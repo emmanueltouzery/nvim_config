@@ -497,7 +497,7 @@ vim.keymap.set("n", "<leader>tc", function()
     vim.o.conceallevel = 2
   end
 end, {desc = "Toggle conceal"})
-vim.keymap.set("n", "<leader>tC", ':lua vim.opt.colorcolumn=""', {desc = "Toggle color column"})
+vim.keymap.set("n", "<leader>tC", ':set colorcolumn=', {desc = "Toggle color column"})
 vim.keymap.set("n", "<leader>ta", function()
   if vim.g.stop_adb_monitor == nil or vim.g.stop_adb_monitor == true then
     notif({"Starting the ADB monitor"})

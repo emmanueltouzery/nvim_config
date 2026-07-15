@@ -50,6 +50,13 @@ return {
 
             previous_is_stacktrace = string.match(line, "^[ \t]+stacktrace:$")
           end
+        elseif string.match(task.cmd, "jest") then
+          for _, line in ipairs(lines) do
+            local filename, line_num = string.match(line, "^%s+at [%w-_./]+ %(([^:]+):(%d+):%d+%)")
+            if filename and line_num then
+              vim.fn.setqflist({{filename = filename, lnum = line_num, col = 1, type = 'E'}}, 'a')
+            end
+          end
         end
       end,
 

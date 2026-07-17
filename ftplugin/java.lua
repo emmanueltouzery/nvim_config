@@ -103,6 +103,13 @@ local function java_insert_inspect_param(v)
 end
 vim.keymap.set('n', '<localleader>ip', java_insert_inspect_param, { buffer = true, desc = "log variable value"})
 
+vim.keymap.set('v', '<localleader>ip', function()
+  local txt = get_visual_selection()
+  -- Exit visual mode back to normal mode
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "x", true)
+  java_insert_inspect_param(txt)
+end, { buffer = true, desc = "log selection value"})
+
 local function java_insert_inspect_label()
   winid = vim.api.nvim_get_current_win()
   local cur_line = vim.fn.line('.')

@@ -93,7 +93,7 @@ local function java_insert_inspect_param(v)
         vim.cmd("norm! O")
         vim.cmd[[set nopaste]]
       end
-      vim.cmd('norm! aLog.i(TAG, "' .. param_name .. ' :" + ' .. param_name .. ');')
+      vim.cmd('norm! aLog.i(TAG, "' .. param_name .. ': " + ' .. param_name .. ');')
       -- position the cursor in the quotes to enable quick rename
       vim.cmd('norm! 0')
       vim.cmd('norm! 25l')

@@ -1,4 +1,4 @@
--- check for String.format invocations.
+-- START check for String.format invocations.
 
 local namespace = vim.api.nvim_create_namespace("string_format_checker")
 
@@ -6,14 +6,11 @@ local function check_string_format(bufnr)
   -- Clear previous format errors for this buffer
   vim.diagnostic.set(namespace, bufnr, {})
 
-  -- 1. Get the Java Tree-sitter parser and tree
   local parser = vim.treesitter.get_parser(bufnr, "java")
   if not parser then return end
   local tree = parser:parse()[1]
   local root = tree:root()
 
-  -- 2. Define your Tree-sitter query to find String.format calls
-  -- (Adjust this query to target the exact nodes you want)
   local query_string = [[
     (method_invocation
       object: (identifier) @obj (#eq? @obj "String")
@@ -24,7 +21,6 @@ local function check_string_format(bufnr)
 
   local diagnostics = {}
 
-  -- 3. Iterate through matches
   for id, node, metadata in query:iter_captures(root, bufnr, 0, -1) do
     if query.captures[id] == "args" then
       local total_params = node:named_child_count()
@@ -36,7 +32,6 @@ local function check_string_format(bufnr)
         if first_param_text:sub(1, 1) == '"' and first_param_text:sub(-1, -1) == '"' then
 
           -- 2. Remove all escaped percentages "%%" 
-          -- (We use '%%' in Lua patterns because % is the escape character)
           local sanitized_string = first_param_text:gsub("%%%%", "")
 
           -- 3. Count the remaining single '%' characters
@@ -62,14 +57,48 @@ local function check_string_format(bufnr)
     end
   end
 
-  -- 4. Set the diagnostics to make them visible in the UI
+  -- Set the diagnostics to make them visible in the UI
   vim.diagnostic.set(namespace, bufnr, diagnostics)
 end
 
--- 5. Plug it into the save event
+-- Plug it into the save event
 vim.api.nvim_create_autocmd("BufWritePost", {
   pattern = "*.java",
   callback = function(args)
     check_string_format(args.buf)
   end,
 })
+
+-- END check for String.format invocations.
+
+-- see elixir_insert_inspect_param
+local function java_insert_inspect_param(v)
+  winid = vim.api.nvim_get_current_win()
+  local cur_line = vim.fn.line('.')
+  local cur_col = vim.fn.col('.')
+  local param_name = v or vim.fn.expand("<cword>")
+  local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
+  local is_function_name = string.match(cur_line_str, "^%s*def%s+" .. param_name .. "%(")
+  require('leap').leap {
+    target_windows = { winid },
+    targets = inspect_point_candidate_param(winid),
+    action = function(target)
+      vim.api.nvim_win_set_cursor(0, target.pos)
+      if target.pos[2] == 1 then
+        -- setting 'set paste' to fix an issue where the first line of the function
+        -- is a comment, and without the set paste, here vim would insert a new
+        -- COMMENTED line.
+        -- https://superuser.com/a/963068/214371
+        vim.cmd[[set paste]]
+        vim.cmd("norm! O")
+        vim.cmd[[set nopaste]]
+      end
+      vim.cmd('norm! aLog.i(TAG, "' .. param_name .. ' :" + ' .. param_name .. ');')
+      -- position the cursor in the quotes to enable quick rename
+      vim.cmd('norm! 0')
+      vim.cmd('norm! 25l')
+      vim.cmd('startinsert')
+    end
+  }
+end
+vim.keymap.set('n', '<localleader>ip', java_insert_inspect_param, { buffer = true, desc = "log variable value"})

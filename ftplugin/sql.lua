@@ -86,10 +86,34 @@ local function insert_statement_separators()
 end
 vim.keymap.set("n", '<localleader>s', insert_statement_separators, {buffer = true, desc="Insert sql statement Separators (;)"})
 
+-- the idea is to add command separators ";" automagically.
+-- don't do anything if there is already a ";" separator after my
+-- current line and without blank lines to it, i'm editing a single command.
+-- else rebalance separators.
 vim.keymap.set('n', 'o', function()
-  vim.cmd('normal! o')
-  insert_statement_separators()
-  vim.cmd('normal! o')
+  local current_line = vim.api.nvim_win_get_cursor(0)[1]
+  local has_semicolon_under = false
+  local lines_below = vim.api.nvim_buf_get_lines(0, current_line, -1, false)
+  for _, line in ipairs(lines_below) do
+    if #vim.trim(line) == 0 then
+      -- stop at the first blank line
+      break
+    end
+    if line:find(';') then
+      has_semicolon_under = true
+      break
+    end
+  end
+  if has_semicolon_under then
+    -- don't do anything special
+    vim.cmd('normal! o')
+  else
+    -- rebalance separators
+    vim.cmd('normal! o')
+    insert_statement_separators()
+    vim.cmd('normal! o')
+  end
+  vim.cmd('startinsert')
 end, { buffer = true, desc = "Open line below and insert separators" })
 
 require 'key-menu'.set('n', '<localleader>w', {desc='Wrap field in function', buffer = true})

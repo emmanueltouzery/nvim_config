@@ -1168,6 +1168,16 @@ function _G.telescope_commits(opts)
         -- previewers.git_commit_message.new(opts),
       },
       sorter = conf.file_sorter(opts),
+      tiebreak = function(entry1, entry2, prompt)
+        local start_pos1, _ = entry1.ordinal:find(prompt)
+        if start_pos1 then
+          local start_pos2, _ = entry2.ordinal:find(prompt)
+          if start_pos2 then
+            return start_pos1 < start_pos2
+          end
+        end
+        return false
+      end,
       attach_mappings = function(_, map)
         actions.select_default:replace(actions.git_checkout)
         map({ "i", "n" }, "<c-r>m", actions.git_reset_mixed)

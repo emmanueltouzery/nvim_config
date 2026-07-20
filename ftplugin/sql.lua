@@ -86,6 +86,12 @@ local function insert_statement_separators()
 end
 vim.keymap.set("n", '<localleader>s', insert_statement_separators, {buffer = true, desc="Insert sql statement Separators (;)"})
 
+vim.keymap.set('n', 'o', function()
+  vim.cmd('normal! o')
+  insert_statement_separators()
+  vim.cmd('normal! o')
+end, { desc = "Open line below and insert separators" })
+
 require 'key-menu'.set('n', '<localleader>w', {desc='Wrap field in function', buffer = true})
 
 -- ge Backward to end of previous word

@@ -90,7 +90,7 @@ vim.keymap.set('n', 'o', function()
   vim.cmd('normal! o')
   insert_statement_separators()
   vim.cmd('normal! o')
-end, { desc = "Open line below and insert separators" })
+end, { buffer = true, desc = "Open line below and insert separators" })
 
 require 'key-menu'.set('n', '<localleader>w', {desc='Wrap field in function', buffer = true})
 

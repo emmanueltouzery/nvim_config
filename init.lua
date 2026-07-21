@@ -122,6 +122,19 @@ require('packer').startup(function(use)
 
     require('telescope').setup {
       defaults = {
+        -- make sure matches with the same score get sorted as they would be by default
+        -- https://github.com/nvim-telescope/telescope.nvim/pull/1401#issuecomment-957234973
+        -- https://github.com/nvim-telescope/telescope.nvim/issues/1080#issuecomment-1592392087
+        tiebreak = function(entry1, entry2, prompt)
+          local start_pos1, _ = entry1.ordinal:find(prompt)
+          if start_pos1 then
+            local start_pos2, _ = entry2.ordinal:find(prompt)
+            if start_pos2 then
+              return start_pos1 < start_pos2
+            end
+          end
+          return false
+        end,
         -- path_display = {'truncate'},
         path_display = function(opts, path)
           local get_status = require("telescope.state").get_status

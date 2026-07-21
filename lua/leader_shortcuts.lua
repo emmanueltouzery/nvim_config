@@ -226,12 +226,6 @@ end, {desc="Search text raw"})
 function _G.buffer_fuzzy_find(word_under_cursor)
   local w = vim.fn.expand('<cword>')
   local opts = {}
-  -- https://github.com/nvim-telescope/telescope.nvim/issues/1080
-  -- keep lines ordered for in-buffer search as much as possible,
-  -- ignore the match quality algorithm
-  opts.tiebreak = function(current_entry, existing_entry, prompt)
-    return false
-  end
   local previewers = require("telescope.previewers")
   local source_buf = vim.api.nvim_win_get_buf(0)
   local ns_previewer = vim.api.nvim_create_namespace "telescope.previewers"
@@ -242,20 +236,6 @@ function _G.buffer_fuzzy_find(word_under_cursor)
         apply_buffer_preview(self, ns_previewer, source_buf, entry.lnum)
       end,
     }),
-    -- make sure matches with the same score get sorted by line number
-    -- https://github.com/nvim-telescope/telescope.nvim/pull/1401#issuecomment-957234973
-    -- https://github.com/nvim-telescope/telescope.nvim/issues/1080#issuecomment-1592392087
-    tiebreak = function(entry1, entry2, prompt)
-      local start_pos1, _ = entry1.ordinal:find(prompt)
-      if start_pos1 then
-        local start_pos2, _ = entry2.ordinal:find(prompt)
-        if start_pos2 then
-          return start_pos1 < start_pos2
-        end
-      end
-      return false
-    end,
-    additional_args = { "--ignore-case", "--pcre2" },
   })
   if word_under_cursor then
     vim.fn.feedkeys(w)

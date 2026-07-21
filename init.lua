@@ -1173,6 +1173,14 @@ require('packer').startup(function(use)
           local ret = {
             render.status_and_name(task),
           }
+          local env_parts = {}
+          for k, v in pairs(task.env) do
+            table.insert(env_parts, string.format('%s=%s', k, v))
+          end
+          local env_vars = table.concat(env_parts, ", ")
+          if #env_vars > 0 then
+            vim.list_extend(ret, {{{env_vars}}})
+          end
           local folder_name = "[" .. string.match(task.cwd, "[^/]+$") .. "]"
           vim.list_extend(ret, {{{folder_name}}})
           vim.list_extend(ret, {render.duration(task)})

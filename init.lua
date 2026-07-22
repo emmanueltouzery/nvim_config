@@ -1174,8 +1174,10 @@ require('packer').startup(function(use)
             render.status_and_name(task),
           }
           local env_parts = {}
-          for k, v in pairs(task.env) do
-            table.insert(env_parts, string.format('%s=%s', k, v))
+          if task.env ~= nil then
+            for k, v in pairs(task.env) do
+              table.insert(env_parts, string.format('%s=%s', k, v))
+            end
           end
           local env_vars = table.concat(env_parts, ", ")
           if #env_vars > 0 then

@@ -1285,6 +1285,10 @@ function _G.open_in_cursor_popup(buf, pref_height)
       win_height = height
     end
 
+    vim.keymap.set({'n', 'v'}, 'q', function()
+      vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+    end, {buffer = buf})
+
     local opts = {
         style = "minimal",
         border = "rounded",
@@ -1307,6 +1311,10 @@ local function open_text_in_cursor_popup(text, pref_height)
   open_in_cursor_popup(buf, pref_height)
 end
 
+local function under_cursor_can_in_place()
+  return vim.bo[vim.api.nvim_win_get_buf(0)].buftype ~= "terminal" and not vim.bo[vim.api.nvim_win_get_buf(0)].readonly and vim.bo[vim.api.nvim_win_get_buf(0)].modifiable
+end
+
 function _G.under_cursor_unix_timestamp_to_date(format_local)
   local under_cursor = vim.fn.expand('<cword>')
   if #under_cursor == 13 then
@@ -1319,7 +1327,7 @@ function _G.under_cursor_unix_timestamp_to_date(format_local)
     params = {'date', '-d', '@' .. under_cursor, '+"%Y-%m-%d %H:%M:%S.%3N"'}
   end
   local out = vim.system(params, {text=true}):wait().stdout
-  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
+  if not under_cursor_can_in_place() then
     open_text_in_cursor_popup(out, 2)
   else
     vim.cmd("norm! ciw" .. out)
@@ -1335,7 +1343,7 @@ function _G.under_cursor_minutes_to_hhmm()
   local n = tonumber(under_cursor)
   local remainder = n % 60
   local res = ((n - remainder) / 60) .. ":" .. string.format("%02d", remainder)
-  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
+  if not under_cursor_can_in_place() then
     open_text_in_cursor_popup(res, 2)
   else
     vim.cmd("norm! ciw" .. res)
@@ -1353,7 +1361,7 @@ function _G.under_cursor_seconds_to_hhmm()
   local n = tonumber(under_cursor) / 60
   local remainder = n % 60
   local res = ((n - remainder) / 60) .. ":" .. string.format("%02d", remainder)
-  if vim.bo[vim.api.nvim_win_get_buf(0)].readonly or not vim.bo[vim.api.nvim_win_get_buf(0)].modifiable then
+  if not under_cursor_can_in_place() then
     open_text_in_cursor_popup(res, 2)
   else
     vim.cmd("norm! ciw" .. res)

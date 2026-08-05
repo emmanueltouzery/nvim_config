@@ -94,6 +94,26 @@ vim.keymap.set('n', 'o', function()
   local current_line = vim.api.nvim_win_get_cursor(0)[1]
   local has_semicolon_under = false
   local lines_below = vim.api.nvim_buf_get_lines(0, current_line, -1, false)
+
+  if #lines_below == 0 then
+    -- last line
+    local cur_line_contents = vim.api.nvim_buf_get_lines(0, current_line-1, current_line, false)[1]
+    if string.match(cur_line_contents, ";") then
+      -- end of the last statement.
+      -- add a new statement after this one (after the ; on the current line)
+      vim.api.nvim_buf_set_lines(0, current_line, current_line, false, {";"})
+      vim.cmd('normal! 2o')
+      vim.cmd('startinsert')
+    else
+      -- non-concluded last statement.
+      -- end this statement and add a new line to it (before the ; we add)
+      vim.api.nvim_buf_set_lines(0, current_line, current_line, false, {";"})
+      vim.cmd('normal! o')
+      vim.cmd('startinsert')
+    end
+    return
+  end
+
   for _, line in ipairs(lines_below) do
     if #vim.trim(line) == 0 then
       -- stop at the first blank line

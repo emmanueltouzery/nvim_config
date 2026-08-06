@@ -29,11 +29,11 @@ end
 vim.keymap.set('n', '<localleader>iv', elixir_insert_inspect_value, {desc="elixir add inspect value", buffer = true})
 
 -- see  typescript_insert_inspect_param
-local function elixir_insert_inspect_param()
+local function elixir_insert_inspect_param(v)
   winid = vim.api.nvim_get_current_win()
   local cur_line = vim.fn.line('.')
   local cur_col = vim.fn.col('.')
-  local param_name = vim.fn.expand("<cword>")
+  local param_name = v or vim.fn.expand("<cword>")
   local cur_line_str = vim.api.nvim_buf_get_lines(0, cur_line-1, cur_line, false)[1]
   local is_function_name = string.match(cur_line_str, "^%s*def%s+" .. param_name .. "%(")
   require('leap').leap {
@@ -62,6 +62,13 @@ local function elixir_insert_inspect_param()
   }
 end
 vim.keymap.set('n', '<localleader>ip', elixir_insert_inspect_param, {desc="elixir add inspect parameter", buffer = true})
+
+vim.keymap.set('v', '<localleader>ip', function()
+  local txt = get_visual_selection()
+  -- Exit visual mode back to normal mode
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "x", true)
+  elixir_insert_inspect_param(txt)
+end, { buffer = true, desc = "elixir add inspect parameter"})
 
 local function elixir_insert_inspect_label()
   winid = vim.api.nvim_get_current_win()

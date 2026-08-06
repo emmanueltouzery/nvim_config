@@ -1162,6 +1162,8 @@ require('packer').startup(function(use)
         vim.keymap.set({'n', 'v'}, 'q', function()
           vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
         end, {buffer = true})
+
+        vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], {noremap = true})
       end,
     })
     require('overseer').setup{

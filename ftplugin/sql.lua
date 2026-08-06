@@ -151,3 +151,73 @@ vim.keymap.set("n", '<localleader>wa', [[:normal gewysaw(ysaw(biarray_to_json<es
 vim.keymap.set("n", '<localleader>wA', [[:normal gewysaw(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%i::jsonb<esc>]], {buffer = true, desc="Pretty display for json array"})
 
 vim.keymap.set("n", '<localleader>wc', [[:normal gewysaw(bicount<cr>]], {buffer = true, desc="Wrap in count"})
+
+local function run_sql(q)
+  local db = vim.b.db or vim.g.db
+  if not db and vim.b.dbui_db_key_name then
+    db = vim.fn['db_ui#get_conn_info'](vim.b.dbui_db_key_name).url
+  end
+  if type(db) ~= "string" or db == "" then return print("No DB connection found") end
+
+  local url = vim.fn['db#resolve'](db)
+  local res = vim.fn.system({ 'psql', url, '-tAc', q })
+
+  if vim.v.shell_error == 0 then
+    return res
+  else
+    print("Failed: " .. vim.trim(res))
+  end
+end
+
+local function insert_cols(tbl, alias)
+  local q = ("SELECT string_agg('%s' || quote_ident(column_name) || ' as ' || quote_ident('%s' || column_name), ',|' ORDER BY ordinal_position) FROM information_schema.columns WHERE table_name = '%s';")
+     :format(alias and alias .. "." or '', alias and alias .. '_' or '', tbl)
+  local cols = run_sql(q)
+
+  if cols then
+    local lines = vim.split(vim.trim(cols), "|")
+    table.insert(lines, "") -- add trailing newline
+    vim.api.nvim_put(lines, 'c', true, true)
+  end
+end
+
+local function get_sql_tables(bufnr)
+  bufnr = bufnr or 0
+  local parser = vim.treesitter.get_parser(bufnr, "sql")
+  if not parser then return {} end
+
+  local query = vim.treesitter.query.parse("sql", [[
+    (relation
+      (object_reference
+        name: (identifier) @table)
+      alias: (identifier)? @alias)
+  ]])
+
+  local tree = parser:parse()[1]
+
+  local results = {}
+  for _, match in query:iter_matches(tree:root(), bufnr) do
+    local entry = {}
+    for id, nodes in pairs(match) do
+      local name = query.captures[id]
+      local node = type(nodes) == "table" and nodes[1] or nodes
+      entry[name] = vim.treesitter.get_node_text(node, bufnr)
+    end
+    if entry.table then
+      table.insert(results, entry)
+    end
+  end
+
+  return results
+end
+
+local function insert_table_cols()
+  vim.ui.select(vim.tbl_map(function(e) return e.alias and string.format("%s %s", e.table, e.alias) or e.table end, get_sql_tables(0)), {prompt="Insert column names: pick table"}, function(choice)
+    if choice ~= nil then
+      local tbl, alias = unpack(vim.split(choice, " "))
+      insert_cols(tbl, alias)
+    end
+  end)
+end
+
+vim.keymap.set("n", '<localleader>c', insert_table_cols, {buffer = true, desc="Insert table columns in query"})

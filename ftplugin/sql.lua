@@ -175,6 +175,12 @@ local function insert_cols(tbl, alias)
   local cols = run_sql(q)
 
   if cols then
+    -- if "*" from select * is under the cursor, delete it before inserting
+    -- the list of columns
+    if vim.fn.expand('<cWORD>') == '*' then
+      vim.cmd('normal! x')
+    end
+
     local lines = vim.split(vim.trim(cols), "|")
     table.insert(lines, "") -- add trailing newline
     vim.api.nvim_put(lines, 'c', true, true)

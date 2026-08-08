@@ -10,3 +10,12 @@ Quickfix history {{{1
 Go to older QF list      :col[der]     N
 Go to newer QF list      :cnew[er]     N
 Show list of QF lists    :chi[story]   N
+Debugging {{{1
+# Specific to my config
+Leader subsection        <leader>u     N
+Variable info/hover      F7           VN
+Continue                 F5            N
+Step over                F10           N
+Step into                F11           N
+Step out                 S-F11         N
+Step back                F12           N

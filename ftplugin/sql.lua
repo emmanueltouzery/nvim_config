@@ -175,10 +175,14 @@ local function insert_cols(tbl, alias)
   local cols = run_sql(q)
 
   if cols then
-    -- if "*" from select * is under the cursor, delete it before inserting
-    -- the list of columns
     if vim.fn.expand('<cWORD>') == '*' then
+      -- if "*" from select * is under the cursor, delete it before inserting
+      -- the list of columns
       vim.cmd('normal! x')
+    else
+      -- if it wasn't * under the cursor, then assume we're adding to an
+      -- existing list of columns, append "," to the previous line
+      vim.cmd('normal! kA,')
     end
 
     local lines = vim.split(vim.trim(cols), "|")

@@ -173,7 +173,7 @@ function _G.dadbod_setup_cmp()
     -- i think it's needed for non-ascii https://github.com/hrsh7th/cmp-buffer/issues/11
     keyword_pattern = [[\k\+]],
   }
-}, } })
+}, { name = 'emoji' } } })
 end
 
 vim.cmd[[autocmd FileType sql,mysql,plsql lua dadbod_setup_cmp()]]

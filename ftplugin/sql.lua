@@ -144,13 +144,13 @@ require 'key-menu'.set('n', '<localleader>w', {desc='Wrap field in function', bu
 -- You Surround A Word with (
 --b backward
 -- insert
-vim.keymap.set("n", '<localleader>wj', [[:normal gewysaw(bijsonb_pretty<cr>]], {buffer = true, desc="Wrap in jsonb_pretty"})
+vim.keymap.set("n", '<localleader>wj', [[:normal gewysiW(bijsonb_pretty<cr>]], {buffer = true, desc="Wrap in jsonb_pretty"})
 
 -- start similar to -j. wrap in two levels of brackets, use % to switch to the other bracket, esc to exit insert mode
-vim.keymap.set("n", '<localleader>wa', [[:normal gewysaw(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%hi::jsonb<esc>]], {buffer = true, desc="Pretty display for array"})
-vim.keymap.set("n", '<localleader>wA', [[:normal gewysaw(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%i::jsonb<esc>]], {buffer = true, desc="Pretty display for json array"})
+vim.keymap.set("n", '<localleader>wa', [[:normal gewysiW(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%hi::jsonb<esc>]], {buffer = true, desc="Pretty display for array"})
+vim.keymap.set("n", '<localleader>wA', [[:normal gewysiW(ysaw(biarray_to_json<esc>bbijsonb_pretty<esc>%i::jsonb<esc>]], {buffer = true, desc="Pretty display for json array"})
 
-vim.keymap.set("n", '<localleader>wc', [[:normal gewysaw(bicount<cr>]], {buffer = true, desc="Wrap in count"})
+vim.keymap.set("n", '<localleader>wc', [[:normal gewysiW(bicount<cr>]], {buffer = true, desc="Wrap in count"})
 
 local function run_sql(q)
   local db = vim.b.db or vim.g.db

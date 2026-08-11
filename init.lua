@@ -1496,7 +1496,7 @@ require('packer').startup(function(use)
     --   end,
     -- })
   end}
-  use {"emmanueltouzery/vim-dadbod", commit="42319fd7dbe45aa4aba44c6d00e55019f89ad6f6"} -- no OOM on large queries, adbsqlite adapter
+  use {"emmanueltouzery/vim-dadbod", commit="78bdd6d4a8cfd8f7810c2fbd19a0b3a6d837e549"} -- no OOM on large queries, adbsqlite adapter, minor changes
   -- fork due to a jq issue i don't understand
   use {"emmanueltouzery/vim-dadbod-ui", commit="bd4d6f38b02e1c847b3b9522815e2d854df9fafd", config=function()
     vim.g.db_ui_use_nerd_fonts = 1

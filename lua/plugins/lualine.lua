@@ -1,4 +1,3 @@
-
 local function winnr()
   local nr = vim.fn.winnr()
   if nr == 1 then return '󰎦'
@@ -273,7 +272,7 @@ local function lsp_pending()
 end
 
 local function job_info()
-  return vim.g.job_info or ""
+  return progress_status()
 end
 
 function setup_lualine()
@@ -413,4 +412,3 @@ function setup_lualine()
     }
   end
 end
--- vim: ts=2 sts=2 sw=2 et

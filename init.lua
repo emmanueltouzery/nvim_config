@@ -1658,7 +1658,7 @@ vim.system({"bash", "-c", "swaymsg -t get_outputs | jq 'max_by(.scale).scale'"},
   -- need this hack or neovide is confused and has the wrong grid size
   vim.defer_fn(function()
     vim.g.neovide_scale_factor = 1
-  end, 400)
+  end, 600)
 end))
 -- the stl is related to https://vi.stackexchange.com/a/34849/38754
 -- workaround for carets in the statusline

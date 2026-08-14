@@ -15,6 +15,9 @@ local function display_changes(entry)
   if summary == nil then
     return "-"
   end
+  if bufdat.ref_text == nil and summary.source_name == 'git' then
+    return "?" -- untracked
+  end
   local t = {}
   if summary.add and summary.add > 0 then table.insert(t, '+' .. summary.add) end
   if summary.change and summary.change > 0 then table.insert(t, '~' .. summary.change) end

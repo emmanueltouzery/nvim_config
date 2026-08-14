@@ -19,7 +19,7 @@ end
 function _G.get_tab_win_buf_by_ft(ft)
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
-    if vim.api.nvim_buf_get_option(buf, "ft") == ft then
+    if vim.bo[buf].filetype == ft then
       return vim.api.nvim_win_get_number(w), buf
     end
   end

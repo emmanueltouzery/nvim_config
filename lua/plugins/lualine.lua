@@ -383,7 +383,7 @@ function setup_lualine()
             local ok, w = pcall(vim.api.nvim_tabpage_get_win, tab.tabId)
             if ok then
               local b = vim.api.nvim_win_get_buf(w)
-              local ft = vim.api.nvim_buf_get_option(b, 'ft')
+              local ft = vim.bo[b].filetype
               if label == "[No Name]" then
                 label = ft
               end

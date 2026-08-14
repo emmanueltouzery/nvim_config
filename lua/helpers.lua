@@ -664,7 +664,7 @@ function _G.get_nvimtree_window()
   local wins = vim.api.nvim_list_wins()
   for i, win in ipairs(wins) do
     local buf = vim.api.nvim_win_get_buf(win)
-    if vim.api.nvim_buf_get_option(buf, "ft") == "NvimTree" then
+    if vim.bo[buf].filetype == "NvimTree" then
       return win
     end
   end
@@ -801,7 +801,7 @@ function _G.quickfix_goto_bottom()
   local term_winid = nil
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
-    if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then
+    if vim.bo[buf].filetype == "qf" then
       -- yes => scroll quickfix to the bottom
       vim.cmd(":cbottom")
       return
@@ -819,7 +819,7 @@ end
 function _G.win_bring_qf_here()
   local qf_buf_id = nil
   for _, b in pairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_get_option(b, "ft") == "qf" then
+    if vim.bo[b].filetype == "qf" then
       qf_buf_id = b
       break
     end
@@ -852,7 +852,7 @@ function _G.jump_to_qf()
   -- then actual QF
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
-    if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then
+    if vim.bo[buf].filetype == "qf" then
       vim.cmd(vim.api.nvim_win_get_number(w) .. ' wincmd w')
       return
     end
@@ -991,9 +991,9 @@ function _G.close_nonvisible_buffers()
     -- if vim.api.nvim_buf_is_loaded(b) and not vim.tbl_contains(visible_bufs, b) then
     if not vim.tbl_contains(visible_bufs, b) then
       -- skip terminals otherwise spc-bo can break overseer which is running terminals in the background
-      if vim.api.nvim_buf_get_option(b, "buftype") ~= "terminal" then
+      if vim.bo[b].buftype ~= "terminal" then
         local force = false
-        -- local force = vim.api.nvim_buf_get_option(b, "buftype") == "terminal"
+        -- local force = vim.bo[b].buftype == "terminal"
         local ok = pcall(vim.api.nvim_buf_delete, b, { force = force })
         if ok then
           deleted_count = deleted_count + 1
@@ -1049,7 +1049,7 @@ function _G.toggle_diff()
     local wins = vim.api.nvim_tabpage_list_wins(0)
     for i, win in pairs(wins) do
       local buf = vim.api.nvim_win_get_buf(win)
-      local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
+      local buf_ft = vim.bo[buf].filetype
       if not vim.tbl_contains(DiffExcludeFTs, buf_ft) then
         vim.api.nvim_win_call(win, function() vim.cmd("diffthis") end)
       end
@@ -1064,7 +1064,7 @@ function _G.window_diff_json()
   local wins = {}
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
     local buf = vim.api.nvim_win_get_buf(win)
-    local buf_ft = vim.api.nvim_buf_get_option(buf, "ft")
+    local buf_ft = vim.bo[buf].filetype
     if not vim.tbl_contains(DiffExcludeFTs, buf_ft) then
       table.insert(wins, win)
     end
@@ -1078,7 +1078,7 @@ function _G.window_diff_json()
   for _, w in pairs(wins) do
     local buf = vim.api.nvim_win_get_buf(w)
     local buf_name = vim.api.nvim_buf_get_name(buf) 
-    local is_saved = buf_name ~= nil and vim.fn.filereadable(buf_name) == 1 and not vim.api.nvim_buf_get_option(buf, 'modified')
+    local is_saved = buf_name ~= nil and vim.fn.filereadable(buf_name) == 1 and not vim.bo[buf].modified
     if is_saved and on_disk == nil then
       on_disk = buf_name
     else

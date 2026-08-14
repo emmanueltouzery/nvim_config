@@ -163,7 +163,7 @@ function _G.dadbod_setup_cmp()
       local bufs = {}
       for _, win in ipairs(vim.api.nvim_list_wins()) do
         local buf = vim.api.nvim_win_get_buf(win)
-        local ft = vim.api.nvim_buf_get_option(buf, 'ft')
+        local ft = vim.bo[buf].filetype
         if ft == 'dbout' then
           bufs[buf] = true
         end

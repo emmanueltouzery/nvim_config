@@ -121,7 +121,7 @@ function _G.my_gen_from_buffer()
     end
 
     local hidden = entry.info.hidden == 1 and "h" or "a"
-    local readonly = vim.api.nvim_buf_get_option(entry.bufnr, "readonly") and "=" or " "
+    local readonly = vim.bo[entry.bufnr].readonly and "=" or " "
     local changed = entry.info.changed == 1 and "+" or " "
     local indicator = entry.flag .. hidden .. readonly .. changed
     local lnum = 1

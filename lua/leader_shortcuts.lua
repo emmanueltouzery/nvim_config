@@ -26,7 +26,7 @@ local function apply_buffer_preview(self, ns_previewer, source_buf, entry_lnum)
       vim.cmd "norm! zz"
     end)
   end)
-  local ft = vim.api.nvim_buf_get_option(source_buf, 'ft')
+  local ft = vim.bo[source_buf].filetype
   require("telescope.previewers.utils").highlighter(
     self.state.bufnr,
     ft
@@ -400,7 +400,7 @@ require 'key-menu'.set('n', '<leader>sc', {desc='Search code'})
 vim.keymap.set( "n", "<leader>scd", "<cmd>lua search_code_deps()<CR>", {desc="Search code deps"})
 
 local function astgrep_open_buf()
-  local ft = vim.api.nvim_buf_get_option(0, 'ft')
+  local ft = vim.bo.filetype
   if ft == 'typescriptreact' then
     ft = 'tsx'
   end
@@ -518,7 +518,7 @@ vim.keymap.set("n", "<leader>tq", function()
 
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
-    if vim.api.nvim_buf_get_option(buf, "ft") == "qf" then
+    if vim.bo[buf]"ft" == "qf" then
       vim.cmd("cclose")
       return
     end
@@ -589,7 +589,7 @@ function _G.tabpage_is_terminal(tab)
   if #wins == 1 then
     win = wins[1]
     local buf = vim.api.nvim_win_get_buf(win)
-    if vim.api.nvim_buf_get_option(buf, "buftype") == 'terminal' then
+    if vim.bo[buf].buftype == 'terminal' then
       return true
     end
   end
@@ -614,7 +614,7 @@ function _G.tabpage_is_sql(tab)
   if #wins ~= 1 then
     for _, win in ipairs(wins) do
       local buf = vim.api.nvim_win_get_buf(win)
-      if vim.api.nvim_buf_get_option(buf, "ft") == 'dbui' then
+      if vim.bo[buf].filetype == 'dbui' then
         return true
       end
     end

@@ -297,8 +297,8 @@ function _G.handleFileChanged()
   local height = vim.fn.winheight(0)
 
   local popup_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
-  vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
+  vim.bo[popup_buf].buftype = 'nofile'
+  vim.bo[popup_buf].modifiable = true
 
   local opts = {
     focusable = false,
@@ -1090,7 +1090,7 @@ function _G.window_diff_json()
     return
   end
   local output_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(output_buf, "ft", "diff")
+  vim.bo[output_buf].filetype ="diff"
 
   local width = vim.api.nvim_get_option("columns")
   local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
@@ -1100,8 +1100,8 @@ function _G.window_diff_json()
       vim.api.nvim_buf_set_lines(output_buf, -1, -1, true, output)
     end),
     on_exit = vim.schedule_wrap(function(j, output)
-      vim.api.nvim_buf_set_option(output_buf, 'modifiable', false)
-      vim.api.nvim_buf_set_option(output_buf, "readonly", true)
+      vim.bo[output_buf].modifiable = false
+      vim.bo[output_buf].readonly = true
       vim.api.nvim_open_win(output_buf, true, {
         row = (height - 50) / 2,
         col = (width - 120) / 2,
@@ -1201,10 +1201,10 @@ function _G.quickfix_at_curpos()
     end
     if #errors > 0 then
       local popup_buf = vim.api.nvim_create_buf(false, true)
-      vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
-      vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")
-      vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
-      vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
+      vim.bo[popup_buf].buftype = 'nofile'
+      vim.bo[popup_buf].bufhidden = "hide"
+      vim.bo[popup_buf].swapfile = false
+      vim.bo[popup_buf].modifiable = true
 
       local win_opts = {
         style = "minimal",
@@ -1218,8 +1218,8 @@ function _G.quickfix_at_curpos()
       }
 
       vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, errors)
-      vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
-      vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
+      vim.bo[popup_buf].modifiable = false
+      vim.bo[popup_buf].readonly = true
       vim.keymap.set('n', 'q', '<cmd>quit!<cr>', { silent = true, buffer = popup_buf })
 
       local cur_buf = vim.api.nvim_win_get_buf(0)
@@ -1303,8 +1303,8 @@ end
 
 local function open_text_in_cursor_popup(text, pref_height)
   local buf = string_to_buffer(text)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-  vim.api.nvim_buf_set_option(buf, "readonly", true)
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].readonly = true
   vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})
   vim.api.nvim_set_option_value("modified", false, {buf = buf})
   vim.api.nvim_set_option_value("bufhidden", 'wipe', {buf = buf})

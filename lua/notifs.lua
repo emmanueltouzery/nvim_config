@@ -75,10 +75,10 @@ function _G.notif(msg, level, opts)
     vim.fn.jobstart({"notify-send", title, table.concat(system_notif_msg, "\n"), "--icon=dialog-information"})
   end
   local popup_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
-  vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")
-  vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
-  vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
+  vim.bo[popup_buf].buftype = 'nofile'
+  vim.bo[popup_buf].bufhidden = "hide"
+  vim.bo[popup_buf].swapfile = false
+  vim.bo[popup_buf].modifiable = true
 
   local width = vim.api.nvim_get_option("columns")
   local height = vim.api.nvim_get_option("lines") - vim.o.cmdheight - 1
@@ -100,8 +100,8 @@ function _G.notif(msg, level, opts)
   }
 
   vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, notif_format_msg(msg))
-  vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
-  vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
+  vim.bo[popup_buf].modifiable = false
+  vim.bo[popup_buf].readonly = true
 
   local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 

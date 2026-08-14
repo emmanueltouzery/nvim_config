@@ -405,7 +405,7 @@ local function astgrep_open_buf()
     ft = 'tsx'
   end
   local buf = vim.api.nvim_create_buf(true, true)
-  vim.api.nvim_buf_set_option(buf, 'ft', 'astgrep')
+  vim.bo[buf].filetype = 'astgrep'
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
     -- this is for the elixir AST, but easy enough to modify
     "id: fdf",
@@ -1195,8 +1195,8 @@ vim.keymap.set("n", "<leader>cll", function()
         vim.diagnostic.open_float(0, {scope="line"})
       else
         local buf = string_to_buffer(indented_msg)
-        vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-        vim.api.nvim_buf_set_option(buf, "readonly", true)
+        vim.bo[buf].modifiable = false
+        vim.bo[buf].readonly = true
         vim.api.nvim_set_option_value("filetype", "markdown", {buf = buf})
         vim.api.nvim_set_option_value("modified", false, {buf = buf})
         vim.api.nvim_set_option_value("bufhidden", 'wipe', {buf = buf})

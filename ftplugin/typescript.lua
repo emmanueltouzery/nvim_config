@@ -290,7 +290,7 @@ vim.keymap.set('n', 'K', function()
     local orig_buf = vim.api.nvim_win_get_buf(0)
 
     local popup_buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_option(popup_buf, 'ft', 'markdown')
+    vim.bo[popup_buf].filetype = 'markdown'
 
     local width = 70
     local height = 15

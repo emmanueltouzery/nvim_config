@@ -49,8 +49,8 @@ function _G.open_git_commit_popup()
         else
           -- changes present, proceed to commit
           local popup_buf = vim.api.nvim_create_buf(true, false)
-          vim.api.nvim_buf_set_option(popup_buf, 'ft', 'mygitcommit') -- syntax/mygitcommit.lua
-          vim.api.nvim_buf_set_option(popup_buf, 'textwidth', 80)
+          vim.bo[popup_buf].ft = 'mygitcommit' -- syntax/mygitcommit.lua
+          vim.bo[popup_buf].textwidth = 80
           vim.api.nvim_buf_set_lines(popup_buf, 0, -1, false, vim.tbl_map(function(l) return "# " .. l end, vim.split(res.stdout, "\n")))
 
           local editor_width = vim.api.nvim_get_option("columns")

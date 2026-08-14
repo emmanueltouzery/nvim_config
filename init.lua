@@ -645,10 +645,10 @@ require('packer').startup(function(use)
         end, 200)
 
         local popup_buf = vim.api.nvim_create_buf(false, true)
-        vim.api.nvim_buf_set_option(popup_buf, 'buftype', 'nofile')
-        vim.api.nvim_buf_set_option(popup_buf, "bufhidden", "hide")
-        vim.api.nvim_buf_set_option(popup_buf, "swapfile", false)
-        vim.api.nvim_buf_set_option(popup_buf, 'modifiable', true)
+        vim.bo[popup_buf].buftype = "nofile"
+        vim.bo[popup_buf].bufhidden = "hide"
+        vim.bo[popup_buf].swapfile = false
+        vim.bo[popup_buf].modifiable = true
 
         local width = vim.api.nvim_win_get_width(0)
         local height = vim.api.nvim_win_get_height(0) - 1
@@ -665,8 +665,8 @@ require('packer').startup(function(use)
           col = width,
           noautocmd = true,
         }
-        -- vim.api.nvim_buf_set_option(popup_buf, 'modifiable', false)
-        vim.api.nvim_buf_set_option(popup_buf, "readonly", true)
+        -- vim.bo[popup_buf].modifiable = false
+        vim.bo[popup_buf].readonly = true
 
         local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 

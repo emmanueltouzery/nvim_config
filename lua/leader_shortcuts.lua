@@ -49,8 +49,12 @@ vim.keymap.set( "n", "<leader>,", function()
       map({ "i", "n" }, "<c-f>", function(prompt_bufnr)
         require("telescope.actions").close(prompt_bufnr)
         local source_bufnr = require("telescope.actions.state").get_selected_entry(prompt_bufnr).bufnr
+        local mini_diff = require('mini.diff')
         local lines = vim.api.nvim_buf_get_lines(source_bufnr, 0, -1, false)
-        require('mini.diff').set_ref_text(0, table.concat(lines, '\n'))
+        vim.b.minidiff_config = {
+          source = mini_diff.gen_source.none()
+        }
+        mini_diff.set_ref_text(0, table.concat(lines, '\n'))
       end, {desc="diff with buffer"})
       return true
     end,

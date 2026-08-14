@@ -606,7 +606,7 @@ require('packer').startup(function(use)
     -- create a popup displaying the previous and next yoink pastes that can be switched to
     local ns = vim.api.nvim_create_namespace "yoink.popup"
     function check_close_paste_popup()
-      if vim.uv.hrtime() > vim.b.paste_popup_timeout then
+      if vim.b.paste_popup_timeout ~= nil and vim.uv.hrtime() > vim.b.paste_popup_timeout then
         if vim.b.hide_paste_ring_popup ~= nil then
           vim.b.hide_paste_ring_popup()
           vim.b.hide_paste_ring_popup = nil

@@ -14,13 +14,12 @@ return {
         })
       end,
       on_reset = function(self, task)
-        if msg_id ~= nil then
-          vim.api.nvim_echo({{'Done'}}, true, {
-            id = msg_id, kind='progress', status='success', source='Job status', title=params.message
-          })
-        end
+        vim.api.nvim_echo({{'Done'}}, true, {
+          id = msg_id, kind='progress', status='success', source='Job status', title=params.message
+        })
+        msg_id = nil
       end,
-      on_exit = function(self, task, status)
+      on_complete = function(self, task, status)
         vim.api.nvim_echo({{'Done'}}, true, {
           id = msg_id, kind='progress', status='success', source='Job status', title=params.message
         })

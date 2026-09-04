@@ -141,10 +141,10 @@ function _G.goto_fileline()
       -- or only like app/win.rs instead of src/app/win.rs
       -- we can leverage 'fd' for that.
       for _, project in pairs(telescope_load_projects()) do
-        local output = vim.split(vim.system({
+        local output = vim.split(vim.system(
           { 'fd', '-p', fname },
-          {cwd = project.path},
-        }):wait().stdout, "\n")
+          {cwd = project.path}
+        ):wait().stdout, "\n")
         if output ~= nil and #output > 0 and vim.fn.filereadable(project.path .. "/" .. output[1]) == 1 then
           vim.cmd(":e " .. project.path .. "/" .. output[1])
           vim.cmd(":" .. line)

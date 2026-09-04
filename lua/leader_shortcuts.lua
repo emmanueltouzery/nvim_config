@@ -495,7 +495,18 @@ vim.keymap.set("n", "<leader>tc", function()
     vim.o.conceallevel = 2
   end
 end, {desc = "Toggle conceal"})
-vim.keymap.set("n", "<leader>tC", ':set colorcolumn=', {desc = "Toggle color column"})
+vim.keymap.set("n", "<leader>tC", function()
+  local cc = vim.wo.colorcolumn
+  local default_val = (cc ~= "") and cc or tostring(vim.fn.col('.'))
+  vim.ui.input({
+    prompt = "Set colorcolumn (leave blank to disable): ",
+    default = default_val,
+  }, function(input)
+    if input ~= nil then
+      vim.wo.colorcolumn = input
+    end
+  end)
+end, {desc = "Toggle color column"})
 vim.keymap.set("n", "<leader>ta", function()
   if vim.g.stop_adb_monitor == nil or vim.g.stop_adb_monitor == true then
     notif({"Starting the ADB monitor"})

@@ -371,7 +371,7 @@ require('packer').startup(function(use)
       callback = function() vim.treesitter.start() end,
     })
   end}
-  use {'neovim/nvim-lspconfig', commit='abf6d190f2c06818489c0bd4b926e7e3a06c5e51'} -- Collection of configurations for built-in LSP client
+  use {'neovim/nvim-lspconfig', commit='615d7b2712efb2f530a83a9d0466acafba6b1d6f'} -- Collection of configurations for built-in LSP client
   use {'hrsh7th/nvim-cmp', commit='da88697d7f45d16852c6b2769dc52387d1ddc45f'} -- Autocompletion plugin
   use {'emmanueltouzery/cmp-nvim-lsp', commit='9bbd274822b9967528cbc50075df1018cf6f55e2'} -- my hack so the rust LSP doesn't overwrite my text (possibly inoperant on 0.12+)
   use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
@@ -849,20 +849,41 @@ require('packer').startup(function(use)
       require("mason").setup()
       -- require("mason-lspconfig").setup {}
 
-      vim.lsp.config("ts_ls", {
-        init_options = {
-          supportsHoverVerbosity=true,
-          preferences = {
+      -- ts_ls, for typescript < 7.0
+      -- vim.lsp.config("ts_ls", {
+      --   init_options = {
+      --     supportsHoverVerbosity=true,
+      --     preferences = {
+      --       maximumHoverLength = 2500,
+      --     }
+      --   },
+      -- })
+      -- vim.lsp.enable({"ts_ls"})
+      --
+
+      -- tsc, for typescript >= 7.0
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.experimental = {hoverVerbosityLevel = true}
+      capabilities.textDocument = capabilities.textDocument or {}
+      capabilities.textDocument.hover = capabilities.textDocument.hover or {}
+      -- these two actually don't seem required, but...
+      capabilities.textDocument.hover.verbosityLevel = true
+      capabilities.textDocument.hover.supportsHoverVerbosity = true
+
+      vim.lsp.config("tsc", {
+        capabilities = capabilities,
+        settings = {
+          ['js/ts'] = {
             maximumHoverLength = 2500,
           }
         },
       })
-      vim.lsp.enable({"ts_ls"})
+      vim.lsp.enable('tsc')
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if vim.tbl_contains({"elixir_ls", "ts_ls", "jsonls"}, client.config.name) then
+          if vim.tbl_contains({"elixir_ls", "ts_ls", "jsonls", "tsc"}, client.config.name) then
             -- use manual indentation (through conform.nvim) -- prettier for JS+json, elixir fmt
             -- for elixir conform is better than the elixirls indentation, because it can give me the mix fmt output
             -- which sometimes pinpoints the syntax error

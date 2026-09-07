@@ -242,7 +242,7 @@ vim.keymap.set('n', '%', smart_percent, { silent = true, desc = "TS-aware JSX ju
 local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
   local contents = vim.split(res.contents.value, '\n')
   local plusMinusOpts = ""
-  if params.verbosityLevel > 1 then
+  if params.verbosityLevel > 0 then
     plusMinusOpts = plusMinusOpts .. "[-]"
 
     vim.keymap.set('n', '<kMinus>', function()
@@ -257,7 +257,7 @@ local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
     vim.keymap.del('n', '<kMinus>', { buf = popup_buf})
     params.hadPlus = false
   end
-  if res.canIncreaseVerbosityLevel then
+  if res.canIncreaseVerbosity then
     plusMinusOpts = plusMinusOpts .. "[+]"
 
     vim.keymap.set('n', '<kPlus>', function()
@@ -281,7 +281,7 @@ end
 
 vim.keymap.set('n', 'K', function()
   local params = vim.lsp.util.make_position_params()
-  params.verbosityLevel = 1
+  params.verbosityLevel = 0
   vim.lsp.buf_request(0, 'textDocument/hover', params, function(err, res)
     if res == nil then
       -- happens for instance when triggering hover on a plain string

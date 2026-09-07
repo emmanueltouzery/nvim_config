@@ -90,7 +90,7 @@ function _G.get_call_hierarchy_for_item(call_hierarchy_item)
   local by_lsp = vim.lsp.buf_request_sync(0, 'callHierarchy/incomingCalls', { item = call_hierarchy_item })
   if by_lsp and #by_lsp >= 1 then
     local result = by_lsp[vim.tbl_keys(by_lsp)[1]].result
-    if #result >= 1 then
+    if result ~= nil and #result >= 1 then
       for _, item in ipairs(result) do
         -- "group by" URL, because two calling classes/functions could have the same name,
         -- but different URIs/being distinct. If we grouped by name, we'd merge them.

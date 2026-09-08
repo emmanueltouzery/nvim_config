@@ -864,11 +864,11 @@ require('packer').startup(function(use)
       -- tsc, for typescript >= 7.0
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.experimental = {hoverVerbosityLevel = true}
-      capabilities.textDocument = capabilities.textDocument or {}
-      capabilities.textDocument.hover = capabilities.textDocument.hover or {}
-      -- these two actually don't seem required, but...
-      capabilities.textDocument.hover.verbosityLevel = true
-      capabilities.textDocument.hover.supportsHoverVerbosity = true
+      -- capabilities.textDocument = capabilities.textDocument or {}
+      -- capabilities.textDocument.hover = capabilities.textDocument.hover or {}
+      -- -- these two actually don't seem required, but...
+      -- capabilities.textDocument.hover.verbosityLevel = true
+      -- capabilities.textDocument.hover.supportsHoverVerbosity = true
 
       vim.lsp.config("tsc", {
         capabilities = capabilities,

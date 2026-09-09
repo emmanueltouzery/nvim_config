@@ -30,7 +30,12 @@ local function progress_init()
         or ev.data.status == 'cancel'
       then
         progress[ev.data.id] = nil
-        notif({"Task completed", ev.data.title})
+        -- this can trigger in the middle of autocommands and notif()
+        -- opens a window which can close other buffers to get closed due
+        -- to bufhidden=wipe and cause havoc -- schedule the notification.
+        vim.schedule(function()
+          notif({"Task completed", ev.data.title})
+        end)
       end
     end,
   })

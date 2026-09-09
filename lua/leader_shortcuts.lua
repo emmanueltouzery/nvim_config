@@ -1241,7 +1241,21 @@ vim.keymap.set("n", "<leader>clk", function()
   notif({"Killed " .. count .. " pending LSP requests"})
 end, {desc="Kill pending lsp requests"})
 
-vim.keymap.set("n", "<leader>clR", "<cmd>:LspRestart<CR>", {desc="Restart LSP clients for this buffer"})
+vim.keymap.set("n", "<leader>clR", function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients == 0 then
+    vim.notify("No active LSP clients for current buffer", vim.log.levels.WARN)
+    return
+  end
+
+  for _, client in ipairs(clients) do
+    vim.lsp.stop_client(client.id)
+  end
+
+  -- Re-attach LSP clients to the current buffer
+  vim.cmd("edit")
+  vim.notify("LSP clients restarted for buffer", vim.log.levels.INFO)
+end, {desc="Restart LSP clients for this buffer"})
 vim.keymap.set("n", "<leader>cli", "<cmd>lua remove_unused_imports()<CR>", {desc="Remove unused imports"})
 
 -- override LSP for java, not using LSP there

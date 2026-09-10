@@ -529,7 +529,7 @@ vim.keymap.set("n", "<leader>tq", function()
 
   for _, w in pairs(vim.api.nvim_list_wins()) do
     local buf = vim.api.nvim_win_get_buf(w)
-    if vim.bo[buf]"ft" == "qf" then
+    if vim.bo[buf]["ft"] == "qf" then
       vim.cmd("cclose")
       return
     end

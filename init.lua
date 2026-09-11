@@ -1613,7 +1613,6 @@ require("telescope_lsp_hierarchy")
 require("telescope_qf_locations")
 require("telescope_modified_git_projects")
 require("telescope_buffers_entry_maker")
-require("telescope_projects")
 
 --Set highlight on search
 vim.o.hlsearch = false
@@ -2132,6 +2131,7 @@ vim.api.nvim_create_autocmd({ "User" }, {
 })
 
 require("leader_shortcuts")
+require("telescope_projects")
 require("shortcuts")
 require("database")
 require("mini_diff_extras")

@@ -63,7 +63,7 @@ local function expand_property(name, tokens)
       return "shadow: " .. val
     end
 
-    local inset = val:match("%binset%b") and "inset" or "outset"
+    local inset = vim.fn.matchstr(val, [[\<inset\>]]) ~= "" and "inset" or "outset"
     local color = val:match("(rgba?%b())") or val:match("(hsla?%b())") or val:match("(var%b())") or val:match("#%x+")
 
     local lengths = {}

@@ -1597,12 +1597,6 @@ require("quicker").setup({
 end,
 })
 
--- private, optional stuff
-vim.pack.add({{ src = 'git@github.com:emmanueltouzery/nvim_config_private' }})
-if pcall(require, 'nvim_config_private') then
-  require'nvim_config_private'.setup{}
-end
-
 
 require("telescope_vimgrep")
 require("telescope_global_marks")
@@ -2135,5 +2129,11 @@ require("telescope_projects")
 require("shortcuts")
 require("database")
 require("mini_diff_extras")
+
+-- private, optional stuff
+vim.pack.add({{ src = 'git@github.com:emmanueltouzery/nvim_config_private' }})
+if pcall(require, 'nvim_config_private') then
+  require'nvim_config_private'.setup{}
+end
 
 -- vim: ts=2 sts=2 sw=2 et

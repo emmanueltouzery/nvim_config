@@ -1,3 +1,5 @@
+vim.pack.add({{ src = 'https://github.com/nvim-lualine/lualine.nvim', version='b8c23159c0161f4b89196f74ee3a6d02cdc3a955'}})
+
 local function winnr()
   local nr = vim.fn.winnr()
   if nr == 1 then return '󰎦'
@@ -412,3 +414,6 @@ function setup_lualine()
     }
   end
 end
+
+setup_lualine()
+

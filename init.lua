@@ -5,9 +5,24 @@ if vim.version().major == 0 and vim.version().minor >= 11 then
   vim.tbl_islist = vim.islist
 end
 
+require("plugins.lualine")
+require("helpers")
+require("global_marks")
+require("previous_next")
+require("notifs")
+require("ts_unused_imports")
+require("elixir")
+require("git_commit")
+require("gitlab_mr_helpers")
+require("progress")
+
 vim.g.doom_one_terminal_colors = true
 vim.g.BufKillCreateMappings = 0 -- vim-bufkill plugin
 vim.g.lightspeed_no_default_keymaps = true
+
+vim.pack.add({
+  { src = 'https://github.com/emmanueltouzery/key-menu.nvim', version='171ad5c40fe978ebba86026beac1ac3ed8eda42d'}, -- originally linty-org/key-menu.nvim but the git repo was deleted...
+})
 
 -- https://superuser.com/a/1842153
 vim.g.gitcommit_summary_length = 72
@@ -82,306 +97,170 @@ vim.api.nvim_create_autocmd('PackChanged', {
   end,
 })
 
+vim.pack.add({{ src = 'https://github.com/emmanueltouzery/doom-one.nvim', version='2dedefe10f3294b6fd8b7b459673548e209da06d'}})
+require('doom-one').setup({
+  cursor_coloring = true,
+  italic_comments = true,
+  diagnostics_color_text = false,
+  plugins_integrations = {
+    telescope = true,
+  }
+})
+
+vim.pack.add({
+  {
+    src = 'https://github.com/nvim-tree/nvim-tree.lua', version='50e919426a4a2053f78b2f8ab001c8ad8eb47ef6'
+    -- for some reason must call init outside of the config block, elsewhere
+    -- config = function() require'nvim-tree'.setup {} end
+  },
+  {src = 'https://github.com/nvim-tree/nvim-web-devicons', version='19d257cf889f79f4022163c3fbb5e08639077bd8' },
+})
+require("plugins.misc")
+
+vim.pack.add({{ src = "https://github.com/goolord/alpha-nvim", version="0bb6fc0646bcd1cdb4639737a1cee8d6e08bcc31"}})
+local alpha = require'alpha'
+local dashboard = require'alpha.themes.dashboard'
+dashboard.section.header.val = {
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⡟⢻⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⡀⠀⠀⠀⣠⣴⠟⠋⠀⠘⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢶⣄⠀⠀⢠⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⠟⠛⠉⠙⠻⣦⣶⠟⠋⠁⠀⠀⠀⠀⢹⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠷⣦⣈⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠇⠀⠀⠀⠀⠀⠈⢻⣆⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⢰⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣆⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⢼⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡟⠛⠿⢶⣤⣄⣀⣀⡀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣤⣤⣿⣷⡀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⠀⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣷⣤⣴⡶⠾⠿⠟⠛⠛⠛⠛⠛⠛⠛⠋⠉⠉⠉⠉⠉⠉⠉⢻⣿⣿⣤⡀⠀⠀⢀⣼⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⠻⠶⠾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⢠⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣷⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⢸⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠻⢶⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠄⢸⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠿⣶⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⣸⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⣈⣉⣡⣿⣇⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣯⣭⣭⣼⣧⣀⣤⣤⣤⣠⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣏⣉⣉⣉⣩⣭⣭⣥⣤⣤⣤⠶⠶⠶⠶⠶⠶⠶⠶⠶⠤⠤⠶⠶⠶⠶⣶⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⢻⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+}
+dashboard.section.buttons.val = {
+  dashboard.button( "e", "  New file" , ":ene <BAR> startinsert <CR>"),
+  dashboard.button( "p", "  Open project" , ":lua telescope_projects()<cr>"),
+  dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
+}
+dashboard.config.opts.noautocmd = true
+alpha.setup(dashboard.config)
+
+-- considered https://github.com/gbprod/yanky.nvim & https://github.com/AckslD/nvim-neoclip.lua too, previously used maxbrunsfeld/vim-yankstack
 -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
 -- drop s and S due to lightspeed
 vim.g.yoinkIncludeDeleteOperations = 1
 vim.g.yoinkSwapClampAtEnds = 0
-
-  -- UI to select things (files, grep results, open buffers...)
-  vim.pack.add({
-    { src = 'https://github.com/debugloop/telescope-undo.nvim', version = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
-    { src = 'https://github.com/emmanueltouzery/telescope.nvim', version="beb508fbc43fd8254913b5f0474039435b9b7c83", load = function()
-    local actions = require("telescope.actions")
-    -- https://github.com/nvim-telescope/telescope.nvim/issues/2778#issuecomment-2202572413
-    local focus_preview = function(prompt_bufnr)
-      local action_state = require("telescope.actions.state")
-      local picker = action_state.get_current_picker(prompt_bufnr)
-      local prompt_win = picker.prompt_win
-      local previewer = picker.previewer
-      local bufnr = previewer.state.bufnr or previewer.state.termopen_bufnr
-      local winid = previewer.state.winid or vim.fn.win_findbuf(bufnr)[1]
-      vim.keymap.set("n", "<S-Tab>", function()
-        vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", prompt_win))
-      end, { buffer = bufnr })
-      vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", winid))
-      -- api.nvim_set_current_win(winid)
+vim.pack.add({{ src = 'https://github.com/svermeulen/vim-yoink', version='89ed6934679fdbc3c20f552b50b1f869f624cd22'}})
+-- check for other vim.g.yoink settings set beforehand
+-- create a popup displaying the previous and next yoink pastes that can be switched to
+local ns = vim.api.nvim_create_namespace "yoink.popup"
+function check_close_paste_popup()
+  if vim.b.paste_popup_timeout ~= nil and vim.uv.hrtime() > vim.b.paste_popup_timeout then
+    if vim.b.hide_paste_ring_popup ~= nil then
+      vim.b.hide_paste_ring_popup()
+      vim.b.hide_paste_ring_popup = nil
+      vim.b.paste_popup_timeout = nil
     end
-
-    local telescope_pick_win_and_open = function(prompt_bufnr)
-      local entry = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
-      filename = entry.filename
-      if entry.cwd then
-        filename = entry.cwd .. "/" .. entry.filename
-      end
-      actions.close(prompt_bufnr)
-      if vim.fn.winnr('$') > 1 then
-        vim.cmd[[ChooseWin]]
-      end
-      vim.cmd(":e " .. filename)
-      if entry.lnum then
-          vim.schedule(function()
-            vim.cmd("norm " .. entry.lnum .. "G")
-          end)
-      end
+  else
+    vim.defer_fn(function()
+      check_close_paste_popup()
+    end, 200)
+  end
+end
+function update_popup(hist)
+  local select_hist = {}
+  for i, w in ipairs(hist) do
+    local text = w.text
+    local lines = vim.tbl_filter(function(l) return #l > 0 end, vim.split(text, "\n"))
+    if #lines > 1 then
+      text = string.format("[%d ] %s", #lines, vim.trim(lines[1]))
     end
+    local st = truncate_no_plenary(vim.trim(text), 70)
+    if #st < 70 then
+      -- couldn't find another way to highlight the row beyond the end
+      -- of the text -- pad with spaces so that the highlight reaches the end of the line
+      st = st .. string.rep(" ", 70 - #st)
+    end
+    table.insert(select_hist, st)
+  end
+  vim.api.nvim_buf_set_lines(vim.b.paste_popup_buf, 0, -1, false, select_hist)
+  vim.hl.range(vim.b.paste_popup_buf, ns, "BufferTabPages", {1, 0}, {1, #select_hist[2]})
+end
+function swap_back_or_fro(cmd)
+  local hist = vim.fn['yoink#getYankHistory']()
+  if vim.b.paste_popup_timeout == nil then
+    vim.defer_fn(function()
+      check_close_paste_popup()
+    end, 200)
 
-    require('telescope').setup {
-      defaults = {
-        -- make sure matches with the same score get sorted as they would be by default
-        -- https://github.com/nvim-telescope/telescope.nvim/pull/1401#issuecomment-957234973
-        -- https://github.com/nvim-telescope/telescope.nvim/issues/1080#issuecomment-1592392087
-        tiebreak = function(entry1, entry2, prompt)
-          local start_pos1, _ = entry1.ordinal:find(prompt)
-          if start_pos1 then
-            local start_pos2, _ = entry2.ordinal:find(prompt)
-            if start_pos2 then
-              return start_pos1 < start_pos2
-            end
-          end
-          return false
-        end,
-        -- path_display = {'truncate'},
-        path_display = function(opts, path)
-          local get_status = require("telescope.state").get_status
-          local utils = require("telescope.utils")
+    local popup_buf = vim.api.nvim_create_buf(false, true)
+    vim.bo[popup_buf].buftype = "nofile"
+    vim.bo[popup_buf].bufhidden = "hide"
+    vim.bo[popup_buf].swapfile = false
+    vim.bo[popup_buf].modifiable = true
 
-          local cwd
-          if opts.cwd then
-            cwd = opts.cwd
-            if not vim.in_fast_event() then
-              cwd = utils.path_expand(opts.cwd)
-            end
-          else
-            cwd = vim.loop.cwd()
-          end
-          path = path:gsub("^" .. escape_pattern(cwd) .. "/?", "")
+    local width = vim.api.nvim_win_get_width(0)
+    local height = vim.api.nvim_win_get_height(0) - 1
 
-          local status = get_status(vim.api.nvim_get_current_buf())
-          local len = 150
-          -- status.layout is nil at least for spc-oP, the picker's picker
-          if status.layout then
-            len = vim.api.nvim_win_get_width(status.layout.results.winid) - status.picker.selection_caret:len() - 2
-          end
-
-          path = truncate_left_no_plenary(path, len)
-
-          local tail = require("telescope.utils").path_tail(path)
-          -- path = string.format("%s (%s)", tail, path)
-
-          local highlights = {
-            {
-              {
-                0,
-                #path - #tail,
-              },
-              "Comment", -- highlight group name
-            },
-          }
-
-          return path, highlights
-        end;
-        prompt_prefix = "   ",
-        selection_caret = " ",
-        sorting_strategy = "ascending",
-        layout_config = {
-          prompt_position = "top",
-          width = 0.75,
-          preview_cutoff = 120,
-          horizontal = {
-            preview_width = 0.6,
-          },
-        },
-        cache_picker = {
-          -- keep 3 recent pickers in cache. see `:help telescope.defaults.cache_picker`
-          -- https://github.com/nvim-telescope/telescope.nvim/issues/1483
-          -- useful for the shortcut to open recent pickers, `:help builtin.pickers`
-          num_pickers = 5,
-        },
-        file_ignore_patterns = { "/%.git/", "^%.git/", "/node_modules/", "^node_modules/", "^__pycache__/" },
-        mappings = {
-          i = {
-            ["<C-n>"] = actions.cycle_history_next,
-            ["<C-p>"] = actions.cycle_history_prev,
-
-              -- https://github.com/nvim-telescope/telescope.nvim/issues/2115#issuecomment-1366575821
-            ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
-            ["<kEnter>"] = require("telescope.actions").select_default + require("telescope.actions").center,
-            ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
-            ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
-            ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
-            ["<C-r><C-w>"] = function(picker)
-                require("telescope.actions").close(picker)
-                local word = vim.fn.expand('<cword>')
-                vim.cmd[[Telescope resume]]
-                vim.defer_fn(function()
-                  vim.fn.feedkeys(word)
-                end, 10)
-              end,
-            ["<S-Tab>"] = focus_preview,
-            ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-            ["<M-CR>"] = function(prompt_bufnr) telescope_pick_win_and_open(prompt_bufnr) end,
-          },
-          n = {
-            ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
-            ["<kEnter>"] = require("telescope.actions").select_default + require("telescope.actions").center,
-            ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
-            ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
-            ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
-            ["<S-Tab>"] = focus_preview,
-            ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
-            ["<M-CR>"] = function(prompt_bufnr) telescope_pick_win_and_open(prompt_bufnr) end,
-          }
-        },
-      },
-      pickers = {
-        buffers = {
-          sort_lastused = true,
-          mappings = {
-            i = {
-              ["<c-Del>"] = actions.delete_buffer + actions.move_to_top,
-            }
-          }
-        }
-      },
-      extensions = {
-        undo = {
-          side_by_side = true,
-          diff_context_lines = 3,
-          layout_strategy = "vertical",
-          sorting_strategy = "descending",
-          layout_config = {
-            preview_height = 0.8,
-            preview_cutoff = 0,
-          },
-          mappings = {
-            i = {
-              ["<C-r>a"] = function(prompt_bufnr)
-                local base = require("telescope-undo.actions").yank_additions(prompt_bufnr)
-                local function with_notif()
-                    res = base()
-                    notif({"Copied " .. #res .. " lines to the clipboard"})
-                end
-                return with_notif
-              end,
-              ["<C-r>d"] = function(prompt_bufnr)
-                local base = require("telescope-undo.actions").yank_deletions(prompt_bufnr)
-                local function with_notif()
-                    res = base()
-                    notif({"Copied " .. #res .. " lines to the clipboard"})
-                end
-                return with_notif
-              end,
-              ["<cr>"] = require("telescope-undo.actions").restore,
-            },
-            n = {
-              ["<C-r>a"] = function(prompt_bufnr)
-                local base = require("telescope-undo.actions").yank_additions(prompt_bufnr)
-                local function with_notif()
-                    res = base()
-                    notif({"Copied " .. #res .. " lines to the clipboard"})
-                end
-                return with_notif
-              end,
-              ["<C-r>d"] = function(prompt_bufnr)
-                local base = require("telescope-undo.actions").yank_deletions(prompt_bufnr)
-                local function with_notif()
-                    res = base()
-                    notif({"Copied " .. #res .. " lines to the clipboard"})
-                end
-                return with_notif
-              end,
-              ["<cr>"] = require("telescope-undo.actions").restore,
-            },
-          },
-        },
-        live_grep_args = {
-          auto_quoting = false,
-          vimgrep_arguments = {
-            -- add --ignore-file to the defaults
-            "rg",
-            "--color=never",
-            "--no-heading",
-            "--with-filename",
-            "--line-number",
-            "--column",
-            "--smart-case",
-            "--ignore-file=" .. vim.fn.stdpath("config") .. "/rg-ignore",
-          },
-          mappings = {
-              i = {
-                ["<C-t>"] = prompt_toggle_rg_po_files,
-              },
-          },
-        },
-        aerial = {
-          col1_width = 2,
-          col2_width = 32,
-        },
-      },
+    local win_opts = {
+      focusable = false,
+      style = "minimal",
+      border = "rounded",
+      relative = "win",
+      width = 70,
+      height = #hist,
+      anchor = "SE",
+      row = height,
+      col = width,
+      noautocmd = true,
     }
-    require("telescope").load_extension("undo")
+    -- vim.bo[popup_buf].modifiable = false
+    vim.bo[popup_buf].readonly = true
 
-    -- Enable telescope fzf native
-    require('telescope').load_extension 'fzf'
+    local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
 
-    return true
-  end},
-  { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim', version="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" },
-  { src = 'https://github.com/nvim-lualine/lualine.nvim', version='b8c23159c0161f4b89196f74ee3a6d02cdc3a955', load=function()
-    setup_lualine()
-    return true
-  end},
-  { src = 'https://github.com/echasnovski/mini.diff', version = '65c59f9967fec965d8759a88c1baa43147699035', load=function()
-    -- put a priority higher than the default 10 for diagnostic errors, so that
-    -- the signs for a hunk are together on the left, and prioritized instead of individual
-    -- diagnostics moving the sign for a line to not line up
-    -- put 30 to be more than the 21/22 that nvim-dap uses for breakpoint signs,
-    -- otherwise diff vertical lines are broken by breakpoints
-    local priority = 30
-    if vim.version().major == 0 and vim.version().minor < 11 then
-      -- only neovim < 0.11, i want the the diff signs on the left => need a lower value
-      priority = 9
+    vim.b.paste_popup_buf = popup_buf
+    vim.b.hide_paste_ring_popup = function()
+      if vim.api.nvim_win_is_valid(popup_win) then
+        vim.api.nvim_win_close(popup_win, true)
+      end
+      if vim.api.nvim_buf_is_valid(popup_buf) then
+        vim.api.nvim_buf_delete(popup_buf, {force=true})
+      end
     end
-    require('mini.diff').setup({
-      view = {
-        style = 'sign',
-        signs = { add = '┃', change = '┃', delete = '_' },
-        priority = priority,
-      },
-      -- source = {
-      --   name = "branch_diff",
-      --   attach = function(buf_id)
-      --     local absolute_file_path = vim.api.nvim_buf_get_name(buf_id)
-      --     local git_path = vim.fs.root(absolute_file_path, '.git')
-      --     if git_path ~= nil then
-      --       local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
-      --       local contents_branch = vim.system({"git", "show", (vim.g.diff_source_branch or 'develop') .. ":" .. file_path}, {text = true}, function(res)
-      --         if res.code == 0 then
-      --           vim.schedule(function()
-      --             require('mini.diff').set_ref_text(buf_id, res.stdout)
-      --           end)
-      --         end
-      --       end)
-      --     end
-      --   end,
-      -- },
-    })
-    return true
-  end},
-  -- Highlight, edit, and navigate code using a fast incremental parsing library
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version='7caec274fd19c12b55902a5b795100d21531391f', load=function()
-    -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-    -- groovy is for gradle build files
-    require'nvim-treesitter'.install { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
-      "elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css" }
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = {  "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
-        "elixir","jsdoc","json","scss","typescript", "typescriptreact", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css"  },
-      callback = function() vim.treesitter.start() end,
-    })
-    return true
-  end},
-  { src = 'https://github.com/neovim/nvim-lspconfig', version='615d7b2712efb2f530a83a9d0466acafba6b1d6f'}, -- Collection of configurations for built-in LSP client
+  end
+  vim.b.paste_popup_timeout = vim.uv.hrtime() + 3000000000 --3s
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes(cmd, true, false, true),
+    "n",   -- mode: normal mode
+    true   -- escape keycodes
+  )
+  update_popup(hist)
+end
+-- end yoink popup
+
+vim.keymap.set("n", "<M-p>", function()
+  swap_back_or_fro("<Plug>(YoinkPostPasteSwapBack)")
+end)
+vim.keymap.set("n", "<M-P>", function()
+  swap_back_or_fro("<Plug>(YoinkPostPasteSwapForward)")
+end)
+
+vim.cmd[[nmap p <plug>(YoinkPaste_p)]]
+vim.cmd[[nmap P <plug>(YoinkPaste_P)]]
+
+vim.pack.add({
   { src = 'https://github.com/hrsh7th/nvim-cmp', version='da88697d7f45d16852c6b2769dc52387d1ddc45f'}, -- Autocompletion plugin
   { src = 'https://github.com/emmanueltouzery/cmp-nvim-lsp', version='9bbd274822b9967528cbc50075df1018cf6f55e2'}, -- my hack so the rust LSP doesn't overwrite my text (possibly inoperant on 0.12+)
   { src = "https://github.com/hrsh7th/cmp-buffer", version = "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
@@ -389,1042 +268,1116 @@ vim.g.yoinkSwapClampAtEnds = 0
   { src = "https://github.com/hrsh7th/cmp-emoji", version = "0acd702358230abeb6576769f7116e766bca28a0" },
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
   { src = 'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help', version = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'},
-  { src = 'https://github.com/emmanueltouzery/doom-one.nvim', version='2dedefe10f3294b6fd8b7b459673548e209da06d', load = function()
-    require('doom-one').setup({
-      cursor_coloring = true,
-      italic_comments = true,
-      diagnostics_color_text = false,
-      plugins_integrations = {
-        telescope = true,
-      }
-    })
-    return true
-  end},
-  { src = 'https://github.com/airblade/vim-rooter', version='0415be8b5989e56f6c9e382a04906b7f719cfb38', load = function()
-    vim.g.rooter_silent_chdir = 1
-    vim.g.rooter_cd_cmd = 'lcd'
-    vim.g.rooter_change_directory_for_non_project_files = 'current'
+})
+require("plugins.cmp")
 
-    vim.api.nvim_create_autocmd("User", {
-      pattern = "RooterChDir",
-      callback=function()
-        set_extra_spellfiles()
-      end})
-      return true
-  end},
-  { src = 'https://github.com/emmanueltouzery/vim-choosewin', version='12098bc747ccb593c87b163fb67f1c8367b1e2c8',
-    -- fork which adds the "close window" feature
-  load = function()
-    vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
-    vim.keymap.set("n", "¸¸", function() vim.fn.feedkeys('--') end)
+vim.pack.add({{ src = 'https://github.com/airblade/vim-rooter', version='0415be8b5989e56f6c9e382a04906b7f719cfb38'}})
+vim.g.rooter_silent_chdir = 1
+vim.g.rooter_cd_cmd = 'lcd'
+vim.g.rooter_change_directory_for_non_project_files = 'current'
 
-    vim.g.choosewin_blink_on_land = 0 -- causes issues where the blinking is not stopped and the word under cursor gets highlighted forever
-    return true
-  end},
-  { src = 'https://github.com/emmanueltouzery/diffview.nvim', version='200467703c35a584f572b2c840f32ec24995d054',
-    load = function()
-      local function open_difftastic(file_path, left_commit, right_commit)
-        local cmd = "PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. left_commit .. ":" .. file_path .. " " .. right_commit .. ":" ..  file_path
+vim.api.nvim_create_autocmd("User", {
+  pattern = "RooterChDir",
+  callback=function()
+    set_extra_spellfiles()
+  end}
+)
 
-        open_command_in_popup(cmd)
+vim.pack.add({{ src = 'https://github.com/emmanueltouzery/vim-choosewin', version='12098bc747ccb593c87b163fb67f1c8367b1e2c8'}})
+-- fork which adds the "close window" feature
+vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
+vim.keymap.set("n", "¸¸", function() vim.fn.feedkeys('--') end)
+
+vim.g.choosewin_blink_on_land = 0 -- causes issues where the blinking is not stopped and the word under cursor gets highlighted forever
+
+vim.pack.add({ { src = 'https://github.com/emmanueltouzery/diffview.nvim', version='200467703c35a584f572b2c840f32ec24995d054' }})
+local function open_difftastic(file_path, left_commit, right_commit)
+  local cmd = "PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. left_commit .. ":" .. file_path .. " " .. right_commit .. ":" ..  file_path
+
+  open_command_in_popup(cmd)
+end
+
+require('diffview').setup {
+  hooks = {
+    view_opened = function(view)
+      -- duplicated with another FileType hook because matchadd() is per-window,
+      -- and diffview reuses buffers on new windows so the autocomand doesn't help
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(view.tabpage)) do
+        vim.api.nvim_win_call(win, function()
+          vim.cmd("call matchadd('TodoGroup', 'TODO', -1)")
+        end)
       end
-
-      require('diffview').setup {
-        hooks = {
-          view_opened = function(view)
-            -- duplicated with another FileType hook because matchadd() is per-window,
-            -- and diffview reuses buffers on new windows so the autocomand doesn't help
-            for _, win in ipairs(vim.api.nvim_tabpage_list_wins(view.tabpage)) do
-              vim.api.nvim_win_call(win, function()
-                vim.cmd("call matchadd('TodoGroup', 'TODO', -1)")
-              end)
+    end,
+  },
+  keymaps = {
+    view = {
+      ["šx"] = function()
+        require'diffview.config'.actions.prev_conflict()
+        vim.cmd("norm! zz") -- center on screen
+      end,
+      ["đx"] = function()
+        require'diffview.config'.actions.next_conflict()
+        vim.cmd("norm! zz") -- center on screen
+      end,
+      ["<leader>b"] = false, -- don't block my own leader.b (buffer) shortcuts
+      {"n", "gf", diffview_gf,
+      {desc = "Goto File"},
+    },
+  },
+  file_panel = {
+    ["-"] = false, -- i want this shortcut for choosewin
+    {"n", "s", require("diffview.config").actions.toggle_stage_entry,
+    {desc = "Stage / unstage the selected entry"},
+  },
+  {"n", "c",
+  function()
+    -- cc should commit from diffview
+    vim.cmd('DiffviewClose')
+    vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1]) -- in case i had a dadbod in the second tab, where i could have jumped after closing the diffview tab
+    open_git_commit_popup()
+  end,
+  {desc = "Invoke diffview"} },
+  {"n", "šx", require("diffview.config").actions.prev_conflict, {desc = "Go to previous conflict"}},
+  {"n", "đx", require("diffview.config").actions.next_conflict, {desc = "Go to next conflict"}},
+  {"n", "gf", diffview_gf, {desc = "Goto File"}, },
+  {"n", "F", require("diffview.config").actions.select_first_entry, {desc = "Jump to first file"}, },
+  { "n", "ćf", require("diffview.config").actions.select_first_entry, { desc = "Open the diff for the first file" } },
+  { "n", "žf", require("diffview.config").actions.select_last_entry, { desc = "Open the diff for the last file" } },
+  { "n", "X", function()
+    local rel_path = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().path
+    local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
+    local absolute_file_path = git_root .. "/" .. rel_path
+    local stat = vim.loop.fs_stat(absolute_file_path)
+    if stat.type == "directory" then
+      vim.ui.select({"Yes", "No"}, {prompt="Discard changes in the whole git folder " .. rel_path .. "?"}, function(choice)
+        if choice == "Yes" then
+          vim.system({"git", "checkout", "--", rel_path .. "/"}, {text=true, cwd=git_root}, vim.schedule_wrap(function(res)
+            if #res.stderr + #res.stdout > 0 then
+              notif({res.stderr .. " " .. res.stdout})
             end
-          end,
-        },
-        keymaps = {
-          view = {
-            ["šx"] = function()
-              require'diffview.config'.actions.prev_conflict()
-              vim.cmd("norm! zz") -- center on screen
-            end,
-            ["đx"] = function()
-              require'diffview.config'.actions.next_conflict()
-              vim.cmd("norm! zz") -- center on screen
-            end,
-            ["<leader>b"] = false, -- don't block my own leader.b (buffer) shortcuts
-            {"n", "gf", diffview_gf,
-              {desc = "Goto File"},
-            },
-          },
-          file_panel = {
-            ["-"] = false, -- i want this shortcut for choosewin
-            {"n", "s", require("diffview.config").actions.toggle_stage_entry,
-              {desc = "Stage / unstage the selected entry"},
-            },
-            {"n", "c",
-              function()
-              -- cc should commit from diffview
-              vim.cmd('DiffviewClose')
-              vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1]) -- in case i had a dadbod in the second tab, where i could have jumped after closing the diffview tab
-              open_git_commit_popup()
-            end,
-              {desc = "Invoke diffview"}
-            },
-            {"n", "šx", require("diffview.config").actions.prev_conflict, {desc = "Go to previous conflict"}},
-            {"n", "đx", require("diffview.config").actions.next_conflict, {desc = "Go to next conflict"}},
-            {"n", "gf", diffview_gf,
-              {desc = "Goto File"},
-            },
-            {"n", "F",
-            require("diffview.config").actions.select_first_entry,
-              {desc = "Jump to first file"},
-            },
-            { "n", "ćf", require("diffview.config").actions.select_first_entry, { desc = "Open the diff for the first file" } },
-            { "n", "žf", require("diffview.config").actions.select_last_entry, { desc = "Open the diff for the last file" } },
-            { "n", "X", function()
-              local rel_path = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().path
-              local git_root = vim.fs.root(vim.fn.getcwd(), ".git")
-              local absolute_file_path = git_root .. "/" .. rel_path
-              local stat = vim.loop.fs_stat(absolute_file_path)
-              if stat.type == "directory" then
-                vim.ui.select({"Yes", "No"}, {prompt="Discard changes in the whole git folder " .. rel_path .. "?"}, function(choice)
-                  if choice == "Yes" then
-                    vim.system({"git", "checkout", "--", rel_path .. "/"}, {text=true, cwd=git_root}, vim.schedule_wrap(function(res)
-                      if #res.stderr + #res.stdout > 0 then
-                        notif({res.stderr .. " " .. res.stdout})
-                      end
-                    end))
-                  end
-                end)
-              else
-                require'diffview.config'.actions.restore_entry()
-              end
-            end, { desc = "Restore entry to the state on the left side" } },
-            -- makes sense here and not in localleader because in this case we override a global shortcut
-            {"n", "<leader>cm", function()
-              local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
-              glow_for_buffer(bufnr)
-            end,
-              {desc = "Display markdown"},
-            },
-          },
-          file_history_panel = {
-            {"n", "gf", diffview_gf,
-              {desc = "Goto File"},
-            },
-            {"n", "gc", function()
-              local commit = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().commit.hash
-              vim.cmd("DiffviewOpen " .. commit .. "^.." ..commit)
-            end, {desc = "Goto Commit"}},
-            {"n", "<C-enter>", function()
-              local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
-              if string.match(stash_info, "^stash@") then
-                -- copy-pasted from telescope actions.git_apply_stash + added the reload_all() and changed apply to pop
-                vim.system({ "git", "stash", "pop", stash_info }, { text = true}, function(res)
-                  if res.code ~= 0 then
-                    vim.schedule(function()
-                      local msg = "Stash pop failed: " .. res.stderr
-                      notif({msg}, vim.log.levels.ERROR)
-                      print(msg)
-                    end)
-                  else
-                    -- unstage everything. we stage when we stash files to avoid issues with untracked files...
-                    vim.system({"git", "restore", "--staged", "."}, {text=true}, vim.schedule_wrap(function(res)
-                      if res.code == 0 then
-                        vim.cmd("DiffviewClose")
-                        reload_all()
-                        vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1])
-                        -- utils.notify("actions.git_apply_stash", {
-                        --   msg = string.format("applied: '%s' ", selection.value),
-                        --   level = "INFO",
-                        -- })
-                      else
-                        local msg = "Unstage after unstash failed: " .. res.stderr
-                        notif({msg}, vim.log.levels.ERROR)
-                        print(msg)
-                      end
-                    end))
-                  end
-                end)
-              end
-            end, {desc = "Pop git stash"}},
-            {"n", "<C-Del>", function()
-              local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
-              if string.match(stash_info, "^stash@") then
-                vim.system({"git", "stash", "drop", stash_info}, {text=true}, vim.schedule_wrap(function()
-                    vim.cmd("DiffviewClose")
-                    vim.cmd("DiffviewFileHistory -g --range=stash")
-                end))
-              end
-            end}
-          },
-        },
-        file_history_panel = {
-          log_options = {
-            git = {
-              single_file = {
-                follow = true,       -- Follow renames (only for single file)
-              }
-            },
-            relative_date_cutoff_seconds = 3 * 24 * 60 * 60,
-          }
-        },
-      }
-
-      -- https://github.com/sindrets/diffview.nvim/issues/167#issuecomment-1173673615
-      vim.cmd[[au BufWinEnter diffview://*/log/*/commit_log nnoremap <buffer> q <Cmd>q<CR>]]
-
-      -- require('diffview').init()
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "DiffviewFiles",
-        callback=function(ev)
-          local branch = "unknown branch"
-          vim.fn.jobstart("git branch --show", {
-            on_stdout = vim.schedule_wrap(function(j, output)
-              if #output[1] > 0 then
-                branch = output[1]
-              end
-            end),
-            on_exit = vim.schedule_wrap(function(j, output)
-              for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-                if vim.api.nvim_win_get_buf(win) == ev.buf then
-                  vim.wo[win].winbar = "%#Title#%= " .. branch
-                  if vim.fn.exists('&winfixbuf') == 1 then
-                    vim.wo[win].winfixbuf = true
-                  end
-                end
-              end
-            end)
-          })
-        end,
-      })
-      return true
+          end))
+        end
+      end)
+    else
+      require'diffview.config'.actions.restore_entry()
     end
+  end, { desc = "Restore entry to the state on the left side" } },
+  -- makes sense here and not in localleader because in this case we override a global shortcut
+  {"n", "<leader>cm", function()
+    local bufnr = require'diffview.lib'.get_current_view().cur_entry.layout.b.file.bufnr
+    glow_for_buffer(bufnr)
+  end, {desc = "Display markdown"}, }, },
+  file_history_panel = {
+    {"n", "gf", diffview_gf,
+    {desc = "Goto File"},
   },
+  {"n", "gc", function()
+    local commit = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().commit.hash
+    vim.cmd("DiffviewOpen " .. commit .. "^.." ..commit)
+  end, {desc = "Goto Commit"}},
+  {"n", "<C-enter>", function()
+    local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
+    if string.match(stash_info, "^stash@") then
+      -- copy-pasted from telescope actions.git_apply_stash + added the reload_all() and changed apply to pop
+      vim.system({ "git", "stash", "pop", stash_info }, { text = true}, function(res)
+        if res.code ~= 0 then
+          vim.schedule(function()
+            local msg = "Stash pop failed: " .. res.stderr
+            notif({msg}, vim.log.levels.ERROR)
+            print(msg)
+          end)
+        else
+          -- unstage everything. we stage when we stash files to avoid issues with untracked files...
+          vim.system({"git", "restore", "--staged", "."}, {text=true}, vim.schedule_wrap(function(res)
+            if res.code == 0 then
+              vim.cmd("DiffviewClose")
+              reload_all()
+              vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1])
+              -- utils.notify("actions.git_apply_stash", {
+                --   msg = string.format("applied: '%s' ", selection.value),
+                --   level = "INFO",
+                -- })
+              else
+                local msg = "Unstage after unstash failed: " .. res.stderr
+                notif({msg}, vim.log.levels.ERROR)
+                print(msg)
+              end
+            end))
+          end
+        end)
+      end
+    end, {desc = "Pop git stash"}},
+    {"n", "<C-Del>", function()
+      local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
+      if string.match(stash_info, "^stash@") then
+        vim.system({"git", "stash", "drop", stash_info}, {text=true}, vim.schedule_wrap(function()
+          vim.cmd("DiffviewClose")
+          vim.cmd("DiffviewFileHistory -g --range=stash")
+        end))
+      end
+    end} },
+  },
+  file_history_panel = {
+    log_options = {
+      git = {
+        single_file = {
+          follow = true,       -- Follow renames (only for single file)
+        }
+      },
+      relative_date_cutoff_seconds = 3 * 24 * 60 * 60,
+    }
+  },
+}
+
+-- https://github.com/sindrets/diffview.nvim/issues/167#issuecomment-1173673615
+vim.cmd[[au BufWinEnter diffview://*/log/*/commit_log nnoremap <buffer> q <Cmd>q<CR>]]
+
+-- require('diffview').init()
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "DiffviewFiles",
+  callback=function(ev)
+    local branch = "unknown branch"
+    vim.fn.jobstart("git branch --show", {
+      on_stdout = vim.schedule_wrap(function(j, output)
+        if #output[1] > 0 then
+          branch = output[1]
+        end
+      end),
+      on_exit = vim.schedule_wrap(function(j, output)
+        for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          if vim.api.nvim_win_get_buf(win) == ev.buf then
+            vim.wo[win].winbar = "%#Title#%= " .. branch
+            if vim.fn.exists('&winfixbuf') == 1 then
+              vim.wo[win].winfixbuf = true
+            end
+          end
+        end
+      end)
+    })
+  end,
+})
+
+vim.pack.add({ { src = 'https://github.com/echasnovski/mini.diff', version = '65c59f9967fec965d8759a88c1baa43147699035'}})
+-- put a priority higher than the default 10 for diagnostic errors, so that
+-- the signs for a hunk are together on the left, and prioritized instead of individual
+-- diagnostics moving the sign for a line to not line up
+-- put 30 to be more than the 21/22 that nvim-dap uses for breakpoint signs,
+-- otherwise diff vertical lines are broken by breakpoints
+local priority = 30
+if vim.version().major == 0 and vim.version().minor < 11 then
+  -- only neovim < 0.11, i want the the diff signs on the left => need a lower value
+  priority = 9
+end
+require('mini.diff').setup({
+  view = {
+    style = 'sign',
+    signs = { add = '┃', change = '┃', delete = '_' },
+    priority = priority,
+  },
+  -- source = {
+  --   name = "branch_diff",
+  --   attach = function(buf_id)
+  --     local absolute_file_path = vim.api.nvim_buf_get_name(buf_id)
+  --     local git_path = vim.fs.root(absolute_file_path, '.git')
+  --     if git_path ~= nil then
+  --       local file_path = absolute_file_path:gsub(escape_pattern(git_path) .. "/", "")
+  --       local contents_branch = vim.system({"git", "show", (vim.g.diff_source_branch or 'develop') .. ":" .. file_path}, {text = true}, function(res)
+  --         if res.code == 0 then
+  --           vim.schedule(function()
+  --             require('mini.diff').set_ref_text(buf_id, res.stdout)
+  --           end)
+  --         end
+  --       end)
+  --     end
+  --   end,
+  -- },
+})
+
+vim.pack.add({ { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version='7caec274fd19c12b55902a5b795100d21531391f' }})
+-- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+-- groovy is for gradle build files
+require'nvim-treesitter'.install { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
+"elixir","jsdoc","json","scss","typescript", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css" }
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {  "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
+  "elixir","jsdoc","json","scss","typescript", "typescriptreact", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css"  },
+  callback = function() vim.treesitter.start() end,
+})
+
+vim.pack.add({{ src = 'https://github.com/neovim/nvim-lspconfig', version='615d7b2712efb2f530a83a9d0466acafba6b1d6f'}}) -- Collection of configurations for built-in LSP client
+-- ts_ls, for typescript < 7.0
+-- vim.lsp.config("ts_ls", {
+--   init_options = {
+--     supportsHoverVerbosity=true,
+--     preferences = {
+--       maximumHoverLength = 2500,
+--     }
+--   },
+-- })
+-- vim.lsp.enable({"ts_ls"})
+--
+
+-- tsc, for typescript >= 7.0
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.experimental = {hoverVerbosityLevel = true}
+-- capabilities.textDocument = capabilities.textDocument or {}
+-- capabilities.textDocument.hover = capabilities.textDocument.hover or {}
+-- -- these two actually don't seem required, but...
+-- capabilities.textDocument.hover.verbosityLevel = true
+-- capabilities.textDocument.hover.supportsHoverVerbosity = true
+
+vim.lsp.config("tsc", {
+  capabilities = capabilities,
+  settings = {
+    ['js/ts'] = {
+      maximumHoverLength = 2500,
+    }
+  },
+})
+vim.lsp.enable('tsc')
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if vim.tbl_contains({"elixir_ls", "ts_ls", "jsonls", "tsc"}, client.config.name) then
+      -- use manual indentation (through conform.nvim) -- prettier for JS+json, elixir fmt
+      -- for elixir conform is better than the elixirls indentation, because it can give me the mix fmt output
+      -- which sometimes pinpoints the syntax error
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+    end
+
+    if client:supports_method('textDocument/documentColor') and vim.version().major == 0 and vim.version().minor >= 12 then
+      vim.lsp.document_color.enable(true, {bufnr=args.buf}, {style='virtual'})
+    end
+  end,
+})
+
+vim.lsp.config("rust_analyzer", {})
+vim.lsp.enable({"rust_analyzer"})
+
+vim.lsp.config("elixirls", {})
+vim.lsp.enable({"elixirls"})
+
+vim.lsp.config("bashls", {})
+vim.lsp.enable({"bashls"})
+
+vim.lsp.config("jsonls", {})
+vim.lsp.enable({"jsonls"})
+
+vim.lsp.config("cssls", {})
+vim.lsp.enable({"cssls"})
+
+vim.lsp.config("graphql", {
+  -- disabling for typescript & typescriptreact as i don't know what it gives me
+  -- and i suspect it slows things down
+  filetypes = {'graphql'}
+})
+vim.lsp.enable({"graphql"})
+
+-- lspconfig.elixirls.setup {
+  --   cmd = { "elixir-ls" }; -- for some reason I must specify the command. I think I shouldn't have to, due to mason
+  --   -- use conform.nvim for elixir indentation, because it can give me the mix fmt output
+  --   -- which sometimes pinpoints the syntax error
+  -- }
+
+-- UI to select things (files, grep results, open buffers...)
+vim.pack.add({
+  { src = 'https://github.com/debugloop/telescope-undo.nvim', version = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
+  { src = 'https://github.com/emmanueltouzery/telescope.nvim', version="beb508fbc43fd8254913b5f0474039435b9b7c83"},
+  { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim', version="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" },
   { src = 'https://github.com/nvim-telescope/telescope-live-grep-raw.nvim', version='731a046da7dd3adff9de871a42f9b7fb85f60f47'},
-  { src = 'https://github.com/emmanueltouzery/agitator.nvim', version='ceaf20e08b0d37ef6e63f38f7fac3f7d700ffede'},
-  -- use {'/home/emmanuel/home/elixir-extras.nvim'
-  { src = 'https://github.com/emmanueltouzery/elixir-extras.nvim', load=function()
-    require'elixir-extras'.setup_multiple_clause_gutter()
-    return true
+})
+
+local actions = require("telescope.actions")
+-- https://github.com/nvim-telescope/telescope.nvim/issues/2778#issuecomment-2202572413
+local focus_preview = function(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local picker = action_state.get_current_picker(prompt_bufnr)
+  local prompt_win = picker.prompt_win
+  local previewer = picker.previewer
+  local bufnr = previewer.state.bufnr or previewer.state.termopen_bufnr
+  local winid = previewer.state.winid or vim.fn.win_findbuf(bufnr)[1]
+  vim.keymap.set("n", "<S-Tab>", function()
+    vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", prompt_win))
+  end, { buffer = bufnr })
+  vim.cmd(string.format("noautocmd lua vim.api.nvim_set_current_win(%s)", winid))
+  -- api.nvim_set_current_win(winid)
+end
+
+local telescope_pick_win_and_open = function(prompt_bufnr)
+  local entry = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
+  filename = entry.filename
+  if entry.cwd then
+    filename = entry.cwd .. "/" .. entry.filename
   end
-  },
-  { src = 'https://github.com/svermeulen/vim-yoink', version='89ed6934679fdbc3c20f552b50b1f869f624cd22', load = function()
-    -- check for other vim.g.yoink settings set beforehand
-    -- create a popup displaying the previous and next yoink pastes that can be switched to
-    local ns = vim.api.nvim_create_namespace "yoink.popup"
-    function check_close_paste_popup()
-      if vim.b.paste_popup_timeout ~= nil and vim.uv.hrtime() > vim.b.paste_popup_timeout then
-        if vim.b.hide_paste_ring_popup ~= nil then
-          vim.b.hide_paste_ring_popup()
-          vim.b.hide_paste_ring_popup = nil
-          vim.b.paste_popup_timeout = nil
+  actions.close(prompt_bufnr)
+  if vim.fn.winnr('$') > 1 then
+    vim.cmd[[ChooseWin]]
+  end
+  vim.cmd(":e " .. filename)
+  if entry.lnum then
+    vim.schedule(function()
+      vim.cmd("norm " .. entry.lnum .. "G")
+    end)
+  end
+end
+
+require('telescope').setup {
+  defaults = {
+    -- make sure matches with the same score get sorted as they would be by default
+    -- https://github.com/nvim-telescope/telescope.nvim/pull/1401#issuecomment-957234973
+    -- https://github.com/nvim-telescope/telescope.nvim/issues/1080#issuecomment-1592392087
+    tiebreak = function(entry1, entry2, prompt)
+      local start_pos1, _ = entry1.ordinal:find(prompt)
+      if start_pos1 then
+        local start_pos2, _ = entry2.ordinal:find(prompt)
+        if start_pos2 then
+          return start_pos1 < start_pos2
+        end
+      end
+      return false
+    end,
+    -- path_display = {'truncate'},
+    path_display = function(opts, path)
+      local get_status = require("telescope.state").get_status
+      local utils = require("telescope.utils")
+
+      local cwd
+      if opts.cwd then
+        cwd = opts.cwd
+        if not vim.in_fast_event() then
+          cwd = utils.path_expand(opts.cwd)
         end
       else
-        vim.defer_fn(function()
-          check_close_paste_popup()
-        end, 200)
+        cwd = vim.loop.cwd()
       end
-    end
-    function update_popup(hist)
-      local select_hist = {}
-      for i, w in ipairs(hist) do
-        local text = w.text
-        local lines = vim.tbl_filter(function(l) return #l > 0 end, vim.split(text, "\n"))
-        if #lines > 1 then
-          text = string.format("[%d ] %s", #lines, vim.trim(lines[1]))
-        end
-        local st = truncate_no_plenary(vim.trim(text), 70)
-        if #st < 70 then
-          -- couldn't find another way to highlight the row beyond the end
-          -- of the text -- pad with spaces so that the highlight reaches the end of the line
-          st = st .. string.rep(" ", 70 - #st)
-        end
-        table.insert(select_hist, st)
+      path = path:gsub("^" .. escape_pattern(cwd) .. "/?", "")
+
+      local status = get_status(vim.api.nvim_get_current_buf())
+      local len = 150
+      -- status.layout is nil at least for spc-oP, the picker's picker
+      if status.layout then
+        len = vim.api.nvim_win_get_width(status.layout.results.winid) - status.picker.selection_caret:len() - 2
       end
-      vim.api.nvim_buf_set_lines(vim.b.paste_popup_buf, 0, -1, false, select_hist)
-      vim.hl.range(vim.b.paste_popup_buf, ns, "BufferTabPages", {1, 0}, {1, #select_hist[2]})
-    end
-    function swap_back_or_fro(cmd)
-      local hist = vim.fn['yoink#getYankHistory']()
-      if vim.b.paste_popup_timeout == nil then
-        vim.defer_fn(function()
-          check_close_paste_popup()
-        end, 200)
 
-        local popup_buf = vim.api.nvim_create_buf(false, true)
-        vim.bo[popup_buf].buftype = "nofile"
-        vim.bo[popup_buf].bufhidden = "hide"
-        vim.bo[popup_buf].swapfile = false
-        vim.bo[popup_buf].modifiable = true
+      path = truncate_left_no_plenary(path, len)
 
-        local width = vim.api.nvim_win_get_width(0)
-        local height = vim.api.nvim_win_get_height(0) - 1
+      local tail = require("telescope.utils").path_tail(path)
+      -- path = string.format("%s (%s)", tail, path)
 
-        local win_opts = {
-          focusable = false,
-          style = "minimal",
-          border = "rounded",
-          relative = "win",
-          width = 70,
-          height = #hist,
-          anchor = "SE",
-          row = height,
-          col = width,
-          noautocmd = true,
-        }
-        -- vim.bo[popup_buf].modifiable = false
-        vim.bo[popup_buf].readonly = true
-
-        local popup_win = vim.api.nvim_open_win(popup_buf, false, win_opts)
-
-        vim.b.paste_popup_buf = popup_buf
-        vim.b.hide_paste_ring_popup = function()
-          if vim.api.nvim_win_is_valid(popup_win) then
-            vim.api.nvim_win_close(popup_win, true)
-          end
-          if vim.api.nvim_buf_is_valid(popup_buf) then
-            vim.api.nvim_buf_delete(popup_buf, {force=true})
-          end
-        end
-      end
-      vim.b.paste_popup_timeout = vim.uv.hrtime() + 3000000000 --3s
-      vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes(cmd, true, false, true),
-        "n",   -- mode: normal mode
-        true   -- escape keycodes
-      )
-      update_popup(hist)
-    end
-    -- end yoink popup
-
-    vim.keymap.set("n", "<M-p>", function()
-      swap_back_or_fro("<Plug>(YoinkPostPasteSwapBack)")
-    end)
-    vim.keymap.set("n", "<M-P>", function()
-      swap_back_or_fro("<Plug>(YoinkPostPasteSwapForward)")
-    end)
-
-    vim.cmd[[nmap p <plug>(YoinkPaste_p)]]
-    vim.cmd[[nmap P <plug>(YoinkPaste_P)]]
-    return true
-  end}, -- considered https://github.com/gbprod/yanky.nvim & https://github.com/AckslD/nvim-neoclip.lua too, previously used maxbrunsfeld/vim-yankstack
-  { src = 'https://github.com/emmanueltouzery/vim-elixir', version='735528cecc19ecffa002ffa20176e9984cced970'},
-  { src = 'https://github.com/smjonas/live-command.nvim', version='ce4b104ce702c7bb9fdff863059af6d47107ca61', load=function()
-    require("live-command").setup {
-      defaults = {
-        inline_highlighting = false, -- https://github.com/smjonas/live-command.nvim/issues/23
-      },
-      commands = {
-        Norm = { cmd = "norm" },
-        S = { cmd = "Subvert"}, -- must be defined before we import vim-abolish
-      },
-    }
-    return true
-  end},
-  { src = 'https://github.com/tpope/vim-abolish', version='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'},
-  { src = 'https://github.com/qpkorr/vim-bufkill', version='2bd6d7e791668ea52bb26be2639406fcf617271f'},
-  { src = 'https://github.com/lifepillar/vim-cheat40', version='22c505b9334abc603fc23a3776360ab3a86e0ab5', load=function()
-    vim.cmd[[autocmd! FileType cheat40 :set signcolumn=no]]
-    return true
-  end},
-  {
-    src = "https://github.com/ggandor/leap.nvim",
-    version="0a034970fb430e6027f2df556af04e19e4d9ccc5",
-    load = function()
-    -- require("leap").add_default_mappings()
-      vim.api.nvim_set_keymap('n', 's', '<Plug>(leap-forward-to)', {silent = true})
-      vim.api.nvim_set_keymap('n', 'S', '<Plug>(leap-backward-to)', {silent = true})
-      vim.api.nvim_set_keymap('v', 's', '<Plug>(leap-forward-to)', {silent = true})
-      vim.api.nvim_set_keymap('v', 'S', '<Plug>(leap-backward-to)', {silent = true})
-      vim.api.nvim_set_keymap('n', 'gs', '<Plug>(leap-cross-window)', {silent = true})
-
-      -- The below settings make Leap's highlighting a bit closer to what you've been
-      -- used to in Lightspeed.
-      -- disable because this sometimes leaves some lines as highlighted as commented when they're not
-      -- vim.api.nvim_set_hl(0, "LeapBackdrop", {link = "Comment"})
-      vim.api.nvim_set_hl(
-      0,
-      "LeapMatch",
-      {
-        fg = "white", -- for light themes, set to 'black' or similar
-        bold = true,
-        nocombine = true
+      local highlights = {
+        {
+          {
+            0,
+            #path - #tail,
+          },
+          "Comment", -- highlight group name
+        },
       }
-      )
-      require("leap").opts.highlight_unlabeled_phase_one_targets = true
-      return true
-    end
-  },
-  { src = 'https://github.com/vim-test/vim-test', version='c63b94c1e5089807f4532e05f087351ddb5a207c', load = function()
-    -- https://github.com/vim-test/vim-test/issues/711
-    -- trigger tests also for non-test elixir files, useful to run all tests
-    -- also from a non-test file
-    -- tolerate .ex, .exs, and .eex
-    vim.g["test#elixir#exunit#file_pattern"] = "^.*\\.ee\\?xs\\?$"
 
-    -- elixir: warnings as errors
-    vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
-
-    -- need this to parse more errors from tests into quickfix when i have debugging statements
-    -- otherwise the test output may get truncated
-    vim.cmd[[set scrollback=40000]]
-
-    -- https://github.com/vim-test/vim-test/issues/902#issuecomment-4388304422
-    vim.g['test#custom_strategies'] = {
-      overseer = function(cmd)
-        require('overseer').new_task({ cmd = cmd, components = {
-          {'job_display_info', message = "Tests running"},
-          "vim_test_qf",
-          "on_exit_set_status",
-          -- "on_complete_notify", -- i limited my notify to filter out messages, notifs.lua and overseer doesn't give markers i can use to whitelist it
-          "on_complete_notif",
-          "only_tree_tests",
-        }, metadata = {type = "test"} }):start()
-      end,
-    }
-    vim.g['test#strategy'] = 'overseer'
-    return true
-  end},
-  -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
-  { src = 'https://github.com/dhruvasagar/vim-markify', version='14158865c0f37a02a5d6d738437eb00a821b31ef', load = function()
-    vim.g.markify_error_text = ""
-    vim.g.markify_warning_text = ""
-    vim.g.markify_info_text = ""
-    vim.g.markify_info_texthl = "Todo"
-    vim.g.markify_echo_current_message = 0
-    return true
-  end},
-  { src = 'https://github.com/emmanueltouzery/dressing.nvim', version='ed59504b70f2ced477eb39f1fe6e1acc668dcfbf', load=function()
-    require('dressing').setup({
-      input = {
-        -- ESC won't close the modal, ability to use vim keys
-        insert_only = false,
-        get_config = function(opts)
-          if opts.kind == 'center_win' then
-            return {
-              relative = 'editor',
-            }
-          end
-        end
+      return path, highlights
+    end;
+    prompt_prefix = "   ",
+    selection_caret = " ",
+    sorting_strategy = "ascending",
+    layout_config = {
+      prompt_position = "top",
+      width = 0.75,
+      preview_cutoff = 120,
+      horizontal = {
+        preview_width = 0.6,
       },
-      select = {
-        get_config = function(opts)
-          -- https://github.com/stevearc/dressing.nvim/issues/22#issuecomment-1067211863
-          -- for codeaction, we want null-ls to be last
-          -- https://github.com/jose-elias-alvarez/null-ls.nvim/issues/630
-          -- for eslint, it's offering me options like "disable eslint rule" which
-          -- are almost never what I want, and they appear before the more useful options
-          -- from the LSP
-          if opts.kind == 'codeaction' then
-            return {
-              telescope = {
-                -- sorter = require'telescope.sorters'.Sorter:new {
-                --   scoring_function = function(_, _, line)
-                --     local order = tonumber(string.match(line, "^[%d]+"))
-                --     if string.find(line, escape_pattern('null-ls')) then
-                --       return order+100
-                --     else
-                --       return order
-                --     end
-                --   end,
-                -- },
-                cache_picker = false,
-                -- copied from the telescope dropdown theme
-                sorting_strategy = "ascending",
-                layout_strategy = "center",
-                layout_config = {
-                  preview_cutoff = 1, -- Preview should always show (unless previewer = false)
-                  width = 80,
-                  height = 15,
-                },
-                borderchars = {
-                  prompt = { "─", "│", " ", "│", "╭", "╮", "│", "│" },
-                  results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-                  preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-                },
-              }
-            }
-          end
+    },
+    cache_picker = {
+      -- keep 3 recent pickers in cache. see `:help telescope.defaults.cache_picker`
+      -- https://github.com/nvim-telescope/telescope.nvim/issues/1483
+      -- useful for the shortcut to open recent pickers, `:help builtin.pickers`
+      num_pickers = 5,
+    },
+    file_ignore_patterns = { "/%.git/", "^%.git/", "/node_modules/", "^node_modules/", "^__pycache__/" },
+    mappings = {
+      i = {
+        ["<C-n>"] = actions.cycle_history_next,
+        ["<C-p>"] = actions.cycle_history_prev,
+
+        -- https://github.com/nvim-telescope/telescope.nvim/issues/2115#issuecomment-1366575821
+        ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
+        ["<kEnter>"] = require("telescope.actions").select_default + require("telescope.actions").center,
+        ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
+        ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
+        ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
+        ["<C-r><C-w>"] = function(picker)
+          require("telescope.actions").close(picker)
+          local word = vim.fn.expand('<cword>')
+          vim.cmd[[Telescope resume]]
+          vim.defer_fn(function()
+            vim.fn.feedkeys(word)
+          end, 10)
         end,
+        ["<S-Tab>"] = focus_preview,
+        ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+        ["<M-CR>"] = function(prompt_bufnr) telescope_pick_win_and_open(prompt_bufnr) end,
       },
-    })
-    vim.cmd[[set winhighlight=NormalFloat:DressingInputText]]
-    return true
-  end},
-  {
-    src = "https://github.com/williamboman/mason.nvim",
-    version = "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
-  -- }
-  -- use {
-  --   "williamboman/mason-lspconfig.nvim",
-  --   commit = "b1d9a914b02ba5660f1e272a03314b31d4576fe2",
-    load = function()
-      require("mason").setup()
-      -- require("mason-lspconfig").setup {}
-
-      -- ts_ls, for typescript < 7.0
-      -- vim.lsp.config("ts_ls", {
-      --   init_options = {
-      --     supportsHoverVerbosity=true,
-      --     preferences = {
-      --       maximumHoverLength = 2500,
-      --     }
-      --   },
-      -- })
-      -- vim.lsp.enable({"ts_ls"})
-      --
-
-      -- tsc, for typescript >= 7.0
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities.experimental = {hoverVerbosityLevel = true}
-      -- capabilities.textDocument = capabilities.textDocument or {}
-      -- capabilities.textDocument.hover = capabilities.textDocument.hover or {}
-      -- -- these two actually don't seem required, but...
-      -- capabilities.textDocument.hover.verbosityLevel = true
-      -- capabilities.textDocument.hover.supportsHoverVerbosity = true
-
-      vim.lsp.config("tsc", {
-        capabilities = capabilities,
-        settings = {
-          ['js/ts'] = {
-            maximumHoverLength = 2500,
-          }
-        },
-      })
-      vim.lsp.enable('tsc')
-
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if vim.tbl_contains({"elixir_ls", "ts_ls", "jsonls", "tsc"}, client.config.name) then
-            -- use manual indentation (through conform.nvim) -- prettier for JS+json, elixir fmt
-            -- for elixir conform is better than the elixirls indentation, because it can give me the mix fmt output
-            -- which sometimes pinpoints the syntax error
-            client.server_capabilities.documentFormattingProvider = false
-            client.server_capabilities.documentRangeFormattingProvider = false
-          end
-
-          if client:supports_method('textDocument/documentColor') and vim.version().major == 0 and vim.version().minor >= 12 then
-            vim.lsp.document_color.enable(true, {bufnr=args.buf}, {style='virtual'})
-          end
-        end,
-      })
-
-      vim.lsp.config("rust_analyzer", {})
-      vim.lsp.enable({"rust_analyzer"})
-
-      vim.lsp.config("elixirls", {})
-      vim.lsp.enable({"elixirls"})
-
-      vim.lsp.config("bashls", {})
-      vim.lsp.enable({"bashls"})
-
-      vim.lsp.config("jsonls", {})
-      vim.lsp.enable({"jsonls"})
-
-      vim.lsp.config("cssls", {})
-      vim.lsp.enable({"cssls"})
-
-      vim.lsp.config("graphql", {
-        -- disabling for typescript & typescriptreact as i don't know what it gives me
-        -- and i suspect it slows things down
-        filetypes = {'graphql'}
-      })
-      vim.lsp.enable({"graphql"})
-
-      -- lspconfig.elixirls.setup {
-      --   cmd = { "elixir-ls" }; -- for some reason I must specify the command. I think I shouldn't have to, due to mason
-      --   -- use conform.nvim for elixir indentation, because it can give me the mix fmt output
-      --   -- which sometimes pinpoints the syntax error
-      -- }
-      return true
-    end,
-    -- after = "nvim-lspconfig",
+      n = {
+        ["<CR>"] = require("telescope.actions").select_default + require("telescope.actions").center,
+        ["<kEnter>"] = require("telescope.actions").select_default + require("telescope.actions").center,
+        ["<C-x>"] = require("telescope.actions").select_horizontal + require("telescope.actions").center,
+        ["<C-v>"] = require("telescope.actions").select_vertical + require("telescope.actions").center,
+        ["<C-t>"] = require("telescope.actions").select_tab + require("telescope.actions").center,
+        ["<S-Tab>"] = focus_preview,
+        ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+        ["<M-CR>"] = function(prompt_bufnr) telescope_pick_win_and_open(prompt_bufnr) end,
+      }
+    },
   },
-  { src = 'https://github.com/emmanueltouzery/key-menu.nvim', version='171ad5c40fe978ebba86026beac1ac3ed8eda42d'}, -- originally linty-org/key-menu.nvim but the git repo was deleted...
-  { src = 'https://github.com/akinsho/toggleterm.nvim', version='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', load = function()
-    require("toggleterm").setup{
-      direction = 'float',
-      float_opts = {
-        width = 140,
-        height = 45,
-      },
-      size = function(term)
-        if term.direction == "horizontal" then
-          return 15
-        elseif term.direction == "vertical" then
-          return vim.o.columns * 0.5
-        end
-      end,
-      on_open=function(term)
-        -- q to close a terminal
-        vim.api.nvim_buf_set_keymap(term.bufnr, "n", "<esc>", "<cmd>close<CR>", {noremap = true, silent = true})
-      end,
-    }
-    function _G.set_terminal_keymaps()
-      local opts = {noremap = true}
-      vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
-    end
-    -- if you only want these mappings for toggle term use term://*toggleterm#* instead
-    vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-    return true
-  end},
-  { src = 'https://github.com/stevearc/aerial.nvim', version="645d108a5242ec7b378cbe643eb6d04d4223f034", load = function()
-    local protocol = require("vim.lsp.protocol")
-    local function get_symbol_kind_name(kind_number)
-      return protocol.SymbolKind[kind_number] or "Unknown"
-    end
-
-    local function node_from_match(match, path)
-      return ((match or {})[path] or {}).node
-    end
-
-    vim.api.nvim_set_hl(0, 'AerialPrivate', { default = true, italic = true})
-    require("aerial").setup({
-      -- i find the lazy load is not all worth it for me
-      -- i don't notice the startup delay, but the first use
-      -- delay is reeeeally noticeable
-      lazy_load = false,
-      disable_max_lines = 20000, -- useful for json output in dadbod-jq
-      backends = {
-        ['_'] = { "treesitter", "lsp", "markdown", "man" },
-        elixir = { "treesitter" },
-        typescript = { "treesitter" },
-        typescriptreact = { "treesitter" },
-        groovy = { "treesitter" },
-      },
-      filter_kind = false,
-      icons = {
-        Field       = "󰙅 ",
-        Type        = "󰊄 ",
-      },
-      keymaps = {
-        ["<Tab>"] = "actions.tree_toggle",
-      },
-      treesitter = {
-        experimental_selection_range = true,
-      },
-      k = 2,
-      post_parse_symbol = function(bufnr, item, ctx)
-        if ctx.backend_name == "treesitter" and (ctx.lang == "typescript" or ctx.lang == "tsx") then
-          -- don't want to display in-function items
-          local value_node = node_from_match(ctx.match, "var_type")
-          local cur_parent = value_node and value_node:parent()
-          while cur_parent do
-            if cur_parent:type() == "arrow_function"
-              or cur_parent:type() == "function_declaration"
-              or cur_parent:type() == "method_definition" then
-              return false
-            end
-            cur_parent = cur_parent:parent()
-          end
-
-          -- find out whether the function is public or private
-          -- this combines with get_highlight for which we highlight
-          -- private symbols differently
-          item.scope = "private"
-          local value_node = node_from_match(ctx.match, "symbol")
-          local cur_parent = value_node and value_node:parent()
-          while cur_parent do
-            if cur_parent:type() == "export_statement" then
-              item.scope = nil
-            end
-            cur_parent = cur_parent:parent()
-          end
-        elseif ctx.backend_name == "treesitter" and ctx.lang == "groovy" then
-          if ctx.match.kind ~= "Constant" then
-            return true
-          end
-
-          -- don't want to display in-function items
-          local value_node = node_from_match(ctx.match, "symbol")
-          local cur_parent = value_node and value_node:parent()
-          while cur_parent do
-            if cur_parent:type() == "closure" then
-              return false
-            end
-            cur_parent = cur_parent:parent()
-          end
-        elseif ctx.backend_name == "lsp" and ctx.symbol and ctx.symbol.location and string.match(ctx.symbol.location.uri, "%.graphql$") then
-          -- for graphql it was easier to go with LSP. Use the symbol kind to keep only the toplevel queries/mutations
-          return ctx.symbol.kind == 5
-        elseif ctx.backend_name == "treesitter" and ctx.lang == "html" and vim.fn.expand("%:e") == "ui" then
-          -- in GTK UI files only display 'object' items (widgets), and display their
-          -- class instead of the tag name (which is always 'object')
-          if item.name == "object" then
-            local line = vim.api.nvim_buf_get_lines(bufnr, item.lnum-1, item.lnum, false)[1]
-            local _, _, class = string.find(line, [[class=.([^'"]+)]])
-            item.name = class
-            return true
-          else
-            return false
-          end
-        elseif ctx.backend_name == "treesitter" and ctx.lang == "rust" then
-          local value_node = node_from_match(ctx.match, "symbol")
-          local child_text = vim.treesitter.get_node_text(value_node:child(0), bufnr) or "<parse error>"
-          if child_text ~= "pub" then
-            item.scope = "private"
-          end
-        elseif ctx.backend_name == "treesitter" and ctx.lang == "java" then
-          local value_node = node_from_match(ctx.match, "symbol")
-          local child_text = vim.treesitter.get_node_text(value_node:child(0), bufnr) or "<parse error>"
-          local is_private = child_text:match("private")
-          if is_private then
-            item.scope = "private"
-          end
-        elseif ctx.backend_name == "treesitter" and ctx.lang == "python" then
-          -- don't want to display in-function items
-          local value_node = node_from_match(ctx.match, "symbol")
-          local cur_parent = value_node and value_node:parent()
-          while cur_parent do
-            if cur_parent:type() == "function_definition" then
-              return false
-            end
-            cur_parent = cur_parent:parent()
-          end
-        end
-        return true
-      end,
-      get_highlight = function(symbol, is_icon)
-        if symbol.scope == "private" then
-          return "AerialPrivate"
-        else
-          return "variable"
-        end
-      end,
-    })
-    require('telescope').load_extension('aerial')
-    return true
-  end},
-  {
-    src = 'https://github.com/nvim-tree/nvim-tree.lua', version='50e919426a4a2053f78b2f8ab001c8ad8eb47ef6'
-    -- for some reason must call init outside of the config block, elsewhere
-    -- config = function() require'nvim-tree'.setup {} end
-  },
-  {src = 'https://github.com/nvim-tree/nvim-web-devicons', version='19d257cf889f79f4022163c3fbb5e08639077bd8' },
-  { src = "https://github.com/windwp/nvim-autopairs", version='7a2c97cccd60abc559344042fefb1d5a85b3e33b', load=function()
-    require("nvim-autopairs").setup({
-      check_ts = true,
-      enable_afterquote = true,
-      enable_moveright = true,
-      enable_check_bracket_line = true,
-    })
-    return true
-  end},
-  { src = "https://github.com/goolord/alpha-nvim", version="0bb6fc0646bcd1cdb4639737a1cee8d6e08bcc31", load=function()
-    local alpha = require'alpha'
-    local dashboard = require'alpha.themes.dashboard'
-    dashboard.section.header.val = {
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⡟⢻⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⡀⠀⠀⠀⣠⣴⠟⠋⠀⠘⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢶⣄⠀⠀⢠⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⠟⠛⠉⠙⠻⣦⣶⠟⠋⠁⠀⠀⠀⠀⢹⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠷⣦⣈⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠇⠀⠀⠀⠀⠀⠈⢻⣆⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⢰⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣆⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠆⢼⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡟⠛⠿⢶⣤⣄⣀⣀⡀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣤⣤⣿⣷⡀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⠀⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣷⣤⣴⡶⠾⠿⠟⠛⠛⠛⠛⠛⠛⠛⠋⠉⠉⠉⠉⠉⠉⠉⢻⣿⣿⣤⡀⠀⠀⢀⣼⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⠻⠶⠾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⢠⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣷⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⢸⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠻⢶⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠄⢸⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠿⣶⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⣸⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⣈⣉⣡⣿⣇⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣯⣭⣭⣼⣧⣀⣤⣤⣤⣠⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣏⣉⣉⣉⣩⣭⣭⣥⣤⣤⣤⠶⠶⠶⠶⠶⠶⠶⠶⠶⠤⠤⠶⠶⠶⠶⣶⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⢻⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-    }
-    dashboard.section.buttons.val = {
-      dashboard.button( "e", "  New file" , ":ene <BAR> startinsert <CR>"),
-      dashboard.button( "p", "  Open project" , ":lua telescope_projects()<cr>"),
-      dashboard.button( "q", "  Quit NVIM" , ":qa<CR>"),
-    }
-    dashboard.config.opts.noautocmd = true
-    alpha.setup(dashboard.config)
-    return true
-  end},
-  -- private, optional stuff
-  { src = 'git@github.com:emmanueltouzery/nvim_config_private', load=function()
-    if pcall(require, 'nvim_config_private') then
-      require'nvim_config_private'.setup{}
-    end
-    return true
-  end},
-  -- combining changes from max397574 and Gelio
-  -- https://github.com/mfussenegger/nvim-treehopper/pull/14
-  -- https://github.com/mfussenegger/nvim-treehopper/issues/10#issuecomment-1126289736
-  -- and other improvements
-  -- alternative => https://github.com/ggandor/leap-ast.nvim
-  { src = 'https://github.com/emmanueltouzery/nvim-treehopper', version='402e65c326671adba7af75657910620af80702b8'},
-  -- previously used a very old version of kylechui/nvim-surround
-  -- mini.surround: slightly less code
-  -- supports JSX <></> tags (rename to <> to <div> for instance - the latest nvim-surround might support it too...)
-  { src = 'https://github.com/nvim-mini/mini.surround', version='444e155147e2b5159dd28a65f9736254c16cb817', load=function()
-    require('mini.surround').setup({
-      -- back to nvim-surround mappings. muscle memory
-      -- and conflict with leap.nvim 's' leader key
+  pickers = {
+    buffers = {
+      sort_lastused = true,
       mappings = {
-        add = 'ys',
-        delete = 'ds',
-        find = '',
-        find_left = '',
-        highlight = '',
-        replace = 'cs',
-      },
-      n_lines = 150,
-      highlight_duration = 3000,
-      custom_surroundings = {
-        -- rename tag while keeping attributes https://github.com/nvim-mini/mini.nvim/issues/1293#issuecomment-2423827325
-        T = {
-          input = { '<(%w+)[^<>]->.-</%1>', '^<()%w+().*</()%w+()>$' },
-          output = function()
-            local tag_name = MiniSurround.user_input('Tag name')
-            if tag_name == nil then return nil end
-            return { left = tag_name, right = tag_name }
-          end,
-        },
-      },
-    })
-    return true
-  end},
-  { src = 'https://github.com/tpope/vim-sleuth', version='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'},
-  { src = 'https://github.com/emmanueltouzery/overseer.nvim', version='c231e752b15d80f20550ee60ac692f2765c8702e', load=function()
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = { "OverseerOutput"},
-      callback = function()
-        vim.keymap.set({'n', 'v'}, 'q', function()
-          vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
-        end, {buffer = true})
-
-        vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], {noremap = true})
-      end,
-    })
-    require('overseer').setup{
-      dap = false,
-      task_list = {
-        direction = 'right',
-        render = function(task)
-          local render = require("overseer.render")
-          local ret = {
-            render.status_and_name(task),
-          }
-          local env_parts = {}
-          if task.env ~= nil then
-            for k, v in pairs(task.env) do
-              table.insert(env_parts, string.format('%s=%s', k, v))
-            end
-          end
-          local env_vars = table.concat(env_parts, ", ")
-          if #env_vars > 0 then
-            vim.list_extend(ret, {{{env_vars}}})
-          end
-          local folder_name = "[" .. string.match(task.cwd, "[^/]+$") .. "]"
-          vim.list_extend(ret, {{{folder_name}}})
-          vim.list_extend(ret, {render.duration(task)})
-          vim.list_extend(ret, render.result_lines(task, { oneline = true }))
-          vim.list_extend(ret, render.output_lines(task, { num_lines = 4 }))
-          return render.remove_empty_lines(ret)
-        end,
-      },
-      task_editor = {
-        bindings = {
-          n = {
-            ["<Esc>"] = "Cancel",
-          }
-        },
-      },
-      component_aliases = {
-        default = {
-          "on_exit_set_status",
-          -- {"on_complete_dispose", timeout = 900},
-          "on_complete_dispose_disablable",
+        i = {
+          ["<c-Del>"] = actions.delete_buffer + actions.move_to_top,
         }
-      },
-      actions = {
-        ["set output marker"] = {
-          condition = function(task)
-            return task:get_bufnr()
-          end,
-          run = function(task)
-            local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
-            -- for some reason a bunch of extra "" lines at the end
-            while lines[#lines] == "" do
-              table.remove(lines, #lines)
-            end
-            vim.g["overseer_tasks_output_marker_" .. task.id] = #lines+1
-          end,
-        },
-        ["copy output to clipboard"] = {
-          condition = function(task)
-            return task:get_bufnr()
-          end,
-          run = function(task)
-            local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
-            copy_to_clipboard(vim.fn.join(lines, "\n"))
-          end,
-        },
-        ["copy output from marker to clipboard"] = {
-          condition = function(task)
-            return task:get_bufnr()
-          end,
-          run = function(task)
-            local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
-            copy_to_clipboard(vim.fn.join(vim.list_slice(lines, vim.g["overseer_tasks_output_marker_" .. task.id], #lines), "\n"))
-          end,
-        },
-        save = false,
-        edit = false,
-      },
+      }
     }
+  },
+  extensions = {
+    undo = {
+      side_by_side = true,
+      diff_context_lines = 3,
+      layout_strategy = "vertical",
+      sorting_strategy = "descending",
+      layout_config = {
+        preview_height = 0.8,
+        preview_cutoff = 0,
+      },
+      mappings = {
+        i = {
+          ["<C-r>a"] = function(prompt_bufnr)
+            local base = require("telescope-undo.actions").yank_additions(prompt_bufnr)
+            local function with_notif()
+              res = base()
+              notif({"Copied " .. #res .. " lines to the clipboard"})
+            end
+            return with_notif
+          end,
+          ["<C-r>d"] = function(prompt_bufnr)
+            local base = require("telescope-undo.actions").yank_deletions(prompt_bufnr)
+            local function with_notif()
+              res = base()
+              notif({"Copied " .. #res .. " lines to the clipboard"})
+            end
+            return with_notif
+          end,
+          ["<cr>"] = require("telescope-undo.actions").restore,
+        },
+        n = {
+          ["<C-r>a"] = function(prompt_bufnr)
+            local base = require("telescope-undo.actions").yank_additions(prompt_bufnr)
+            local function with_notif()
+              res = base()
+              notif({"Copied " .. #res .. " lines to the clipboard"})
+            end
+            return with_notif
+          end,
+          ["<C-r>d"] = function(prompt_bufnr)
+            local base = require("telescope-undo.actions").yank_deletions(prompt_bufnr)
+            local function with_notif()
+              res = base()
+              notif({"Copied " .. #res .. " lines to the clipboard"})
+            end
+            return with_notif
+          end,
+          ["<cr>"] = require("telescope-undo.actions").restore,
+        },
+      },
+    },
+    live_grep_args = {
+      auto_quoting = false,
+      vimgrep_arguments = {
+        -- add --ignore-file to the defaults
+        "rg",
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--smart-case",
+        "--ignore-file=" .. vim.fn.stdpath("config") .. "/rg-ignore",
+      },
+      mappings = {
+        i = {
+          ["<C-t>"] = prompt_toggle_rg_po_files,
+        },
+      },
+    },
+    aerial = {
+      col1_width = 2,
+      col2_width = 32,
+    },
+  },
+}
+require("telescope").load_extension("undo")
+
+-- Enable telescope fzf native
+require('telescope').load_extension 'fzf'
+
+
+vim.pack.add({ { src = 'https://github.com/stevearc/aerial.nvim', version="645d108a5242ec7b378cbe643eb6d04d4223f034" }})
+local protocol = require("vim.lsp.protocol")
+local function get_symbol_kind_name(kind_number)
+  return protocol.SymbolKind[kind_number] or "Unknown"
+end
+
+local function node_from_match(match, path)
+  return ((match or {})[path] or {}).node
+end
+
+vim.api.nvim_set_hl(0, 'AerialPrivate', { default = true, italic = true})
+require("aerial").setup({
+  -- i find the lazy load is not all worth it for me
+  -- i don't notice the startup delay, but the first use
+  -- delay is reeeeally noticeable
+  lazy_load = false,
+  disable_max_lines = 20000, -- useful for json output in dadbod-jq
+  backends = {
+    ['_'] = { "treesitter", "lsp", "markdown", "man" },
+    elixir = { "treesitter" },
+    typescript = { "treesitter" },
+    typescriptreact = { "treesitter" },
+    groovy = { "treesitter" },
+  },
+  filter_kind = false,
+  icons = {
+    Field       = "󰙅 ",
+    Type        = "󰊄 ",
+  },
+  keymaps = {
+    ["<Tab>"] = "actions.tree_toggle",
+  },
+  treesitter = {
+    experimental_selection_range = true,
+  },
+  k = 2,
+  post_parse_symbol = function(bufnr, item, ctx)
+    if ctx.backend_name == "treesitter" and (ctx.lang == "typescript" or ctx.lang == "tsx") then
+      -- don't want to display in-function items
+      local value_node = node_from_match(ctx.match, "var_type")
+      local cur_parent = value_node and value_node:parent()
+      while cur_parent do
+        if cur_parent:type() == "arrow_function"
+          or cur_parent:type() == "function_declaration"
+          or cur_parent:type() == "method_definition" then
+          return false
+        end
+        cur_parent = cur_parent:parent()
+      end
+
+      -- find out whether the function is public or private
+      -- this combines with get_highlight for which we highlight
+      -- private symbols differently
+      item.scope = "private"
+      local value_node = node_from_match(ctx.match, "symbol")
+      local cur_parent = value_node and value_node:parent()
+      while cur_parent do
+        if cur_parent:type() == "export_statement" then
+          item.scope = nil
+        end
+        cur_parent = cur_parent:parent()
+      end
+    elseif ctx.backend_name == "treesitter" and ctx.lang == "groovy" then
+      if ctx.match.kind ~= "Constant" then
+        return true
+      end
+
+      -- don't want to display in-function items
+      local value_node = node_from_match(ctx.match, "symbol")
+      local cur_parent = value_node and value_node:parent()
+      while cur_parent do
+        if cur_parent:type() == "closure" then
+          return false
+        end
+        cur_parent = cur_parent:parent()
+      end
+    elseif ctx.backend_name == "lsp" and ctx.symbol and ctx.symbol.location and string.match(ctx.symbol.location.uri, "%.graphql$") then
+      -- for graphql it was easier to go with LSP. Use the symbol kind to keep only the toplevel queries/mutations
+      return ctx.symbol.kind == 5
+    elseif ctx.backend_name == "treesitter" and ctx.lang == "html" and vim.fn.expand("%:e") == "ui" then
+      -- in GTK UI files only display 'object' items (widgets), and display their
+      -- class instead of the tag name (which is always 'object')
+      if item.name == "object" then
+        local line = vim.api.nvim_buf_get_lines(bufnr, item.lnum-1, item.lnum, false)[1]
+        local _, _, class = string.find(line, [[class=.([^'"]+)]])
+        item.name = class
+        return true
+      else
+        return false
+      end
+    elseif ctx.backend_name == "treesitter" and ctx.lang == "rust" then
+      local value_node = node_from_match(ctx.match, "symbol")
+      local child_text = vim.treesitter.get_node_text(value_node:child(0), bufnr) or "<parse error>"
+      if child_text ~= "pub" then
+        item.scope = "private"
+      end
+    elseif ctx.backend_name == "treesitter" and ctx.lang == "java" then
+      local value_node = node_from_match(ctx.match, "symbol")
+      local child_text = vim.treesitter.get_node_text(value_node:child(0), bufnr) or "<parse error>"
+      local is_private = child_text:match("private")
+      if is_private then
+        item.scope = "private"
+      end
+    elseif ctx.backend_name == "treesitter" and ctx.lang == "python" then
+      -- don't want to display in-function items
+      local value_node = node_from_match(ctx.match, "symbol")
+      local cur_parent = value_node and value_node:parent()
+      while cur_parent do
+        if cur_parent:type() == "function_definition" then
+          return false
+        end
+        cur_parent = cur_parent:parent()
+      end
+    end
     return true
-  end},
+  end,
+  get_highlight = function(symbol, is_icon)
+    if symbol.scope == "private" then
+      return "AerialPrivate"
+    else
+      return "variable"
+    end
+  end,
+})
+require('telescope').load_extension('aerial')
+
+vim.pack.add({ { src = "https://github.com/windwp/nvim-autopairs", version='7a2c97cccd60abc559344042fefb1d5a85b3e33b' }})
+require("nvim-autopairs").setup({
+  check_ts = true,
+  enable_afterquote = true,
+  enable_moveright = true,
+  enable_check_bracket_line = true,
+})
+
+vim.pack.add({ { src = 'https://github.com/nvim-mini/mini.surround', version='444e155147e2b5159dd28a65f9736254c16cb817' }})
+require('mini.surround').setup({
+  -- back to nvim-surround mappings. muscle memory
+  -- and conflict with leap.nvim 's' leader key
+  mappings = {
+    add = 'ys',
+    delete = 'ds',
+    find = '',
+    find_left = '',
+    highlight = '',
+    replace = 'cs',
+  },
+  n_lines = 150,
+  highlight_duration = 3000,
+  custom_surroundings = {
+    -- rename tag while keeping attributes https://github.com/nvim-mini/mini.nvim/issues/1293#issuecomment-2423827325
+    T = {
+      input = { '<(%w+)[^<>]->.-</%1>', '^<()%w+().*</()%w+()>$' },
+      output = function()
+        local tag_name = MiniSurround.user_input('Tag name')
+        if tag_name == nil then return nil end
+        return { left = tag_name, right = tag_name }
+      end,
+    },
+  },
+})
+
+-- use {'/home/emmanuel/home/elixir-extras.nvim'
+vim.pack.add({{ src = 'https://github.com/emmanueltouzery/elixir-extras.nvim' }})
+require'elixir-extras'.setup_multiple_clause_gutter()
+
+vim.pack.add({{ src = 'https://github.com/smjonas/live-command.nvim', version='ce4b104ce702c7bb9fdff863059af6d47107ca61' }})
+require("live-command").setup {
+  defaults = {
+    inline_highlighting = false, -- https://github.com/smjonas/live-command.nvim/issues/23
+  },
+  commands = {
+    Norm = { cmd = "norm" },
+    S = { cmd = "Subvert"}, -- must be defined before we import vim-abolish
+  },
+}
+
+
+vim.pack.add({{ src = 'https://github.com/lifepillar/vim-cheat40', version='22c505b9334abc603fc23a3776360ab3a86e0ab5' }})
+vim.cmd[[autocmd! FileType cheat40 :set signcolumn=no]]
+
+vim.pack.add({{ src = "https://github.com/ggandor/leap.nvim", version="0a034970fb430e6027f2df556af04e19e4d9ccc5" }})
+-- require("leap").add_default_mappings()
+vim.api.nvim_set_keymap('n', 's', '<Plug>(leap-forward-to)', {silent = true})
+vim.api.nvim_set_keymap('n', 'S', '<Plug>(leap-backward-to)', {silent = true})
+vim.api.nvim_set_keymap('v', 's', '<Plug>(leap-forward-to)', {silent = true})
+vim.api.nvim_set_keymap('v', 'S', '<Plug>(leap-backward-to)', {silent = true})
+vim.api.nvim_set_keymap('n', 'gs', '<Plug>(leap-cross-window)', {silent = true})
+
+-- The below settings make Leap's highlighting a bit closer to what you've been
+-- used to in Lightspeed.
+-- disable because this sometimes leaves some lines as highlighted as commented when they're not
+-- vim.api.nvim_set_hl(0, "LeapBackdrop", {link = "Comment"})
+vim.api.nvim_set_hl(
+  0,
+  "LeapMatch",
+  {
+    fg = "white", -- for light themes, set to 'black' or similar
+    bold = true,
+    nocombine = true
+  }
+)
+require("leap").opts.highlight_unlabeled_phase_one_targets = true
+
+
+  -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
+vim.pack.add({{ src = 'https://github.com/dhruvasagar/vim-markify', version='14158865c0f37a02a5d6d738437eb00a821b31ef' }})
+vim.g.markify_error_text = ""
+vim.g.markify_warning_text = ""
+vim.g.markify_info_text = ""
+vim.g.markify_info_texthl = "Todo"
+vim.g.markify_echo_current_message = 0
+
+vim.pack.add({{ src = 'https://github.com/emmanueltouzery/dressing.nvim', version='ed59504b70f2ced477eb39f1fe6e1acc668dcfbf' }})
+require('dressing').setup({
+  input = {
+    -- ESC won't close the modal, ability to use vim keys
+    insert_only = false,
+    get_config = function(opts)
+      if opts.kind == 'center_win' then
+        return {
+          relative = 'editor',
+        }
+      end
+    end
+  },
+  select = {
+    get_config = function(opts)
+      -- https://github.com/stevearc/dressing.nvim/issues/22#issuecomment-1067211863
+      -- for codeaction, we want null-ls to be last
+      -- https://github.com/jose-elias-alvarez/null-ls.nvim/issues/630
+      -- for eslint, it's offering me options like "disable eslint rule" which
+      -- are almost never what I want, and they appear before the more useful options
+      -- from the LSP
+      if opts.kind == 'codeaction' then
+        return {
+          telescope = {
+            -- sorter = require'telescope.sorters'.Sorter:new {
+            --   scoring_function = function(_, _, line)
+            --     local order = tonumber(string.match(line, "^[%d]+"))
+            --     if string.find(line, escape_pattern('null-ls')) then
+            --       return order+100
+            --     else
+            --       return order
+            --     end
+            --   end,
+            -- },
+            cache_picker = false,
+            -- copied from the telescope dropdown theme
+            sorting_strategy = "ascending",
+            layout_strategy = "center",
+            layout_config = {
+              preview_cutoff = 1, -- Preview should always show (unless previewer = false)
+              width = 80,
+              height = 15,
+            },
+            borderchars = {
+              prompt = { "─", "│", " ", "│", "╭", "╮", "│", "│" },
+              results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+              preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+            },
+          }
+        }
+      end
+    end,
+  },
+})
+vim.cmd[[set winhighlight=NormalFloat:DressingInputText]]
+
+vim.pack.add({{ src = "https://github.com/williamboman/mason.nvim", version = "57e5a8addb8c71fb063ee4acda466c7cf6ad2800" }} )
+require("mason").setup()
+-- require("mason-lspconfig").setup {}
+
+vim.pack.add({ { src = 'https://github.com/akinsho/toggleterm.nvim', version='2a787c426ef00cb3488c11b14f5dcf892bbd0bda' }})
+require("toggleterm").setup{
+  direction = 'float',
+  float_opts = {
+    width = 140,
+    height = 45,
+  },
+  size = function(term)
+    if term.direction == "horizontal" then
+      return 15
+    elseif term.direction == "vertical" then
+      return vim.o.columns * 0.5
+    end
+  end,
+  on_open=function(term)
+    -- q to close a terminal
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "<esc>", "<cmd>close<CR>", {noremap = true, silent = true})
+  end,
+}
+function _G.set_terminal_keymaps()
+  local opts = {noremap = true}
+  vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
+end
+-- if you only want these mappings for toggle term use term://*toggleterm#* instead
+vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+
+vim.pack.add({ { src = 'https://github.com/emmanueltouzery/overseer.nvim', version='c231e752b15d80f20550ee60ac692f2765c8702e' }})
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { "OverseerOutput"},
+  callback = function()
+    vim.keymap.set({'n', 'v'}, 'q', function()
+      vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+    end, {buffer = true})
+
+    vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], {noremap = true})
+  end,
+})
+require('overseer').setup{
+  dap = false,
+  task_list = {
+    direction = 'right',
+    render = function(task)
+      local render = require("overseer.render")
+      local ret = {
+        render.status_and_name(task),
+      }
+      local env_parts = {}
+      if task.env ~= nil then
+        for k, v in pairs(task.env) do
+          table.insert(env_parts, string.format('%s=%s', k, v))
+        end
+      end
+      local env_vars = table.concat(env_parts, ", ")
+      if #env_vars > 0 then
+        vim.list_extend(ret, {{{env_vars}}})
+      end
+      local folder_name = "[" .. string.match(task.cwd, "[^/]+$") .. "]"
+      vim.list_extend(ret, {{{folder_name}}})
+      vim.list_extend(ret, {render.duration(task)})
+      vim.list_extend(ret, render.result_lines(task, { oneline = true }))
+      vim.list_extend(ret, render.output_lines(task, { num_lines = 4 }))
+      return render.remove_empty_lines(ret)
+    end,
+  },
+  task_editor = {
+    bindings = {
+      n = {
+        ["<Esc>"] = "Cancel",
+      }
+    },
+  },
+  component_aliases = {
+    default = {
+      "on_exit_set_status",
+      -- {"on_complete_dispose", timeout = 900},
+      "on_complete_dispose_disablable",
+    }
+  },
+  actions = {
+    ["set output marker"] = {
+      condition = function(task)
+        return task:get_bufnr()
+      end,
+      run = function(task)
+        local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
+        -- for some reason a bunch of extra "" lines at the end
+        while lines[#lines] == "" do
+          table.remove(lines, #lines)
+        end
+        vim.g["overseer_tasks_output_marker_" .. task.id] = #lines+1
+      end,
+    },
+    ["copy output to clipboard"] = {
+      condition = function(task)
+        return task:get_bufnr()
+      end,
+      run = function(task)
+        local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
+        copy_to_clipboard(vim.fn.join(lines, "\n"))
+      end,
+    },
+    ["copy output from marker to clipboard"] = {
+      condition = function(task)
+        return task:get_bufnr()
+      end,
+      run = function(task)
+        local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, false)
+        copy_to_clipboard(vim.fn.join(vim.list_slice(lines, vim.g["overseer_tasks_output_marker_" .. task.id], #lines), "\n"))
+      end,
+    },
+    save = false,
+    edit = false,
+  },
+}
+
+vim.pack.add({{ src = 'https://github.com/vim-test/vim-test', version='c63b94c1e5089807f4532e05f087351ddb5a207c' }})
+-- https://github.com/vim-test/vim-test/issues/711
+-- trigger tests also for non-test elixir files, useful to run all tests
+-- also from a non-test file
+-- tolerate .ex, .exs, and .eex
+vim.g["test#elixir#exunit#file_pattern"] = "^.*\\.ee\\?xs\\?$"
+
+-- elixir: warnings as errors
+vim.cmd("let g:test#elixir#exunit#options = { 'all': '--warnings-as-errors'}")
+
+-- need this to parse more errors from tests into quickfix when i have debugging statements
+-- otherwise the test output may get truncated
+vim.cmd[[set scrollback=40000]]
+
+-- https://github.com/vim-test/vim-test/issues/902#issuecomment-4388304422
+vim.g['test#custom_strategies'] = {
+  overseer = function(cmd)
+    require('overseer').new_task({ cmd = cmd, components = {
+      {'job_display_info', message = "Tests running"},
+      "vim_test_qf",
+      "on_exit_set_status",
+      -- "on_complete_notify", -- i limited my notify to filter out messages, notifs.lua and overseer doesn't give markers i can use to whitelist it
+      "on_complete_notif",
+      "only_tree_tests",
+    }, metadata = {type = "test"} }):start()
+  end,
+}
+vim.g['test#strategy'] = 'overseer'
+
+
+vim.pack.add({
   { src = 'https://github.com/theHamsta/nvim-dap-virtual-text', version='fbdb48c2ed45f4a8293d0d483f7730d24467ccb6'},
   -- see https://github.com/tjdevries/config.nvim/blob/7cad8009177b4c10083b21cfa14f8eebe308745e/lua/custom/plugins/dap.lua#L45
   -- see https://youtu.be/lyNfnI-B640?si=E_NRcgMHqptrunKF
-  { src = 'https://github.com/mfussenegger/nvim-dap', version='40a8189b8a57664a1850b0823fdcb3ac95b9f635', load=function()
-    local dap = require "dap"
-    require("nvim-dap-virtual-text").setup({
-      display_callback = function(variable, buf, stackframe, node, options)
-          local val = variable.value:gsub("%s+", " ")
-          if #val > 20 then
-            val = val:sub(1, 20) .. "…"
-          end
-        -- by default, strip out new line characters
-        if options.virt_text_pos == 'inline' then
-          return ' = ' .. val
-        else
-          return variable.name .. ' = ' .. val
-        end
-      end,
-    })
-
-    -- local elixir_ls_debugger = vim.fn.exepath "elixir-ls-debugger"
-    local elixir_ls_debugger = vim.fn.stdpath('data') .. "/mason/bin/elixir-ls-debugger"
-    if elixir_ls_debugger ~= "" then
-      dap.adapters.mix_task = {
-        type = "executable",
-        command = elixir_ls_debugger,
-      }
-
-      dap.configurations.elixir = {
-        {
-          type = "mix_task",
-          name = "phoenix server",
-          task = "phx.server",
-          request = "launch",
-          projectDir = "${workspaceFolder}",
-          exitAfterTaskReturns = false,
-          debugAutoInterpretAllModules = false,
-          -- debugInterpretModulesPatterns = {},
-        },
-        {
-          type = "mix_task",
-          name = "mix test",
-          task = 'test',
-          taskArgs = { "--trace" },
-          request = "launch",
-          startApps = true, -- for Phoenix projects
-          projectDir = "${workspaceFolder}",
-          -- requireFiles = {
-          --   "test/**/test_helper.exs",
-          --   "test/**/*_test.exs"
-          -- },
-          debugAutoInterpretAllModules = false,
-          -- debugInterpretModulesPatterns = {},
-        },
-      }
+  { src = 'https://github.com/mfussenegger/nvim-dap', version='40a8189b8a57664a1850b0823fdcb3ac95b9f635'}
+})
+local dap = require "dap"
+require("nvim-dap-virtual-text").setup({
+  display_callback = function(variable, buf, stackframe, node, options)
+    local val = variable.value:gsub("%s+", " ")
+    if #val > 20 then
+      val = val:sub(1, 20) .. "…"
     end
+    -- by default, strip out new line characters
+    if options.virt_text_pos == 'inline' then
+      return ' = ' .. val
+    else
+      return variable.name .. ' = ' .. val
+    end
+  end,
+})
 
-    vim.api.nvim_set_hl(0, 'DapStopped', { bg='#4c5870' })
-    vim.fn.sign_define('DapStopped', {text='→', texthl='', linehl='DapStopped', numhl=''})
-    vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl='' })
+-- local elixir_ls_debugger = vim.fn.exepath "elixir-ls-debugger"
+local elixir_ls_debugger = vim.fn.stdpath('data') .. "/mason/bin/elixir-ls-debugger"
+if elixir_ls_debugger ~= "" then
+  dap.adapters.mix_task = {
+    type = "executable",
+    command = elixir_ls_debugger,
+  }
 
-    require 'key-menu'.set('n', '<Space>u', {desc='debUgger'})
-    vim.keymap.set("n", "<space>ub", dap.toggle_breakpoint, {desc='toggle breakpoint'})
-    vim.keymap.set("n", "<space>uB", dap.clear_breakpoints, {desc='clear all breakpoints'})
-    vim.keymap.set("n", "<space>ug", dap.run_to_cursor, {desc='run to cursor'})
+  dap.configurations.elixir = {
+    {
+      type = "mix_task",
+      name = "phoenix server",
+      task = "phx.server",
+      request = "launch",
+      projectDir = "${workspaceFolder}",
+      exitAfterTaskReturns = false,
+      debugAutoInterpretAllModules = false,
+      -- debugInterpretModulesPatterns = {},
+    },
+    {
+      type = "mix_task",
+      name = "mix test",
+      task = 'test',
+      taskArgs = { "--trace" },
+      request = "launch",
+      startApps = true, -- for Phoenix projects
+      projectDir = "${workspaceFolder}",
+      -- requireFiles = {
+        --   "test/**/test_helper.exs",
+        --   "test/**/*_test.exs"
+        -- },
+        debugAutoInterpretAllModules = false,
+        -- debugInterpretModulesPatterns = {},
+    },
+  }
+end
 
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "dap-float",
-      callback = function(ev)
-        vim.keymap.set('n', 'q', function()
-          vim.api.nvim_win_close(0, true)
-        end, { buffer = true })
-      end
-    })
+vim.api.nvim_set_hl(0, 'DapStopped', { bg='#4c5870' })
+vim.fn.sign_define('DapStopped', {text='→', texthl='', linehl='DapStopped', numhl=''})
+vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl='' })
 
-    local debug_start = function()
-      local modules_to_interpret = vim.g.dap_mods_to_interpret and vim.split(vim.g.dap_mods_to_interpret, ",") or {}
-      for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        local has_signs = #vim.fn.sign_getplaced(bufnr, { group = "dap_breakpoints" })[1].signs > 0
-        if has_signs then
-            local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 10, false)
-            for _, line in ipairs(lines) do
-              if line:match("defmodule") then
-                table.insert(modules_to_interpret, vim.trim(line:gsub("defmodule", ""):gsub("do", "")))
-              end
-            end
+require 'key-menu'.set('n', '<Space>u', {desc='debUgger'})
+vim.keymap.set("n", "<space>ub", dap.toggle_breakpoint, {desc='toggle breakpoint'})
+vim.keymap.set("n", "<space>uB", dap.clear_breakpoints, {desc='clear all breakpoints'})
+vim.keymap.set("n", "<space>ug", dap.run_to_cursor, {desc='run to cursor'})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dap-float",
+  callback = function(ev)
+    vim.keymap.set('n', 'q', function()
+      vim.api.nvim_win_close(0, true)
+    end, { buffer = true })
+  end
+})
+
+local debug_start = function()
+  local modules_to_interpret = vim.g.dap_mods_to_interpret and vim.split(vim.g.dap_mods_to_interpret, ",") or {}
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    local has_signs = #vim.fn.sign_getplaced(bufnr, { group = "dap_breakpoints" })[1].signs > 0
+    if has_signs then
+      local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 10, false)
+      for _, line in ipairs(lines) do
+        if line:match("defmodule") then
+          table.insert(modules_to_interpret, vim.trim(line:gsub("defmodule", ""):gsub("do", "")))
         end
       end
-      print("DAP will interpret modules: " .. vim.inspect(modules_to_interpret))
-
-      dap.configurations.elixir[1].debugInterpretModulesPatterns = modules_to_interpret
-
-      local file = vim.fn.expand('%:p')
-      local line = vim.fn.line('.')
-      dap.configurations.elixir[2].taskArgs = { "--trace", file .. ":" .. line }
-      dap.configurations.elixir[2].debugInterpretModulesPatterns = modules_to_interpret
-
-      if type(_G.extra_dap_init) == "function" then
-          extra_dap_init()
-      end
-
-      dap.continue()
     end
+  end
+  print("DAP will interpret modules: " .. vim.inspect(modules_to_interpret))
 
-    vim.keymap.set("n", "<F7>", function()
-      require('dap.ui.widgets').hover()
-    end, {desc='debug hover'})
+  dap.configurations.elixir[1].debugInterpretModulesPatterns = modules_to_interpret
 
-    vim.keymap.set("v", "<F7>", function()
-      local start_pos = vim.fn.getpos("v")
-      local end_pos = vim.fn.getpos(".")
-      local lines = vim.fn.getregion(start_pos, end_pos, { type = vim.fn.mode() })
-      local selection = table.concat(lines, '\n')
+  local file = vim.fn.expand('%:p')
+  local line = vim.fn.line('.')
+  dap.configurations.elixir[2].taskArgs = { "--trace", file .. ":" .. line }
+  dap.configurations.elixir[2].debugInterpretModulesPatterns = modules_to_interpret
 
-      require('dap.ui.widgets').hover(selection)
-    end, {desc='debug hover, visual mode'})
+  if type(_G.extra_dap_init) == "function" then
+    extra_dap_init()
+  end
 
-    vim.keymap.set("n", "<leader>us", debug_start, {desc='debug start'})
-    vim.keymap.set("n", "<leader>uc", dap.continue, {desc='debug continue'})
-    vim.keymap.set("n", "<leader>uR", dap.restart, {desc='debug restart'})
-    vim.keymap.set("n", "<leader>uk", function()
-      vim.cmd("DapTerminate")
-      vim.defer_fn(function()
-        vim.cmd("DapVirtualTextForceRefresh")
-      end, 100)
-    end, {desc='debug stop (kill)'})
+  dap.continue()
+end
 
-    vim.keymap.set("n", "<F5>", dap.continue)
-    vim.keymap.set("n", "<F10>", dap.step_over)
-    vim.keymap.set("n", "<F11>", dap.step_into)
-    vim.keymap.set("n", "<S-F11>", dap.step_out)
-    vim.keymap.set("n", "<F12>", dap.step_back)
+vim.keymap.set("n", "<F7>", function()
+  require('dap.ui.widgets').hover()
+end, {desc='debug hover'})
 
-      -- vim.defer_fn(function() vim.cmd("DapSetLogLevel TRACE") end, 1000)
-      return true
-  end},
-  -- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
+vim.keymap.set("v", "<F7>", function()
+  local start_pos = vim.fn.getpos("v")
+  local end_pos = vim.fn.getpos(".")
+  local lines = vim.fn.getregion(start_pos, end_pos, { type = vim.fn.mode() })
+  local selection = table.concat(lines, '\n')
+
+  require('dap.ui.widgets').hover(selection)
+end, {desc='debug hover, visual mode'})
+
+vim.keymap.set("n", "<leader>us", debug_start, {desc='debug start'})
+vim.keymap.set("n", "<leader>uc", dap.continue, {desc='debug continue'})
+vim.keymap.set("n", "<leader>uR", dap.restart, {desc='debug restart'})
+vim.keymap.set("n", "<leader>uk", function()
+  vim.cmd("DapTerminate")
+  vim.defer_fn(function()
+    vim.cmd("DapVirtualTextForceRefresh")
+  end, 100)
+end, {desc='debug stop (kill)'})
+
+vim.keymap.set("n", "<F5>", dap.continue)
+vim.keymap.set("n", "<F10>", dap.step_over)
+vim.keymap.set("n", "<F11>", dap.step_into)
+vim.keymap.set("n", "<S-F11>", dap.step_out)
+vim.keymap.set("n", "<F12>", dap.step_back)
+
+-- vim.defer_fn(function() vim.cmd("DapSetLogLevel TRACE") end, 1000)
+-- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
 -- require'dap'.adapters.codelldb = {
 --   type = 'server',
 --   port = "20392",
@@ -1437,7 +1390,7 @@ vim.g.yoinkSwapClampAtEnds = 0
 --     -- detached = false,
 --   }
 -- }
-  -- end}
+-- end}
 --   use {'/simrat39/rust-tools.nvim', commit='86a2b4e31f504c00715d0dd082a6b8b5d4afbf03', config=function()
 --     local rt = require("rust-tools")
 
@@ -1486,154 +1439,181 @@ vim.g.yoinkSwapClampAtEnds = 0
 --     --   -- },
 --     -- })
 --   end}
-  -- tracking my 'search' branch.
-  -- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs
-  { src = "https://github.com/emmanueltouzery/apidocs.nvim", load=function()
-    require("apidocs").setup()
-    return true
-  end},
-  { src = "https://github.com/mfussenegger/nvim-lint", version="5b1bdf306bd3e565908145279e8bbfc594dac3b3", load=function()
-    local lint = require("lint")
-    lint.linters_by_ft = {
-      javascript = { "eslint" },
-      javascriptreact = { "eslint" },
-      typescript = { "eslint" },
-      typescriptreact = { "eslint" },
-      java = { "checkstyle" },
-      rust = { "clippy" },
-    }
+-- tracking my 'search' branch.
 
-    -- install checkstyle using mason (spc-pl)
-    local checkstyle = lint.linters.checkstyle
-    checkstyle.config_file = vim.fn.stdpath("config") .. "/java-checkstyle.xml"
 
-    nvim_lint_create_autocmds()
-    return true
-  end},
-  { src = "https://github.com/stevearc/conform.nvim", version="62d5accad8b29d6ba9b58d3dff90c43a55621c60", load=function()
-    require("conform").setup({
-      formatters_by_ft = {
-        javascript = { "prettier" },
-        javascriptreact = { "prettier" },
-        typescript = { "prettier" },
-        typescriptreact = { "prettier" },
-        markdown = { "prettier" },
-        json = { "prettier" },
-        css = { "prettier" },
-        scss = { "prettier" },
-        less = { "prettier" },
-        graphql = { "prettier" },
-        elixir = { "mix" },
-      },
-      format_after_save = function(bufnr)
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return
-        end
-        return {}
-      end,
-    })
-    -- vim.api.nvim_create_autocmd("BufWritePre", {
-    --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", "*.rs" },
-    --   callback = function(args)
-    --     if vim.g.disable_autoformat or vim.b[args.buf].disable_autoformat then
-    --       return
-    --     end
-    --     require("conform").format({ bufnr = args.buf })
-    --   end,
-    -- })
-    return true
-  end},
+-- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs
+vim.pack.add({{ src = "https://github.com/emmanueltouzery/apidocs.nvim" }})
+require("apidocs").setup()
+
+vim.pack.add({{ src = "https://github.com/mfussenegger/nvim-lint", version="5b1bdf306bd3e565908145279e8bbfc594dac3b3" }})
+local lint = require("lint")
+lint.linters_by_ft = {
+  javascript = { "eslint" },
+  javascriptreact = { "eslint" },
+  typescript = { "eslint" },
+  typescriptreact = { "eslint" },
+  java = { "checkstyle" },
+  rust = { "clippy" },
+}
+-- install checkstyle using mason (spc-pl)
+local checkstyle = lint.linters.checkstyle
+checkstyle.config_file = vim.fn.stdpath("config") .. "/java-checkstyle.xml"
+nvim_lint_create_autocmds()
+
+vim.pack.add({{ src = "https://github.com/stevearc/conform.nvim", version="62d5accad8b29d6ba9b58d3dff90c43a55621c60" }})
+require("conform").setup({
+  formatters_by_ft = {
+    javascript = { "prettier" },
+    javascriptreact = { "prettier" },
+    typescript = { "prettier" },
+    typescriptreact = { "prettier" },
+    markdown = { "prettier" },
+    json = { "prettier" },
+    css = { "prettier" },
+    scss = { "prettier" },
+    less = { "prettier" },
+    graphql = { "prettier" },
+    elixir = { "mix" },
+  },
+  format_after_save = function(bufnr)
+    if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+      return
+    end
+    return {}
+  end,
+})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx", "*.md", "*.json", "*.css", "*.scss", "*.less", "*.graphql", "*.ex", "*.exs", "*.rs" },
+--   callback = function(args)
+--     if vim.g.disable_autoformat or vim.b[args.buf].disable_autoformat then
+--       return
+--     end
+--     require("conform").format({ bufnr = args.buf })
+--   end,
+-- })
+
+vim.pack.add({
   { src = "https://github.com/emmanueltouzery/vim-dadbod", version="78bdd6d4a8cfd8f7810c2fbd19a0b3a6d837e549"}, -- no OOM on large queries, adbsqlite adapter, minor changes
   -- fork due to a jq issue i don't understand
-  { src = "https://github.com/emmanueltouzery/vim-dadbod-ui", version="bd4d6f38b02e1c847b3b9522815e2d854df9fafd", load=function()
-    vim.g.db_ui_use_nerd_fonts = 1
-    vim.g.db_ui_auto_execute_table_helpers = 1
-    -- executing on save is annoying when i run :wa in another tab: the query in
-    -- the background tab is run and the output displayed in the foreground tab.
-    -- also my ,g mapping is good enough
-    vim.g.db_ui_execute_on_save = 0
-    -- vim.g.db_ui_use_nvim_notify = 1
-
-    -- can use my own notifications, but i actually prefer theirs
-    -- vim.notify = function(msg, level, opts)
-    --   if opts and (opts.title == "Neogit" or opts.title == "[DBUI]") then
-    --     if level == "info" then -- needed for DBUI/dadbod-ui
-    --       level = vim.log.levels.INFO
-    --     end
-
-    vim.api.nvim_create_autocmd({ "User" }, {
-      pattern = {'DBQueryPost', "*DBExecutePost"},
-      callback = function()
-        local out_filetype = get_dbout_filetype()
-        if out_filetype == 'dbout' then
-          local _w, bufnr = get_dbout_win_buf()
-          if bufnr ~= nil then
-            -- it will be null for jq queries
-            vim.api.nvim_buf_call(bufnr, function()
-              require("zebrazone").start()
-            end)
-          end
-        end
-      end,
-    })
-    return true
-  end},
-  { src = "https://github.com/kristijanhusak/vim-dadbod-completion", version="880f7e9f2959e567c718d52550f9fae1aa07aa81", load=function()
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "dbout",
-      callback=function(ev)
-        vim.api.nvim_win_set_height(0, 40)
-      end})
-      return true
-  end},
-  { src = "https://github.com/emmanueltouzery/code-compass.nvim"},
-  { src = "https://github.com/emmanueltouzery/decisive.nvim", load=function()
-    require('decisive').setup{}
-    vim.cmd[[hi CsvFillHlOdd  guibg=#2f3542]]
-    return true
-  end},
-  -- https://github.com/neovim/neovim/issues/20092
-  { src = "https://github.com/notomo/zebrazone.nvim", version="c4704c0bdbb7ad5de3779e32b76d6852cfb458e3", load=function()
-    -- tone down the zebra effect with my theme
-    vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
-    return true
-  end},
-  { src = "https://github.com/stevearc/quicker.nvim", version="12a2291869a326424b1cbee937f4f80334433012", load=function()
-    require("quicker").setup({
-      keys = {
-        {
-          ">",
-          function()
-            require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
-          end,
-          desc = "Expand quickfix context",
-        },
-        {
-          "<",
-          function()
-            require("quicker").collapse()
-          end,
-          desc = "Collapse quickfix context",
-        },
-      },
-      -- https://github.com/stevearc/quicker.nvim/issues/43#issuecomment-2675837219
-      on_qf = function(bufnr)
-        vim.b.detectindent_has_tried_to_detect = 1
-        vim.keymap.set('n', 'dd', function()
-          vim.o.lazyredraw = true
-          vim.cmd.normal{vim.api.nvim_replace_termcodes('<CR>', true, true, true), bang = true}
-          vim.cmd.delete()
-          vim.cmd.normal{vim.api.nvim_replace_termcodes('<C-o>', true, true, true), bang = true}
-          vim.cmd.wincmd("p")
-          vim.o.lazyredraw = false
-        end, {
-            buffer = true,
-          })
-      end,
-    })
-    return true
-  end}
+  { src = "https://github.com/emmanueltouzery/vim-dadbod-ui", version="bd4d6f38b02e1c847b3b9522815e2d854df9fafd"},
+  { src = "https://github.com/kristijanhusak/vim-dadbod-completion", version="880f7e9f2959e567c718d52550f9fae1aa07aa81"}
 })
+vim.g.db_ui_use_nerd_fonts = 1
+vim.g.db_ui_auto_execute_table_helpers = 1
+-- executing on save is annoying when i run :wa in another tab: the query in
+-- the background tab is run and the output displayed in the foreground tab.
+-- also my ,g mapping is good enough
+vim.g.db_ui_execute_on_save = 0
+-- vim.g.db_ui_use_nvim_notify = 1
+
+-- can use my own notifications, but i actually prefer theirs
+-- vim.notify = function(msg, level, opts)
+--   if opts and (opts.title == "Neogit" or opts.title == "[DBUI]") then
+--     if level == "info" then -- needed for DBUI/dadbod-ui
+--       level = vim.log.levels.INFO
+--     end
+
+vim.api.nvim_create_autocmd({ "User" }, {
+  pattern = {'DBQueryPost', "*DBExecutePost"},
+  callback = function()
+    local out_filetype = get_dbout_filetype()
+    if out_filetype == 'dbout' then
+      local _w, bufnr = get_dbout_win_buf()
+      if bufnr ~= nil then
+        -- it will be null for jq queries
+        vim.api.nvim_buf_call(bufnr, function()
+          require("zebrazone").start()
+        end)
+      end
+    end
+  end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dbout",
+  callback=function(ev)
+    vim.api.nvim_win_set_height(0, 40)
+  end
+})
+
+vim.pack.add({
+  { src = 'https://github.com/emmanueltouzery/agitator.nvim', version='ceaf20e08b0d37ef6e63f38f7fac3f7d700ffede'},
+  { src = 'https://github.com/emmanueltouzery/vim-elixir', version='735528cecc19ecffa002ffa20176e9984cced970'},
+  { src = 'https://github.com/tpope/vim-abolish', version='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'},
+  { src = 'https://github.com/qpkorr/vim-bufkill', version='2bd6d7e791668ea52bb26be2639406fcf617271f'},
+  -- combining changes from max397574 and Gelio
+  -- https://github.com/mfussenegger/nvim-treehopper/pull/14
+  -- https://github.com/mfussenegger/nvim-treehopper/issues/10#issuecomment-1126289736
+  -- and other improvements
+  -- alternative => https://github.com/ggandor/leap-ast.nvim
+  { src = 'https://github.com/emmanueltouzery/nvim-treehopper', version='402e65c326671adba7af75657910620af80702b8'},
+  -- previously used a very old version of kylechui/nvim-surround
+  -- mini.surround: slightly less code
+  -- supports JSX <></> tags (rename to <> to <div> for instance - the latest nvim-surround might support it too...)
+  { src = 'https://github.com/tpope/vim-sleuth', version='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'},
+  { src = "https://github.com/emmanueltouzery/code-compass.nvim"},
+})
+
+vim.pack.add({{ src = "https://github.com/emmanueltouzery/decisive.nvim"  }})
+require('decisive').setup{}
+vim.cmd[[hi CsvFillHlOdd  guibg=#2f3542]]
+
+-- https://github.com/neovim/neovim/issues/20092
+vim.pack.add({{ src = "https://github.com/notomo/zebrazone.nvim", version="c4704c0bdbb7ad5de3779e32b76d6852cfb458e3" }})
+-- tone down the zebra effect with my theme
+vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
+
+vim.pack.add({{ src = "https://github.com/stevearc/quicker.nvim", version="12a2291869a326424b1cbee937f4f80334433012" }})
+require("quicker").setup({
+  keys = {
+    {
+      ">",
+      function()
+        require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
+      end,
+      desc = "Expand quickfix context",
+    },
+    {
+      "<",
+      function()
+        require("quicker").collapse()
+      end,
+      desc = "Collapse quickfix context",
+    },
+  },
+  -- https://github.com/stevearc/quicker.nvim/issues/43#issuecomment-2675837219
+  on_qf = function(bufnr)
+    vim.b.detectindent_has_tried_to_detect = 1
+    vim.keymap.set('n', 'dd', function()
+      vim.o.lazyredraw = true
+      vim.cmd.normal{vim.api.nvim_replace_termcodes('<CR>', true, true, true), bang = true}
+      vim.cmd.delete()
+      vim.cmd.normal{vim.api.nvim_replace_termcodes('<C-o>', true, true, true), bang = true}
+      vim.cmd.wincmd("p")
+      vim.o.lazyredraw = false
+    end, {
+    buffer = true,
+  })
+end,
+})
+
+-- private, optional stuff
+vim.pack.add({{ src = 'git@github.com:emmanueltouzery/nvim_config_private' }})
+if pcall(require, 'nvim_config_private') then
+  require'nvim_config_private'.setup{}
+end
+
+
+require("telescope_vimgrep")
+require("telescope_global_marks")
+require("telescope_branches")
+require("telescope_recent_or_all")
+require("telescope_lsp_completions")
+require("telescope_lsp_hierarchy")
+require("telescope_qf_locations")
+require("telescope_modified_git_projects")
+require("telescope_buffers_entry_maker")
+require("telescope_projects")
 
 --Set highlight on search
 vim.o.hlsearch = false
@@ -1719,33 +1699,6 @@ vim.o.relativenumber = true
 vim.opt.cursorline = true -- highlight the current line number
 vim.opt.clipboard = "unnamedplus"
 vim.opt.timeoutlen = 500 -- related to linty-org/key-menu.nvim, how fast do we show the menu
-
-require("plugins.lualine")
-require("plugins.cmp")
-require("plugins.misc")
-require("leader_shortcuts")
-require("shortcuts")
-require("helpers")
-require("global_marks")
-require("previous_next")
-require("telescope_vimgrep")
-require("telescope_global_marks")
-require("telescope_branches")
-require("telescope_recent_or_all")
-require("telescope_lsp_completions")
-require("telescope_lsp_hierarchy")
-require("telescope_qf_locations")
-require("telescope_modified_git_projects")
-require("telescope_buffers_entry_maker")
-require("telescope_projects")
-require("notifs")
-require("ts_unused_imports")
-require("elixir")
-require("database")
-require("mini_diff_extras")
-require("git_commit")
-require("gitlab_mr_helpers")
-require("progress")
 
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 
@@ -2177,4 +2130,10 @@ vim.api.nvim_create_autocmd({ "User" }, {
     end, 500)
   end,
 })
+
+require("leader_shortcuts")
+require("shortcuts")
+require("database")
+require("mini_diff_extras")
+
 -- vim: ts=2 sts=2 sw=2 et

@@ -18,11 +18,14 @@ Array to JSON            array_to_json()
 List enum values         enum_range()
 # select enum_range(null::enum_t);
 Expand array to rows     unnest()
+Expand jsonb array to r  jsonb_array_elements()
+# CROSS JOIN LATERAL jsonb_array_elements()
 }}}
 Postgresql syntax {{{1
 Set array value          '{"e1", "e2"}'
 Durations                interval
-Access JSON field        ->>
+Access JSON field as str ->>
+Access JSON field as json->
 # duration * interval '1 sec'
 }}}
 SQLite tips {{{1

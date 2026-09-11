@@ -1,17 +1,9 @@
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+require('vim._core.ui2').enable()
 
 -- ain't nobody got time to deal with deprecations
 if vim.version().major == 0 and vim.version().minor >= 11 then
   vim.tbl_islist = vim.islist
 end
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-end
-
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' })
 
 vim.g.doom_one_terminal_colors = true
 vim.g.BufKillCreateMappings = 0 -- vim-bufkill plugin
@@ -80,12 +72,25 @@ function _G.nvim_lint_create_autocmds()
     })
 end
 
-require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim' -- Package manager
+-- https://github.com/nvim-telescope/telescope-fzf-native.nvim/pull/161
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == 'telescope-fzf-native.nvim' and (kind == 'install' or kind == 'update') then
+      vim.system({ 'make' }, { cwd = ev.data.path })
+    end
+  end,
+})
+
+-- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
+-- drop s and S due to lightspeed
+vim.g.yoinkIncludeDeleteOperations = 1
+vim.g.yoinkSwapClampAtEnds = 0
+
   -- UI to select things (files, grep results, open buffers...)
-  use { 'emmanueltouzery/telescope.nvim', requires = {
-    { 'debugloop/telescope-undo.nvim', commit = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
-  }, commit="beb508fbc43fd8254913b5f0474039435b9b7c83", config = function()
+  vim.pack.add({
+    { src = 'https://github.com/debugloop/telescope-undo.nvim', version = 'b5e31b358095074b60d87690bd1dc0a020a2afab' },
+    { src = 'https://github.com/emmanueltouzery/telescope.nvim', version="beb508fbc43fd8254913b5f0474039435b9b7c83", load = function()
     local actions = require("telescope.actions")
     -- https://github.com/nvim-telescope/telescope.nvim/issues/2778#issuecomment-2202572413
     local focus_preview = function(prompt_bufnr)
@@ -318,12 +323,15 @@ require('packer').startup(function(use)
 
     -- Enable telescope fzf native
     require('telescope').load_extension 'fzf'
-  end}
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', commit="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" }
-  use { 'nvim-lualine/lualine.nvim', commit='b8c23159c0161f4b89196f74ee3a6d02cdc3a955', config=function()
+
+    return true
+  end},
+  { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim', version="2330a7eac13f9147d6fe9ce955cb99b6c1a0face" },
+  { src = 'https://github.com/nvim-lualine/lualine.nvim', version='b8c23159c0161f4b89196f74ee3a6d02cdc3a955', load=function()
     setup_lualine()
-  end}
-  use {'echasnovski/mini.diff', commit = '65c59f9967fec965d8759a88c1baa43147699035', config=function()
+    return true
+  end},
+  { src = 'https://github.com/echasnovski/mini.diff', version = '65c59f9967fec965d8759a88c1baa43147699035', load=function()
     -- put a priority higher than the default 10 for diagnostic errors, so that
     -- the signs for a hunk are together on the left, and prioritized instead of individual
     -- diagnostics moving the sign for a line to not line up
@@ -358,9 +366,10 @@ require('packer').startup(function(use)
       --   end,
       -- },
     })
-  end}
+    return true
+  end},
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use {'nvim-treesitter/nvim-treesitter', commit='7caec274fd19c12b55902a5b795100d21531391f', config=function()
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version='7caec274fd19c12b55902a5b795100d21531391f', load=function()
     -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
     -- groovy is for gradle build files
     require'nvim-treesitter'.install { "c", "cpp", "lua", "rust", "json", "yaml", "toml", "html", "javascript", "markdown", "markdown_inline", "vim", "vimdoc", "diff",
@@ -370,16 +379,17 @@ require('packer').startup(function(use)
         "elixir","jsdoc","json","scss","typescript", "typescriptreact", "bash", "dockerfile", "eex", "graphql", "tsx", "python", "java", "ruby", "awk", "groovy", "sql", "go", "xml", "css"  },
       callback = function() vim.treesitter.start() end,
     })
-  end}
-  use {'neovim/nvim-lspconfig', commit='615d7b2712efb2f530a83a9d0466acafba6b1d6f'} -- Collection of configurations for built-in LSP client
-  use {'hrsh7th/nvim-cmp', commit='da88697d7f45d16852c6b2769dc52387d1ddc45f'} -- Autocompletion plugin
-  use {'emmanueltouzery/cmp-nvim-lsp', commit='9bbd274822b9967528cbc50075df1018cf6f55e2'} -- my hack so the rust LSP doesn't overwrite my text (possibly inoperant on 0.12+)
-  use { "hrsh7th/cmp-buffer", commit = "3022dbc9166796b644a841a02de8dd1cc1d311fa" }
-  use { "hrsh7th/cmp-path", commit = "91ff86cd9c29299a64f968ebb45846c485725f23" }
-  use { "hrsh7th/cmp-emoji", commit = "0acd702358230abeb6576769f7116e766bca28a0" }
+    return true
+  end},
+  { src = 'https://github.com/neovim/nvim-lspconfig', version='615d7b2712efb2f530a83a9d0466acafba6b1d6f'}, -- Collection of configurations for built-in LSP client
+  { src = 'https://github.com/hrsh7th/nvim-cmp', version='da88697d7f45d16852c6b2769dc52387d1ddc45f'}, -- Autocompletion plugin
+  { src = 'https://github.com/emmanueltouzery/cmp-nvim-lsp', version='9bbd274822b9967528cbc50075df1018cf6f55e2'}, -- my hack so the rust LSP doesn't overwrite my text (possibly inoperant on 0.12+)
+  { src = "https://github.com/hrsh7th/cmp-buffer", version = "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
+  { src = "https://github.com/hrsh7th/cmp-path", version = "91ff86cd9c29299a64f968ebb45846c485725f23" },
+  { src = "https://github.com/hrsh7th/cmp-emoji", version = "0acd702358230abeb6576769f7116e766bca28a0" },
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
-  use {'hrsh7th/cmp-nvim-lsp-signature-help', commit = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'}
-  use {'emmanueltouzery/doom-one.nvim', commit='2dedefe10f3294b6fd8b7b459673548e209da06d', config = function()
+  { src = 'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help', version = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'},
+  { src = 'https://github.com/emmanueltouzery/doom-one.nvim', version='2dedefe10f3294b6fd8b7b459673548e209da06d', load = function()
     require('doom-one').setup({
       cursor_coloring = true,
       italic_comments = true,
@@ -388,8 +398,9 @@ require('packer').startup(function(use)
         telescope = true,
       }
     })
-  end}
-  use {'airblade/vim-rooter', commit='0415be8b5989e56f6c9e382a04906b7f719cfb38', config = function()
+    return true
+  end},
+  { src = 'https://github.com/airblade/vim-rooter', version='0415be8b5989e56f6c9e382a04906b7f719cfb38', load = function()
     vim.g.rooter_silent_chdir = 1
     vim.g.rooter_cd_cmd = 'lcd'
     vim.g.rooter_change_directory_for_non_project_files = 'current'
@@ -399,17 +410,19 @@ require('packer').startup(function(use)
       callback=function()
         set_extra_spellfiles()
       end})
-  end, commit='0415be8b5989e56f6c9e382a04906b7f719cfb38'}
-  use {'emmanueltouzery/vim-choosewin', commit='12098bc747ccb593c87b163fb67f1c8367b1e2c8',
+      return true
+  end},
+  { src = 'https://github.com/emmanueltouzery/vim-choosewin', version='12098bc747ccb593c87b163fb67f1c8367b1e2c8',
     -- fork which adds the "close window" feature
-  config = function()
+  load = function()
     vim.cmd[[nmap ¸ <Plug>(choosewin)]] -- "quake key" on the left of the numbers
     vim.keymap.set("n", "¸¸", function() vim.fn.feedkeys('--') end)
 
     vim.g.choosewin_blink_on_land = 0 -- causes issues where the blinking is not stopped and the word under cursor gets highlighted forever
-  end} 
-  use {'emmanueltouzery/diffview.nvim', commit='200467703c35a584f572b2c840f32ec24995d054',
-    config = function()
+    return true
+  end},
+  { src = 'https://github.com/emmanueltouzery/diffview.nvim', version='200467703c35a584f572b2c840f32ec24995d054',
+    load = function()
       local function open_difftastic(file_path, left_commit, right_commit)
         local cmd = "PAGER=cat GIT_EXTERNAL_DIFF='difft --display side-by-side-show-both' git diff " .. left_commit .. ":" .. file_path .. " " .. right_commit .. ":" ..  file_path
 
@@ -586,23 +599,19 @@ require('packer').startup(function(use)
           })
         end,
       })
+      return true
     end
-
-  }
-  use {'nvim-telescope/telescope-live-grep-raw.nvim', commit='731a046da7dd3adff9de871a42f9b7fb85f60f47'}
-  use {'emmanueltouzery/agitator.nvim', commit='ceaf20e08b0d37ef6e63f38f7fac3f7d700ffede'}
+  },
+  { src = 'https://github.com/nvim-telescope/telescope-live-grep-raw.nvim', version='731a046da7dd3adff9de871a42f9b7fb85f60f47'},
+  { src = 'https://github.com/emmanueltouzery/agitator.nvim', version='ceaf20e08b0d37ef6e63f38f7fac3f7d700ffede'},
   -- use {'/home/emmanuel/home/elixir-extras.nvim'
-  use {'emmanueltouzery/elixir-extras.nvim'
-  , config=function()
+  { src = 'https://github.com/emmanueltouzery/elixir-extras.nvim', load=function()
     require'elixir-extras'.setup_multiple_clause_gutter()
+    return true
   end
-  }
-  -- vim.cmd("let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 's', 'S', 'x', 'X', 'y', 'Y']")
-  -- drop s and S due to lightspeed
-  vim.g.yoinkIncludeDeleteOperations = 1
-  vim.g.yoinkSwapClampAtEnds = 0
-  use {'svermeulen/vim-yoink', commit='89ed6934679fdbc3c20f552b50b1f869f624cd22', config= function()
-
+  },
+  { src = 'https://github.com/svermeulen/vim-yoink', version='89ed6934679fdbc3c20f552b50b1f869f624cd22', load = function()
+    -- check for other vim.g.yoink settings set beforehand
     -- create a popup displaying the previous and next yoink pastes that can be switched to
     local ns = vim.api.nvim_create_namespace "yoink.popup"
     function check_close_paste_popup()
@@ -699,9 +708,10 @@ require('packer').startup(function(use)
 
     vim.cmd[[nmap p <plug>(YoinkPaste_p)]]
     vim.cmd[[nmap P <plug>(YoinkPaste_P)]]
-  end} -- considered https://github.com/gbprod/yanky.nvim & https://github.com/AckslD/nvim-neoclip.lua too, previously used maxbrunsfeld/vim-yankstack
-  use {'emmanueltouzery/vim-elixir', commit='735528cecc19ecffa002ffa20176e9984cced970'}
-  use {'smjonas/live-command.nvim', commit='ce4b104ce702c7bb9fdff863059af6d47107ca61', config=function()
+    return true
+  end}, -- considered https://github.com/gbprod/yanky.nvim & https://github.com/AckslD/nvim-neoclip.lua too, previously used maxbrunsfeld/vim-yankstack
+  { src = 'https://github.com/emmanueltouzery/vim-elixir', version='735528cecc19ecffa002ffa20176e9984cced970'},
+  { src = 'https://github.com/smjonas/live-command.nvim', version='ce4b104ce702c7bb9fdff863059af6d47107ca61', load=function()
     require("live-command").setup {
       defaults = {
         inline_highlighting = false, -- https://github.com/smjonas/live-command.nvim/issues/23
@@ -711,17 +721,18 @@ require('packer').startup(function(use)
         S = { cmd = "Subvert"}, -- must be defined before we import vim-abolish
       },
     }
-  end}
-  use {'tpope/vim-abolish', commit='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'}
-  use {'qpkorr/vim-bufkill', commit='2bd6d7e791668ea52bb26be2639406fcf617271f'}
-  use {'lifepillar/vim-cheat40', commit='22c505b9334abc603fc23a3776360ab3a86e0ab5', config=function()
+    return true
+  end},
+  { src = 'https://github.com/tpope/vim-abolish', version='3f0c8faadf0c5b68bcf40785c1c42e3731bfa522'},
+  { src = 'https://github.com/qpkorr/vim-bufkill', version='2bd6d7e791668ea52bb26be2639406fcf617271f'},
+  { src = 'https://github.com/lifepillar/vim-cheat40', version='22c505b9334abc603fc23a3776360ab3a86e0ab5', load=function()
     vim.cmd[[autocmd! FileType cheat40 :set signcolumn=no]]
-  end}
-  use {
-    "ggandor/leap.nvim",
-    commit="0a034970fb430e6027f2df556af04e19e4d9ccc5",
-    config = function()
-
+    return true
+  end},
+  {
+    src = "https://github.com/ggandor/leap.nvim",
+    version="0a034970fb430e6027f2df556af04e19e4d9ccc5",
+    load = function()
     -- require("leap").add_default_mappings()
       vim.api.nvim_set_keymap('n', 's', '<Plug>(leap-forward-to)', {silent = true})
       vim.api.nvim_set_keymap('n', 'S', '<Plug>(leap-backward-to)', {silent = true})
@@ -743,9 +754,10 @@ require('packer').startup(function(use)
       }
       )
       require("leap").opts.highlight_unlabeled_phase_one_targets = true
+      return true
     end
-  }
-  use {'vim-test/vim-test', commit='c63b94c1e5089807f4532e05f087351ddb5a207c', config = function()
+  },
+  { src = 'https://github.com/vim-test/vim-test', version='c63b94c1e5089807f4532e05f087351ddb5a207c', load = function()
     -- https://github.com/vim-test/vim-test/issues/711
     -- trigger tests also for non-test elixir files, useful to run all tests
     -- also from a non-test file
@@ -773,16 +785,18 @@ require('packer').startup(function(use)
       end,
     }
     vim.g['test#strategy'] = 'overseer'
-  end}
+    return true
+  end},
   -- vim-markify, considered alternative: https://github.com/tomtom/quickfixsigns_vim
-  use {'dhruvasagar/vim-markify', commit='14158865c0f37a02a5d6d738437eb00a821b31ef', config = function()
+  { src = 'https://github.com/dhruvasagar/vim-markify', version='14158865c0f37a02a5d6d738437eb00a821b31ef', load = function()
     vim.g.markify_error_text = ""
     vim.g.markify_warning_text = ""
     vim.g.markify_info_text = ""
     vim.g.markify_info_texthl = "Todo"
     vim.g.markify_echo_current_message = 0
-  end}
-  use {'emmanueltouzery/dressing.nvim', commit='ed59504b70f2ced477eb39f1fe6e1acc668dcfbf', config=function()
+    return true
+  end},
+  { src = 'https://github.com/emmanueltouzery/dressing.nvim', version='ed59504b70f2ced477eb39f1fe6e1acc668dcfbf', load=function()
     require('dressing').setup({
       input = {
         -- ESC won't close the modal, ability to use vim keys
@@ -837,15 +851,16 @@ require('packer').startup(function(use)
       },
     })
     vim.cmd[[set winhighlight=NormalFloat:DressingInputText]]
-  end}
-  use {
-    "williamboman/mason.nvim",
-    commit = "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
+    return true
+  end},
+  {
+    src = "https://github.com/williamboman/mason.nvim",
+    version = "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
   -- }
   -- use {
   --   "williamboman/mason-lspconfig.nvim",
   --   commit = "b1d9a914b02ba5660f1e272a03314b31d4576fe2",
-    config = function()
+    load = function()
       require("mason").setup()
       -- require("mason-lspconfig").setup {}
 
@@ -924,11 +939,12 @@ require('packer').startup(function(use)
       --   -- use conform.nvim for elixir indentation, because it can give me the mix fmt output
       --   -- which sometimes pinpoints the syntax error
       -- }
+      return true
     end,
     -- after = "nvim-lspconfig",
-  }
-  use {'emmanueltouzery/key-menu.nvim', commit='171ad5c40fe978ebba86026beac1ac3ed8eda42d'} -- originally linty-org/key-menu.nvim but the git repo was deleted...
-  use {'akinsho/toggleterm.nvim', commit='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', config = function()
+  },
+  { src = 'https://github.com/emmanueltouzery/key-menu.nvim', version='171ad5c40fe978ebba86026beac1ac3ed8eda42d'}, -- originally linty-org/key-menu.nvim but the git repo was deleted...
+  { src = 'https://github.com/akinsho/toggleterm.nvim', version='2a787c426ef00cb3488c11b14f5dcf892bbd0bda', load = function()
     require("toggleterm").setup{
       direction = 'float',
       float_opts = {
@@ -953,8 +969,9 @@ require('packer').startup(function(use)
     end
     -- if you only want these mappings for toggle term use term://*toggleterm#* instead
     vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-  end}
-  use {'stevearc/aerial.nvim', commit="645d108a5242ec7b378cbe643eb6d04d4223f034", config = function()
+    return true
+  end},
+  { src = 'https://github.com/stevearc/aerial.nvim', version="645d108a5242ec7b378cbe643eb6d04d4223f034", load = function()
     local protocol = require("vim.lsp.protocol")
     local function get_symbol_kind_name(kind_number)
       return protocol.SymbolKind[kind_number] or "Unknown"
@@ -1079,22 +1096,24 @@ require('packer').startup(function(use)
       end,
     })
     require('telescope').load_extension('aerial')
-  end}
-  use {
-    'nvim-tree/nvim-tree.lua', commit='50e919426a4a2053f78b2f8ab001c8ad8eb47ef6',
-    requires = { 'nvim-tree/nvim-web-devicons', commit='19d257cf889f79f4022163c3fbb5e08639077bd8' },
+    return true
+  end},
+  {
+    src = 'https://github.com/nvim-tree/nvim-tree.lua', version='50e919426a4a2053f78b2f8ab001c8ad8eb47ef6'
     -- for some reason must call init outside of the config block, elsewhere
     -- config = function() require'nvim-tree'.setup {} end
-  }
-  use {"windwp/nvim-autopairs", commit='7a2c97cccd60abc559344042fefb1d5a85b3e33b', config=function()
+  },
+  {src = 'https://github.com/nvim-tree/nvim-web-devicons', version='19d257cf889f79f4022163c3fbb5e08639077bd8' },
+  { src = "https://github.com/windwp/nvim-autopairs", version='7a2c97cccd60abc559344042fefb1d5a85b3e33b', load=function()
     require("nvim-autopairs").setup({
       check_ts = true,
       enable_afterquote = true,
       enable_moveright = true,
       enable_check_bracket_line = true,
     })
-  end}
-  use {"goolord/alpha-nvim", commit="0bb6fc0646bcd1cdb4639737a1cee8d6e08bcc31", config=function()
+    return true
+  end},
+  { src = "https://github.com/goolord/alpha-nvim", version="0bb6fc0646bcd1cdb4639737a1cee8d6e08bcc31", load=function()
     local alpha = require'alpha'
     local dashboard = require'alpha.themes.dashboard'
     dashboard.section.header.val = {
@@ -1132,23 +1151,25 @@ require('packer').startup(function(use)
     }
     dashboard.config.opts.noautocmd = true
     alpha.setup(dashboard.config)
-  end}
+    return true
+  end},
   -- private, optional stuff
-  use {'git@github.com:emmanueltouzery/nvim_config_private', config=function()
+  { src = 'git@github.com:emmanueltouzery/nvim_config_private', load=function()
     if pcall(require, 'nvim_config_private') then
       require'nvim_config_private'.setup{}
     end
-  end}
+    return true
+  end},
   -- combining changes from max397574 and Gelio
   -- https://github.com/mfussenegger/nvim-treehopper/pull/14
   -- https://github.com/mfussenegger/nvim-treehopper/issues/10#issuecomment-1126289736
   -- and other improvements
   -- alternative => https://github.com/ggandor/leap-ast.nvim
-  use {'emmanueltouzery/nvim-treehopper', commit='402e65c326671adba7af75657910620af80702b8'}
+  { src = 'https://github.com/emmanueltouzery/nvim-treehopper', version='402e65c326671adba7af75657910620af80702b8'},
   -- previously used a very old version of kylechui/nvim-surround
   -- mini.surround: slightly less code
   -- supports JSX <></> tags (rename to <> to <div> for instance - the latest nvim-surround might support it too...)
-  use {'nvim-mini/mini.surround', commit='444e155147e2b5159dd28a65f9736254c16cb817', config=function()
+  { src = 'https://github.com/nvim-mini/mini.surround', version='444e155147e2b5159dd28a65f9736254c16cb817', load=function()
     require('mini.surround').setup({
       -- back to nvim-surround mappings. muscle memory
       -- and conflict with leap.nvim 's' leader key
@@ -1174,9 +1195,10 @@ require('packer').startup(function(use)
         },
       },
     })
-  end}
-  use {'tpope/vim-sleuth', commit='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'}
-  use {'emmanueltouzery/overseer.nvim', commit='c231e752b15d80f20550ee60ac692f2765c8702e', config=function()
+    return true
+  end},
+  { src = 'https://github.com/tpope/vim-sleuth', version='1d25e8e5dc4062e38cab1a461934ee5e9d59e5a8'},
+  { src = 'https://github.com/emmanueltouzery/overseer.nvim', version='c231e752b15d80f20550ee60ac692f2765c8702e', load=function()
     vim.api.nvim_create_autocmd('FileType', {
       pattern = { "OverseerOutput"},
       callback = function()
@@ -1264,12 +1286,12 @@ require('packer').startup(function(use)
         edit = false,
       },
     }
-  end}
+    return true
+  end},
+  { src = 'https://github.com/theHamsta/nvim-dap-virtual-text', version='fbdb48c2ed45f4a8293d0d483f7730d24467ccb6'},
   -- see https://github.com/tjdevries/config.nvim/blob/7cad8009177b4c10083b21cfa14f8eebe308745e/lua/custom/plugins/dap.lua#L45
   -- see https://youtu.be/lyNfnI-B640?si=E_NRcgMHqptrunKF
-  use {'mfussenegger/nvim-dap', commit='40a8189b8a57664a1850b0823fdcb3ac95b9f635', requires={
-        {'theHamsta/nvim-dap-virtual-text', commit='fbdb48c2ed45f4a8293d0d483f7730d24467ccb6'},
-      }, config=function()
+  { src = 'https://github.com/mfussenegger/nvim-dap', version='40a8189b8a57664a1850b0823fdcb3ac95b9f635', load=function()
     local dap = require "dap"
     require("nvim-dap-virtual-text").setup({
       display_callback = function(variable, buf, stackframe, node, options)
@@ -1400,7 +1422,8 @@ require('packer').startup(function(use)
     vim.keymap.set("n", "<F12>", dap.step_back)
 
       -- vim.defer_fn(function() vim.cmd("DapSetLogLevel TRACE") end, 1000)
-  end}
+      return true
+  end},
   -- use {'mfussenegger/nvim-dap', commit='6f79b822997f2e8a789c6034e147d42bc6706770', config=function()
 -- require'dap'.adapters.codelldb = {
 --   type = 'server',
@@ -1465,10 +1488,11 @@ require('packer').startup(function(use)
 --   end}
   -- tracking my 'search' branch.
   -- upstream has archived the plugin: https://github.com/luckasRanarison/nvim-devdocs
-  use {"emmanueltouzery/apidocs.nvim", config=function()
+  { src = "https://github.com/emmanueltouzery/apidocs.nvim", load=function()
     require("apidocs").setup()
-  end}
-  use {"mfussenegger/nvim-lint", commit="5b1bdf306bd3e565908145279e8bbfc594dac3b3", config=function()
+    return true
+  end},
+  { src = "https://github.com/mfussenegger/nvim-lint", version="5b1bdf306bd3e565908145279e8bbfc594dac3b3", load=function()
     local lint = require("lint")
     lint.linters_by_ft = {
       javascript = { "eslint" },
@@ -1484,8 +1508,9 @@ require('packer').startup(function(use)
     checkstyle.config_file = vim.fn.stdpath("config") .. "/java-checkstyle.xml"
 
     nvim_lint_create_autocmds()
-  end}
-  use {"stevearc/conform.nvim", commit="62d5accad8b29d6ba9b58d3dff90c43a55621c60", config=function()
+    return true
+  end},
+  { src = "https://github.com/stevearc/conform.nvim", version="62d5accad8b29d6ba9b58d3dff90c43a55621c60", load=function()
     require("conform").setup({
       formatters_by_ft = {
         javascript = { "prettier" },
@@ -1516,10 +1541,11 @@ require('packer').startup(function(use)
     --     require("conform").format({ bufnr = args.buf })
     --   end,
     -- })
-  end}
-  use {"emmanueltouzery/vim-dadbod", commit="78bdd6d4a8cfd8f7810c2fbd19a0b3a6d837e549"} -- no OOM on large queries, adbsqlite adapter, minor changes
+    return true
+  end},
+  { src = "https://github.com/emmanueltouzery/vim-dadbod", version="78bdd6d4a8cfd8f7810c2fbd19a0b3a6d837e549"}, -- no OOM on large queries, adbsqlite adapter, minor changes
   -- fork due to a jq issue i don't understand
-  use {"emmanueltouzery/vim-dadbod-ui", commit="bd4d6f38b02e1c847b3b9522815e2d854df9fafd", config=function()
+  { src = "https://github.com/emmanueltouzery/vim-dadbod-ui", version="bd4d6f38b02e1c847b3b9522815e2d854df9fafd", load=function()
     vim.g.db_ui_use_nerd_fonts = 1
     vim.g.db_ui_auto_execute_table_helpers = 1
     -- executing on save is annoying when i run :wa in another tab: the query in
@@ -1550,25 +1576,29 @@ require('packer').startup(function(use)
         end
       end,
     })
-  end}
-  use {"kristijanhusak/vim-dadbod-completion", commit="880f7e9f2959e567c718d52550f9fae1aa07aa81", config=function()
+    return true
+  end},
+  { src = "https://github.com/kristijanhusak/vim-dadbod-completion", version="880f7e9f2959e567c718d52550f9fae1aa07aa81", load=function()
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "dbout",
       callback=function(ev)
         vim.api.nvim_win_set_height(0, 40)
       end})
-  end}
-  use {"emmanueltouzery/code-compass.nvim"}
-  use {"emmanueltouzery/decisive.nvim", config=function()
+      return true
+  end},
+  { src = "https://github.com/emmanueltouzery/code-compass.nvim"},
+  { src = "https://github.com/emmanueltouzery/decisive.nvim", load=function()
     require('decisive').setup{}
     vim.cmd[[hi CsvFillHlOdd  guibg=#2f3542]]
-  end}
+    return true
+  end},
   -- https://github.com/neovim/neovim/issues/20092
-  use {"notomo/zebrazone.nvim", commit="c4704c0bdbb7ad5de3779e32b76d6852cfb458e3", config=function()
+  { src = "https://github.com/notomo/zebrazone.nvim", version="c4704c0bdbb7ad5de3779e32b76d6852cfb458e3", load=function()
     -- tone down the zebra effect with my theme
     vim.cmd[[hi ZebrazoneDefault guibg=#2f3542]]
-  end}
-  use {"stevearc/quicker.nvim", commit="12a2291869a326424b1cbee937f4f80334433012", config=function()
+    return true
+  end},
+  { src = "https://github.com/stevearc/quicker.nvim", version="12a2291869a326424b1cbee937f4f80334433012", load=function()
     require("quicker").setup({
       keys = {
         {
@@ -1601,8 +1631,9 @@ require('packer').startup(function(use)
           })
       end,
     })
+    return true
   end}
-end)
+})
 
 --Set highlight on search
 vim.o.hlsearch = false

@@ -2129,6 +2129,9 @@ require("telescope_projects")
 require("shortcuts")
 require("database")
 require("mini_diff_extras")
+if vim.fn.has("nvim-0.13") == 1 then
+  require("nanodiff")
+end
 
 -- private, optional stuff
 vim.pack.add({{ src = 'git@github.com:emmanueltouzery/nvim_config_private' }})

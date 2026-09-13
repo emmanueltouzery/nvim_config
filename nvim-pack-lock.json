@@ -16,7 +16,7 @@
       "version": "'0bb6fc0646bcd1cdb4639737a1cee8d6e08bcc31'"
     },
     "apidocs.nvim": {
-      "rev": "52ae3968ff64c3a7f9464a65f537dbae4e99033e",
+      "rev": "88a44ee36994a52b8e2f4b0c23a2a31570d799d8",
       "src": "https://github.com/emmanueltouzery/apidocs.nvim"
     },
     "cmp-buffer": {
@@ -35,9 +35,8 @@
       "version": "'9bbd274822b9967528cbc50075df1018cf6f55e2'"
     },
     "cmp-nvim-lsp-signature-help": {
-      "rev": "3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1",
-      "src": "https://github.com/hrsh7th/cmp-nvim-lsp-signature-help",
-      "version": "'3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'"
+      "rev": "fd3e882e56956675c620898bf1ffcf4fcbe7ec84",
+      "src": "https://github.com/hrsh7th/cmp-nvim-lsp-signature-help"
     },
     "cmp-path": {
       "rev": "91ff86cd9c29299a64f968ebb45846c485725f23",

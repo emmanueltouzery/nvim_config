@@ -267,7 +267,7 @@ vim.pack.add({
   { src = "https://github.com/hrsh7th/cmp-path", version = "91ff86cd9c29299a64f968ebb45846c485725f23" },
   { src = "https://github.com/hrsh7th/cmp-emoji", version = "0acd702358230abeb6576769f7116e766bca28a0" },
   -- alternative: https://github.com/ray-x/lsp_signature.nvim but the cmp one is more lightweight
-  { src = 'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help', version = '3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1'},
+  { src = 'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help'},
 })
 require("plugins.cmp")
 

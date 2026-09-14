@@ -72,6 +72,8 @@ local function open_status_tab(sections)
 end
 
 local function get_diff_status(git_root)
+  local current_commit =  async_sys({"git", "rev-parse", "HEAD"}, {cwd = git_root}).stdout
+
   local output = async_sys({"git", "status", "--porcelain=v2"}, {cwd = git_root})
 
   local staged = {}
@@ -133,9 +135,9 @@ local function get_diff_status(git_root)
   end
 
   return {
-    {title = "Staged", contents = staged},
-    {title = "Unstaged", contents = unstaged},
-    {title = "Untracked", contents = untracked},
+    {title = "Staged", contents = staged, left_sha = current_commit, right_sha = "stage"},
+    {title = "Unstaged", contents = unstaged, left_sha = current_commit, right_sha = "disk"},
+    {title = "Untracked", contents = untracked, left_sha = nil, right_sha = "disk"},
   }
 end
 
@@ -148,6 +150,9 @@ function _G.nanodiff_status()
 end
 
 local function get_diff_revspec(git_root, revspec)
+  local commits_stdout = async_sys({"git", "rev-parse", "--revs-only", "--no-flags", revspec}, {text = true, cwd = git_root}).stdout
+  local left_sha, right_sha = unpack(vim.split(commits_stdout:gsub("%^", ""), "%s+", { trimempty = true }))
+
   local output = vim.trim(async_sys({"git", "diff", "--name-status", "-M", revspec}, {text = true, cwd = git_root}).stdout)
 
   local results = {}
@@ -192,15 +197,20 @@ local function get_diff_revspec(git_root, revspec)
     end
   end
 
-  return results
+  return {{
+    title = "Changes",
+    contents = status,
+    left_sha = left_sha,
+    right_sha = right_sha,
+    contents = results,
+  }}
 end
 
 function _G.nanodiff_revspec(revspec)
   async.run(function()
     local git_root = vim.trim(async_sys({"git", "rev-parse", "--show-toplevel"}, {text = true}).stdout)
-    local status = get_diff_revspec(git_root, revspec)
-    print("status: " .. vim.inspect(status))
-    vim.schedule(function() open_status_tab({{title = "Changes", contents = status}}) end)
+    local contents = get_diff_revspec(git_root, revspec)
+    vim.schedule(function() open_status_tab(contents) end)
   end):raise_on_error()
 end
 

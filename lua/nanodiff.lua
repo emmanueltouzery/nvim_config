@@ -2,13 +2,13 @@ local async = vim.async
 
 local async_sys = async.wrap(3, vim.system)
 
-local function add_section(lines, line_to_path, header, items, is_renamed)
+local function add_section(lines, line_to_path, header, items)
   if #items == 0 then return end
 
   table.insert(lines, "== " .. header .. " ==")
   for _, item in ipairs(items) do
     local display_str, target_path
-    if is_renamed then
+    if item.orig_path then
       display_str = string.format("  [%s] %s -> %s", item.status, item.orig_path, item.path)
       target_path = item.path
     else
@@ -22,7 +22,7 @@ local function add_section(lines, line_to_path, header, items, is_renamed)
   table.insert(lines, "") -- Empty line separator
 end
 
-local function open_status_tab(status)
+local function open_status_tab(sections)
   vim.cmd("tabnew")
 
   -- 2. Create an unlisted, scratch buffer for the left side
@@ -34,19 +34,10 @@ local function open_status_tab(status)
 
   local lines = {}
   vim.b[left_buf].line_to_path = {}
-  add_section(lines, vim.b[left_buf].line_to_path, "Staged Changes", status.staged, false)
-  add_section(lines, vim.b[left_buf].line_to_path, "Staged Renames", status.staged_renamed, true)
-  add_section(lines, vim.b[left_buf].line_to_path, "Unstaged Changes", status.unstaged, false)
-
-  if #status.untracked > 0 then
-    table.insert(lines, "== Untracked Files ==")
-    for _, path in ipairs(git_data.untracked) do
-      table.insert(lines, "  [?] " .. path)
-      vim.b[left_buf].line_to_path[#lines] = path
-    end
+  for _, section in ipairs(sections) do
+    add_section(lines, vim.b[left_buf].line_to_path, section.title, section.contents)
   end
 
-  -- 3. Populate buffer content
   if lines and #lines > 0 then
     vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, lines)
   end
@@ -80,15 +71,14 @@ local function open_status_tab(status)
   }
 end
 
-local function get_git_status(output)
-  local result = {
-    staged = {},          -- Standard staged modifications/additions/deletions
-    staged_renamed = {},  -- Specifically staged renames: { new_path, old_path }
-    unstaged = {},        -- Worktree modifications/deletions
-    untracked = {},       -- New untracked files
-  }
+local function get_diff_status(git_root)
+  local output = async_sys({"git", "status", "--porcelain=v2"}, {cwd = git_root})
 
-  for line in output:gmatch("[^\r\n]+") do
+  local staged = {}
+  local unstaged = {}
+  local untracked = {}
+
+  for line in output.stdout:gmatch("[^\r\n]+") do
     local prefix = line:sub(1, 1)
 
     if prefix == "1" then
@@ -99,10 +89,10 @@ local function get_git_status(output)
         local y = xy:sub(2, 2) -- Unstaged
 
         if x ~= "." then
-          table.insert(result.staged, { path = path, status = x })
+          table.insert(staged, { path = path, status = x })
         end
         if y ~= "." then
-          table.insert(result.unstaged, { path = path, status = y })
+          table.insert(unstaged, { path = path, status = y })
         end
       else
         print("couldn't match line: " .. line)
@@ -119,17 +109,17 @@ local function get_git_status(output)
         local path, orig_path = paths:match("^([^\t]+)\t(.+)$")
 
         if x == "R" or x == "C" then
-          table.insert(result.staged_renamed, {
+          table.insert(staged, {
             path = path,
             orig_path = orig_path,
             status = x,
           })
         elseif x ~= "." then
-          table.insert(result.staged, { path = path, status = x })
+          table.insert(staged, { path = path, status = x })
         end
 
         if y ~= "." then
-          table.insert(result.unstaged, { path = path, status = y })
+          table.insert(unstaged, { path = path, status = y })
         end
       end
 
@@ -137,21 +127,80 @@ local function get_git_status(output)
       -- Untracked files: "? <path>"
       local path = line:match("^%?%s+(.+)$")
       if path then
-        table.insert(result.untracked, path)
+        table.insert(untracked, { path = path, status = "?" })
       end
     end
   end
 
-  return result
+  return {
+    {title = "Staged", contents = staged},
+    {title = "Unstaged", contents = unstaged},
+    {title = "Untracked", contents = untracked},
+  }
 end
 
-function _G.nanodiff()
+function _G.nanodiff_status()
   async.run(function()
     local git_root = vim.trim(async_sys({"git", "rev-parse", "--show-toplevel"}, {text = true}).stdout)
-    local res = async_sys({"git", "status", "--porcelain=v2"}, {cwd = git_root})
-    local status = get_git_status(res.stdout)
-    print("output parsed: " .. vim.inspect(status))
+    local status = get_diff_status(git_root)
     vim.schedule(function() open_status_tab(status) end)
+  end):raise_on_error()
+end
+
+local function get_diff_revspec(git_root, revspec)
+  local output = vim.trim(async_sys({"git", "diff", "--name-status", "-M", revspec}, {text = true, cwd = git_root}).stdout)
+
+  local results = {}
+
+  for line in output:gmatch("[^\r\n]+") do
+    -- Split line by tab characters
+    local parts = {}
+    for part in line:gmatch("[^\t]+") do
+      table.insert(parts, part)
+    end
+
+    if #parts >= 2 then
+      local raw_code = parts[1]
+      local code_char = raw_code:sub(1, 1)
+      local path = parts[2]
+      local orig_path = nil
+      local status
+
+      if code_char == "A" then
+        status = "added"
+      elseif code_char == "D" then
+        status = "deleted"
+      elseif code_char == "M" then
+        status = "modified"
+      elseif code_char == "R" then
+        status = "renamed"
+        orig_path = parts[2]
+        path = parts[3]
+      elseif code_char == "C" then
+        status = "copied"
+        orig_path = parts[2]
+        path = parts[3]
+      else
+        status = "unknown"
+      end
+
+      table.insert(results, {
+        path = path,
+        orig_path = orig_path,
+        status = status,
+      })
+    end
+  end
+
+  return results
+end
+
+function _G.nanodiff_revspec(revspec)
+  async.run(function()
+    local git_root = vim.trim(async_sys({"git", "rev-parse", "--show-toplevel"}, {text = true}).stdout)
+    local status = get_diff_revspec(git_root, revspec)
+    print("status: " .. vim.inspect(status))
+    vim.schedule(function() open_status_tab({{title = "Changes", contents = status}}) end)
   end):raise_on_error()
 end
 

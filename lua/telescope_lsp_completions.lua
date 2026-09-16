@@ -1,5 +1,10 @@
 function _G.telescope_lsp_completions()
-  local params = vim.lsp.util.make_position_params()
+  local clients = vim.lsp.get_clients()
+  if #clients == 0 or #clients > 1 then
+    print("telescope_lsp_completions: 0 or >1 LSP clients, aborting")
+    return
+  end
+  local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
   vim.lsp.buf_request(0, 'textDocument/completion', params, function(err, result, ctx, config)
     local pickers = require "telescope.pickers"
     local finders = require "telescope.finders"

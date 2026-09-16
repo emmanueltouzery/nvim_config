@@ -969,7 +969,12 @@ function _G.lsp_goto_def_center()
   if vim.fn.has("nvim-0.11") == 1 then
     get_locations( 'textDocument/definition', opts)
   else
-    local params = vim.lsp.util.make_position_params()
+    local clients = vim.lsp.get_clients()
+    if #clients == 0 or #clients > 1 then
+      print("lsp_goto_def_center: 0 or >1 LSP clients, aborting")
+      return
+    end
+    local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
     vim.lsp.buf_request(0, 'textDocument/definition', params, function(err, result, ctx, config)
       local client = vim.lsp.get_client_by_id(ctx.client_id)
       local handler = client.handlers['textDocument/definition'] or vim.lsp.handlers['textDocument/definition']

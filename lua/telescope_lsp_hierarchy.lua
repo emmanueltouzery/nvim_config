@@ -41,7 +41,12 @@ function _G.telescope_display_call_hierarchy()
     }
   end
 
-  local by_lsp = vim.lsp.buf_request_sync(0, 'textDocument/prepareCallHierarchy', vim.lsp.util.make_position_params())
+  local clients = vim.lsp.get_clients()
+  if #clients == 0 or #clients > 1 then
+    print("call hierarchy: 0 or >1 LSP clients, aborting")
+    return
+  end
+  local by_lsp = vim.lsp.buf_request_sync(0, 'textDocument/prepareCallHierarchy', vim.lsp.util.make_position_params(0, clients[1].offset_encoding))
   if by_lsp ~= nil and #by_lsp >= 1 then
     local result = by_lsp[vim.tbl_keys(by_lsp)[1]].result
     if #result >= 1 then

@@ -507,16 +507,16 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.pack.add({{ src = 'https://github.com/neovim/nvim-lspconfig', version='615d7b2712efb2f530a83a9d0466acafba6b1d6f'}}) -- Collection of configurations for built-in LSP client
 -- ts_ls, for typescript < 7.0
--- vim.lsp.config("ts_ls", {
---   init_options = {
---     supportsHoverVerbosity=true,
---     preferences = {
---       maximumHoverLength = 2500,
---     }
---   },
--- })
+-- disabled by default, must be enabled manually
+vim.lsp.config("ts_ls", {
+  init_options = {
+    supportsHoverVerbosity=true,
+    preferences = {
+      maximumHoverLength = 2500,
+    }
+  },
+})
 -- vim.lsp.enable({"ts_ls"})
---
 
 -- tsc, for typescript >= 7.0
 local capabilities = vim.lsp.protocol.make_client_capabilities()

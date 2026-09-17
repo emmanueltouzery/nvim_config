@@ -498,7 +498,18 @@ vim.keymap.set("n", "<leader>tc", function()
 end, {desc = "Toggle conceal"})
 vim.keymap.set("n", "<leader>tC", function()
   local cc = vim.wo.colorcolumn
-  local default_val = (cc ~= "") and cc or tostring(vim.fn.col('.'))
+  local active_cols = vim.split(cc, ",")
+  local cur_col = tostring(vim.fn.col('.'))
+  local default_val = cur_col
+  if cc ~= "" then
+    if vim.list_contains(active_cols, cur_col) then
+      -- remove the current column from the list
+      default_val = table.concat(vim.tbl_filter(function(v) return v ~= cur_col end, active_cols), ",")
+    else
+      -- add the current column to the list
+      default_val = cc .. "," .. cur_col
+    end
+  end
   vim.ui.input({
     prompt = "Set colorcolumn (leave blank to disable): ",
     default = default_val,

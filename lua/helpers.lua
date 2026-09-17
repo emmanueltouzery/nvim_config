@@ -857,6 +857,16 @@ function _G.jump_to_qf()
       return
     end
   end
+
+  -- now try diffview
+  for _, w in pairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(w)
+    if vim.bo[buf].filetype == "DiffviewFileHistory" then
+      vim.cmd(vim.api.nvim_win_get_number(w) .. ' wincmd w')
+      return
+    end
+  end
+
   -- no QF.. do we have an open tests terminal?
   -- i'm doing that because when running tests i'm first running them
   -- in a terminal and later i rather display the QF. So I'd like the

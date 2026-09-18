@@ -1,5 +1,11 @@
 require('vim._core.ui2').enable()
 
+if vim.fn.has("nvim-0.13") == 1 then
+  -- the cmdline shouldn't expand at all on long messages, just display [+X]
+  -- i can look if i want to
+  vim.opt.messagesopt:append({ maxheight = 1 })
+end
+
 -- ain't nobody got time to deal with deprecations
 if vim.version().major == 0 and vim.version().minor >= 11 then
   vim.tbl_islist = vim.islist

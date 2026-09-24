@@ -222,12 +222,18 @@ local function get_sql_tables(bufnr)
 end
 
 local function insert_table_cols()
-  vim.ui.select(vim.tbl_map(function(e) return e.alias and string.format("%s %s", e.table, e.alias) or e.table end, get_sql_tables(0)), {prompt="Insert column names: pick table"}, function(choice)
-    if choice ~= nil then
-      local tbl, alias = unpack(vim.split(choice, " "))
-      insert_cols(tbl, alias)
-    end
-  end)
+  local tables = vim.tbl_map(function(e) return e.alias and string.format("%s %s", e.table, e.alias) or e.table end, get_sql_tables(0))
+  if #tables == 1 then
+    local tbl, alias = unpack(vim.split(tables[1], " "))
+    insert_cols(tbl, alias)
+  else
+    vim.ui.select(tables, {prompt="Insert column names: pick table"}, function(choice)
+      if choice ~= nil then
+        local tbl, alias = unpack(vim.split(choice, " "))
+        insert_cols(tbl, alias)
+      end
+    end)
+  end
 end
 
 vim.keymap.set("n", '<localleader>c', insert_table_cols, {buffer = true, desc="Insert table columns in query"})

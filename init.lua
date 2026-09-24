@@ -1181,6 +1181,18 @@ require('overseer').setup{
     }
   },
   actions = {
+    ["output to window"] = {
+      condition = function(task)
+        return task:get_bufnr()
+      end,
+      run = function(task)
+        vim.cmd[[ChooseWin]]
+        vim.api.nvim_win_set_buf(0, task:get_bufnr())
+        local util = require('overseer.util')
+        util.set_term_window_opts()
+        util.scroll_to_end(0)
+      end,
+    },
     ["set output marker"] = {
       condition = function(task)
         return task:get_bufnr()

@@ -1045,6 +1045,12 @@ end
 
 DiffExcludeFTs = {"NvimTree", "packer", "cheat40", "OverseerList", "aerial", "AgitatorTimeMachine", "qf", "DiffviewFiles"}
 
+function _G.skip_window(win)
+  local config = vim.api.nvim_win_get_config(win)
+  -- skip UI2 windows, see https://github.com/neovim/neovim/issues/34295
+  return not config.focusable
+end
+
 function _G.toggle_diff()
   -- remember which is the current window
   local cur_win = vim.api.nvim_get_current_win()
@@ -1054,7 +1060,9 @@ function _G.toggle_diff()
   local has_diff = false
   local wins = vim.api.nvim_tabpage_list_wins(0)
   for i, win in pairs(wins) do
-    has_diff = has_diff or vim.api.nvim_win_call(win, function() return vim.opt.diff:get() end)
+    if not skip_window(win) then
+      has_diff = has_diff or vim.api.nvim_win_call(win, function() return vim.opt.diff:get() end)
+    end
   end
 
   if has_diff then
@@ -1063,10 +1071,12 @@ function _G.toggle_diff()
     -- used to do a plain 'windo diffthis', but i want to exclude some window types
     local wins = vim.api.nvim_tabpage_list_wins(0)
     for i, win in pairs(wins) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      local buf_ft = vim.bo[buf].filetype
-      if not vim.tbl_contains(DiffExcludeFTs, buf_ft) then
-        vim.api.nvim_win_call(win, function() vim.cmd("diffthis") end)
+      if not skip_window(win) then
+        local buf = vim.api.nvim_win_get_buf(win)
+        local buf_ft = vim.bo[buf].filetype
+        if not vim.tbl_contains(DiffExcludeFTs, buf_ft) then
+          vim.api.nvim_win_call(win, function() vim.cmd("diffthis") end)
+        end
       end
     end
   end

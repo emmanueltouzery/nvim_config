@@ -2009,7 +2009,10 @@ vim.o.diffopt = "internal,filler,closeoff,linematch:60"
 
 -- fold even 1 line, because for instance with foldexpr i use folds
 -- as a marker for "interesting or not"
-vim.o.foldminlines = 0
+-- COMMENT: this has bad side-effects on other foldmethods of causing
+-- individual items to be folded separately, breaking long nested folds
+-- => setting this only when using foldexpr with regexes
+-- vim.o.foldminlines = 0
 
 -- https://pawelgrzybek.com/vim-tip-more-intuitive-ctrl-a-adding-and-ctrl-x-subtracting/
 -- smarter behavior for C-a and C-x -- if there's a "-" the number is only considered negative

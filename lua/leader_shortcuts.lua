@@ -156,16 +156,20 @@ function _G.set_fm(choice)
     if choice == "syntax" then
       vim.cmd("syntax on")
     end
+    vim.o.foldminlines = 1
     vim.cmd("setlocal foldmethod=" .. choice .. " | setlocal foldenable | set foldlevel=2")
   end
 end
 vim.keymap.set("x", "<leader>zy", function() yank_folds() end, {desc="Yank without folds"})
-vim.keymap.set("n", "<leader>zM", ":lua quick_set_fm()<cr>", {desc="Quickly change folding method"})
-vim.keymap.set("n", "<leader>zmi", ":lua set_fm('indent')<cr>", {desc="Set indent folding method"})
-vim.keymap.set("n", "<leader>zms", ":lua set_fm('syntax')<cr>", {desc="Set syntax folding method"})
+vim.keymap.set("n", "<leader>zM", quick_set_fm, {desc="Quickly change folding method"})
+vim.keymap.set("n", "<leader>zmi", function() set_fm('indent') end, {desc="Set indent folding method"})
+vim.keymap.set("n", "<leader>zms", function() set_fm('syntax') end, {desc="Set syntax folding method"})
 vim.keymap.set("n", "<leader>zme", function()
   vim.ui.input({prompt="vim verymagic regexp of the lines not to fold", kind="center_win", default=vim.b.fme_reg}, function(reg)
     if reg ~= nil then
+      -- fold even 1 line, because for instance with foldexpr i use folds
+      -- as a marker for "interesting or not"
+      vim.o.foldminlines = 0
       vim.b.fme_reg = reg
       vim.cmd[[set foldmethod=expr]]
       local regexp = reg:gsub("%|", [[\|]])
@@ -175,6 +179,11 @@ vim.keymap.set("n", "<leader>zme", function()
     end
   end)
 end, {desc="Set expr folding method"})
+vim.keymap.set("n", "<leader>zmt", function()
+  vim.o.foldminlines = 1
+  vim.opt_local.foldmethod = "expr"
+  vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+end, {desc = "Treesitter fold method"})
 vim.keymap.set("n", "<leader>zmd", ":lua set_fm('disable')<cr>", {desc="Disable folding"})
 
 -- FILES

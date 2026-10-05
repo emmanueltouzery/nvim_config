@@ -11,7 +11,6 @@ if vim.version().major == 0 and vim.version().minor >= 11 then
   vim.tbl_islist = vim.islist
 end
 
-require("plugins.lualine")
 require("helpers")
 require("global_marks")
 require("previous_next")
@@ -1614,6 +1613,10 @@ require("quicker").setup({
   })
 end,
 })
+
+-- load lualine as last plugin, so that the plugins that
+-- integrate with it are loaded (for instance overseer)
+require("plugins.lualine")
 
 
 require("telescope_vimgrep")

@@ -31,4 +31,7 @@ hi def link JsonNull @constant.builtin.json
 syn match JsonBoolean /\v\W(true|false)\ze\W/
 hi def link JsonBoolean @boolean.json
 
+syn match NewLineIncell /↵/
+hi def link NewLineIncell Comment
+
 let b:current_syntax = 'dbout'

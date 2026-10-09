@@ -280,7 +280,7 @@ local function hover_set_contents(orig_buf, params, popup_buf, popup_win, res)
 end
 
 vim.keymap.set('n', 'K', function()
-  local clients = vim.lsp.get_clients()
+  local clients = vim.lsp.get_clients({buffer=0})
   if #clients == 0 or #clients > 1 then
     print("K: 0 or >1 LSP clients, aborting")
     return

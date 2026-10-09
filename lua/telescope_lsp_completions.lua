@@ -1,5 +1,5 @@
 function _G.telescope_lsp_completions()
-  local clients = vim.lsp.get_clients()
+  local clients = vim.lsp.get_clients({buffer=0})
   if #clients == 0 or #clients > 1 then
     print("telescope_lsp_completions: 0 or >1 LSP clients, aborting")
     return

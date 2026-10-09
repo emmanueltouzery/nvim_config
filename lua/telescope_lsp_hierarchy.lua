@@ -41,7 +41,7 @@ function _G.telescope_display_call_hierarchy()
     }
   end
 
-  local clients = vim.lsp.get_clients()
+  local clients = vim.lsp.get_clients({buffer=0})
   if #clients == 0 or #clients > 1 then
     print("call hierarchy: 0 or >1 LSP clients, aborting")
     return

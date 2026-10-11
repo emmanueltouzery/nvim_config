@@ -169,9 +169,7 @@ vnoremap <Up> gk
 ]])
 
 -- i want border on the K hover window
-if vim.fn.has("nvim-0.11") == 1 then
-  vim.o.winborder = "rounded"
-end
+vim.o.winborder = "rounded"
 
 -- https://vim.fandom.com/wiki/Map_Ctrl-Backspace_to_delete_previous_word
 vim.cmd('inoremap <C-h> <C-\\><C-o>db')

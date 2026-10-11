@@ -1731,27 +1731,20 @@ if vim.version().major == 0 and vim.version().minor < 12 then
   })
 end
 
-if vim.fn.has("nvim-0.11") == 1 then
-  vim.diagnostic.config({
-    -- virtual_text = {
-    --   prefix = "●",
-    -- },
-    -- severity_sort = true,
-    signs = {
-      text = {
-        [vim.diagnostic.severity.ERROR] = "",
-        [vim.diagnostic.severity.WARN] = "",
-        [vim.diagnostic.severity.INFO] = "",
-        [vim.diagnostic.severity.HINT] = "",
-      },
+vim.diagnostic.config({
+-- virtual_text = {
+  --   prefix = "●",
+  -- },
+  -- severity_sort = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN] = "",
+      [vim.diagnostic.severity.INFO] = "",
+      [vim.diagnostic.severity.HINT] = "",
     },
-  })
-else
-  vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "DiagnosticSignError", })
-  vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "DiagnosticSignWarn", })
-  vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "DiagnosticSignInfo", })
-  vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "DiagnosticSignHint", })
-end
+  },
+})
 
 -- https://qmacro.org/blog/posts/2025/08/04/excluding-specific-diagnostics-in-neovim/
 local original_vim_diagnostic_set = vim.diagnostic.set
@@ -2033,15 +2026,13 @@ vim.o.nrformats = "bin,hex,blank"
 vim.cmd[[au TermClose * call feedkeys("\<C-\>\<C-n>")]]
 
 -- winfixbuf
-if vim.fn.has("nvim-0.10") == 1 then
-  vim.api.nvim_create_autocmd("BufEnter", {
-    callback = function()
-      if vim.list_contains({"NvimTree", "OverseerList", "aerial", "dbui", "dbout"}, vim.bo.filetype) then
-        vim.wo.winfixbuf = true
-      end
-    end,
-  })
-end
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    if vim.list_contains({"NvimTree", "OverseerList", "aerial", "dbui", "dbout"}, vim.bo.filetype) then
+      vim.wo.winfixbuf = true
+    end
+  end,
+})
 
 -- if vim.fn.has("nvim-0.11") == 1 then
 --   -- longer message history, stop making me press enter on longer messages

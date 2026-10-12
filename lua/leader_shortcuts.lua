@@ -1256,7 +1256,7 @@ vim.keymap.set("n", "<leader>clc", "<cmd>lua require'telescope.builtin'.lsp_inco
 vim.keymap.set("n", "<leader>clh", "<cmd>lua telescope_display_call_hierarchy()<cr>", {desc="Display lsp call hierarchy"})
 vim.keymap.set("n", "<leader>clk", function()
   local count = 0
-  for _, c in ipairs(vim.lsp.get_clients()) do
+  for _, c in ipairs(vim.lsp.get_clients({bufnr=0})) do
     for _, req in ipairs(vim.tbl_keys(c.requests)) do
       c.cancel_request(req)
       count = count + 1

@@ -4,6 +4,7 @@ if vim.fn.has("nvim-0.13") == 1 then
   -- the cmdline shouldn't expand at all on long messages, just display [+X]
   -- i can look if i want to
   vim.opt.messagesopt:append({ maxheight = 1 })
+  vim.opt.messagesopt:append({ history = 5000 })
 end
 
 -- ain't nobody got time to deal with deprecations

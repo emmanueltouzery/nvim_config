@@ -161,7 +161,7 @@
       "version": "'19d257cf889f79f4022163c3fbb5e08639077bd8'"
     },
     "nvim_config_private": {
-      "rev": "bcd9d2e3b9acf42082a51885579bb25f43d2bf4e",
+      "rev": "e7c0efce2c94868a563ae6d5c86401f5366e9ac1",
       "src": "git@github.com:emmanueltouzery/nvim_config_private"
     },
     "overseer.nvim": {

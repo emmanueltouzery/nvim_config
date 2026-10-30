@@ -1664,6 +1664,9 @@ vim.opt.smartindent = true
 vim.opt.copyindent = true
 vim.opt.preserveindent = true
 
+-- tab width when displaying. reduce from the default 8
+vim.opt.tabstop = 4
+
 -- display eg the git status in more cases, for instance git status+TODO marker
 -- it's auto:2-3 in doom-nvim. reduced it to 1-2 then switched to yes to stop the
 -- sign column expanding and reducing when the LSP gets reloaded.

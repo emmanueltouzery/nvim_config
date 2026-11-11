@@ -62,9 +62,9 @@
       "version": "'200467703c35a584f572b2c840f32ec24995d054'"
     },
     "doom-one.nvim": {
-      "rev": "2dedefe10f3294b6fd8b7b459673548e209da06d",
+      "rev": "ca8ef228e5dee8570b67c71a011571c37871082a",
       "src": "https://github.com/emmanueltouzery/doom-one.nvim",
-      "version": "'2dedefe10f3294b6fd8b7b459673548e209da06d'"
+      "version": "'mine'"
     },
     "dressing.nvim": {
       "rev": "ed59504b70f2ced477eb39f1fe6e1acc668dcfbf",

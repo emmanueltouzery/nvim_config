@@ -103,7 +103,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
   end,
 })
 
-vim.pack.add({{ src = 'https://github.com/emmanueltouzery/doom-one.nvim', version='2dedefe10f3294b6fd8b7b459673548e209da06d'}})
+vim.pack.add({{ src = 'https://github.com/emmanueltouzery/doom-one.nvim', version = 'mine'}})
 require('doom-one').setup({
   cursor_coloring = true,
   italic_comments = true,

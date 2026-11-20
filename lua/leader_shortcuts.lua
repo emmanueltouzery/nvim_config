@@ -783,8 +783,14 @@ function telescope_branches_mappings(prompt_bufnr, map)
       require('nanodiff').revspec(diffspec)
     else
       actions.close(prompt_bufnr)
-      -- vim.cmd(":DiffviewOpen " .. branches[1] .. "..." .. branches[2])
-      require('nanodiff').revspec(branches[1] .. "..." .. branches[2])
+      vim.ui.select({"Direct: 'A B'", "Since branching: 'A...B'"}, {prompt="Select how to compare the branches"}, function(choice, index)
+        local sep = " "
+        if index == 2 then
+          sep = "..."
+        end
+        -- vim.cmd(":DiffviewOpen " .. branches[1] .. "..." .. branches[2])
+        require('nanodiff').revspec(branches[1] .. sep .. branches[2])
+      end)
     end
   end, {desc = "Git diff"})
   map('i', '<C-enter>', function(nr) -- create a local branch to track an origin branch

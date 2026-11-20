@@ -728,12 +728,14 @@ function telescope_commits_mappings(prompt_bufnr, map)
     if #commits == 0 then
       commit = require("telescope.actions.state").get_selected_entry(prompt_bufnr).value
       actions.close(prompt_bufnr)
-      vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
+      -- vim.cmd(":DiffviewOpen " .. commit .. "^.." .. commit)
+      require('nanodiff').revspec(commit .. "^.." .. commit)
     elseif #commits ~= 2 then
       print("Must select two commits for diff")
     else
       actions.close(prompt_bufnr)
-      vim.cmd(":DiffviewOpen " .. commits[1] .. "^.." .. commits[2])
+      -- vim.cmd(":DiffviewOpen " .. commits[1] .. "^.." .. commits[2])
+      require('nanodiff').revspec(commits[1] .. "^.." .. commits[2])
     end
   end, {desc = "Diff in diffview"})
   map('i', '<C-k>', function(nr)
@@ -777,10 +779,12 @@ function telescope_branches_mappings(prompt_bufnr, map)
         -- on develop => presumably i'm behind, comparing ahead
         diffspec = "..." .. branch
       end
-      vim.cmd(":DiffviewOpen " .. diffspec)
+      -- vim.cmd(":DiffviewOpen " .. diffspec)
+      require('nanodiff').revspec(diffspec)
     else
       actions.close(prompt_bufnr)
-      vim.cmd(":DiffviewOpen " .. branches[1] .. "..." .. branches[2])
+      -- vim.cmd(":DiffviewOpen " .. branches[1] .. "..." .. branches[2])
+      require('nanodiff').revspec(branches[1] .. "..." .. branches[2])
     end
   end, {desc = "Git diff"})
   map('i', '<C-enter>', function(nr) -- create a local branch to track an origin branch
@@ -961,7 +965,8 @@ vim.keymap.set("n", "<leader>gb", "<cmd>lua require'agitator'.git_blame_toggle()
 vim.keymap.set("n", "<leader>gf", "<cmd>lua require'agitator'.open_file_git_branch()<cr>", {desc="Open file from branch"})
 vim.keymap.set("n", "<leader>gs", "<cmd>lua require'agitator'.search_git_branch()<cr>", {desc="Search in another branch"})
 vim.keymap.set("n", "<leader>gl", function() vim.cmd('DiffviewFileHistory ' .. vim.fs.root(vim.fn.getcwd(), '.git')) end, {desc="project history (Log)"})
-vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
+-- vim.keymap.set("n", "<leader>gT", "<cmd>:DiffviewFileHistory %<cr>", {desc="file_history"})
+vim.keymap.set("n", "<leader>gT", function() require('nanodiff').log({buf=0}) end, {desc="file_history"})
 vim.keymap.set("n", "<leader>gg", "<cmd>DiffviewOpen<cr>", {desc="Git two-way diff"})
 vim.keymap.set("n", "<leader>gC", ":lua display_git_commit()<cr>", {desc="Git display commit"})
 vim.keymap.set("n", "<leader>gv", ":lua ShowCommitAtLine()<cr>", {desc="View commit for line"})

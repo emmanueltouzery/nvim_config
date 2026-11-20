@@ -19,7 +19,6 @@ require("notifs")
 require("ts_unused_imports")
 require("elixir")
 require("git_commit")
-require("gitlab_mr_helpers")
 require("progress")
 
 vim.g.doom_one_terminal_colors = true
@@ -379,7 +378,8 @@ require('diffview').setup {
   },
   {"n", "gc", function()
     local commit = require'diffview.lib'.get_current_view().panel:get_item_at_cursor().commit.hash
-    vim.cmd("DiffviewOpen " .. commit .. "^.." ..commit)
+    -- vim.cmd("DiffviewOpen " .. commit .. "^.." ..commit)
+    require('nanodiff').revspec(commit .. "^.." ..commit)
   end, {desc = "Goto Commit"}},
   {"n", "<C-enter>", function()
     local stash_info = require'diffview.lib'.get_current_view().panel:get_log_entry_at_cursor().commit.reflog_selector
@@ -2149,10 +2149,94 @@ require("shortcuts")
 require("database")
 require("mini_diff_extras")
 
+-- vim.opt.rtp:append(vim.env.HOME .. "/home/nanodiff.nvim") 
+vim.pack.add({{ src = 'git@github.com:emmanueltouzery/nanodiff.nvim' }})
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.api.nvim_set_hl(0, 'NanodiffAdd', { link = 'DiffAdded' })
+    vim.api.nvim_set_hl(0, 'NanodiffDelete', { link = 'DiffRemoved' })
+  end
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern ={ "NanodiffLogPanel", "NanodiffDiffPanel", "NanodiffRevspecLogPanel" },
+  callback = function(args)
+    local tabdata = require('nanodiff').lib.tabdata
+    local tab_data = tabdata.get_data()
+    local panel_buf = vim.api.nvim_win_get_buf(tab_data.left_win or tab_data.bottom_win)
+
+    vim.keymap.set('n', 'gf', function()
+      local filetree = require('nanodiff').lib.filetree
+      local section, item = filetree.get_cur_section_item(tab_data.ft_st)
+      if item ~= nil then
+        vim.cmd[[:tabc]]
+        local tab = vim.api.nvim_get_current_tabpage()
+        if tabpage_is_sql(tab) or tabpage_is_terminal(tab) then
+          vim.api.nvim_set_current_tabpage(1)
+        end
+        if vim.fn.winnr('$') > 1 then
+          vim.cmd[[ChooseWin]]
+        end
+        vim.cmd(":e " .. tab_data.git_root .. "/" .. item.path)
+      end
+    end, {buffer = true})
+
+    vim.keymap.set('n', 'c', function()
+      vim.cmd[[:tabc]]
+      vim.api.nvim_set_current_tabpage(vim.api.nvim_list_tabpages()[1]) -- in case i had a dadbod in the second tab, where i could have jumped after closing the diffview tab
+      open_git_commit_popup()
+    end, {buffer = true})
+
+    if tab_data.title == "Stashes" then
+      vim.keymap.set('n', "<C-enter>", function()
+        require('nanodiff').get_adapter(function(adapter)
+          vim.async.run(function()
+            vim.async.await(adapter.actions.unstash())
+            -- unstage everything. we stage when we stash files to avoid issues with untracked files...
+            require('nanodiff').lib.io_helpers.run_cmd({"git", "restore", "--staged", "."}, {cwd = git_root})
+          end):raise_on_error()
+        end)
+      end, { noremap = true, silent = true, buffer = bottom_buf })
+    end
+
+    if args.match == "NanodiffDiffPanel" then
+      -- tie action to kPlus besides the default '+'
+      vim.keymap.set('n', '<kPlus>', function()
+        require('nanodiff').get_adapter(function(adapter)
+          adapter.actions.mark_file_for_diff()
+        end)
+      end, { noremap = true, silent = true, buffer = left_buf })
+    end
+  end,
+})
+vim.keymap.set("n", "<leader>ghO", function()
+  print("ghO")
+  require('nanodiff').stashes({
+    shortcuts = {
+      unstash = false, -- i want to implement it myself
+    }
+  })
+end, {desc="list git stashes"})
+
+vim.keymap.set("n", "<leader>gG", function()
+  require('nanodiff').status({
+    shortcuts = {
+      conflict_previous = "šx",
+      conflict_next = "đx",
+    }
+  })
+end, {desc="git status"})
+
+vim.keymap.set("n", "<leader>gL", function()
+  require('nanodiff').log()
+end, {desc="git log"})
+
 -- private, optional stuff
 vim.pack.add({{ src = 'git@github.com:emmanueltouzery/nvim_config_private' }})
 if pcall(require, 'nvim_config_private') then
   require'nvim_config_private'.setup{}
 end
+
+require("gitlab_mr_helpers")
 
 -- vim: ts=2 sts=2 sw=2 et

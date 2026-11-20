@@ -158,6 +158,9 @@ vim.notify = function(msg, level, opts)
   elseif opts and opts.title == "telescope.nvim" then
     -- for instance telescope.actions.git_checkout when changing branches (success & failure)
     notif({msg}, level)
+  elseif opts and opts.source == "nanodiff" then
+    notif({msg}, level)
+    print(msg)
   elseif opts and opts.title == "Git commit" then
     -- me, my own git_commit
     notif({msg}, level)

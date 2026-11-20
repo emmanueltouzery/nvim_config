@@ -173,18 +173,20 @@ function _G.ShowCommitAtLine()
   if commit_sha:sub(1, 1) == '^' then
     -- https://stackoverflow.com/questions/13105858/
     -- https://stackoverflow.com/a/40884093/516188
-    vim.cmd("DiffviewOpen 4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. commit_sha:gsub("^%^", "") .. "  --selected-file=" .. vim.fn.expand("%:p"))
+    -- vim.cmd("DiffviewOpen 4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. commit_sha:gsub("^%^", "") .. "  --selected-file=" .. vim.fn.expand("%:p"))
+    require('nanodiff').revspec("4b825dc642cb6eb9a060e54bf8d69288fbee4904.." .. commit_sha:gsub("^%^", ""), {selected_file = vim.fn.expand("%:p")})
   else
     show_commit(commit_sha)
   end
 end
 
 function _G.show_commit(commit_sha)
-  if vim.fn.expand("%"):match("^diffview:")  then
-    vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. require'diffview.lib'.get_current_view().cur_entry.path)
-  else
-    vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. vim.fn.expand("%:p"))
-  end
+  -- if vim.fn.expand("%"):match("^diffview:")  then
+  --   vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. require'diffview.lib'.get_current_view().cur_entry.path)
+  -- else
+    -- vim.cmd("DiffviewOpen " .. commit_sha .. "^.." .. commit_sha .. "  --selected-file=" .. vim.fn.expand("%:p"))
+    require("nanodiff").revspec(commit_sha .. "^.." .. commit_sha, {selected_file = vim.fn.expand("%:p")})
+  -- end
 end
 
 function _G.select_current_qf(also_print)
@@ -790,7 +792,8 @@ end
 function _G.display_git_commit()
   vim.ui.input({prompt="Enter git commit id:", kind="center_win"}, function(input)
     if input ~= nil then
-      vim.cmd(":DiffviewOpen " .. input .. "^.." .. input)
+      -- vim.cmd(":DiffviewOpen " .. input .. "^.." .. input)
+      require("nanodiff").revspec(input .. "^.." .. input)
     end
   end)
 end

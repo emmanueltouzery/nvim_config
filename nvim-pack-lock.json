@@ -64,7 +64,7 @@
     "doom-one.nvim": {
       "rev": "2dedefe10f3294b6fd8b7b459673548e209da06d",
       "src": "https://github.com/emmanueltouzery/doom-one.nvim",
-      "version": "'2dedefe10f3294b6fd8b7b459673548e209da06d'"
+      "version": "'mine'"
     },
     "dressing.nvim": {
       "rev": "ed59504b70f2ced477eb39f1fe6e1acc668dcfbf",
@@ -109,6 +109,10 @@
       "rev": "444e155147e2b5159dd28a65f9736254c16cb817",
       "src": "https://github.com/nvim-mini/mini.surround",
       "version": "'444e155147e2b5159dd28a65f9736254c16cb817'"
+    },
+    "nanodiff.nvim": {
+      "rev": "9674e48d64f50d4f24e41d58a3aa85229e750873",
+      "src": "git@github.com:emmanueltouzery/nanodiff.nvim"
     },
     "nvim-autopairs": {
       "rev": "7a2c97cccd60abc559344042fefb1d5a85b3e33b",

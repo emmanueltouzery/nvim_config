@@ -20,7 +20,9 @@ end
 
 local function gitlab_mr_open_at_line()
   local absolute_file_path = vim.api.nvim_buf_get_name(0)
-  if vim.startswith(absolute_file_path, "diffview://") then
+  if vim.startswith(absolute_file_path, "nanodiff://") then
+    absolute_file_path = absolute_file_path:gsub("nanodiff...[^/]+/", "")
+  elseif vim.startswith(absolute_file_path, "diffview://") then
     absolute_file_path = require('diffview.lib').get_current_view().cur_entry.path
   end
   local git_path = vim.fs.root(absolute_file_path, '.git')

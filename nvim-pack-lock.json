@@ -111,7 +111,7 @@
       "version": "'444e155147e2b5159dd28a65f9736254c16cb817'"
     },
     "nanodiff.nvim": {
-      "rev": "9674e48d64f50d4f24e41d58a3aa85229e750873",
+      "rev": "0eb81ac79d0a20371da79fa3201010860048a377",
       "src": "git@github.com:emmanueltouzery/nanodiff.nvim"
     },
     "nvim-autopairs": {
